@@ -56,7 +56,10 @@ def get_backend_logger(name="BackendCLI") -> BackendLogger:
     """Initializes the BackendLogger."""
     log_path = backend_config.LOGGING.FILE
     os.makedirs(os.path.dirname(log_path), exist_ok=True)
-    return BackendLogger(name=name, path=log_path, level=backend_config.LOGGING.LEVEL)
+    # Use level from backend config directly
+    log_level_str = getattr(backend_config.LOGGING, 'LEVEL', 'INFO').upper()
+    log_level = logging.getLevelName(log_level_str)
+    return BackendLogger(name=name, path=log_path, level=log_level)
 
 
 # --- Policy Commands (Data Collection) ---
@@ -212,33 +215,58 @@ def db_remove(
     logger.warning("Proceeding with database removal (drop)...")
     try:
         from ydrpolicy.backend.database.init_db import drop_db
-        asyncio.run(drop_db(db_url=db_url))
+        asyncio.run(drop_db(db_url=db_url, force=True)) # Pass force=True here as confirmation is handled above
         logger.success("Database removal (drop) completed.")
     except Exception as e:
         logger.failure(f"Database removal (drop) failed: {e}", exc_info=True)
         raise typer.Exit(code=1)
 
-# --- Migration Sub-App ---
-# MIGRATION COMMANDS REMOVED
 
 # ============================================================================
-# 3. MCP Mode (Placeholder)
+# 3. MCP Mode
 # ============================================================================
 mcp_app = typer.Typer(name="mcp", help="Manage the MCP server.")
 app.add_typer(mcp_app)
 
-@mcp_app.command("start", help="Start the MCP server (Not Implemented).")
+@mcp_app.command("start", help="Start the MCP server.")
 def mcp_start(
-    host: str = typer.Option(backend_config.MCP.HOST, help="Host to bind the server to."),
-    port: int = typer.Option(backend_config.MCP.PORT, help="Port to bind the server to."),
-    transport: str = typer.Option(backend_config.MCP.TRANSPORT, help="Transport mode (http or stdio).")
+    host: Optional[str] = typer.Option(None, help="Host to bind the server to (overrides config)."),
+    port: Optional[int] = typer.Option(None, help="Port to bind the server to (overrides config)."),
+    transport: Optional[str] = typer.Option(None, help="Transport mode (http or stdio, overrides config).")
 ):
+    """Starts the YDR Policy MCP server."""
     logger = get_backend_logger("MCP")
-    logger.info(f"Attempting to start MCP server on {host}:{port} via {transport}...")
-    logger.warning("MCP server start functionality is not yet implemented.")
-    # Placeholder for actual MCP server start logic
-    # from ydrpolicy.backend.mcp.server import start_mcp_server # Example import
-    # asyncio.run(start_mcp_server(host, port, transport)) # Example call
+
+    # Use overrides or config values
+    server_host = host if host is not None else backend_config.MCP.HOST
+    server_port = port if port is not None else backend_config.MCP.PORT
+    server_transport = transport if transport is not None else backend_config.MCP.TRANSPORT
+
+    if server_transport not in ['stdio', 'http']:
+        logger.error(f"Invalid transport type: '{server_transport}'. Must be 'stdio' or 'http'.")
+        raise typer.Exit(code=1)
+
+    logger.info(f"Attempting to start MCP server on {server_host}:{server_port} via {server_transport}...")
+
+    try:
+        # Import the server starter function
+        from ydrpolicy.backend.mcp.server import start_mcp_server
+
+        # Run the server (start_mcp_server itself calls mcp.run which is blocking)
+        # We run it within asyncio.run() as the tool functions it contains are async.
+        # However, mcp.run() will manage the event loop itself.
+        asyncio.run(start_mcp_server(host=server_host, port=server_port, transport=server_transport))
+
+        # This line will be reached only after the server stops
+        logger.info("MCP Server finished.")
+
+    except ImportError:
+         logger.failure("Could not import 'start_mcp_server' from 'ydrpolicy.backend.mcp.server'. Make sure the file exists.", exc_info=True)
+         raise typer.Exit(code=1)
+    except Exception as e:
+        logger.failure(f"MCP Server failed to start or crashed: {e}", exc_info=True)
+        raise typer.Exit(code=1)
+
 
 # ============================================================================
 # 4. Agent Mode (Placeholder)
@@ -262,7 +290,8 @@ def agent_chat():
 if __name__ == "__main__":
     # Ensure project root is discoverable if running as script
     current_dir = os.path.dirname(os.path.abspath(__file__))
-    project_root = os.path.abspath(os.path.join(current_dir, os.pardir)) # Adjust if main.py is not in root
+    # Assuming main.py is in the root of the project
+    project_root = current_dir
     if project_root not in sys.path:
          sys.path.insert(0, project_root)
 

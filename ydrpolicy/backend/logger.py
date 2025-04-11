@@ -19,16 +19,10 @@ class BackendLogger:
         """
         # Create a Rich console
         self.console = Console()
-        
-        # Create the logger
         self.logger = logging.getLogger(name)
         self.logger.setLevel(level)
-        
-        # Remove any existing handlers to avoid duplicates
         if self.logger.handlers:
             self.logger.handlers.clear()
-            
-        # Add Rich handler for terminal output with nice formatting
         rich_handler = RichHandler(
             rich_tracebacks=True,
             console=self.console,
@@ -37,28 +31,18 @@ class BackendLogger:
         )
         rich_handler.setLevel(level)
         self.logger.addHandler(rich_handler)
-        
-        # Add file handler if a log file is specified
         if path and path != "":
             try:
                 os.makedirs(os.path.dirname(path), exist_ok=True)
-                
-                # Standard formatter for file logs
                 file_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-                
-                # Create and configure file handler
                 file_handler = logging.FileHandler(
-                    path, 
-                    mode='a' if os.path.exists(path) else 'w', 
+                    path,
+                    mode='a' if os.path.exists(path) else 'w',
                     encoding='utf-8'
                 )
                 file_handler.setFormatter(file_formatter)
                 file_handler.setLevel(level)
-                
-                # Add file handler to the logger
                 self.logger.addHandler(file_handler)
-                
-                # Log that we initialized with a file
                 self.logger.info(f"Backend logging initialized. Log file: {path}")
             except Exception as e:
                 self.logger.error(f"Failed to initialize file logging to {path}: {e}", exc_info=True)
@@ -69,43 +53,51 @@ class BackendLogger:
     def info(self, message: str) -> None:
         """Log info level message"""
         self.logger.info(message)
-        
+
     def error(self, message: str, exc_info=False) -> None:
         """Log error level message"""
         self.logger.error(message, exc_info=exc_info)
-        
+
     def debug(self, message: str) -> None:
         """Log debug level message"""
         self.logger.debug(message)
-        
+
     def warning(self, message: str) -> None:
         """Log warning level message"""
         self.logger.warning(message)
-    
+
     def success(self, message: str) -> None:
         """Log success as an info message with success prefix"""
         self.logger.info(f"[green]SUCCESS:[/green] {message}")
-        
-    def failure(self, message: str) -> None:
+
+    # --- ADD exc_info parameter here ---
+    def failure(self, message: str, exc_info=False) -> None:
         """Log failure as an error message with failure prefix"""
-        self.logger.error(f"[red]FAILURE:[/red] {message}")
-        
+        # --- PASS exc_info to self.logger.error ---
+        self.logger.error(f"[red]FAILURE:[/red] {message}", exc_info=exc_info)
+
     def progress(self, message: str) -> None:
         """Log progress as an info message with progress prefix"""
         self.logger.info(f"[blue]PROGRESS:[/blue] {message}")
-        
+
     def db(self, message: str) -> None:
         """Log database-related message with special formatting"""
         self.logger.info(f"[yellow]DATABASE:[/yellow] {message}")
-        
+
     def api(self, message: str) -> None:
         """Log API-related message with special formatting"""
         self.logger.info(f"[magenta]API:[/magenta] {message}")
-        
+
     def vector(self, message: str) -> None:
         """Log vector operations with special formatting"""
         self.logger.info(f"[cyan]VECTOR:[/cyan] {message}")
 
-
 # Create a default instance for import
-logger = BackendLogger(path=os.path.join("data", "logs", "backend.log"))
+# Ensure the default log path is handled correctly
+try:
+    default_log_path = os.path.join("data", "logs", "backend.log")
+    os.makedirs(os.path.dirname(default_log_path), exist_ok=True)
+    logger = BackendLogger(path=default_log_path)
+except Exception as e:
+    print(f"Warning: Could not create default log directory for BackendLogger: {e}")
+    logger = BackendLogger(path=None) # Fallback to console only

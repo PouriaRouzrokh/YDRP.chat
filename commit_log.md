@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 8 (4/11/2025 - 00:48)
+
+Wrote the primary version of the mcp server
+
 ## commit 7 (4/9/2025 - 21:38)
 
 Optimized the database functionalities and testing"

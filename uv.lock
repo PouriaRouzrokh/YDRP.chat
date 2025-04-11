@@ -82,6 +82,24 @@ wheels = [
 ]
 
 [[package]]
+name = "anthropic"
+version = "0.49.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "anyio" },
+    { name = "distro" },
+    { name = "httpx" },
+    { name = "jiter" },
+    { name = "pydantic" },
+    { name = "sniffio" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/86/e3/a88c8494ce4d1a88252b9e053607e885f9b14d0a32273d47b727cbee4228/anthropic-0.49.0.tar.gz", hash = "sha256:c09e885b0f674b9119b4f296d8508907f6cff0009bc20d5cf6b35936c40b4398", size = 210016 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/76/74/5d90ad14d55fbe3f9c474fdcb6e34b4bed99e3be8efac98734a5ddce88c1/anthropic-0.49.0-py3-none-any.whl", hash = "sha256:bbc17ad4e7094988d2fa86b87753ded8dce12498f4b85fe5810f208f454a8375", size = 243368 },
+]
+
+[[package]]
 name = "anyio"
 version = "4.9.0"
 source = { registry = "https://pypi.org/simple" }
@@ -721,6 +739,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/00/11/b56381fa6c3f4cc5d2cf54a7dbf98ad9aa0b339ef7a601d6053538b079a7/jupyter_core-5.7.2.tar.gz", hash = "sha256:aa5f8d32bbf6b431ac830496da7392035d6f61b4f54872f15c4bd2a9c3f536d9", size = 87629 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c9/fb/108ecd1fe961941959ad0ee4e12ee7b8b1477247f30b1fdfd83ceaf017f0/jupyter_core-5.7.2-py3-none-any.whl", hash = "sha256:4f7315d2f6b4bcf2e3e7cb6e46772eba760ae459cd1f59d29eb57b0a01bd7409", size = 28965 },
+]
+
+[[package]]
+name = "libtmux"
+version = "0.46.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/39/7b/df253e49910c11e73566e97f54408a7c2945a87eff53bc5e6c9952acdeb4/libtmux-0.46.1.tar.gz", hash = "sha256:762163be40953f1e99617de4a1f11480b45fd0bc027910ef48d45f99f3fda6ee", size = 334320 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/13/f5/742db15973ee604b6861a8c92df44a900c88fcd1abd041161dd37371764f/libtmux-0.46.1-py3-none-any.whl", hash = "sha256:4a968741513f002da97bddf0b9c46c0f76529ff33f451e140daef7ee1e03d532", size = 60261 },
 ]
 
 [[package]]
@@ -2064,12 +2091,14 @@ name = "ydr-policy-scraping"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "anthropic" },
     { name = "asyncpg" },
     { name = "docx" },
     { name = "dotenv" },
     { name = "fastapi" },
     { name = "greenlet" },
     { name = "ipykernel" },
+    { name = "libtmux" },
     { name = "litellm" },
     { name = "markdownify" },
     { name = "mcp" },
@@ -2098,12 +2127,14 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "anthropic", specifier = ">=0.49.0" },
     { name = "asyncpg", specifier = ">=0.29.0" },
     { name = "docx", specifier = ">=0.2.4" },
     { name = "dotenv", specifier = ">=0.9.9" },
     { name = "fastapi", specifier = ">=0.110.0" },
     { name = "greenlet", specifier = ">=3.1.1" },
     { name = "ipykernel", specifier = ">=6.29.5" },
+    { name = "libtmux", specifier = ">=0.46.1" },
     { name = "litellm", specifier = ">=1.63.11" },
     { name = "markdownify", specifier = ">=1.1.0" },
     { name = "mcp", specifier = ">=1.2.0" },
