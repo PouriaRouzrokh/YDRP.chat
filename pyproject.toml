@@ -1,0 +1,41 @@
+[project]
+name = "ydr-policy-scraping"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "asyncpg>=0.29.0",
+    "docx>=0.2.4",
+    "dotenv>=0.9.9",
+    "fastapi>=0.110.0",
+    "greenlet>=3.1.1",
+    "ipykernel>=6.29.5",
+    "litellm>=1.63.11",
+    "markdownify>=1.1.0",
+    "mcp>=1.2.0",
+    "mistralai>=1.5.1",
+    "openai>=1.20.0",
+    "pandas>=2.2.3",
+    "pgvector>=0.2.4",
+    "pillow>=11.1.0",
+    "pydantic>=2.0.0",
+    "pypdf>=5.4.0",
+    "pytest>=7.4.0",
+    "pytest-asyncio>=0.23.0",
+    "python-docx>=1.1.2",
+    "python-dotenv>=1.0.0",
+    "requests>=2.32.3",
+    "rich>=13.9.4",
+    "selenium>=4.29.0",
+    "sqlalchemy>=2.0.0",
+    "typer>=0.15.2",
+]
+
+[dependency-groups]
+dev = [
+    "ydr-policy-scraping",
+]
+
+[tool.uv.sources]
+ydr-policy-scraping = { workspace = true }

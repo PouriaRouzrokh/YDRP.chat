@@ -1,0 +1,24 @@
+# Source URL: https://medicine.yale.edu/diagnosticradiology/patientcare/policies/intraosseousneedlecontrastinjection/
+# Depth: 3
+# Timestamp: 20250330090815040462
+---
+YDR CT Intraosseous Iodinated Contrast Injection Policy < Radiology & Biomedical Imaging
+Yale School of Medicine
+INFORMATION FOR
+# YDR CT Intraosseous Iodinated Contrast Injection Policy
+IO lines may be used for power injection of iodinated contrast for CT
+1. Flush IO line with 20cc IO saline. If IO line does not flush easily, do not use.
+2. If Patient is unconscious, no analgesia is required. If patient is conscious and responsive to pain, IO 2% epinephrine free lidocaine should be administered (nursing/provider responsibility) just prior to contrast as per the protocol below:
+**ADULT:**
+**Pediatric:**
+3. Hook power injector tubing directly to IO line hub.
+4.Inject contrast through IO line. No guidelines exist on rates for injection so use lowest injection rate possible (up to 5cc/sec) for the study and do not exceed 300 psi.
+5. Disconnect power injector tubing from the IO line hub and flush the IO line with 20 cc IO saline.
+Yale School of Medicine
+  Tompkin's East 2
+  New Haven, CT 06520
+  you could attend in March 2025
+© 2025 Yale School of Medicine. Updated 09/17/2024
+Your browser is antiquated and no longer supported on this website. Please update your browser or switch to Chrome, Firefox or Safari.   
+You can update your IE here:   
+<https://support.microsoft.com/en-us/help/17621/internet-explorer-downloads>

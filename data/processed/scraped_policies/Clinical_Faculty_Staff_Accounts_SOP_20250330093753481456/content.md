@@ -1,0 +1,52 @@
+![img-0.jpeg](img-0.jpeg.png)
+
+# A. Purpose 
+
+The purpose of this Standard Operating Procedure (SOP) is to provide guidance for clinical faculty staff accounts. A staff account is a fund used only to pay (on a tax free basis) for work related activities and professional fees, as well as for faculty development.
+
+## B. Scope
+
+This SOP applies to all YDR clinical faculty.
+
+## C. Procedures
+
+1. Up to $\$ 6500$ will be made available each year for professional development, to be used at each faculty members' discretion.
+a. This amount is exclusive of additional mandatory payments provided by YDR including CT medical license (\$575), ABR dues (\$340) and ACR dues (\$900). If faculty member needs to have a DEA license, this will also be covered.
+b. Funds should be used for professional society membership, CME courses, computer equipment to support professional commitments, travel related expenses for academic pursuits
+
+- No Amazon purchases are allowed unless pre-approved by the business office.
+- Up to $\$ 350$ may be spent on a desk for a home workstation.
+- All computer purchases must be made through the IT Department.
+- Apple watches and wireless headphones are not permitted as an expense.
+- CME/conference hotel expenses should not exceed \$500/night (inclusive of taxes and fees). Anything over \$500/night (net including taxes) requires pre-authorization by the Chair's office.
+c. The faculty p-card is encouraged for all expenses. If personal credit cards are used, expenses may not be fully reimbursed unless the faculty member submits receipts within 120 days of purchase.
+d. Expenses submitted after 120 days of purchase are subject to taxable income per the IRS guidelines.
+
+2. Staff accounts will be capped at $\$ 15,000$
+a. Any overage above $\$ 15,000$ will be transferred to the relevant section fund.
+
+---
+
+- Section fund spending should support the section and be transparent to all section members.
+b. On July 1 of each academic year, if the staff account balance is between $\$ 8,500$ and $\$ 14,999$, the staff account will be replenished up to $\$ 15,000$.
+c. Section funds will be capped at $\$ 25,000$. Any overages at years' end will be transferred to a new departmental faculty development account for clinical research, international outreach, faculty education, faculty well-being, etc.
+- At the discretion of the Chair, some section funds may not be capped at \$25,000, ex. If a section is using funds to hire a new fellow.
+
+3. Retirees working on a per diem basis will not have access to staff accounts unless working $>50 \%$ FTE per diem.
+4. Faculty working though phased retirement will continue to receive the standard (full) staff account monies.
+5. Part-time faculty working at least .50 FTE will be entitled to the standard (full) staff account.
+6. Purchases made by faculty who have offered their resignation should not use their p-card unless approved in advance by the business office.
+7. Faculty who have a deficit at year end will need to pay the department back by July $30^{\text {th }}$ of next fiscal year.
+8. Faculty on extended leave (sick/disability/childcare) may only use staff accounts to maintain society memberships/membership dues. Other expenses must be reviewed and approved by the business office and Chair.
+
+# D. References/Review 
+
+CME SOP
+Reviewed by Regina Hooley, Rob Goodman, Serena DelBasso
+
+## E. Revision History
+
+| Version | Date | Reason For Revision |
+| :-- | :-- | :-- |
+| 4 | $12 / 01 / 2020$ | Post COVID changes |
+| 5 | March 2022 | Minor updates |

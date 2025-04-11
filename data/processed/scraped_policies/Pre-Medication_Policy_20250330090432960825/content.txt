@@ -1,0 +1,60 @@
+# Source URL: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/guidelines/premed/
+# Depth: 3
+# Timestamp: 20250330090432960825
+---
+Pre-Medication Policy < Clinical Faculty Intranet 
+Yale School of Medicine
+INFORMATION FOR
+# Pre-Medication Policy
+| For Planned Administration of Contrast Agents: | | |
+| --- | --- | --- |
+| Previous reaction to allergens (eg shellfish, peanuts, medications, etc): | | |
+| **Mild** | **Moderate** | **Severe** |
+| None | None | None |
+|  | | |
+| Previous reaction to **same** class of contrast agent going to be given: | | |
+| **Mild** | **Moderate** | **Severe** |
+| None | Pre-medicate and use different agent | Do not give contrast\* |
+|  | | |
+| Previous reaction to a **different class** of Contrast agent than type to be given: | | |
+| **Mild** | **Moderate** | **Severe** |
+| None | None | None |
+\*Unless in the opinion of the responsible health care professional and supervising radiologist, the potential benefits outweigh the risks i.e. emergency situations. In these instances, clinical provider should accompany the patient to radiology suite (whenever feasible) to aid in management if a repeat reaction occurs.
+Premedication with steroids and an antihistamine is recommended only for patients who have had a reaction to contrast of a similar class (iodinated agents used during CT are one class, gadolinium based agents used during MRI are separate class) to the one planned to be given. Prophylaxis for those with reactions to other allergens is not necessary.This guideline has been drawn up based on the following information:
+**Exclusions**
+|  |  |  |
+| --- | --- | --- |
+| ***Allergic Like Reaction Definitions¹:*** |  |  |
+| **Mild** | **Moderate** | **Severe** |
+| Limited urticaria² / pruritis² | Diffuse urticaria / pruritis | Diffuse edema, or facial edema with dyspnea |
+| Nasal congestion | Diffuse erythema, stable vital signs | Diffuse erythema with hypotension |
+| Cutaneous Edema | Facial edema without dyspnea | Laryngeal edema with stridor and/or hypoxia |
+| Sneezing / conjunctivitis / rhinorrhea | Throat tightness or hoarseness without dyspnea | Wheezing / bronchospasm, significant hypoxia |
+| Limited “itchy”/“scratchy” throat | Wheezing / bronchospasm, mild or no hypoxia | Anaphylactic shock (hypotension + tachycardia) |
+*¹ Physiologic reactions like nausea, vomiting, feeling of warmth are unlikely to benefit from pre-medication*  
+*² If the urticaria/pruritis required medical treatment it should be considered moderate severity.*
+***References**:*
+## Pre-Medication Regimen
+***All premedication regimens will include one steroid and one antihistamine.***
+### Adult Out-patients:
+### Adult ED and In-Patients:
+### Pediatric Out-patients (For patients less than 50kg):
+### Pediatric ED and In-Patients:
+Premedication order set is linked to EPIC order entry if contrast study ordered in patient with relevant contrast allergy documented in EPIC Allergies.
+Premedication order set is linked to EPIC order entry if contrast study ordered in patient with relevant contrast allergy documented in EPIC Allergies
+---
+Order set can also be found manually by searching using word "Contrast" in EPIC
+Order set can also be found manually by searching using word "Contrast" in EPIC.
+### What do I do if patient is allergic to a drug in the premedication order set?
+Alternate premedication can be used if the patient is known to tolerate other classes of steroids or different antihistamine. If needed, allergy consult may be needed for proper skin prick testing to find a suitable alternate (in many cases, the patient is not allergic to the drug itself but an additive in the drug).
+For allergies to Benadryl, alternate antihistamine can be used that patient is known to tolerate.
+Possible PO alternate steroid regimen is 32 mg methylprednisolone 12h and 2h prior to IV contrast administration.
+Possible PO alternate antihistamine is Claritin or Zyrtec 10mg PO 1h prior to IV contrast administration.
+Yale School of Medicine
+  Tompkin's East 2
+  New Haven, CT 06520
+  you could attend in March 2025
+© 2025 Yale School of Medicine. Updated 09/17/2024
+Your browser is antiquated and no longer supported on this website. Please update your browser or switch to Chrome, Firefox or Safari.   
+You can update your IE here:   
+<https://support.microsoft.com/en-us/help/17621/internet-explorer-downloads>

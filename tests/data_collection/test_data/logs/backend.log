@@ -1,0 +1,477 @@
+2025-04-09 19:48:16,034 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 19:48:16,034 - DBInit - INFO - Starting database initialization...
+2025-04-09 19:48:16,035 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 19:48:16,377 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 19:54:01,107 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 19:54:01,107 - DBInit - INFO - Starting database initialization...
+2025-04-09 19:54:01,108 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 19:54:01,538 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:02:03,509 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:02:03,509 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:02:03,509 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:02:03,871 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:05:16,284 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:05:16,285 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:05:16,285 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:05:24,891 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:10:15,747 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:10:15,747 - DBRemove - WARNING - Command to remove entire database initiated.
+2025-04-09 20:10:19,465 - DBRemove - WARNING - Proceeding with database removal (drop)...
+2025-04-09 20:10:23,525 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
+2025-04-09 20:25:10,938 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:25:10,938 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:25:10,939 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:25:20,162 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:29:06,369 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:29:06,370 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:29:06,370 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:29:06,865 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:36:25,958 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:36:25,959 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:36:25,959 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:36:26,821 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:37:48,409 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:37:48,409 - DBRemove - WARNING - Command to remove entire database initiated.
+2025-04-09 20:37:50,766 - DBRemove - WARNING - Proceeding with database removal (drop)...
+2025-04-09 20:37:52,917 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
+2025-04-09 20:37:56,678 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:37:56,678 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:37:56,679 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:37:57,381 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:39:00,985 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:39:00,986 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:39:00,986 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:39:09,052 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:44:03,387 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:44:03,388 - DBRemove - WARNING - Command to remove entire database initiated.
+2025-04-09 20:44:07,423 - DBRemove - WARNING - Proceeding with database removal (drop)...
+2025-04-09 20:44:10,567 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
+2025-04-09 20:44:15,930 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:44:15,931 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:44:15,931 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:44:26,767 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:48:54,613 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:48:54,615 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:48:54,615 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:48:57,164 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:51:10,512 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:51:10,512 - DBInit - INFO - Starting database initialization...
+2025-04-09 20:51:10,513 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 20:51:11,716 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 20:57:34,100 - PolicyRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:57:34,101 - PolicyRemove - WARNING - Policy removal initiated for ID: '12'.
+2025-04-09 20:57:37,409 - PolicyRemove - WARNING - Proceeding with removal of policy ID: '12'...
+2025-04-09 20:57:37,552 - RemovePolicyScript - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:57:37,584 - RemovePolicyScript - INFO - Attempting to delete policy ID 12 ('Staff_Workplace_Policies')...
+2025-04-09 20:57:37,681 - RemovePolicyScript - ERROR - An error occurred during database operation: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(12) is not present in table "policies".
+[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
+[parameters: (None, 12, 'delete', '{"identifier_type": "id", "identifier_value": 12, "title": "Staff_Workplace_Policies"}')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 545, in _prepare_and_execute
+    self._rows = deque(await prepared_stmt.fetch(*parameters))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 176, in fetch
+    data = await self.__bind_execute(args, 0, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 267, in __bind_execute
+    data, status, _ = await self.__do_execute(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 256, in __do_execute
+    return await executor(protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 206, in bind_execute
+asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(12) is not present in table "policies".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
+    self._adapt_connection.await_(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
+    self._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(12) is not present in table "policies".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/scripts/remove_policy.py", line 112, in run_remove
+    await policy_repo.log_policy_update(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/database/repository/policies.py", line 575, in log_policy_update
+    await self.session.flush()
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 802, in flush
+    await greenlet_spawn(self.sync_session.flush, objects=objects)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4353, in flush
+    self._flush(objects)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4449, in _flush
+    flush_context.execute()
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
+    self._adapt_connection.await_(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
+    self._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(12) is not present in table "policies".
+[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
+[parameters: (None, 12, 'delete', '{"identifier_type": "id", "identifier_value": 12, "title": "Staff_Workplace_Policies"}')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-04-09 20:57:38,368 - PolicyRemove - ERROR - Failed to remove policy '12'. Check previous logs for details.
+2025-04-09 20:58:55,427 - PolicyRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:58:55,427 - PolicyRemove - WARNING - Policy removal initiated for ID: '11'.
+2025-04-09 20:58:58,103 - PolicyRemove - WARNING - Proceeding with removal of policy ID: '11'...
+2025-04-09 20:58:58,243 - RemovePolicyScript - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:58:58,272 - RemovePolicyScript - ERROR - Policy with ID 11 not found.
+2025-04-09 20:58:58,275 - RemovePolicyScript - ERROR - An error occurred during database operation: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(11) is not present in table "policies".
+[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
+[parameters: (None, 11, 'delete_failed', '{"identifier_type": "id", "identifier_value": 11}')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 545, in _prepare_and_execute
+    self._rows = deque(await prepared_stmt.fetch(*parameters))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 176, in fetch
+    data = await self.__bind_execute(args, 0, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 267, in __bind_execute
+    data, status, _ = await self.__do_execute(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 256, in __do_execute
+    return await executor(protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 206, in bind_execute
+asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(11) is not present in table "policies".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
+    self._adapt_connection.await_(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
+    self._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(11) is not present in table "policies".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/scripts/remove_policy.py", line 112, in run_remove
+    await policy_repo.log_policy_update(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/database/repository/policies.py", line 575, in log_policy_update
+    await self.session.flush()
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 802, in flush
+    await greenlet_spawn(self.sync_session.flush, objects=objects)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4353, in flush
+    self._flush(objects)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4449, in _flush
+    flush_context.execute()
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
+    self._adapt_connection.await_(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
+    self._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(11) is not present in table "policies".
+[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
+[parameters: (None, 11, 'delete_failed', '{"identifier_type": "id", "identifier_value": 11}')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-04-09 20:58:58,959 - RemovePolicyScript - ERROR - Failed to log policy removal error after rollback: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(11) is not present in table "policies".
+[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
+[parameters: (None, 11, 'delete_failed', '{"identifier_type": "id", "identifier_value": 11, "error": "(sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class \'asyncpg.exceptions.Forei ... (445 characters truncated) ... delete_failed\', \'{\\"identifier_type\\": \\"id\\", \\"identifier_value\\": 11}\')]\\n(Background on this error at: https://sqlalche.me/e/20/gkpj)"}')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-04-09 20:58:58,961 - PolicyRemove - ERROR - Failed to remove policy '11'. Check previous logs for details.
+2025-04-09 20:59:05,293 - PolicyRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:59:05,294 - PolicyRemove - WARNING - Policy removal initiated for ID: '12'.
+2025-04-09 20:59:06,846 - PolicyRemove - WARNING - Proceeding with removal of policy ID: '12'...
+2025-04-09 20:59:06,984 - RemovePolicyScript - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 20:59:07,015 - RemovePolicyScript - INFO - Attempting to delete policy ID 12 ('Staff_Workplace_Policies')...
+2025-04-09 20:59:07,103 - RemovePolicyScript - ERROR - An error occurred during database operation: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(12) is not present in table "policies".
+[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
+[parameters: (None, 12, 'delete', '{"identifier_type": "id", "identifier_value": 12, "title": "Staff_Workplace_Policies"}')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 545, in _prepare_and_execute
+    self._rows = deque(await prepared_stmt.fetch(*parameters))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 176, in fetch
+    data = await self.__bind_execute(args, 0, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 267, in __bind_execute
+    data, status, _ = await self.__do_execute(
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 256, in __do_execute
+    return await executor(protocol)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "asyncpg/protocol/protocol.pyx", line 206, in bind_execute
+asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(12) is not present in table "policies".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
+    self._adapt_connection.await_(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
+    self._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
+    raise translated_error from error
+sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(12) is not present in table "policies".
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/scripts/remove_policy.py", line 112, in run_remove
+    await policy_repo.log_policy_update(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/database/repository/policies.py", line 575, in log_policy_update
+    await self.session.flush()
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 802, in flush
+    await greenlet_spawn(self.sync_session.flush, objects=objects)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
+    result = context.switch(value)
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4353, in flush
+    self._flush(objects)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4488, in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4449, in _flush
+    flush_context.execute()
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1638, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1843, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1983, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2352, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
+    self._adapt_connection.await_(
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
+    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
+    value = await result
+            ^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
+    self._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
+    self._adapt_connection._handle_exception(error)
+  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
+    raise translated_error from error
+sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
+DETAIL:  Key (policy_id)=(12) is not present in table "policies".
+[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
+[parameters: (None, 12, 'delete', '{"identifier_type": "id", "identifier_value": 12, "title": "Staff_Workplace_Policies"}')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-04-09 20:59:07,786 - PolicyRemove - ERROR - Failed to remove policy '12'. Check previous logs for details.
+2025-04-09 21:01:51,754 - PolicyRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 21:01:51,754 - PolicyRemove - WARNING - Policy removal initiated for ID: '12'.
+2025-04-09 21:01:53,481 - PolicyRemove - WARNING - Proceeding with removal of policy ID: '12'...
+2025-04-09 21:01:53,622 - RemovePolicyScript - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 21:01:53,655 - RemovePolicyScript - INFO - Attempting to delete policy ID 12 ('Staff_Workplace_Policies')...
+2025-04-09 21:01:53,755 - PolicyRemove - INFO - [green]SUCCESS:[/green] Policy '12' removed successfully.
+2025-04-09 21:22:03,616 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 21:22:03,617 - DBRemove - WARNING - Command to remove entire database initiated.
+2025-04-09 21:22:04,273 - DBRemove - WARNING - Proceeding with database removal (drop)...
+2025-04-09 21:22:06,345 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
+2025-04-09 21:22:09,958 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
+2025-04-09 21:22:09,958 - DBInit - INFO - Starting database initialization...
+2025-04-09 21:22:09,958 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 21:22:26,100 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 21:37:02,448 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/tests/data_collection/test_data/logs/backend.log
+2025-04-09 21:37:02,448 - DBRemove - WARNING - Command to remove entire database initiated.
+2025-04-09 21:37:02,946 - DBRemove - WARNING - Proceeding with database removal (drop)...
+2025-04-09 21:37:04,189 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
+2025-04-09 21:37:10,699 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/tests/data_collection/test_data/logs/backend.log
+2025-04-09 21:37:10,699 - DBInit - INFO - Starting database initialization...
+2025-04-09 21:37:10,699 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 21:37:20,916 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 22:21:06,700 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/tests/data_collection/test_data/logs/backend.log
+2025-04-09 22:21:06,700 - DBRemove - WARNING - Command to remove entire database initiated.
+2025-04-09 22:21:08,417 - DBRemove - WARNING - Proceeding with database removal (drop)...
+2025-04-09 22:21:10,408 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
+2025-04-09 22:21:27,703 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/tests/data_collection/test_data/logs/backend.log
+2025-04-09 22:21:27,704 - DBInit - INFO - Starting database initialization...
+2025-04-09 22:21:27,704 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 22:21:40,260 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-09 23:15:45,801 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/tests/data_collection/test_data/logs/backend.log
+2025-04-09 23:15:45,802 - DBRemove - WARNING - Command to remove entire database initiated.
+2025-04-09 23:15:47,597 - DBRemove - WARNING - Proceeding with database removal (drop)...
+2025-04-09 23:15:58,807 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
+2025-04-09 23:16:05,661 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/tests/data_collection/test_data/logs/backend.log
+2025-04-09 23:16:05,661 - DBInit - INFO - Starting database initialization...
+2025-04-09 23:16:05,661 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-09 23:16:14,020 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-10 20:42:53,537 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/engine/tests/data_collection/test_data/logs/backend.log
+2025-04-10 20:42:53,538 - DBRemove - WARNING - Command to remove entire database initiated.
+2025-04-10 20:42:55,629 - DBRemove - WARNING - Proceeding with database removal (drop)...
+2025-04-10 20:43:03,460 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
+2025-04-10 20:43:08,931 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/engine/tests/data_collection/test_data/logs/backend.log
+2025-04-10 20:43:08,931 - DBInit - INFO - Starting database initialization...
+2025-04-10 20:43:08,932 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-10 20:43:25,408 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/engine/tests/data_collection/test_data/logs/backend.log
+2025-04-10 20:43:25,408 - DBInit - INFO - Starting database initialization...
+2025-04-10 20:43:25,409 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-10 20:43:40,475 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.

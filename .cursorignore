@@ -1,0 +1,5 @@
+# Add directories or file patterns to ignore during indexing (e.g. foo/ or *.csv)
+data/raw/documents/
+data/raw/markdown_files/
+data/processed/scraped_policies/
+test_data/

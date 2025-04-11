@@ -1,0 +1,29 @@
+# Source URL: https://medicine.yale.edu/diagnosticradiology/patientcare/policies/insulinpumpctpolicy/
+# Depth: 3
+# Timestamp: 20250330090753325902
+---
+Radiology policy for Insulin Pumps and Glucose Monitors < Radiology & Biomedical Imaging
+Yale School of Medicine
+INFORMATION FOR
+# Radiology policy for Insulin Pumps and Glucose Monitors
+Updated September 2020
+## Background:
+## Recommendations for Physicians ordering CT scan or X-ray:
+1. Advise patient to remove device during exam. If the device cannot be removed or patient refuses, assess if imaging will cover the area over the insulin pump or CGM system and see if system can be safely moved, attached to a different location, turned off and for how long, or if alternative diabetes management is required.
+## Recommendations for Radiologists and X-ray/CT Technologists:
+1. Advise patient to remove device and store it in control room during imaging procedure.
+2. If patient cannot remove or refuses to remove device, advise patient that device damage is possible and ensure they understand potential risk of damage and agree to proceed with imaging.
+   1. If system is tethered to a cannula and can be safely moved, work with the patient to move it to avoid direct exposure to the primary x-ray beam
+   2. If the system cannot be safely moved, ask the patient if it can be safely turned off during the exam. Set a timer and remind the patient to turn their pump back on afterwards and to check it for proper function.
+   3. If possible, avoid including the insulin pump or CGM system inside the scanning range. Confirm the required anatomic range with the supervising radiologist.
+3. For CT and X-ray procedures where the medical device is located within the programmed scan range and cannot be safely moved or turned off, minimize direct x-ray exposure to the electronics of the infusion pump by following standard ALARA (as low as reasonably achievable) protocol.
+4. Imaging exams that would involve scanning directly over the electronics of the device for more than several seconds (i.e. CT perfusion exams or interventional procedures such as CT fluoroscopy), require additional care and should not be performed unless the device can be safely relocated or turned off. If moving or turning the insulin pump or CGM system off is not possible and the scan is urgently needed, careful monitoring of the device during and after the procedure is required.
+## Reference:
+Yale School of Medicine
+  Tompkin's East 2
+  New Haven, CT 06520
+  you could attend in March 2025
+© 2025 Yale School of Medicine. Updated 10/03/2024
+Your browser is antiquated and no longer supported on this website. Please update your browser or switch to Chrome, Firefox or Safari.   
+You can update your IE here:   
+<https://support.microsoft.com/en-us/help/17621/internet-explorer-downloads>

@@ -1,0 +1,32 @@
+# Source URL: https://medicine.yale.edu/diagnosticradiology/patientcare/policies/gadolinium/
+# Depth: 3
+# Timestamp: 20250330090859770942
+---
+Gadolinium Contrast Information < Radiology & Biomedical Imaging
+Yale School of Medicine
+INFORMATION FOR
+# Gadolinium Contrast Information
+*[**For full policy please refer to MRI Safety Manual**](https://files-profile.medicine.yale.edu/documents/09c71c44-be7e-494d-813b-441704ea912d "MRI Safety Manual")*
+## Gad Quick Reference Sheet
+### Who Needs eGFR testing?
+#### OutPatients
+Routine scans done with Dotarem do not require renal function testing. Only patients receiving Eovist (A group III agent per ACR) that answers yes to questions 19-23 need eGFR testing as detailed below.
+#### InPatients:
+Routine scans done with Dotarem do not require renal function testing. Only patients receiving Eovist (A group III agent per ACR) that answers yes to questions 19-23 need eGFR testing as detailed below.
+**Patient getting higher than standard dose (ie. Double dosing) of group II/III agent (such as Dotarem or Eovist) per protocol (ex. Some Cardiac MRI exams, Gamma-Knife Met protocol brain MRI) require renal function screening as a larger dose of Gadolinium is being used.**
+Same policy for group III agents for in-patients and out-patients as above would apply in this setting.
+### What do we do with prior Gadolinium "allergic-like" event?
+If a patient has had a prior reaction to a gadolinium agent but is approved to have a repeat scan with gadolinium ([see pretreatment policy in contrast manual](https://medicine.yale.edu/diagnosticradiology/patientcare/policies/)) effort should be made to determine which contrast agent the reaction occurred with.
+If unknown, Dotarem can be used. If with Dotarem, then Multihance should be used as alternative agent to help decrease risk of repeat reaction.
+### Who needs a Hcg urine test?
+All females getting gadolinium IV contrast who have started menses or are between ages 10-55 need pregnancy testing checked.
+Adults (age 18+) can sign a waiver bypassing urine/serum testing, pediatric pateints (age 10-17) cannot sign waiver and need testing.
+For full policy and exceptions please see: [Policy Regarding Testing for Pregnancy](https://medicine.yale.edu/diagnosticradiology/patientcare/policies/pregnantpatientpolicy/).
+Yale School of Medicine
+  Tompkin's East 2
+  New Haven, CT 06520
+  you could attend in March 2025
+© 2025 Yale School of Medicine. Updated 09/17/2024
+Your browser is antiquated and no longer supported on this website. Please update your browser or switch to Chrome, Firefox or Safari.   
+You can update your IE here:   
+<https://support.microsoft.com/en-us/help/17621/internet-explorer-downloads>
