@@ -493,3 +493,56 @@ DETAIL:  Key (policy_id)=(12) is not present in table "policies".
 2025-04-11 00:44:26,356 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
 2025-04-11 00:44:26,359 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
 2025-04-11 00:44:26,360 - MCPServer - INFO - Running MCP server with stdio transport.
+2025-04-11 07:53:33,719 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 07:53:33,720 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 07:53:34,194 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 07:53:34,197 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 07:53:34,197 - MCPServer - INFO - Running MCP server with stdio transport.
+2025-04-11 07:54:00,564 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 07:54:00,565 - DBInit - INFO - Starting database initialization...
+2025-04-11 07:54:00,565 - DBInit - INFO - Initializing database structure and populating data...
+2025-04-11 07:54:01,157 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
+2025-04-11 08:02:35,695 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 08:02:35,695 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:02:36,027 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 08:02:36,030 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:02:36,030 - MCPServer - INFO - Running MCP server with stdio transport.
+2025-04-11 08:15:49,582 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 08:15:49,582 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:15:50,206 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 08:15:50,209 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:15:50,210 - MCPServer - INFO - Running MCP server with stdio transport.
+2025-04-11 08:17:04,252 - MCPServer - INFO - MCP server process finished.
+2025-04-11 08:17:04,264 - MCP - ERROR - [red]FAILURE:[/red] MCP Server failed to start or crashed: a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 258, in mcp_start
+    asyncio.run(start_mcp_server(host=server_host, port=server_port, transport=server_transport))
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 89, in run
+    raise ValueError("a coroutine was expected, got {!r}".format(coro))
+ValueError: a coroutine was expected, got None
+2025-04-11 08:17:16,279 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 08:17:16,279 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:17:16,822 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 08:17:16,825 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:17:16,826 - MCPServer - INFO - Running MCP server with stdio transport.
+2025-04-11 08:27:01,931 - MCPServer - INFO - MCP server process finished.
+2025-04-11 08:27:01,945 - MCP - ERROR - [red]FAILURE:[/red] MCP Server failed to start or crashed: a coroutine was expected, got None
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 258, in mcp_start
+    asyncio.run(start_mcp_server(host=server_host, port=server_port, transport=server_transport))
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 89, in run
+    raise ValueError("a coroutine was expected, got {!r}".format(coro))
+ValueError: a coroutine was expected, got None
+2025-04-11 08:30:02,587 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 08:30:02,589 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:30:02,590 - MCPServer - INFO - Running MCP server with stdio transport.
+2025-04-11 08:30:27,209 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-11 08:30:27,212 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:30:27,213 - MCPServer - INFO - Running MCP server with stdio transport.
+2025-04-11 08:32:18,331 - MCPServer - INFO - MCP server process finished.

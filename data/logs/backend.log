@@ -2366,3 +2366,221 @@ ValueError: the greenlet library is required to use this function. No module nam
 2025-04-11 00:27:20,297 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
 2025-04-11 00:41:50,256 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
 2025-04-11 00:44:26,041 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 07:53:33,717 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 07:54:00,562 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 07:54:01,084 - BackendLogger - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-11 07:54:01,084 - BackendLogger - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-11 07:54:01,097 - BackendLogger - INFO - Database 'ydrpolicy' already exists.
+2025-04-11 07:54:01,102 - BackendLogger - INFO - Ensuring extension 'vector' exists...
+2025-04-11 07:54:01,113 - BackendLogger - INFO - Extension 'vector' checked/created.
+2025-04-11 07:54:01,113 - BackendLogger - INFO - Creating database tables if they don't exist...
+2025-04-11 07:54:01,122 - BackendLogger - INFO - Tables checked/created.
+2025-04-11 07:54:01,122 - BackendLogger - INFO - Applying search vector triggers...
+2025-04-11 07:54:01,131 - BackendLogger - INFO - Search vector triggers applied.
+2025-04-11 07:54:01,132 - BackendLogger - INFO - Starting data population from scraped_policies directory...
+2025-04-11 07:54:01,132 - BackendLogger - INFO - Scanning scraped policies directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/scraped_policies
+2025-04-11 07:54:01,132 - BackendLogger - INFO - Reading policy descriptions from CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/processed_policies_log.csv
+2025-04-11 07:54:01,136 - BackendLogger - INFO - Loaded 17 timestamp mappings and 17 URL mappings for policy descriptions
+2025-04-11 07:54:01,136 - BackendLogger - INFO - Creating new database engine
+2025-04-11 07:54:01,137 - BackendLogger - INFO - Database engine created successfully
+2025-04-11 07:54:01,137 - BackendLogger - INFO - Fetching existing policy information from database...
+2025-04-11 07:54:01,152 - BackendLogger - INFO - Found 12 existing policies in database.
+2025-04-11 07:54:01,153 - BackendLogger - INFO - Database population finished. Processed 0 new policies. Skipped 12 folders.
+2025-04-11 07:54:01,153 - BackendLogger - INFO - [green]SUCCESS:[/green] Database initialization completed successfully.
+2025-04-11 07:54:01,156 - BackendLogger - INFO - Database engine disposed.
+2025-04-11 08:02:35,693 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:15:49,579 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:17:16,277 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:30:02,189 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:30:02,191 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 08:30:02,192 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 08:30:02,192 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:30:26,684 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:30:26,687 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 08:30:26,687 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 08:30:26,687 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:32:18,347 - BackendLogger - INFO - MCP Server finished.
+2025-04-11 08:37:15,901 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:37:15,903 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 08:37:15,904 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 08:37:15,904 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:37:16,229 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:37:16,230 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 08:38:25,742 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:38:25,744 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 08:38:25,744 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 08:38:25,744 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:38:26,261 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:38:26,262 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 08:40:59,071 - BackendLogger - INFO - Received find_similar_chunks request: query='resident shift change high volume hours...', k=5, threshold=None
+2025-04-11 08:41:00,175 - BackendLogger - INFO - Creating new database engine
+2025-04-11 08:41:00,209 - BackendLogger - INFO - Database engine created successfully
+2025-04-11 08:41:00,210 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.7
+2025-04-11 08:41:00,249 - BackendLogger - INFO - Found 0 similar chunks.
+2025-04-11 08:41:02,597 - BackendLogger - INFO - Received find_similar_chunks request: query='resident scheduling high volume workflow...', k=5, threshold=None
+2025-04-11 08:41:03,227 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.7
+2025-04-11 08:41:03,231 - BackendLogger - INFO - Found 0 similar chunks.
+2025-04-11 08:41:05,281 - BackendLogger - INFO - Received find_similar_chunks request: query='resident scheduling shift changes...', k=5, threshold=None
+2025-04-11 08:41:05,499 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.7
+2025-04-11 08:41:05,505 - BackendLogger - INFO - Found 0 similar chunks.
+2025-04-11 08:41:07,640 - BackendLogger - INFO - Received find_similar_chunks request: query='high volume periods staffing workflow...', k=5, threshold=None
+2025-04-11 08:41:08,183 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.7
+2025-04-11 08:41:08,190 - BackendLogger - INFO - Found 0 similar chunks.
+2025-04-11 08:42:15,725 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:42:15,727 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 08:42:15,727 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 08:42:15,727 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:42:16,056 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:42:16,057 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 08:42:21,053 - BackendLogger - INFO - MCP server process finished.
+2025-04-11 08:42:21,057 - BackendLogger - INFO - MCP Server finished.
+2025-04-11 08:42:24,920 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:42:24,922 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 08:42:24,923 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 08:42:24,923 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:42:25,279 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:42:25,279 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 08:43:17,407 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale resident shift change high volume hours...', k=5, threshold=None
+2025-04-11 08:43:19,337 - BackendLogger - INFO - Creating new database engine
+2025-04-11 08:43:19,359 - BackendLogger - INFO - Database engine created successfully
+2025-04-11 08:43:19,360 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:43:19,396 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:43:21,364 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale medical residents shift handover policy...', k=5, threshold=None
+2025-04-11 08:43:21,959 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:43:21,967 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:43:24,927 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale resident handoff protocol high volume busy ti...', k=5, threshold=None
+2025-04-11 08:43:25,431 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:43:25,440 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:43:27,586 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale medical resident duty hours handoff high volu...', k=5, threshold=None
+2025-04-11 08:43:28,139 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:43:28,147 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:43:32,485 - BackendLogger - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-11 08:45:44,950 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale resident shift scheduling rotation schedule p...', k=5, threshold=None
+2025-04-11 08:45:47,406 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:45:47,420 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:45:50,019 - BackendLogger - INFO - Received get_policy_from_ID request for policy_id: 7
+2025-04-11 08:45:58,923 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale medical resident work hour shift schedule dut...', k=5, threshold=None
+2025-04-11 08:45:59,795 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:45:59,804 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:46:04,996 - BackendLogger - INFO - Received get_policy_from_ID request for policy_id: 7
+2025-04-11 08:46:13,619 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale alternative work arrangements schedule policy...', k=5, threshold=None
+2025-04-11 08:46:14,334 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:46:14,343 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:47:42,954 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale radiology residents scheduling high volume ho...', k=5, threshold=None
+2025-04-11 08:47:43,785 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:47:43,797 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:47:49,703 - BackendLogger - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-11 08:47:52,758 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale radiology resident scheduling coverage high v...', k=5, threshold=None
+2025-04-11 08:47:54,055 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:47:54,064 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:47:56,173 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale radiology resident staffing coverage schedule...', k=5, threshold=None
+2025-04-11 08:47:56,735 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:47:56,742 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:47:59,167 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale radiology excessive clinical volume manage pa...', k=5, threshold=None
+2025-04-11 08:47:59,807 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:47:59,815 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:48:01,874 - BackendLogger - INFO - Received get_policy_from_ID request for policy_id: 11
+2025-04-11 08:48:06,865 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale radiology resident staffing workflow excessiv...', k=5, threshold=None
+2025-04-11 08:48:07,094 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 08:48:07,102 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 08:59:59,372 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 08:59:59,374 - BackendLogger - INFO - Stdio transport selected. Elevating console log level to CRITICAL.
+2025-04-11 08:59:59,374 - BackendLogger - INFO - Console handler level set to CRITICAL (was INFO). INFO messages will only go to file.
+2025-04-11 08:59:59,374 - BackendLogger - INFO - --- TEST LOG MESSAGE AFTER HANDLER LEVEL CHANGE ---
+2025-04-11 08:59:59,374 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 08:59:59,694 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 08:59:59,694 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 09:00:46,888 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 09:00:46,890 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 09:00:46,890 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 09:00:46,890 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 09:00:47,231 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 09:00:47,232 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 09:05:46,737 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 09:05:46,739 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 09:05:46,739 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 09:05:46,739 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 09:05:47,065 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 09:05:47,065 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 09:05:51,228 - BackendLogger - INFO - MCP server process finished.
+2025-04-11 09:05:51,234 - BackendLogger - INFO - MCP Server finished.
+2025-04-11 09:05:55,522 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 09:05:55,524 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 09:05:55,525 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 09:05:55,525 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 09:05:56,068 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 09:05:56,069 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 09:06:48,140 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale radiology resident shift policies high volume...', k=5, threshold=None
+2025-04-11 09:06:48,938 - BackendLogger - INFO - Creating new database engine
+2025-04-11 09:06:48,957 - BackendLogger - INFO - Database engine created successfully
+2025-04-11 09:06:48,958 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:06:49,000 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:06:51,051 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale radiology resident scheduling high volume pat...', k=5, threshold=None
+2025-04-11 09:06:51,490 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:06:51,498 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:06:53,755 - BackendLogger - INFO - Received find_similar_chunks request: query='Yale radiology residency call schedule coverage pe...', k=5, threshold=None
+2025-04-11 09:06:54,721 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:06:54,730 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:06:58,368 - BackendLogger - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-11 09:08:13,861 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 09:08:13,863 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 09:08:13,864 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 09:08:13,864 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 09:08:14,186 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 09:08:14,186 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 09:08:19,893 - BackendLogger - INFO - MCP server process finished.
+2025-04-11 09:08:19,896 - BackendLogger - INFO - MCP Server finished.
+2025-04-11 09:08:35,091 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 09:08:35,093 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 09:08:35,093 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 09:08:35,094 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 09:08:35,460 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 09:08:35,461 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 09:09:24,020 - BackendLogger - INFO - Received find_similar_chunks request: query='radiology residents shifts high volume hours...', k=5, threshold=None
+2025-04-11 09:09:24,584 - BackendLogger - INFO - Creating new database engine
+2025-04-11 09:09:24,610 - BackendLogger - INFO - Database engine created successfully
+2025-04-11 09:09:24,611 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:09:24,651 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:09:27,036 - BackendLogger - INFO - Received find_similar_chunks request: query='radiology resident schedule coverage staffing busy...', k=5, threshold=None
+2025-04-11 09:09:27,547 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:09:27,556 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:09:29,938 - BackendLogger - INFO - Received find_similar_chunks request: query='radiology resident duty hours schedule rotation co...', k=5, threshold=None
+2025-04-11 09:09:30,620 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:09:30,629 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:09:33,400 - BackendLogger - INFO - Received find_similar_chunks request: query='radiology resident on call emergency coverage high...', k=5, threshold=None
+2025-04-11 09:09:34,251 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:09:34,259 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:09:37,315 - BackendLogger - INFO - Received find_similar_chunks request: query='radiology resident duty hours work hours ACGME...', k=5, threshold=None
+2025-04-11 09:09:37,992 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:09:38,002 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:09:43,217 - BackendLogger - INFO - Received find_similar_chunks request: query='YDR radiology resident workload call schedule poli...', k=5, threshold=None
+2025-04-11 09:09:43,610 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:09:43,621 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:09:46,800 - BackendLogger - INFO - Received get_policy_from_ID request for policy_id: 12
+2025-04-11 09:09:49,669 - BackendLogger - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-11 09:09:53,989 - BackendLogger - INFO - Received find_similar_chunks request: query='radiology resident schedule shifts overlap during ...', k=5, threshold=None
+2025-04-11 09:09:54,251 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:09:54,259 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:11:13,659 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 09:11:13,661 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 09:11:13,661 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 09:11:13,661 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 09:11:13,982 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 09:11:13,983 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 09:11:18,530 - BackendLogger - INFO - MCP server process finished.
+2025-04-11 09:11:18,536 - BackendLogger - INFO - MCP Server finished.
+2025-04-11 09:11:21,512 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-11 09:11:21,514 - BackendLogger - INFO - Stdio transport selected. Disabling console logging for MCP process.
+2025-04-11 09:11:21,515 - BackendLogger - INFO - Console (RichHandler) removed for this process.
+2025-04-11 09:11:21,515 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
+2025-04-11 09:11:21,865 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-11 09:11:21,866 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-11 09:11:49,806 - BackendLogger - INFO - Received find_similar_chunks request: query='radiology residents shifts high volume hours sched...', k=5, threshold=None
+2025-04-11 09:11:50,178 - BackendLogger - INFO - Creating new database engine
+2025-04-11 09:11:50,198 - BackendLogger - INFO - Database engine created successfully
+2025-04-11 09:11:50,199 - BackendLogger - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-11 09:11:50,240 - BackendLogger - INFO - Found 5 similar chunks.
+2025-04-11 09:11:54,684 - BackendLogger - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-11 09:11:58,072 - BackendLogger - INFO - Received find_similar_chunks request: query='radiology residents high volume hours shift schedu...', k=3, threshold=None
+2025-04-11 09:11:58,894 - BackendLogger - INFO - Performing vector-only search with limit=3, threshold=0.2
+2025-04-11 09:11:58,904 - BackendLogger - INFO - Found 3 similar chunks.

@@ -599,34 +599,3 @@ class PolicyRepository(BaseRepository[Policy]):
         )
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
-    
-    async def get_policy_details_from_chunk_id(self, chunk_id: int) -> Optional[Dict[str, Any]]:
-        """
-        Retrieve essential policy details (ID, URL, text content) for a given chunk ID.
-
-        Args:
-            chunk_id: The ID of the policy chunk.
-
-        Returns:
-            A dictionary containing 'policy_id', 'policy_url', and 'policy_text',
-            or None if the chunk or associated policy is not found.
-        """
-        logger.info(f"Fetching policy details for chunk ID: {chunk_id}")
-        stmt = (
-            select(
-                Policy.id.label("policy_id"),
-                Policy.source_url.label("policy_url"),
-                Policy.text_content.label("policy_text") # Fetching text_content as requested
-            )
-            .join(PolicyChunk, Policy.id == PolicyChunk.policy_id)
-            .where(PolicyChunk.id == chunk_id)
-        )
-        result = await self.session.execute(stmt)
-        policy_details = result.mappings().first() # Use mappings() to get dict-like results
-
-        if policy_details:
-            logger.info(f"Found policy details for chunk ID {chunk_id} (Policy ID: {policy_details['policy_id']})")
-            return dict(policy_details) # Convert Mapping to dict
-        else:
-            logger.warning(f"No policy details found for chunk ID: {chunk_id}")
-            return None

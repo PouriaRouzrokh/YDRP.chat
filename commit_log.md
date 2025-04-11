@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 9 (4/11/2025 - 09:16)
+
+Debugged the MCP server setup and made sure it works fine with claude.
+
 ## commit 8 (4/11/2025 - 00:48)
 
 Wrote the primary version of the mcp server

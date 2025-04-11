@@ -19,9 +19,11 @@ from ydrpolicy.data_collection.config import config as data_collection_config
 from ydrpolicy.backend.config import config as backend_config
 
 # --- Logging ---
-# Use specific loggers for different components
 from ydrpolicy.data_collection.logger import DataCollectionLogger
-from ydrpolicy.backend.logger import BackendLogger # Assuming BackendLogger can be instantiated
+# Import the default logger instance AND the BackendLogger class itself
+from ydrpolicy.backend.logger import BackendLogger, logger as backend_default_logger
+# Import RichHandler to identify it by type
+from rich.logging import RichHandler # <-- IMPORT RichHandler
 
 # --- Utilities ---
 from ydrpolicy.backend.utils.paths import ensure_directories # Ensure base dirs exist
@@ -235,36 +237,60 @@ def mcp_start(
     transport: Optional[str] = typer.Option(None, help="Transport mode (http or stdio, overrides config).")
 ):
     """Starts the YDR Policy MCP server."""
-    logger = get_backend_logger("MCP")
+    # Use the shared default logger instance from backend.logger
+    logger = backend_default_logger
 
-    # Use overrides or config values
+    # Determine final config values
     server_host = host if host is not None else backend_config.MCP.HOST
     server_port = port if port is not None else backend_config.MCP.PORT
     server_transport = transport if transport is not None else backend_config.MCP.TRANSPORT
 
+    # Validate transport
     if server_transport not in ['stdio', 'http']:
         logger.error(f"Invalid transport type: '{server_transport}'. Must be 'stdio' or 'http'.")
         raise typer.Exit(code=1)
 
+    # --- Conditionally Disable Console Logger ---
+    if server_transport == 'stdio':
+        # Log intention *before* removing handler (will go to file if configured)
+        logger.info("Stdio transport selected. Disabling console logging for MCP process.")
+        console_handler = None
+        # Access the underlying standard logger object
+        underlying_logger = logger.logger
+        for handler in underlying_logger.handlers[:]: # Iterate over a copy
+            if isinstance(handler, RichHandler):
+                console_handler = handler
+                break # Assume only one RichHandler
+
+        if console_handler:
+            underlying_logger.removeHandler(console_handler)
+            # This confirmation might only go to the file log now
+            logger.info("Console (RichHandler) removed for this process.")
+        else:
+            # This warning might only go to the file log now
+            logger.warning("Could not find RichHandler to remove for stdio mode.")
+    # --- End Conditional Disable ---
+
+    # Log the actual start attempt (will go to file log if console disabled)
     logger.info(f"Attempting to start MCP server on {server_host}:{server_port} via {server_transport}...")
 
     try:
-        # Import the server starter function
+        # Import the server starter function (which is now synchronous)
         from ydrpolicy.backend.mcp.server import start_mcp_server
 
-        # Run the server (start_mcp_server itself calls mcp.run which is blocking)
-        # We run it within asyncio.run() as the tool functions it contains are async.
-        # However, mcp.run() will manage the event loop itself.
-        asyncio.run(start_mcp_server(host=server_host, port=server_port, transport=server_transport))
+        # Run the server directly. It will block here until stopped.
+        start_mcp_server(host=server_host, port=server_port, transport=server_transport)
 
-        # This line will be reached only after the server stops
+        # This line is reached only after the server stops
         logger.info("MCP Server finished.")
 
     except ImportError:
-         logger.failure("Could not import 'start_mcp_server' from 'ydrpolicy.backend.mcp.server'. Make sure the file exists.", exc_info=True)
+         # Use logger.error or logger.failure consistently
+         logger.error("Could not import 'start_mcp_server' from 'ydrpolicy.backend.mcp.server'.", exc_info=True)
          raise typer.Exit(code=1)
     except Exception as e:
-        logger.failure(f"MCP Server failed to start or crashed: {e}", exc_info=True)
+        # Use logger.error or logger.failure consistently
+        logger.error(f"MCP Server failed to start or crashed: {e}", exc_info=True)
         raise typer.Exit(code=1)
 
 

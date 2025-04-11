@@ -32,8 +32,8 @@ _config_dict = {
     "RAG": {
         "CHUNK_SIZE": 1000,
         "CHUNK_OVERLAP": 200,
-        "SIMILARITY_THRESHOLD": 0.7,  # Minimum similarity score for a match
-        "TOP_K": 5,  # Number of chunks to retrieve
+        "SIMILARITY_THRESHOLD": 0.2,  # Minimum similarity score for a match
+        "TOP_K": 10,  # Number of chunks to retrieve
         "VECTOR_WEIGHT": 0.8,  # Weight for vector search vs keyword search
         "EMBEDDING_MODEL": "text-embedding-3-small",
         "EMBEDDING_DIMENSIONS": 1536,  # Dimensions for the embedding vectors
