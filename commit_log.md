@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 10 (4/12/2025 - 13:00)
+
+Removed archive folder from the ydrpolicy 
+
 ## commit 9 (4/11/2025 - 09:16)
 
 Debugged the MCP server setup and made sure it works fine with claude.
