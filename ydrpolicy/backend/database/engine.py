@@ -7,7 +7,10 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
 
 # Global engine instance
 _engine: Optional[AsyncEngine] = None

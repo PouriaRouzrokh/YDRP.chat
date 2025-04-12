@@ -1,11 +1,12 @@
-import asyncio
 from typing import List, Dict, Any, Optional
-import logging
 
 from openai import AsyncOpenAI
 
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
 
 # Cache for the OpenAI client
 _client = None

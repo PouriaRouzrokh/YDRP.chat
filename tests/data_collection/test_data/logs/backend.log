@@ -546,3 +546,268 @@ ValueError: a coroutine was expected, got None
 2025-04-11 08:30:27,212 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
 2025-04-11 08:30:27,213 - MCPServer - INFO - Running MCP server with stdio transport.
 2025-04-11 08:32:18,331 - MCPServer - INFO - MCP server process finished.
+2025-04-12 15:47:40,871 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 15:47:40,871 - YDRPolicyCLI - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 15:47:48,609 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 15:47:48,610 - YDRPolicyCLI - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 15:48:20,481 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 15:48:20,482 - YDRPolicyCLI - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 15:48:20,968 - YDRPolicyCLI - INFO - Executing database command...
+2025-04-12 15:48:20,969 - YDRPolicyCLI - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 15:48:24,042 - YDRPolicyCLI - INFO - Database command finished.
+2025-04-12 15:48:36,659 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 15:48:36,660 - YDRPolicyCLI - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 15:48:37,013 - YDRPolicyCLI - INFO - Executing database command...
+2025-04-12 15:48:37,014 - YDRPolicyCLI - INFO - Database initialization and population requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 15:48:47,720 - YDRPolicyCLI - INFO - Database command finished.
+2025-04-12 15:49:24,906 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 15:49:24,906 - YDRPolicyCLI - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 15:49:25,180 - YDRPolicyCLI - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-12 15:49:25,223 - YDRPolicyCLI - ERROR - MCP server failed: FastMCP.run() got an unexpected keyword argument 'host'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 178, in mcp_command
+    mcp_server.start_mcp_server(host=host, port=port, transport=transport)
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/mcp/server.py", line 136, in start_mcp_server
+    mcp.run(host=host, port=port, transport=transport)
+TypeError: FastMCP.run() got an unexpected keyword argument 'host'
+2025-04-12 16:04:54,188 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:04:54,188 - YDRPolicyCLI - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:04:54,562 - YDRPolicyCLI - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-12 16:05:01,949 - YDRPolicyCLI - INFO - MCP server process finished.
+2025-04-12 16:05:10,084 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:05:10,084 - YDRPolicyCLI - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:05:10,356 - YDRPolicyCLI - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-12 16:05:29,043 - YDRPolicyCLI - INFO - MCP server stopped by user (KeyboardInterrupt).
+2025-04-12 16:05:29,046 - YDRPolicyCLI - INFO - MCP server process finished.
+2025-04-12 16:05:32,875 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:05:32,875 - YDRPolicyCLI - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:05:33,142 - YDRPolicyCLI - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-12 16:07:10,596 - YDRPolicyCLI - INFO - MCP server process finished.
+2025-04-12 16:12:56,509 - YDRPolicyCLI - INFO - Backend logging initialized for 'YDRPolicyCLI' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:12:56,510 - YDRPolicyCLI - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:12:56,671 - YDRPolicyCLI - ERROR - Failed to import mcp.server module: cannot import name 'logger' from 'ydrpolicy.backend.logger' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/logger.py). Ensure backend components are installed.
+2025-04-12 16:22:34,679 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:22:34,680 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:22:34,804 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:39,532 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:39,533 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:23:39,652 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:39,663 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:39,711 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:39,865 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:39,865 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:39,868 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-12 16:23:39,868 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-12 16:23:39,869 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http transport via uvicorn on 0.0.0.0:8001.
+2025-04-12 16:23:44,361 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-12 16:23:44,363 - __main__ - INFO - MCP server process finished.
+2025-04-12 16:23:49,803 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:49,804 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:23:49,924 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:49,933 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:49,960 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:50,074 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:50,075 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:23:50,077 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-12 16:23:50,078 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
+2025-04-12 16:23:50,078 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
+2025-04-12 16:23:50,078 - ydrpolicy.backend.mcp.server - INFO - Removed RichHandler for stdio mode.
+2025-04-12 16:23:50,078 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
+2025-04-12 16:23:57,571 - __main__ - INFO - MCP server stopped by user (KeyboardInterrupt).
+2025-04-12 16:23:57,573 - __main__ - INFO - MCP server process finished.
+2025-04-12 16:24:15,514 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:15,515 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:24:15,812 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:15,819 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:15,820 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:15,822 - ydrpolicy.backend.services.chunking - INFO - Backend logging initialized for 'ydrpolicy.backend.services.chunking' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:15,957 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:15,958 - ydrpolicy.backend.database.init_db - INFO - Backend logging initialized for 'ydrpolicy.backend.database.init_db' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:15,960 - ydrpolicy.backend.utils.paths - INFO - Backend logging initialized for 'ydrpolicy.backend.utils.paths' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:15,960 - __main__ - INFO - Executing database command...
+2025-04-12 16:24:15,960 - __main__ - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 16:24:15,961 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
+2025-04-12 16:24:18,366 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
+2025-04-12 16:24:18,372 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
+2025-04-12 16:24:18,373 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
+2025-04-12 16:24:18,415 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green] Database 'ydrpolicy' dropped successfully.
+2025-04-12 16:24:18,419 - __main__ - INFO - Database command finished.
+2025-04-12 16:24:22,484 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:22,485 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:24:22,700 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:22,707 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:22,708 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:22,708 - ydrpolicy.backend.services.chunking - INFO - Backend logging initialized for 'ydrpolicy.backend.services.chunking' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:22,847 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:22,847 - ydrpolicy.backend.database.init_db - INFO - Backend logging initialized for 'ydrpolicy.backend.database.init_db' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:22,848 - ydrpolicy.backend.utils.paths - INFO - Backend logging initialized for 'ydrpolicy.backend.utils.paths' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:22,848 - __main__ - INFO - Executing database command...
+2025-04-12 16:24:22,848 - __main__ - INFO - Database initialization and population requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 16:24:22,849 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 16:24:22,849 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-12 16:24:22,859 - ydrpolicy.backend.database.init_db - INFO - Creating database 'ydrpolicy'...
+2025-04-12 16:24:22,922 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green] Database 'ydrpolicy' created.
+2025-04-12 16:24:22,925 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
+2025-04-12 16:24:22,944 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
+2025-04-12 16:24:22,945 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
+2025-04-12 16:24:22,974 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
+2025-04-12 16:24:22,975 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
+2025-04-12 16:24:22,980 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
+2025-04-12 16:24:22,981 - ydrpolicy.backend.database.init_db - INFO - Starting data population from scraped_policies directory...
+2025-04-12 16:24:22,981 - ydrpolicy.backend.database.init_db - INFO - Scanning scraped policies directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/scraped_policies
+2025-04-12 16:24:22,981 - ydrpolicy.backend.database.init_db - INFO - Reading policy descriptions from CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/processed_policies_log.csv
+2025-04-12 16:24:22,985 - ydrpolicy.backend.database.init_db - INFO - Loaded 17 timestamp mappings and 17 URL mappings for policy descriptions
+2025-04-12 16:24:22,986 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-12 16:24:22,986 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-12 16:24:22,987 - ydrpolicy.backend.database.init_db - INFO - Fetching existing policy information from database...
+2025-04-12 16:24:22,999 - ydrpolicy.backend.database.init_db - INFO - Found 0 existing policies in database.
+2025-04-12 16:24:23,000 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Yale_University_Policy_on_Conflict_of_Interest' from folder: Yale_University_Policy_on_Conflict_of_Interest_20250409192912567168
+2025-04-12 16:24:23,008 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 1
+2025-04-12 16:24:23,008 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
+2025-04-12 16:24:23,067 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
+2025-04-12 16:24:23,874 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
+2025-04-12 16:24:23,876 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
+2025-04-12 16:24:23,878 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
+2025-04-12 16:24:23,879 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Residents_Wellbeing_Policy' from folder: Residents_Wellbeing_Policy_20250409193300717366
+2025-04-12 16:24:23,912 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 2
+2025-04-12 16:24:23,913 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
+2025-04-12 16:24:23,914 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
+2025-04-12 16:24:24,401 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
+2025-04-12 16:24:24,403 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
+2025-04-12 16:24:24,404 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
+2025-04-12 16:24:24,404 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy' from folder: School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy_20250409193128387433
+2025-04-12 16:24:24,424 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 3
+2025-04-12 16:24:24,425 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
+2025-04-12 16:24:24,426 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
+2025-04-12 16:24:25,226 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
+2025-04-12 16:24:25,227 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
+2025-04-12 16:24:25,228 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
+2025-04-12 16:24:25,229 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Controller_s_Office_Factsheet' from folder: Controller_s_Office_Factsheet_20250409194424987413
+2025-04-12 16:24:25,245 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 4
+2025-04-12 16:24:25,247 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 21 chunks.
+2025-04-12 16:24:25,248 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 21 texts
+2025-04-12 16:24:25,775 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 21 embeddings
+2025-04-12 16:24:25,776 - ydrpolicy.backend.database.init_db - INFO -   Generated 21 embeddings.
+2025-04-12 16:24:25,777 - ydrpolicy.backend.database.init_db - INFO -   Added 21 PolicyChunk records to session.
+2025-04-12 16:24:25,778 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Appointment_Application_Requirements_Process' from folder: Voluntary_Faculty_Appointment_Application_Requirements_Process_20250409193339788344
+2025-04-12 16:24:25,817 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 5
+2025-04-12 16:24:25,818 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 3 chunks.
+2025-04-12 16:24:25,818 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
+2025-04-12 16:24:26,438 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
+2025-04-12 16:24:26,440 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
+2025-04-12 16:24:26,442 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records to session.
+2025-04-12 16:24:26,443 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Workday_Finance_User-Based_Security_Groups_Request_Process' from folder: Workday_Finance_User-Based_Security_Groups_Request_Process_20250409194153006635
+2025-04-12 16:24:26,455 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 6
+2025-04-12 16:24:26,457 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 3 chunks.
+2025-04-12 16:24:26,458 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
+2025-04-12 16:24:26,764 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
+2025-04-12 16:24:26,766 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
+2025-04-12 16:24:26,766 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records to session.
+2025-04-12 16:24:26,768 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Staff_Workplace_Policies' from folder: Staff_Workplace_Policies_20250409204542316052
+2025-04-12 16:24:26,813 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 7
+2025-04-12 16:24:26,823 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 333 chunks.
+2025-04-12 16:24:26,824 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 333 texts
+2025-04-12 16:24:28,291 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 333 embeddings
+2025-04-12 16:24:28,292 - ydrpolicy.backend.database.init_db - INFO -   Generated 333 embeddings.
+2025-04-12 16:24:28,297 - ydrpolicy.backend.database.init_db - INFO -   Added 333 PolicyChunk records to session.
+2025-04-12 16:24:28,297 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Grand_Rounds_Allowable_Expenses' from folder: Grand_Rounds_Allowable_Expenses_20250409192920823251
+2025-04-12 16:24:28,572 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 8
+2025-04-12 16:24:28,573 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
+2025-04-12 16:24:28,573 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
+2025-04-12 16:24:28,973 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
+2025-04-12 16:24:28,975 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
+2025-04-12 16:24:28,976 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
+2025-04-12 16:24:28,977 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Guidelines_Clarification' from folder: Voluntary_Faculty_Guidelines_Clarification_20250409193316792165
+2025-04-12 16:24:28,995 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 9
+2025-04-12 16:24:28,997 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
+2025-04-12 16:24:28,998 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
+2025-04-12 16:24:29,742 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
+2025-04-12 16:24:29,744 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
+2025-04-12 16:24:29,745 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
+2025-04-12 16:24:29,746 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Guidelines_for_Appointment' from folder: Guidelines_for_Appointment_20250409193232742762
+2025-04-12 16:24:29,770 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 10
+2025-04-12 16:24:29,771 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 6 chunks.
+2025-04-12 16:24:29,772 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 6 texts
+2025-04-12 16:24:30,639 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 6 embeddings
+2025-04-12 16:24:30,641 - ydrpolicy.backend.database.init_db - INFO -   Generated 6 embeddings.
+2025-04-12 16:24:30,642 - ydrpolicy.backend.database.init_db - INFO -   Added 6 PolicyChunk records to session.
+2025-04-12 16:24:30,643 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP' from folder: Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP_20250409193528279122
+2025-04-12 16:24:30,663 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 11
+2025-04-12 16:24:30,665 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
+2025-04-12 16:24:30,665 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
+2025-04-12 16:24:31,355 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
+2025-04-12 16:24:31,357 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
+2025-04-12 16:24:31,358 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
+2025-04-12 16:24:31,359 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'YDR_Conflict_of_Interest_Policy' from folder: YDR_Conflict_of_Interest_Policy_20250409192856529523
+2025-04-12 16:24:31,375 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 12
+2025-04-12 16:24:31,376 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 7 chunks.
+2025-04-12 16:24:31,376 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 7 texts
+2025-04-12 16:24:31,763 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 7 embeddings
+2025-04-12 16:24:31,765 - ydrpolicy.backend.database.init_db - INFO -   Generated 7 embeddings.
+2025-04-12 16:24:31,766 - ydrpolicy.backend.database.init_db - INFO -   Added 7 PolicyChunk records to session.
+2025-04-12 16:24:31,784 - ydrpolicy.backend.database.init_db - INFO - Database population finished. Processed 12 new policies. Skipped 0 folders.
+2025-04-12 16:24:31,785 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green] Database initialization completed successfully.
+2025-04-12 16:24:31,797 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
+2025-04-12 16:24:31,798 - __main__ - INFO - Database command finished.
+2025-04-12 16:24:38,689 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:38,690 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:24:38,812 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:38,821 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:38,847 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:38,967 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:38,968 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:38,970 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-12 16:24:38,971 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
+2025-04-12 16:24:38,971 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
+2025-04-12 16:24:38,971 - ydrpolicy.backend.mcp.server - INFO - Removed RichHandler for stdio mode.
+2025-04-12 16:24:38,971 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
+2025-04-12 16:24:46,153 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:24:46,154 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================

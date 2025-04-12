@@ -2,6 +2,7 @@
 """
 Repository for database operations related to Message and ToolUsage models.
 """
+from logging import config
 from typing import List, Dict, Any, Optional
 
 from sqlalchemy import select
@@ -10,7 +11,10 @@ from sqlalchemy.orm import selectinload
 
 from ydrpolicy.backend.database.models import Message, ToolUsage, Chat
 from ydrpolicy.backend.database.repository.base import BaseRepository
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
 
 class MessageRepository(BaseRepository[Message]):
     """Repository for managing Message and ToolUsage objects."""

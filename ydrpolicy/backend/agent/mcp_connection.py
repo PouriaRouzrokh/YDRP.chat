@@ -8,7 +8,10 @@ from typing import AsyncGenerator, Optional
 from agents.mcp import MCPServerSse
 
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
 
 # Store the server instance globally or manage it via dependency injection
 _mcp_server_instance: Optional[MCPServerSse] = None

@@ -11,6 +11,11 @@ from sqlalchemy.ext.asyncio import AsyncAttrs
 # Use declarative_base from sqlalchemy.orm
 from sqlalchemy.orm import declarative_base, relationship, mapped_column, Mapped, selectinload
 
+# Initialize logger
+from ydrpolicy.backend.config import config
+from ydrpolicy.backend.logger import BackendLogger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE) 
+
 # Import for pgvector
 try:
     from pgvector.sqlalchemy import Vector
@@ -25,11 +30,7 @@ except ImportError:
         def __call__(self, *args, **kwargs):
             # Mock the behavior when used as a type hint or column type
             return self # Or return a mock column type if necessary
-
-
-from ydrpolicy.backend.logger import logger
-from ydrpolicy.backend.config import config
-
+        
 # Base class for all models
 Base = declarative_base(cls=(AsyncAttrs,))
 

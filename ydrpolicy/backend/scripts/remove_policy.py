@@ -41,7 +41,7 @@ from ydrpolicy.backend.config import config as backend_config # Renamed for clar
 from ydrpolicy.backend.logger import BackendLogger # Use BackendLogger
 
 # Initialize logger for this script
-logger = BackendLogger(name="RemovePolicyScript", path=backend_config.LOGGING.FILE)
+logger = BackendLogger(name=__name__, path=backend_config.LOGGING.FILE)
 
 
 # --- Core Removal Logic ---

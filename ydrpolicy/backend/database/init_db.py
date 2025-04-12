@@ -20,7 +20,11 @@ from ydrpolicy.backend.database.repository.policies import PolicyRepository
 from ydrpolicy.backend.services.chunking import chunk_text
 from ydrpolicy.backend.services.embeddings import embed_texts
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
+
 from ydrpolicy.backend.utils.paths import ensure_directories
 
 

@@ -10,7 +10,10 @@ from sqlalchemy.sql.expression import or_, and_
 from ydrpolicy.backend.database.models import Policy, PolicyChunk, PolicyUpdate, Image
 from ydrpolicy.backend.database.repository.base import BaseRepository
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
 
 
 class PolicyRepository(BaseRepository[Policy]):

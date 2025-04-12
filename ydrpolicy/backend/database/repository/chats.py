@@ -2,6 +2,7 @@
 """
 Repository for database operations related to Chat models.
 """
+from logging import config
 from typing import Optional, List
 
 from sqlalchemy import select
@@ -10,7 +11,10 @@ from sqlalchemy.orm import selectinload
 
 from ydrpolicy.backend.database.models import Chat, User
 from ydrpolicy.backend.database.repository.base import BaseRepository
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
 
 class ChatRepository(BaseRepository[Chat]):
     """Repository for managing Chat objects in the database."""

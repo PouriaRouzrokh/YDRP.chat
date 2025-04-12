@@ -34,7 +34,7 @@ except NameError:
 # Import config and logger early as they are used across commands
 from ydrpolicy.backend.config import config
 from ydrpolicy.backend.logger import BackendLogger
-logger = BackendLogger(name="YDRPolicyCLI", path=config.LOGGING.FILE) # Use backend logger path
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE) # Use backend logger path
 
 
 # --- Typer App Definition ---

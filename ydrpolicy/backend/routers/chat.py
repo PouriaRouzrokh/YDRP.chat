@@ -8,10 +8,16 @@ from typing import AsyncGenerator
 from fastapi import APIRouter, Depends, HTTPException, Body
 from fastapi.responses import StreamingResponse
 
+from ydrpolicy.backend.config import config
+
 # Updated schema import
 from ydrpolicy.backend.schemas.chat import ChatRequest, StreamChunk
 from ydrpolicy.backend.services.chat_service import ChatService
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
+
 from ydrpolicy.backend.database.engine import get_async_session # For potential repo injection later
 
 # --- Dependency Injection Refinement (Example) ---

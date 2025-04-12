@@ -28,7 +28,7 @@ logs_dir = Path(__file__).parent / "logs"
 logs_dir.mkdir(exist_ok=True, parents=True)
 
 # Initialize logger with full path
-test_logger = BackendLogger(name="TestDBConnection", path=str(logs_dir / "test_database.log"))
+test_logger = BackendLogger(name=__name__, path=str(logs_dir / "test_database.log"))
 
 # Database connection parameters
 DB_USER = "pouria"

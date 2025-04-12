@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 15 (4/12/2025 - 16:28)
+
+Improved the logging mechanism.
+
 ## commit 14 (4/12/2025 - 15:47)
 
 Made sure that the we are using the OpenAI agentic SDK runner functionalities to handle chat history

@@ -2586,3 +2586,136 @@ ValueError: the greenlet library is required to use this function. No module nam
 2025-04-11 09:11:58,904 - BackendLogger - INFO - Found 3 similar chunks.
 2025-04-12 14:30:45,702 - BackendLogger - INFO - MCP server process finished.
 2025-04-12 14:30:45,703 - BackendLogger - INFO - MCP Server finished.
+2025-04-12 15:47:40,870 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-12 15:47:48,608 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-12 15:48:20,480 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-12 15:48:20,969 - BackendLogger - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
+2025-04-12 15:48:23,985 - BackendLogger - INFO - Terminating active connections to 'ydrpolicy'...
+2025-04-12 15:48:23,990 - BackendLogger - INFO - Connections terminated.
+2025-04-12 15:48:23,991 - BackendLogger - INFO - Dropping database 'ydrpolicy'...
+2025-04-12 15:48:24,038 - BackendLogger - INFO - [green]SUCCESS:[/green] Database 'ydrpolicy' dropped successfully.
+2025-04-12 15:48:36,658 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-12 15:48:37,014 - BackendLogger - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 15:48:37,014 - BackendLogger - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-12 15:48:37,025 - BackendLogger - INFO - Creating database 'ydrpolicy'...
+2025-04-12 15:48:37,096 - BackendLogger - INFO - [green]SUCCESS:[/green] Database 'ydrpolicy' created.
+2025-04-12 15:48:37,099 - BackendLogger - INFO - Ensuring extension 'vector' exists...
+2025-04-12 15:48:37,121 - BackendLogger - INFO - Extension 'vector' checked/created.
+2025-04-12 15:48:37,121 - BackendLogger - INFO - Creating database tables if they don't exist...
+2025-04-12 15:48:37,153 - BackendLogger - INFO - Tables checked/created.
+2025-04-12 15:48:37,154 - BackendLogger - INFO - Applying search vector triggers...
+2025-04-12 15:48:37,160 - BackendLogger - INFO - Search vector triggers applied.
+2025-04-12 15:48:37,160 - BackendLogger - INFO - Starting data population from scraped_policies directory...
+2025-04-12 15:48:37,161 - BackendLogger - INFO - Scanning scraped policies directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/scraped_policies
+2025-04-12 15:48:37,161 - BackendLogger - INFO - Reading policy descriptions from CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/processed_policies_log.csv
+2025-04-12 15:48:37,165 - BackendLogger - INFO - Loaded 17 timestamp mappings and 17 URL mappings for policy descriptions
+2025-04-12 15:48:37,166 - BackendLogger - INFO - Creating new database engine
+2025-04-12 15:48:37,167 - BackendLogger - INFO - Database engine created successfully
+2025-04-12 15:48:37,167 - BackendLogger - INFO - Fetching existing policy information from database...
+2025-04-12 15:48:37,181 - BackendLogger - INFO - Found 0 existing policies in database.
+2025-04-12 15:48:37,181 - BackendLogger - INFO - Processing new policy: 'Yale_University_Policy_on_Conflict_of_Interest' from folder: Yale_University_Policy_on_Conflict_of_Interest_20250409192912567168
+2025-04-12 15:48:37,190 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 1
+2025-04-12 15:48:37,191 - BackendLogger - INFO -   Split text content into 9 chunks.
+2025-04-12 15:48:37,239 - BackendLogger - INFO - Generating embeddings for 9 texts
+2025-04-12 15:48:38,371 - BackendLogger - INFO - Successfully generated 9 embeddings
+2025-04-12 15:48:38,372 - BackendLogger - INFO -   Generated 9 embeddings.
+2025-04-12 15:48:38,373 - BackendLogger - INFO -   Added 9 PolicyChunk records to session.
+2025-04-12 15:48:38,374 - BackendLogger - INFO - Processing new policy: 'Residents_Wellbeing_Policy' from folder: Residents_Wellbeing_Policy_20250409193300717366
+2025-04-12 15:48:38,404 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 2
+2025-04-12 15:48:38,405 - BackendLogger - INFO -   Split text content into 9 chunks.
+2025-04-12 15:48:38,405 - BackendLogger - INFO - Generating embeddings for 9 texts
+2025-04-12 15:48:39,269 - BackendLogger - INFO - Successfully generated 9 embeddings
+2025-04-12 15:48:39,270 - BackendLogger - INFO -   Generated 9 embeddings.
+2025-04-12 15:48:39,272 - BackendLogger - INFO -   Added 9 PolicyChunk records to session.
+2025-04-12 15:48:39,272 - BackendLogger - INFO - Processing new policy: 'School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy' from folder: School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy_20250409193128387433
+2025-04-12 15:48:39,298 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 3
+2025-04-12 15:48:39,300 - BackendLogger - INFO -   Split text content into 5 chunks.
+2025-04-12 15:48:39,300 - BackendLogger - INFO - Generating embeddings for 5 texts
+2025-04-12 15:48:40,143 - BackendLogger - INFO - Successfully generated 5 embeddings
+2025-04-12 15:48:40,145 - BackendLogger - INFO -   Generated 5 embeddings.
+2025-04-12 15:48:40,147 - BackendLogger - INFO -   Added 5 PolicyChunk records to session.
+2025-04-12 15:48:40,149 - BackendLogger - INFO - Processing new policy: 'Controller_s_Office_Factsheet' from folder: Controller_s_Office_Factsheet_20250409194424987413
+2025-04-12 15:48:40,170 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 4
+2025-04-12 15:48:40,173 - BackendLogger - INFO -   Split text content into 21 chunks.
+2025-04-12 15:48:40,173 - BackendLogger - INFO - Generating embeddings for 21 texts
+2025-04-12 15:48:40,972 - BackendLogger - INFO - Successfully generated 21 embeddings
+2025-04-12 15:48:40,973 - BackendLogger - INFO -   Generated 21 embeddings.
+2025-04-12 15:48:40,974 - BackendLogger - INFO -   Added 21 PolicyChunk records to session.
+2025-04-12 15:48:40,975 - BackendLogger - INFO - Processing new policy: 'Voluntary_Faculty_Appointment_Application_Requirements_Process' from folder: Voluntary_Faculty_Appointment_Application_Requirements_Process_20250409193339788344
+2025-04-12 15:48:41,014 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 5
+2025-04-12 15:48:41,015 - BackendLogger - INFO -   Split text content into 3 chunks.
+2025-04-12 15:48:41,015 - BackendLogger - INFO - Generating embeddings for 3 texts
+2025-04-12 15:48:41,621 - BackendLogger - INFO - Successfully generated 3 embeddings
+2025-04-12 15:48:41,623 - BackendLogger - INFO -   Generated 3 embeddings.
+2025-04-12 15:48:41,624 - BackendLogger - INFO -   Added 3 PolicyChunk records to session.
+2025-04-12 15:48:41,626 - BackendLogger - INFO - Processing new policy: 'Workday_Finance_User-Based_Security_Groups_Request_Process' from folder: Workday_Finance_User-Based_Security_Groups_Request_Process_20250409194153006635
+2025-04-12 15:48:41,638 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 6
+2025-04-12 15:48:41,639 - BackendLogger - INFO -   Split text content into 3 chunks.
+2025-04-12 15:48:41,640 - BackendLogger - INFO - Generating embeddings for 3 texts
+2025-04-12 15:48:42,274 - BackendLogger - INFO - Successfully generated 3 embeddings
+2025-04-12 15:48:42,275 - BackendLogger - INFO -   Generated 3 embeddings.
+2025-04-12 15:48:42,276 - BackendLogger - INFO -   Added 3 PolicyChunk records to session.
+2025-04-12 15:48:42,279 - BackendLogger - INFO - Processing new policy: 'Staff_Workplace_Policies' from folder: Staff_Workplace_Policies_20250409204542316052
+2025-04-12 15:48:42,331 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 7
+2025-04-12 15:48:42,344 - BackendLogger - INFO -   Split text content into 333 chunks.
+2025-04-12 15:48:42,345 - BackendLogger - INFO - Generating embeddings for 333 texts
+2025-04-12 15:48:44,435 - BackendLogger - INFO - Successfully generated 333 embeddings
+2025-04-12 15:48:44,436 - BackendLogger - INFO -   Generated 333 embeddings.
+2025-04-12 15:48:44,443 - BackendLogger - INFO -   Added 333 PolicyChunk records to session.
+2025-04-12 15:48:44,443 - BackendLogger - INFO - Processing new policy: 'Grand_Rounds_Allowable_Expenses' from folder: Grand_Rounds_Allowable_Expenses_20250409192920823251
+2025-04-12 15:48:44,705 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 8
+2025-04-12 15:48:44,706 - BackendLogger - INFO -   Split text content into 5 chunks.
+2025-04-12 15:48:44,706 - BackendLogger - INFO - Generating embeddings for 5 texts
+2025-04-12 15:48:45,103 - BackendLogger - INFO - Successfully generated 5 embeddings
+2025-04-12 15:48:45,105 - BackendLogger - INFO -   Generated 5 embeddings.
+2025-04-12 15:48:45,106 - BackendLogger - INFO -   Added 5 PolicyChunk records to session.
+2025-04-12 15:48:45,107 - BackendLogger - INFO - Processing new policy: 'Voluntary_Faculty_Guidelines_Clarification' from folder: Voluntary_Faculty_Guidelines_Clarification_20250409193316792165
+2025-04-12 15:48:45,124 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 9
+2025-04-12 15:48:45,126 - BackendLogger - INFO -   Split text content into 9 chunks.
+2025-04-12 15:48:45,127 - BackendLogger - INFO - Generating embeddings for 9 texts
+2025-04-12 15:48:45,791 - BackendLogger - INFO - Successfully generated 9 embeddings
+2025-04-12 15:48:45,793 - BackendLogger - INFO -   Generated 9 embeddings.
+2025-04-12 15:48:45,794 - BackendLogger - INFO -   Added 9 PolicyChunk records to session.
+2025-04-12 15:48:45,795 - BackendLogger - INFO - Processing new policy: 'Guidelines_for_Appointment' from folder: Guidelines_for_Appointment_20250409193232742762
+2025-04-12 15:48:45,823 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 10
+2025-04-12 15:48:45,824 - BackendLogger - INFO -   Split text content into 6 chunks.
+2025-04-12 15:48:45,825 - BackendLogger - INFO - Generating embeddings for 6 texts
+2025-04-12 15:48:46,237 - BackendLogger - INFO - Successfully generated 6 embeddings
+2025-04-12 15:48:46,239 - BackendLogger - INFO -   Generated 6 embeddings.
+2025-04-12 15:48:46,240 - BackendLogger - INFO -   Added 6 PolicyChunk records to session.
+2025-04-12 15:48:46,241 - BackendLogger - INFO - Processing new policy: 'Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP' from folder: Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP_20250409193528279122
+2025-04-12 15:48:46,260 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 11
+2025-04-12 15:48:46,262 - BackendLogger - INFO -   Split text content into 5 chunks.
+2025-04-12 15:48:46,262 - BackendLogger - INFO - Generating embeddings for 5 texts
+2025-04-12 15:48:47,110 - BackendLogger - INFO - Successfully generated 5 embeddings
+2025-04-12 15:48:47,111 - BackendLogger - INFO -   Generated 5 embeddings.
+2025-04-12 15:48:47,111 - BackendLogger - INFO -   Added 5 PolicyChunk records to session.
+2025-04-12 15:48:47,112 - BackendLogger - INFO - Processing new policy: 'YDR_Conflict_of_Interest_Policy' from folder: YDR_Conflict_of_Interest_Policy_20250409192856529523
+2025-04-12 15:48:47,124 - BackendLogger - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 12
+2025-04-12 15:48:47,125 - BackendLogger - INFO -   Split text content into 7 chunks.
+2025-04-12 15:48:47,125 - BackendLogger - INFO - Generating embeddings for 7 texts
+2025-04-12 15:48:47,683 - BackendLogger - INFO - Successfully generated 7 embeddings
+2025-04-12 15:48:47,685 - BackendLogger - INFO -   Generated 7 embeddings.
+2025-04-12 15:48:47,686 - BackendLogger - INFO -   Added 7 PolicyChunk records to session.
+2025-04-12 15:48:47,706 - BackendLogger - INFO - Database population finished. Processed 12 new policies. Skipped 0 folders.
+2025-04-12 15:48:47,707 - BackendLogger - INFO - [green]SUCCESS:[/green] Database initialization completed successfully.
+2025-04-12 15:48:47,718 - BackendLogger - INFO - Database engine disposed.
+2025-04-12 15:49:24,905 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-12 15:49:25,181 - BackendLogger - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-12 15:49:25,181 - BackendLogger - INFO - Running MCP server with http transport on 0.0.0.0:8001.
+2025-04-12 15:49:25,182 - BackendLogger - ERROR - MCP server run failed: FastMCP.run() got an unexpected keyword argument 'host'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/mcp/server.py", line 136, in start_mcp_server
+    mcp.run(host=host, port=port, transport=transport)
+TypeError: FastMCP.run() got an unexpected keyword argument 'host'
+2025-04-12 16:04:54,187 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-12 16:04:54,562 - BackendLogger - INFO - Attempting to start MCP server using http transport...
+2025-04-12 16:04:54,563 - BackendLogger - INFO - Running MCP server with http transport via uvicorn on 0.0.0.0:8001.
+2025-04-12 16:05:01,945 - BackendLogger - INFO - MCP server process finished.
+2025-04-12 16:05:10,083 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-12 16:05:10,357 - BackendLogger - INFO - Attempting to start MCP server using stdio transport...
+2025-04-12 16:05:10,358 - BackendLogger - INFO - Running MCP server with stdio transport.
+2025-04-12 16:05:32,873 - BackendLogger - INFO - Backend logging initialized. Log file: data/logs/backend.log
+2025-04-12 16:05:33,143 - BackendLogger - INFO - Attempting to start MCP server using http transport...
+2025-04-12 16:05:33,143 - BackendLogger - INFO - Running MCP server with http transport via uvicorn on 0.0.0.0:8001.
+2025-04-12 16:07:10,591 - BackendLogger - INFO - MCP server process finished.

@@ -9,13 +9,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
+
 from ydrpolicy.backend.routers import chat as chat_router # Import the chat router
 # Import other routers as needed
 # from ydrpolicy.backend.routers import auth as auth_router
 from ydrpolicy.backend.agent.mcp_connection import close_mcp_connection
 from ydrpolicy.backend.database.engine import close_db_connection
 from ydrpolicy.backend.utils.paths import ensure_directories # Import ensure_directories
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

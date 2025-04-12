@@ -8,8 +8,11 @@ from agents import Agent, ModelSettings
 from agents.mcp import MCPServer
 
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import logger
+from ydrpolicy.backend.logger import BackendLogger
 from ydrpolicy.backend.agent.mcp_connection import get_mcp_server
+
+# Initialize logger
+logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
 
 # Define the system prompt for the agent
 SYSTEM_PROMPT = """
