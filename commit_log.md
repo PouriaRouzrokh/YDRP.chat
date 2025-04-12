@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 12 (4/12/2025 - 15:02)
+
+Added the base scripts for chat and fastapi but no tests ran yet.
+
 ## commit 11 (4/12/2025 - 14:33)
 
 Created files for incorporating the chat agent.

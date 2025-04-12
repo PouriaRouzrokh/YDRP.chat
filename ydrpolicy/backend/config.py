@@ -42,7 +42,7 @@ _config_dict = {
     # OpenAI settings
     "OPENAI": {
         "API_KEY": os.environ.get("OPENAI_API_KEY"),
-        "MODEL": "gpt-4-turbo",  # Default model for chat
+        "MODEL": "o3-mini",  # Default model for chat
         "TEMPERATURE": 0.7,
         "MAX_TOKENS": 4000,
     },
