@@ -2584,3 +2584,5 @@ ValueError: the greenlet library is required to use this function. No module nam
 2025-04-11 09:11:58,072 - BackendLogger - INFO - Received find_similar_chunks request: query='radiology residents high volume hours shift schedu...', k=3, threshold=None
 2025-04-11 09:11:58,894 - BackendLogger - INFO - Performing vector-only search with limit=3, threshold=0.2
 2025-04-11 09:11:58,904 - BackendLogger - INFO - Found 3 similar chunks.
+2025-04-12 14:30:45,702 - BackendLogger - INFO - MCP server process finished.
+2025-04-12 14:30:45,703 - BackendLogger - INFO - MCP Server finished.
