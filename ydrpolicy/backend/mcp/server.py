@@ -7,7 +7,6 @@ It defines specific tools that can be called by an MCP client (like the Agent).
 These tools interact with the application's database to retrieve policy information.
 The server can be run using either stdio or http transport.
 """
-import asyncio
 import logging # Import standard logging
 from typing import Any, Dict, List, Optional
 import uvicorn # Used for running the server over HTTP
@@ -18,12 +17,11 @@ from rich.logging import RichHandler # Import RichHandler to identify it for rem
 from ydrpolicy.backend.config import config
 from ydrpolicy.backend.database.engine import get_async_session
 from ydrpolicy.backend.database.repository.policies import PolicyRepository
-from ydrpolicy.backend.logger import BackendLogger # Import the custom logger class
 from ydrpolicy.backend.services.embeddings import embed_text
 
 # Instantiate a logger for this module. Console logging is initially enabled
 # but will be disabled later if running in stdio mode.
-logger = BackendLogger(name=__name__, path=config.LOGGING.FILE, log_to_console=True)
+logger = logging.getLogger(__name__)
 
 # Initialize FastMCP server instance. Tools will be registered using decorators.
 # The name "ydrpolicy_mcp" is how this server might be identified by clients.
@@ -185,18 +183,20 @@ def start_mcp_server(host: str, port: int, transport: str):
     # over stdin/stdout. File logging remains active.
     if transport == 'stdio':
         logger.info("Configuring logger for stdio mode (removing console handler)...")
-        underlying_logger = logger.logger # Get the actual logging.Logger instance
+        # Access the standard logger instance directly
         handler_to_remove = None
-        for handler in underlying_logger.handlers:
+        # Iterate through handlers attached to the logger obtained via getLogger()
+        for handler in logger.handlers: # Use 'logger.handlers' directly
             if isinstance(handler, RichHandler): # Identify the console handler
                 handler_to_remove = handler
                 break
         if handler_to_remove:
-            underlying_logger.removeHandler(handler_to_remove)
+            logger.removeHandler(handler_to_remove) # Use 'logger.removeHandler' directly
             logger.info("Removed RichHandler for stdio mode.") # Log to file
         else:
-            # This shouldn't happen with the current logger setup, but good to check
-            logger.warning("Could not find RichHandler to remove for stdio mode.")
+            logger.warning("Could not find RichHandler to remove for stdio mode (already removed or never added?).")
+        # Optionally, you could also increase the level specifically for stdio
+        # logger.setLevel(logging.WARNING) # Suppress INFO/DEBUG messages even in file log for stdio
 
     # Start the server based on the chosen transport
     try:

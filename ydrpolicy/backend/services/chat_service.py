@@ -4,10 +4,8 @@ Service layer for handling chat interactions with the Policy Agent,
 including database persistence for history using structured input.
 """
 import asyncio
+import logging
 from typing import AsyncGenerator, List, Dict, Any, Optional, Tuple
-import datetime
-
-from ydrpolicy.backend.config import config
 
 # Use the correct top-level import
 from agents import Runner, Agent, RunResultStreaming, RunResult
@@ -21,10 +19,9 @@ from openai.types.chat import ChatCompletionMessageParam # Using this type for c
 from openai.types.responses import ResponseTextDeltaEvent, ToolCall, Function
 
 from ydrpolicy.backend.agent.policy_agent import create_policy_agent
-from ydrpolicy.backend.logger import BackendLogger
 
 # Initialize logger
-logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
+logger = logging.getLogger(__name__)
 
 from ydrpolicy.backend.schemas.chat import (
     StreamChunk, StreamChunkData, ChatInfoData, TextDeltaData, ToolCallData,

@@ -1,12 +1,12 @@
+import logging
 from typing import List, Dict, Any, Optional
 
 from openai import AsyncOpenAI
 
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import BackendLogger
 
 # Initialize logger
-logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
+logger = logging.getLogger(__name__)
 
 # Cache for the OpenAI client
 _client = None

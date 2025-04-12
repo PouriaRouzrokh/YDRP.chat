@@ -11,12 +11,13 @@ Direct Usage Examples:
     python -m ydrpolicy.backend.scripts.remove_policy --title "Another Title" --db_url postgresql+asyncpg://user:pass@host/dbname
 """
 
-import os
-import sys
 import asyncio
 import argparse
-from typing import Union, Optional, Dict, Any
+import logging
+import os
+import sys
 from pathlib import Path
+from typing import Union, Optional, Dict, Any
 
 # --- Add project root to sys.path ---
 # This allows running the script directly using `python -m ...`
@@ -38,10 +39,9 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 
 from ydrpolicy.backend.database.repository.policies import PolicyRepository
 from ydrpolicy.backend.config import config as backend_config # Renamed for clarity
-from ydrpolicy.backend.logger import BackendLogger # Use BackendLogger
 
 # Initialize logger for this script
-logger = BackendLogger(name=__name__, path=backend_config.LOGGING.FILE)
+logger = logging.getLogger(__name__)
 
 
 # --- Core Removal Logic ---

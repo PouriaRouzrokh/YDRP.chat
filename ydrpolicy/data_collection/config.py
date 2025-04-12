@@ -42,6 +42,11 @@ _config_dict = {
         "RESET_CRAWL": False,
         "SAVE_INTERVAL": 10,
     },
+    "LOGGING": {
+        "LEVEL": os.environ.get("LOG_LEVEL", "INFO"),
+        "FILE": None, # Default to None, path will be set below
+        "DISABLED": False # Flag to globally disable logging
+    }
 }
 
 # Add other path-dependent settings to the config dictionary

@@ -1,9 +1,9 @@
 import os
+import logging
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import BackendLogger
 
 # Initialize logger
-logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
+logger = logging.getLogger(__name__)
 
 def ensure_directories():
     """Ensure all required directories exist."""

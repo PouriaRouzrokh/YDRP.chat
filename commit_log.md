@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 16 (4/12/2025 - 17:13)
+
+Switched to default logging through Python. Added no logging option to main.py
+
 ## commit 15 (4/12/2025 - 16:28)
 
 Improved the logging mechanism.

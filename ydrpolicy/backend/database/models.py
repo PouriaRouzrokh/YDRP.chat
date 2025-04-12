@@ -1,5 +1,6 @@
 # ydrpolicy/backend/database/models.py
 from datetime import datetime
+import logging
 from typing import List, Optional
 
 from sqlalchemy import (
@@ -12,9 +13,10 @@ from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.orm import declarative_base, relationship, mapped_column, Mapped, selectinload
 
 # Initialize logger
+logger = logging.getLogger(__name__)
+
+# Import config
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import BackendLogger
-logger = BackendLogger(name=__name__, path=config.LOGGING.FILE) 
 
 # Import for pgvector
 try:

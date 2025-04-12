@@ -63,6 +63,13 @@ _config_dict = {
         "JWT_SECRET": os.environ.get("JWT_SECRET", "changeme_in_production"),
         "JWT_ALGORITHM": "HS256",
         "JWT_EXPIRATION": 3600,  # 1 hour in seconds
+    },
+    
+    # Logging settings
+    "LOGGING": {
+        "LEVEL": os.environ.get("LOG_LEVEL", "INFO"),
+        "FILE": None, # Default to None, path will be set below
+        "DISABLED": False # Flag to globally disable logging
     }
 }
 

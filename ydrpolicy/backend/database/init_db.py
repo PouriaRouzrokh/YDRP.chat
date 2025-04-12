@@ -1,12 +1,12 @@
 # ydrpolicy/backend/database/init_db.py
 import asyncio
 from datetime import datetime
+import logging
 import os
 import re
 from typing import Optional, Set, Dict
 from urllib.parse import urlparse
 import pandas as pd
-
 import asyncpg
 from sqlalchemy import text, select
 from sqlalchemy.exc import IntegrityError
@@ -20,10 +20,9 @@ from ydrpolicy.backend.database.repository.policies import PolicyRepository
 from ydrpolicy.backend.services.chunking import chunk_text
 from ydrpolicy.backend.services.embeddings import embed_texts
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import BackendLogger
 
 # Initialize logger
-logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
+logger = logging.getLogger(__name__)
 
 from ydrpolicy.backend.utils.paths import ensure_directories
 

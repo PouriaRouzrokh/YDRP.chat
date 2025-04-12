@@ -811,3 +811,79 @@ YDR Policy RAG Engine CLI - Starting
 ================================================================================
 YDR Policy RAG Engine CLI - Starting
 ================================================================================
+2025-04-12 16:31:10,602 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:31:10,603 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:31:10,757 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:31:10,771 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:31:10,811 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:31:10,950 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:31:10,950 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:31:10,953 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-12 16:31:10,953 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
+2025-04-12 16:31:10,953 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
+2025-04-12 16:31:10,953 - ydrpolicy.backend.mcp.server - INFO - Removed RichHandler for stdio mode.
+2025-04-12 16:31:10,953 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
+2025-04-12 16:32:40,107 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:32:40,108 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:33:32,034 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:33:32,036 - __main__ - INFO - 
+================================================================================
+YDR Policy RAG Engine CLI - Starting
+================================================================================
+2025-04-12 16:33:32,177 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:33:32,189 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:33:32,219 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:33:32,524 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:33:32,525 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
+2025-04-12 16:33:32,529 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-12 16:33:32,529 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
+2025-04-12 16:33:32,530 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
+2025-04-12 16:33:32,530 - ydrpolicy.backend.mcp.server - INFO - Removed RichHandler for stdio mode.
+2025-04-12 16:33:32,530 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
+2025-04-12 16:45:59,278 - __main__ - INFO - MCP server stopped by user (KeyboardInterrupt).
+2025-04-12 16:45:59,281 - __main__ - INFO - MCP server process finished.
+2025-04-12 17:07:29,718 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-12 17:07:29,718 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 17:07:29,718 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
+2025-04-12 17:07:32,010 - ydrpolicy.backend.database.init_db - INFO - Database drop cancelled.
+2025-04-12 17:07:32,012 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-12 17:07:43,346 - ydrpolicy.backend.mcp - WARNING - Running MCP in stdio mode with logging enabled. Console logs might interfere with stdio protocol.
+2025-04-12 17:07:43,346 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-12 17:07:43,346 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
+2025-04-12 17:07:43,347 - ydrpolicy.backend.mcp - ERROR - MCP server failed to start: 'Logger' object has no attribute 'logger'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 289, in mcp_command
+    mcp_server.start_mcp_server(host=run_host, port=run_port, transport=run_transport)
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/mcp/server.py", line 185, in start_mcp_server
+    underlying_logger = logger.logger # Get the actual logging.Logger instance
+                        ^^^^^^^^^^^^^
+AttributeError: 'Logger' object has no attribute 'logger'
+2025-04-12 17:09:39,580 - ydrpolicy.backend.mcp - WARNING - Running MCP in stdio mode with logging enabled. Console logs might interfere with stdio protocol.
+2025-04-12 17:09:39,582 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-12 17:09:39,582 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
+2025-04-12 17:09:39,582 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
+2025-04-12 17:09:39,582 - ydrpolicy.backend.mcp.server - WARNING - Could not find RichHandler to remove for stdio mode (already removed or never added?).
+2025-04-12 17:09:39,583 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
+2025-04-12 17:09:44,405 - ydrpolicy.backend.mcp - INFO - MCP server startup interrupted by user.
+2025-04-12 17:09:44,407 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-12 17:09:51,364 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-12 17:09:51,365 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-12 17:09:51,365 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http transport via uvicorn on 0.0.0.0:8001.
+2025-04-12 17:09:53,818 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-12 17:09:53,820 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-12 17:11:34,630 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-12 17:11:34,630 - __main__ - INFO - MCP server process finished.
+2025-04-12 17:11:39,269 - ydrpolicy.backend.mcp - WARNING - Running MCP in stdio mode with logging enabled. Console logs might interfere with stdio protocol.
+2025-04-12 17:11:39,269 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-12 17:11:39,269 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
+2025-04-12 17:11:39,270 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
+2025-04-12 17:11:39,270 - ydrpolicy.backend.mcp.server - WARNING - Could not find RichHandler to remove for stdio mode (already removed or never added?).
+2025-04-12 17:11:39,270 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
+2025-04-12 17:12:13,642 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-12 17:12:13,643 - ydrpolicy.backend.mcp - INFO - MCP server process finished.

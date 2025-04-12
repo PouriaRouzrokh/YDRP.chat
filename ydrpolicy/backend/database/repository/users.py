@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from ydrpolicy.backend.database.models import User
 from ydrpolicy.backend.database.repository.base import BaseRepository
 
-
 class UserRepository(BaseRepository[User]):
     """Repository for working with User models."""
     

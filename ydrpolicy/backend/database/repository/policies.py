@@ -1,6 +1,6 @@
-# ydrpolicy/backend/database/repository/policies.py
-from typing import List, Optional, Dict, Any
 from datetime import datetime
+import logging
+from typing import List, Optional, Dict, Any
 
 from sqlalchemy import select, func, text, desc, delete
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,10 +10,9 @@ from sqlalchemy.sql.expression import or_, and_
 from ydrpolicy.backend.database.models import Policy, PolicyChunk, PolicyUpdate, Image
 from ydrpolicy.backend.database.repository.base import BaseRepository
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import BackendLogger
 
 # Initialize logger
-logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
+logger = logging.getLogger(__name__)
 
 
 class PolicyRepository(BaseRepository[Policy]):

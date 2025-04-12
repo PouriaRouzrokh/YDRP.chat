@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import sys
 import argparse
 from pathlib import Path
@@ -8,7 +9,6 @@ import os
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from ydrpolicy.backend.logger import BackendLogger
 from ydrpolicy.backend.database.models import Base, create_search_vector_trigger
 from ydrpolicy.backend.config import config as backend_config
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
@@ -30,7 +30,7 @@ logs_dir = Path(__file__).parent / "logs"
 logs_dir.mkdir(exist_ok=True, parents=True)
 
 # Initialize logger with full path
-test_logger = BackendLogger(name=__name__, path=str(logs_dir / "test_policy_chunking.log"))
+test_logger = logging.getLogger(__name__)
 
 # Database connection parameters
 DB_USER = "pouria"

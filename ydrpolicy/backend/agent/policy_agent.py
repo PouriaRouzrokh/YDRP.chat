@@ -2,17 +2,17 @@
 """
 Defines the core OpenAI Agent for interacting with Yale Radiology Policies.
 """
+import logging
 from typing import List, Optional
 
 from agents import Agent, ModelSettings
 from agents.mcp import MCPServer
 
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.logger import BackendLogger
 from ydrpolicy.backend.agent.mcp_connection import get_mcp_server
 
 # Initialize logger
-logger = BackendLogger(name=__name__, path=config.LOGGING.FILE)
+logger = logging.getLogger(__name__)
 
 # Define the system prompt for the agent
 SYSTEM_PROMPT = """
