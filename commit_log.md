@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 14 (4/12/2025 - 15:47)
+
+Made sure that the we are using the OpenAI agentic SDK runner functionalities to handle chat history
+
 ## commit 13 (4/12/2025 - 15:22)
 
 Updated the README.md to add "High-Level Understanding of Chat Functionality"

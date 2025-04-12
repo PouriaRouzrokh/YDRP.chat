@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 from mistralai import Optional
 import typer
+from typing import List, Optional
 import uvicorn # Keep uvicorn import for the agent command
 
 # --- Add project root to sys.path ---
@@ -187,7 +188,7 @@ def mcp_command(
 # --- Agent Command (Integrated) ---
 @app.command(name="agent")
 def agent_command(
-    terminal: bool = typer.Option(False, "--terminal", help="Run agent in interactive terminal (no persistent history)."),
+    terminal: bool = typer.Option(False, "--terminal", help="Run agent in interactive terminal (uses SDK history, not persistent)."), # Updated help
     no_mcp: bool = typer.Option(False, "--no-mcp", help="Run agent without MCP server connection (for testing)."),
     api_host: str = typer.Option(config.API.HOST, "--host", help="Host address for the FastAPI server."),
     api_port: int = typer.Option(config.API.PORT, "--port", help="Port number for the FastAPI server."),
@@ -197,9 +198,9 @@ def agent_command(
     Run the YDR Policy Chat Agent.
 
     - Default mode starts the **FastAPI server** (`http://<host>:<port>`) which provides a streaming chat endpoint (`/chat/stream`) with **persistent history** stored in the database. Requires the database and MCP server (if not using --no-mcp) to be running.
-    - Use `--terminal` for a basic **command-line chat interface**. This mode is for quick testing and **does not save conversation history** to the database.
-    - Use `--no-mcp` to run the agent **without connecting to the MCP server**. This is useful for testing the agent's base LLM capabilities but RAG tools will be unavailable.
-    """
+    - Use `--terminal` for a **command-line chat interface**. This mode uses the SDK's history mechanism (`to_input_list`) for conversational context within the session, but **does not save history** to the database between runs.
+    - Use `--no-mcp` to run the agent **without connecting to the MCP server**. RAG tools will be unavailable.
+    """ # Updated help
     logger.info("Executing agent command...")
 
     use_mcp_flag = not no_mcp
@@ -207,25 +208,31 @@ def agent_command(
     logger.info(f"MCP Tool Connection: {'Enabled' if use_mcp_flag else 'Disabled'}")
 
     if terminal:
-        # --- Terminal Mode ---
-        logger.info("Starting agent in terminal mode (history is NOT persistent)...")
-        # Import agent-specific modules only for terminal mode
+        # --- Terminal Mode (Using SDK History) ---
+        logger.info("Starting agent in terminal mode (using session history, not persistent)...")
+        # Import necessary components for this mode
         try:
             from ydrpolicy.backend.agent.policy_agent import create_policy_agent
-            from agents import Runner
+            # Use correct top-level imports based on previous check
+            from agents import Runner, RunResult, RunResultStreaming
+            from agents.run_context import RunStatus
             from agents import RunEvents
+            # Type hint for input list (aligns with ChatCompletion API)
+            from openai.types.chat import ChatCompletionMessageParam
         except ImportError as e:
-             logger.error(f"Failed to import agent modules: {e}. Ensure backend components are installed.")
+             logger.error(f"Failed to import agent modules: {e}. Ensure backend/openai-agents are installed.")
              raise typer.Exit(code=1)
 
         async def terminal_chat():
-            """Async function to handle the terminal chat loop."""
-            terminal_history_str = "" # Simple string accumulation for *this session only*
-            agent = None # Define agent outside try block for finally clause
+            """Async function to handle the terminal chat loop using SDK history."""
+            # Start with an empty history list for this session
+            agent_input_list: List[ChatCompletionMessageParam] = []
+            agent = None
+            MAX_HISTORY_TURNS_TERMINAL = 10 # Limit history turns in terminal mode
+
             try:
-                # Create the agent instance based on flags
                 agent = await create_policy_agent(use_mcp=use_mcp_flag)
-                print("\n Yale Radiology Policy Agent (Terminal Mode - No Persistent History)")
+                print("\n Yale Radiology Policy Agent (Terminal Mode - Session History)")
                 print("-" * 60)
                 print(f"MCP Tools: {'Enabled' if use_mcp_flag else 'Disabled'}")
                 print("Enter your query or type 'quit' to exit.")
@@ -236,70 +243,78 @@ def agent_command(
                         user_input = input("You: ")
                         if user_input.lower() == 'quit':
                             break
-                        if not user_input.strip(): # Ignore empty input
+                        if not user_input.strip():
                             continue
 
-                        # Prepend simple history to the current input for context *within this session*
-                        current_agent_input = f"{terminal_history_str}\nUser: {user_input}".strip()
+                        # Prepare input list for the current run
+                        new_user_message: ChatCompletionMessageParam = {"role": "user", "content": user_input}
+                        # Append new user message to the existing history list
+                        current_run_input_list = agent_input_list + [new_user_message]
 
                         print("Agent: ", end="", flush=True)
-                        agent_response_text = "" # Accumulate agent response text
+                        final_run_result: Optional[RunResult] = None # To store the result object
 
-                        # Use run_streamed to get live output
-                        result_stream = Runner.run_streamed(
+                        # Run the agent with the structured input list
+                        result_stream: RunResultStreaming = Runner.run_streamed(
                             starting_agent=agent,
-                            input=current_agent_input,
-                            events_to_record=RunEvents.ALL # Record all events for potential debugging
+                            input=current_run_input_list, # Pass the list
+                            events_to_record=RunEvents.ALL
                         )
 
-                        # Process the stream events
+                        # Process the stream for output and capture final result
                         async for event in result_stream.stream_events():
                              if event.type == "raw_response_event" and hasattr(event.data, "delta"):
                                  delta = event.data.delta
                                  if delta:
                                      print(delta, end="", flush=True)
-                                     agent_response_text += delta
                              elif event.type == "run_item_stream_event":
-                                 # Provide feedback on tool usage
                                  if event.item.type == "tool_call_item":
                                      tool_name = event.item.tool_call.function.name
                                      print(f"\n[Calling tool: {tool_name}...]", end="", flush=True)
                                  elif event.item.type == "tool_call_output_item":
                                       print(f"\n[Tool output received.]", end="", flush=True)
-                                      # Optionally print tool output for debugging, but can be verbose
-                                      # print(f"\n[Tool Output: {str(event.item.output)[:100]}...]")
-                        print() # Newline after agent response is fully streamed
+                             elif event.type == "run_complete_event":
+                                  final_run_result = event.result # Capture the final result
+                                  break # Streaming done
+                        print() # Newline after agent response
 
-                        # Append interaction to the simple history string for the next turn
-                        terminal_history_str += f"\nUser: {user_input}\nAssistant: {agent_response_text.strip()}"
-                        # Basic truncation to prevent overly long history in terminal mode
-                        if len(terminal_history_str) > 4000:
-                             logger.debug("Terminal history truncated.")
-                             terminal_history_str = terminal_history_str[-3000:]
+                        # Update the history list for the *next* turn using the SDK method
+                        if final_run_result and final_run_result.status == RunStatus.COMPLETE:
+                             agent_input_list = final_run_result.to_input_list()
+                             logger.debug(f"Updated history list for next turn using to_input_list(). Length: {len(agent_input_list)}")
+                             # Apply simple truncation based on turns (each turn likely adds user+assistant)
+                             if len(agent_input_list) > MAX_HISTORY_TURNS_TERMINAL * 2:
+                                 cutoff = len(agent_input_list) - MAX_HISTORY_TURNS_TERMINAL * 2
+                                 agent_input_list = agent_input_list[cutoff:]
+                                 logger.debug(f"Truncated terminal history list to {len(agent_input_list)} messages.")
 
-                    except EOFError: # Handle Ctrl+D
+                        elif final_run_result: # Handle run failure
+                            print(f"\n[Agent run failed: {final_run_result.error}. History might be incomplete for next turn.]")
+                            # Keep the old history list on failure
+                            logger.warning(f"Keeping previous history list due to agent run failure. Status: {final_run_result.status}")
+                        else:
+                             print("\n[Agent run did not complete properly. History might be incomplete.]")
+                             logger.warning("Agent run did not yield a final result. Keeping previous history list.")
+
+                    except EOFError:
                         print("\nExiting terminal mode (EOF)...")
                         break
-                    except KeyboardInterrupt: # Handle Ctrl+C
+                    except KeyboardInterrupt:
                         print("\nExiting terminal mode (Interrupt)...")
                         break
                     except Exception as loop_err:
-                         # Log error but allow loop to continue if possible
                          logger.error(f"Error during terminal chat loop: {loop_err}", exc_info=True)
                          print(f"\n[Error occurred: {loop_err}]")
 
             except Exception as start_err:
                 logger.error(f"Failed to initialize or start terminal agent: {start_err}", exc_info=True)
             finally:
-                # Ensure MCP connection is closed if it was opened and used
-                if use_mcp_flag and agent: # Check if agent was successfully created
+                if use_mcp_flag and agent:
                     logger.debug("Closing MCP connection for terminal mode...")
-                    # Import close function only if needed
                     from ydrpolicy.backend.agent.mcp_connection import close_mcp_connection
                     await close_mcp_connection()
                 logger.info("Terminal chat session ended.")
 
-        # Run the async terminal chat function
         asyncio.run(terminal_chat())
         logger.info("Terminal agent process finished.")
 
