@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 13 (4/12/2025 - 15:22)
+
+Updated the README.md to add "High-Level Understanding of Chat Functionality"
+
 ## commit 12 (4/12/2025 - 15:02)
 
 Added the base scripts for chat and fastapi but no tests ran yet.
