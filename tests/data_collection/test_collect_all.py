@@ -19,7 +19,6 @@ load_dotenv(dotenv_path=dotenv_path)
 from ydrpolicy.data_collection.collect_policies import collect_all
 # Import config and logger
 from ydrpolicy.data_collection.config import config
-from ydrpolicy.data_collection.logger import DataCollectionLogger
 
 def test_collect_all():
     """
@@ -73,11 +72,7 @@ def test_collect_all():
     if not config.LLM.MISTRAL_API_KEY: print("WARNING: MISTRAL_API_KEY missing. OCR may fail.")
 
     # --- Create Logger for the Test ---
-    test_logger = DataCollectionLogger(
-        name="collect_all_test",
-        level=logging.INFO, # Use DEBUG for very detailed logs
-        path=test_log_file
-    )
+    test_logger = logging.getLogger(__name__)
     test_logger.info(f"--- Starting test_collect_all ---")
     test_logger.info(f"Test output directory: {test_data_dir}")
     test_logger.info(f"Log file: {test_log_file}")
@@ -93,7 +88,7 @@ def test_collect_all():
         os.makedirs(config.PATHS.SCRAPED_POLICIES_DIR, exist_ok=True)
         os.makedirs(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), exist_ok=True) # State dir
 
-        collect_all(config=config, logger=test_logger)
+        collect_all(config=config)
 
         test_logger.info("--- collect_all function finished execution ---")
         print("\n--- collect_all function finished execution ---")

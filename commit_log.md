@@ -1,5 +1,11 @@
 # Commit History
 
+## commit 19 (4/13/2025 - 00:10)
+
+- Debugged the logging issues.
+- Switched from litellm to openai in pdf processing
+- added back the remove-policy functionality to main.py
+
 ## commit 18 (4/12/2025 - 20:34)
 
 Removed the code for removing rich handler from mcp server.

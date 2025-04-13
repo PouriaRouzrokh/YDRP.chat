@@ -39,7 +39,7 @@ def main(config: SimpleNamespace = None):
     if config.CRAWLER.RESET_CRAWL:
         # Import here to avoid circular dependency if state manager uses logger
         from ydrpolicy.data_collection.crawl.crawler_state import CrawlerState
-        state_manager = CrawlerState(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), logger)
+        state_manager = CrawlerState(os.path.join(config.PATHS.RAW_DATA_DIR, "state"))
         state_manager.clear_state()
         logger.info("Crawler state has been reset. Starting fresh crawl.")
         # Also clear the output CSV if resetting
@@ -73,7 +73,6 @@ def main(config: SimpleNamespace = None):
 
         crawler = YaleCrawler(
             config=config,
-            logger=logger
         )
         crawler.start() # This now includes the login pause and crawl loop
 
@@ -111,5 +110,5 @@ if __name__ == "__main__":
     main_logger.setLevel(logging.INFO)
 
     main_logger.info(f"\n{'='*80}\nSTARTING CRAWLER PROCESS\n{'='*80}")
-    main(config=default_config, logger=main_logger)
+    main(config=default_config)
     main_logger.info(f"\n{'='*80}\nCRAWLER PROCESS FINISHED\n{'='*80}")

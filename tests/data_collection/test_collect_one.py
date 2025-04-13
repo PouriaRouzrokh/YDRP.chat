@@ -14,7 +14,6 @@ load_dotenv(dotenv_path=dotenv_path)
 
 from ydrpolicy.data_collection.collect_policies import collect_one
 from ydrpolicy.data_collection.config import config
-from ydrpolicy.data_collection.logger import DataCollectionLogger
 
 def test_collect_one():
     """
@@ -49,7 +48,7 @@ def test_collect_one():
     print(f"Test URL: {test_url}")
 
     # --- Logger ---
-    test_logger = DataCollectionLogger(name="collect_one_test", level=logging.INFO, path=test_log_file)
+    test_logger = logging.getLogger(__name__)
     test_logger.info("--- Starting test_collect_one ---")
 
     policy_output_dir = None
@@ -58,7 +57,7 @@ def test_collect_one():
         os.makedirs(config.PATHS.MARKDOWN_DIR, exist_ok=True)
         os.makedirs(config.PATHS.SCRAPED_POLICIES_DIR, exist_ok=True)
 
-        collect_one(url=test_url, config=config, logger=test_logger)
+        collect_one(url=test_url, config=config)
         test_logger.info("--- collect_one function finished ---")
         print("--- collect_one function finished ---")
 

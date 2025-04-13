@@ -55,7 +55,7 @@ class YaleCrawler:
         self.current_depth: int = 0
         self.config = config
         self.logger = logging.getLogger(__name__)
-        self.state_manager = CrawlerState(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), self.logger)
+        self.state_manager = CrawlerState(os.path.join(config.PATHS.RAW_DATA_DIR, "state"))
         self.stopping = False
         signal.signal(signal.SIGINT, lambda s, f: self.signal_handler(s, f))
         signal.signal(signal.SIGTERM, lambda s, f: self.signal_handler(s, f))

@@ -94,7 +94,6 @@ def scrape_policies(
                                should point to <timestamp>.md files).
         base_path (str): Base directory of raw markdown files (e.g., config.PATHS.MARKDOWN_DIR).
         config (SimpleNamespace): Configuration object.
-        logger (logging.Logger): Logger instance.
 
     Returns:
         pandas.DataFrame: Original DataFrame updated with classification results,

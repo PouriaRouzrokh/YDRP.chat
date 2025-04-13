@@ -233,7 +233,7 @@ def collect_all(config: SimpleNamespace) -> None:
     """Runs the full crawl and scrape (classify/copy) process sequentially."""
     logger.info("Starting collect_all process...")
     logger.info("=" * 80); logger.info("STEP 1: CRAWLING..."); logger.info("=" * 80)
-    try: crawl_main(config=config, logger=logger); logger.info("SUCCESS: Crawling process completed.")
+    try: crawl_main(config=config); logger.info("SUCCESS: Crawling process completed.")
     except SystemExit as e: 
         logger.warning(f"Crawling exited code {e.code}.");
         if e.code != 0: logger.error("Aborting collect_all."); return
@@ -242,7 +242,7 @@ def collect_all(config: SimpleNamespace) -> None:
     try:
         csv_path = os.path.join(config.PATHS.RAW_DATA_DIR, "crawled_policies_data.csv")
         if not os.path.exists(csv_path): logger.error(f"Input file not found: {csv_path}. Aborting scraping."); return
-        scrape_main(config=config, logger=logger) # Uses updated scrape_policies
+        scrape_main(config=config) # Uses updated scrape_policies
         logger.info("SUCCESS: Scraping process completed.")
     except Exception as e: logger.error(f"Scraping failed: {e}", exc_info=True)
     logger.info("=" * 80); logger.info("SUCCESS: collect_all process finished."); logger.info("=" * 80)

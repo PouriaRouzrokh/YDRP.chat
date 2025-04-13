@@ -1,0 +1,193 @@
+2025-04-13 00:05:51,335 - ydrpolicy.data_collection - INFO - Executing policy data collection/processing action...
+2025-04-13 00:05:51,335 - ydrpolicy.data_collection - INFO - Running full data collection pipeline...
+2025-04-13 00:05:51,336 - ydrpolicy.data_collection.collect_policies - INFO - Starting collect_all process...
+2025-04-13 00:05:51,336 - ydrpolicy.data_collection.collect_policies - INFO - ================================================================================
+2025-04-13 00:05:51,336 - ydrpolicy.data_collection.collect_policies - INFO - STEP 1: CRAWLING...
+2025-04-13 00:05:51,336 - ydrpolicy.data_collection.collect_policies - INFO - ================================================================================
+2025-04-13 00:05:51,337 - ydrpolicy.data_collection.crawl.crawl - INFO - Starting crawler with settings:
+2025-04-13 00:05:51,337 - ydrpolicy.data_collection.crawl.crawl - INFO -   - Start URL: https://medicine.yale.edu/diagnosticradiology/facintranet/policies
+2025-04-13 00:05:51,337 - ydrpolicy.data_collection.crawl.crawl - INFO -   - Max Depth: 1
+2025-04-13 00:05:51,337 - ydrpolicy.data_collection.crawl.crawl - INFO -   - Allowed Domains: ['yale.edu', 'medicine.yale.edu']
+2025-04-13 00:05:51,338 - ydrpolicy.data_collection.crawl.crawl - INFO -   - Resume: False
+2025-04-13 00:05:51,338 - ydrpolicy.data_collection.crawl.crawl - INFO -   - Reset: False
+2025-04-13 00:05:51,338 - ydrpolicy.data_collection.crawl.crawl - INFO -   - Raw Output Dir: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files
+2025-04-13 00:05:51,338 - ydrpolicy.data_collection.crawl.crawl - INFO -   - CSV Log: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/crawled_policies_data.csv
+2025-04-13 00:05:51,340 - ydrpolicy.data_collection.crawl.crawler - INFO - Initialized CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/crawled_policies_data.csv
+2025-04-13 00:05:51,340 - ydrpolicy.data_collection.crawl.crawler - INFO - Initializing Chrome WebDriver...
+2025-04-13 00:05:52,300 - ydrpolicy.data_collection.crawl.crawler - INFO - WebDriver initialized successfully
+2025-04-13 00:05:52,301 - ydrpolicy.data_collection.crawl.crawler - INFO - Opening initial URL: https://medicine.yale.edu/diagnosticradiology/facintranet/policies
+2025-04-13 00:05:53,681 - ydrpolicy.data_collection.crawl.crawler - INFO - >>> PAUSING: Log in/Navigate. Press Enter to start crawl...
+2025-04-13 00:06:22,576 - ydrpolicy.data_collection.crawl.crawler - INFO - >>> Resuming...
+2025-04-13 00:06:22,578 - ydrpolicy.data_collection.crawl.crawler - INFO - Resume mode disabled, starting fresh crawl
+2025-04-13 00:06:22,579 - ydrpolicy.data_collection.crawl.crawler_state - INFO - Crawler state cleared
+2025-04-13 00:06:22,580 - ydrpolicy.data_collection.crawl.crawler - INFO - Removed CSV (resume disabled).
+2025-04-13 00:06:22,590 - ydrpolicy.data_collection.crawl.crawler - INFO - Starting new crawl from: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/
+2025-04-13 00:06:22,591 - ydrpolicy.data_collection.crawl.crawler - INFO - Starting automated crawl loop (Max Depth: 1)...
+2025-04-13 00:06:22,592 - ydrpolicy.data_collection.crawl.crawler - INFO - 
+================================================================================
+Processing [1] (Pri: 100.0, Depth: 0): https://medicine.yale.edu/diagnosticradiology/facintranet/policies/
+================================================================================
+2025-04-13 00:06:22,592 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing URL: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/ at depth 0
+2025-04-13 00:06:22,593 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing as webpage: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/
+2025-04-13 00:06:25,452 - ydrpolicy.data_collection.crawl.crawler - INFO - Extracted 62 potential links from https://medicine.yale.edu/diagnosticradiology/facintranet/policies/
+2025-04-13 00:06:25,453 - ydrpolicy.data_collection.crawl.crawler - INFO - Webpage obtained: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/ (Links: 62)
+2025-04-13 00:06:25,454 - ydrpolicy.data_collection.crawl.crawler - INFO - Saved Raw Markdown: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000625453930.md
+2025-04-13 00:06:25,454 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - Analyzing content for policies from: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/
+2025-04-13 00:06:41,666 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - LLM analysis complete for https://medicine.yale.edu/diagnosticradiology/facintranet/policies/. Policy detected: True
+2025-04-13 00:06:41,670 - ydrpolicy.data_collection.crawl.crawler - INFO - Queueing definite: https://medicine.yale.edu/diagnosticradiology/quality-safety/
+2025-04-13 00:06:41,671 - ydrpolicy.data_collection.crawl.crawler - INFO - Queueing definite: https://medicine.yale.edu/myysm/policies/
+2025-04-13 00:06:41,672 - ydrpolicy.data_collection.crawl.crawler - INFO - Queueing definite: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/coi/
+2025-04-13 00:06:41,673 - ydrpolicy.data_collection.crawl.crawler - INFO - Queueing definite: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/grandroundsexpenses/
+2025-04-13 00:06:41,674 - ydrpolicy.data_collection.crawl.crawler - INFO - Queueing definite: https://files-profile.medicine.yale.edu/documents/cba873d8-f1ac-4003-a2fb-9b9745988403
+2025-04-13 00:06:41,675 - ydrpolicy.data_collection.crawl.crawler - INFO - Added 5 new links to queue (Depth 1). Queue size: 5
+2025-04-13 00:06:41,676 - ydrpolicy.data_collection.crawl.crawler - INFO - 
+================================================================================
+Processing [2] (Pri: 38.5, Depth: 1): https://medicine.yale.edu/diagnosticradiology/facintranet/policies/coi/
+================================================================================
+2025-04-13 00:06:41,678 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing URL: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/coi/ at depth 1
+2025-04-13 00:06:41,683 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing as webpage: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/coi/
+2025-04-13 00:06:44,299 - ydrpolicy.data_collection.crawl.crawler - INFO - Extracted 60 potential links from https://medicine.yale.edu/diagnosticradiology/facintranet/policies/coi/
+2025-04-13 00:06:44,299 - ydrpolicy.data_collection.crawl.crawler - INFO - Webpage obtained: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/coi/ (Links: 60)
+2025-04-13 00:06:44,300 - ydrpolicy.data_collection.crawl.crawler - INFO - Saved Raw Markdown: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000644300212.md
+2025-04-13 00:06:44,300 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - Analyzing content for policies from: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/coi/
+2025-04-13 00:07:17,499 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - LLM analysis complete for https://medicine.yale.edu/diagnosticradiology/facintranet/policies/coi/. Policy detected: True
+2025-04-13 00:07:17,503 - ydrpolicy.data_collection.crawl.crawler - INFO - 
+================================================================================
+Processing [3] (Pri: 38.5, Depth: 1): https://medicine.yale.edu/diagnosticradiology/facintranet/policies/grandroundsexpenses/
+================================================================================
+2025-04-13 00:07:17,505 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing URL: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/grandroundsexpenses/ at depth 1
+2025-04-13 00:07:17,506 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing as webpage: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/grandroundsexpenses/
+2025-04-13 00:07:20,327 - ydrpolicy.data_collection.crawl.crawler - INFO - Extracted 60 potential links from https://medicine.yale.edu/diagnosticradiology/facintranet/policies/grandroundsexpenses/
+2025-04-13 00:07:20,328 - ydrpolicy.data_collection.crawl.crawler - INFO - Webpage obtained: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/grandroundsexpenses/ (Links: 60)
+2025-04-13 00:07:20,329 - ydrpolicy.data_collection.crawl.crawler - INFO - Saved Raw Markdown: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000720329190.md
+2025-04-13 00:07:20,330 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - Analyzing content for policies from: https://medicine.yale.edu/diagnosticradiology/facintranet/policies/grandroundsexpenses/
+2025-04-13 00:07:39,575 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - LLM analysis complete for https://medicine.yale.edu/diagnosticradiology/facintranet/policies/grandroundsexpenses/. Policy detected: True
+2025-04-13 00:07:39,578 - ydrpolicy.data_collection.crawl.crawler - INFO - 
+================================================================================
+Processing [4] (Pri: 34.5, Depth: 1): https://medicine.yale.edu/myysm/policies/
+================================================================================
+2025-04-13 00:07:39,579 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing URL: https://medicine.yale.edu/myysm/policies/ at depth 1
+2025-04-13 00:07:39,580 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing as webpage: https://medicine.yale.edu/myysm/policies/
+2025-04-13 00:07:42,198 - ydrpolicy.data_collection.crawl.crawler - INFO - Extracted 230 potential links from https://medicine.yale.edu/myysm/policies/
+2025-04-13 00:07:42,199 - ydrpolicy.data_collection.crawl.crawler - INFO - Webpage obtained: https://medicine.yale.edu/myysm/policies/ (Links: 230)
+2025-04-13 00:07:42,199 - ydrpolicy.data_collection.crawl.crawler - INFO - Saved Raw Markdown: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000742199434.md
+2025-04-13 00:07:42,199 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - Analyzing content for policies from: https://medicine.yale.edu/myysm/policies/
+2025-04-13 00:07:47,279 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - LLM analysis complete for https://medicine.yale.edu/myysm/policies/. Policy detected: False
+2025-04-13 00:07:47,282 - ydrpolicy.data_collection.crawl.crawler - INFO - 
+================================================================================
+Processing [5] (Pri: 29.5, Depth: 1): https://medicine.yale.edu/diagnosticradiology/quality-safety/
+================================================================================
+2025-04-13 00:07:47,283 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing URL: https://medicine.yale.edu/diagnosticradiology/quality-safety/ at depth 1
+2025-04-13 00:07:47,284 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing as webpage: https://medicine.yale.edu/diagnosticradiology/quality-safety/
+2025-04-13 00:07:50,057 - ydrpolicy.data_collection.crawl.crawler - INFO - Extracted 294 potential links from https://medicine.yale.edu/diagnosticradiology/quality-safety/
+2025-04-13 00:07:50,058 - ydrpolicy.data_collection.crawl.crawler - INFO - Webpage obtained: https://medicine.yale.edu/diagnosticradiology/quality-safety/ (Links: 294)
+2025-04-13 00:07:50,058 - ydrpolicy.data_collection.crawl.crawler - INFO - Saved Raw Markdown: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000750058407.md
+2025-04-13 00:07:50,058 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - Analyzing content for policies from: https://medicine.yale.edu/diagnosticradiology/quality-safety/
+2025-04-13 00:08:13,511 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - LLM analysis complete for https://medicine.yale.edu/diagnosticradiology/quality-safety/. Policy detected: True
+2025-04-13 00:08:13,515 - ydrpolicy.data_collection.crawl.crawler - INFO - 
+================================================================================
+Processing [6] (Pri: 4.0, Depth: 1): https://files-profile.medicine.yale.edu/documents/cba873d8-f1ac-4003-a2fb-9b9745988403
+================================================================================
+2025-04-13 00:08:13,516 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing URL: https://files-profile.medicine.yale.edu/documents/cba873d8-f1ac-4003-a2fb-9b9745988403 at depth 1
+2025-04-13 00:08:13,517 - ydrpolicy.data_collection.crawl.crawler - INFO - Processing as document: https://files-profile.medicine.yale.edu/documents/cba873d8-f1ac-4003-a2fb-9b9745988403
+2025-04-13 00:08:13,562 - ydrpolicy.data_collection.crawl.processors.pdf_processor - INFO - Processing PDF: https://files-profile.medicine.yale.edu/documents/cba873d8-f1ac-4003-a2fb-9b9745988403
+2025-04-13 00:08:13,562 - ydrpolicy.data_collection.crawl.processors.pdf_processor - INFO - Raw MD Path: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000813562232.md
+2025-04-13 00:08:13,563 - ydrpolicy.data_collection.crawl.processors.pdf_processor - INFO - Raw Images Path: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000813562232
+2025-04-13 00:08:17,927 - ydrpolicy.data_collection.crawl.processors.pdf_processor - INFO - PDF -> Raw MD success: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000813562232.md
+2025-04-13 00:08:17,939 - ydrpolicy.data_collection.crawl.crawler - INFO - Doc via OCR: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000813562232.md
+2025-04-13 00:08:17,941 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - Analyzing content for policies from: https://files-profile.medicine.yale.edu/documents/cba873d8-f1ac-4003-a2fb-9b9745988403
+2025-04-13 00:08:28,565 - ydrpolicy.data_collection.crawl.processors.llm_processor - INFO - LLM analysis complete for https://files-profile.medicine.yale.edu/documents/cba873d8-f1ac-4003-a2fb-9b9745988403. Policy detected: True
+2025-04-13 00:08:28,568 - ydrpolicy.data_collection.crawl.crawler - INFO - Crawl loop finished.
+2025-04-13 00:08:28,568 - ydrpolicy.data_collection.crawl.crawler - INFO - Crawler completed: Queue empty.
+2025-04-13 00:08:28,570 - ydrpolicy.data_collection.crawl.crawler_state - INFO - Crawler state saved: 6 URLs visited, 0 URLs in queue
+2025-04-13 00:08:28,570 - ydrpolicy.data_collection.crawl.crawler_state - INFO - Last URL: https://files-profile.medicine.yale.edu/documents/cba873d8-f1ac-4003-a2fb-9b9745988403 (depth: 1)
+2025-04-13 00:08:28,572 - ydrpolicy.data_collection.crawl.crawler_state - INFO - Crawler state saved: 6 URLs visited, 0 URLs in queue
+2025-04-13 00:08:28,572 - ydrpolicy.data_collection.crawl.crawler_state - INFO - Last URL: https://files-profile.medicine.yale.edu/documents/cba873d8-f1ac-4003-a2fb-9b9745988403 (depth: 1)
+2025-04-13 00:08:28,573 - ydrpolicy.data_collection.crawl.crawler - INFO - Closing browser...
+2025-04-13 00:08:28,662 - ydrpolicy.data_collection.crawl.crawl - INFO - Crawling finished. Raw data saved in /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files. See CSV log.
+2025-04-13 00:08:28,663 - ydrpolicy.data_collection.collect_policies - INFO - SUCCESS: Crawling process completed.
+2025-04-13 00:08:28,663 - ydrpolicy.data_collection.collect_policies - INFO - ================================================================================
+2025-04-13 00:08:28,663 - ydrpolicy.data_collection.collect_policies - INFO - STEP 2: SCRAPING (Classification & Copy)...
+2025-04-13 00:08:28,664 - ydrpolicy.data_collection.collect_policies - INFO - ================================================================================
+2025-04-13 00:08:28,665 - ydrpolicy.data_collection.scrape.scrape - INFO - Starting policy classification/processing with:
+2025-04-13 00:08:28,665 - ydrpolicy.data_collection.scrape.scrape - INFO -   - Input CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/crawled_policies_data.csv
+2025-04-13 00:08:28,665 - ydrpolicy.data_collection.scrape.scrape - INFO -   - Raw Markdown Base Path: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files
+2025-04-13 00:08:28,665 - ydrpolicy.data_collection.scrape.scrape - INFO -   - Output Directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies
+2025-04-13 00:08:28,666 - ydrpolicy.data_collection.scrape.scrape - INFO -   - Classification LLM model: o3-mini
+2025-04-13 00:08:28,666 - ydrpolicy.data_collection.scrape.scrape - INFO - Reading input data from: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/crawled_policies_data.csv
+2025-04-13 00:08:28,681 - ydrpolicy.data_collection.scrape.scraper - INFO - Target base directory for scraped policies: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies
+2025-04-13 00:08:28,689 - ydrpolicy.data_collection.scrape.scraper - INFO - 
+--------------------------------------------------------------------------------
+2025-04-13 00:08:28,690 - ydrpolicy.data_collection.scrape.scraper - INFO - Processing file 1/6: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000625453930.md
+2025-04-13 00:08:28,690 - ydrpolicy.data_collection.scrape.scraper - INFO - Raw Timestamp: 20250413000625453930
+2025-04-13 00:08:28,691 - ydrpolicy.data_collection.scrape.scraper - INFO - --------------------------------------------------------------------------------
+2025-04-13 00:08:31,962 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Classification: Contains Policy = False
+2025-04-13 00:08:31,963 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Policy Title: 
+2025-04-13 00:08:31,964 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Reasoning: The content is primarily a navigation page with links and menus directing to various policy documents. There is no substantive policy text or specific rules/guidelines provided.
+2025-04-13 00:08:31,964 - ydrpolicy.data_collection.scrape.scraper - INFO - File classified as not containing policy. No output structure created.
+2025-04-13 00:08:31,966 - ydrpolicy.data_collection.scrape.scraper - INFO - 
+--------------------------------------------------------------------------------
+2025-04-13 00:08:31,967 - ydrpolicy.data_collection.scrape.scraper - INFO - Processing file 2/6: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000644300212.md
+2025-04-13 00:08:31,967 - ydrpolicy.data_collection.scrape.scraper - INFO - Raw Timestamp: 20250413000644300212
+2025-04-13 00:08:31,968 - ydrpolicy.data_collection.scrape.scraper - INFO - --------------------------------------------------------------------------------
+2025-04-13 00:08:35,934 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Classification: Contains Policy = True
+2025-04-13 00:08:35,935 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Policy Title: YDR Conflict of Interest Policy
+2025-04-13 00:08:35,935 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Reasoning: The document contains substantive policy text outlining principles for addressing conflicts of interest in external activities, clearly titled 'YDR Conflict of Interest Policy'.
+2025-04-13 00:08:35,937 - ydrpolicy.data_collection.scrape.scraper - INFO - Created/Ensured destination directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies/YDR_Conflict_of_Interest_Policy_20250413000644300212
+2025-04-13 00:08:35,938 - ydrpolicy.data_collection.scrape.scraper - INFO - SUCCESS: Copied raw markdown to: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies/YDR_Conflict_of_Interest_Policy_20250413000644300212/content.md
+2025-04-13 00:08:35,940 - ydrpolicy.data_collection.scrape.scraper - INFO - SUCCESS: Created filtered text version at: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies/YDR_Conflict_of_Interest_Policy_20250413000644300212/content.txt
+2025-04-13 00:08:35,941 - ydrpolicy.data_collection.scrape.scraper - INFO - 
+--------------------------------------------------------------------------------
+2025-04-13 00:08:35,941 - ydrpolicy.data_collection.scrape.scraper - INFO - Processing file 3/6: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000720329190.md
+2025-04-13 00:08:35,942 - ydrpolicy.data_collection.scrape.scraper - INFO - Raw Timestamp: 20250413000720329190
+2025-04-13 00:08:35,942 - ydrpolicy.data_collection.scrape.scraper - INFO - --------------------------------------------------------------------------------
+2025-04-13 00:08:39,620 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Classification: Contains Policy = True
+2025-04-13 00:08:39,621 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Policy Title: Grand Rounds Allowable Expenses
+2025-04-13 00:08:39,621 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Reasoning: The document contains detailed policy text outlining guidelines and reimbursement procedures for hotel, transportation, honorarium, and meeting expenses for Grand Rounds events.
+2025-04-13 00:08:39,621 - ydrpolicy.data_collection.scrape.scraper - INFO - Created/Ensured destination directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies/Grand_Rounds_Allowable_Expenses_20250413000720329190
+2025-04-13 00:08:39,622 - ydrpolicy.data_collection.scrape.scraper - INFO - SUCCESS: Copied raw markdown to: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies/Grand_Rounds_Allowable_Expenses_20250413000720329190/content.md
+2025-04-13 00:08:39,623 - ydrpolicy.data_collection.scrape.scraper - INFO - SUCCESS: Created filtered text version at: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies/Grand_Rounds_Allowable_Expenses_20250413000720329190/content.txt
+2025-04-13 00:08:39,623 - ydrpolicy.data_collection.scrape.scraper - INFO - 
+--------------------------------------------------------------------------------
+2025-04-13 00:08:39,624 - ydrpolicy.data_collection.scrape.scraper - INFO - Processing file 4/6: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000742199434.md
+2025-04-13 00:08:39,624 - ydrpolicy.data_collection.scrape.scraper - INFO - Raw Timestamp: 20250413000742199434
+2025-04-13 00:08:39,624 - ydrpolicy.data_collection.scrape.scraper - INFO - --------------------------------------------------------------------------------
+2025-04-13 00:08:43,550 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Classification: Contains Policy = False
+2025-04-13 00:08:43,551 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Policy Title: 
+2025-04-13 00:08:43,552 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Reasoning: The document is a navigation and listing page for Yale School of Medicine policies, procedures, and bylaws, and does not include substantive policy text or detailed guidelines.
+2025-04-13 00:08:43,553 - ydrpolicy.data_collection.scrape.scraper - INFO - File classified as not containing policy. No output structure created.
+2025-04-13 00:08:43,554 - ydrpolicy.data_collection.scrape.scraper - INFO - 
+--------------------------------------------------------------------------------
+2025-04-13 00:08:43,555 - ydrpolicy.data_collection.scrape.scraper - INFO - Processing file 5/6: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000750058407.md
+2025-04-13 00:08:43,555 - ydrpolicy.data_collection.scrape.scraper - INFO - Raw Timestamp: 20250413000750058407
+2025-04-13 00:08:43,556 - ydrpolicy.data_collection.scrape.scraper - INFO - --------------------------------------------------------------------------------
+2025-04-13 00:08:47,916 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Classification: Contains Policy = False
+2025-04-13 00:08:47,917 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Policy Title: None
+2025-04-13 00:08:47,918 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Reasoning: The content is a navigational page with links to various policy documents and does not include any substantive policy text itself.
+2025-04-13 00:08:47,919 - ydrpolicy.data_collection.scrape.scraper - INFO - File classified as not containing policy. No output structure created.
+2025-04-13 00:08:47,920 - ydrpolicy.data_collection.scrape.scraper - INFO - 
+--------------------------------------------------------------------------------
+2025-04-13 00:08:47,921 - ydrpolicy.data_collection.scrape.scraper - INFO - Processing file 6/6: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000813562232.md
+2025-04-13 00:08:47,921 - ydrpolicy.data_collection.scrape.scraper - INFO - Raw Timestamp: 20250413000813562232
+2025-04-13 00:08:47,922 - ydrpolicy.data_collection.scrape.scraper - INFO - --------------------------------------------------------------------------------
+2025-04-13 00:08:53,758 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Classification: Contains Policy = True
+2025-04-13 00:08:53,760 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Policy Title: Critical Out-Patient Imaging Findings: Immediate Care SOP
+2025-04-13 00:08:53,761 - ydrpolicy.data_collection.scrape.scraper - INFO - LLM Reasoning: The document contains detailed procedural steps and guidelines for handling critical imaging findings, including communication protocols and ED transfer procedures, along with review and approval information.
+2025-04-13 00:08:53,762 - ydrpolicy.data_collection.scrape.scraper - INFO - Created/Ensured destination directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies/Critical_Out-Patient_Imaging_Findings_Immediate_Care_SOP_20250413000813562232
+2025-04-13 00:08:53,764 - ydrpolicy.data_collection.scrape.scraper - INFO - SUCCESS: Copied raw markdown to: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies/Critical_Out-Patient_Imaging_Findings_Immediate_Care_SOP_20250413000813562232/content.md
+2025-04-13 00:08:53,765 - ydrpolicy.data_collection.scrape.scraper - INFO - SUCCESS: Created filtered text version at: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/scraped_policies/Critical_Out-Patient_Imaging_Findings_Immediate_Care_SOP_20250413000813562232/content.txt
+2025-04-13 00:08:53,766 - ydrpolicy.data_collection.scrape.scraper - INFO - Checking for images in source directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/raw/markdown_files/20250413000813562232
+2025-04-13 00:08:53,768 - ydrpolicy.data_collection.scrape.scraper - INFO - 
+================================================================================
+POLICY CLASSIFICATION & PROCESSING COMPLETE
+================================================================================
+2025-04-13 00:08:53,769 - ydrpolicy.data_collection.scrape.scraper - INFO - Total files processed: 6
+2025-04-13 00:08:53,770 - ydrpolicy.data_collection.scrape.scraper - INFO - Files classified as containing policies (processed): 3
+2025-04-13 00:08:53,771 - ydrpolicy.data_collection.scrape.scraper - INFO - Files classified as NOT containing policies: 3
+2025-04-13 00:08:53,771 - ydrpolicy.data_collection.scrape.scrape - INFO - Saving processing log to: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data_2/processed/processed_policies_log.csv
+2025-04-13 00:08:53,773 - ydrpolicy.data_collection.scrape.scrape - INFO - Policy classification and processing completed successfully.
+2025-04-13 00:08:53,773 - ydrpolicy.data_collection.collect_policies - INFO - SUCCESS: Scraping process completed.
+2025-04-13 00:08:53,774 - ydrpolicy.data_collection.collect_policies - INFO - ================================================================================
+2025-04-13 00:08:53,774 - ydrpolicy.data_collection.collect_policies - INFO - SUCCESS: collect_all process finished.
+2025-04-13 00:08:53,774 - ydrpolicy.data_collection.collect_policies - INFO - ================================================================================
+2025-04-13 00:08:53,775 - ydrpolicy.data_collection - INFO - Policy data collection/processing action finished.

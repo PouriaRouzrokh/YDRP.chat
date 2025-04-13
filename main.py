@@ -168,72 +168,136 @@ def db_command(
 def policy_command(
     # Typer context is passed automatically
     ctx: typer.Context,
-    # Command-specific options
-    collect_all: bool = typer.Option(False, "--all", help="Run the full data collection pipeline (crawl and scrape)."),
-    collect_one: Optional[str] = typer.Option(None, "--one", help="Collect and process a single URL."),
-    crawl_only: bool = typer.Option(False, "--crawl", help="Run only the crawling step."),
-    scrape_only: bool = typer.Option(False, "--scrape", help="Run only the scraping/classification step (requires crawled data)."),
-    reset_crawl: bool = typer.Option(False, "--reset-crawl", help="Reset crawler state before crawling."),
-    resume_crawl: bool = typer.Option(False, "--resume-crawl", help="Resume crawling from saved state."),
+    # --- Collection / Processing Options ---
+    collect_all: bool = typer.Option(False, "--collect-all", help="Run the full data collection pipeline (crawl and scrape). Mutually exclusive with other actions."),
+    collect_one: Optional[str] = typer.Option(None, "--collect-one", help="Collect and process a single URL. Mutually exclusive with other actions."),
+    crawl_only: bool = typer.Option(False, "--crawl-all", help="Run only the crawling step. Mutually exclusive with other actions."),
+    scrape_only: bool = typer.Option(False, "--scrape-all", help="Run only the scraping/classification step. Mutually exclusive with other actions."),
+    reset_crawl: bool = typer.Option(False, "--reset-crawl", help="Reset crawler state before crawling (used with --crawl-all or --collect-all)."),
+    resume_crawl: bool = typer.Option(False, "--resume-crawl", help="Resume crawling from saved state (used with --crawl-all or --collect-all)."),
+    # --- Removal Options ---
+    remove_id: Optional[int] = typer.Option(None, "--remove-id", help="ID of the policy to remove from DB. Mutually exclusive with other actions."),
+    remove_title: Optional[str] = typer.Option(None, "--remove-title", help="Exact title of the policy to remove from DB. Mutually exclusive with other actions."),
+    force_remove: bool = typer.Option(False, "--force", help="Force removal without confirmation (used with --remove-id or --remove-title)."),
+    db_url_remove: Optional[str] = typer.Option(None, "--db-url", help="Optional database URL override (for removal action)."),
 ):
     """
-    Collect and process policy documents from Yale sources.
+    Manage policy data: Collect, process, or remove policies.
 
-    - Use `--all` to run both crawling and scraping sequentially.
-    - Use `--one <URL>` to process a single specific URL.
-    - Use `--crawl` to fetch raw content and create markdown files.
-    - Use `--scrape` to classify/process existing markdown files into the structured 'scraped_policies' directory.
-    - Use `--reset-crawl` to clear saved crawler state.
-    - Use `--resume-crawl` to continue a previously stopped crawl.
+    **Only one primary action (collect, process, or remove) can be performed per command.**
+
+    **Collection/Processing Actions:**
+    - `--all`: Runs full data collection (crawl & scrape).
+    - `--one <URL>`: Processes a single URL.
+    - `--crawl`: Runs only the web crawling part. Use `--reset-crawl` or `--resume-crawl` with this.
+    - `--scrape`: Runs only the classification/processing of existing crawled data.
+
+    **Removal Actions:**
+    - `--remove-id <ID>`: Removes policy with the given ID and all its data (chunks, images).
+    - `--remove-title <TITLE>`: Removes policy with the exact title and all its data.
+    - `--force`: Skips confirmation prompt when removing (DANGEROUS).
+    - `--db-url`: Specify a DB URL for the removal action (defaults to backend config).
     """
-    # Get the standard logger instance for data collection tasks.
-    logger = logging.getLogger("ydrpolicy.data_collection")
-    # Retrieve the data collection config object stored in the context.
-    data_config = ctx.meta["data_config"]
+    # Determine which action group is requested
+    collection_actions = [collect_all, collect_one is not None, crawl_only, scrape_only]
+    removal_actions = [remove_id is not None, remove_title is not None]
 
-    # Import data collection modules *only when this command is run*.
-    try:
-        from ydrpolicy.data_collection import collect_policies, crawl, scrape
-        # DataCollectionLogger class is no longer needed here
-    except ImportError as e:
-        # Use the logger instance we just got, which might be silenced but exists.
-        logger.critical(f"Failed to import data_collection modules: {e}. Ensure components are installed.")
-        # Use print as a fallback if logging might be entirely disabled.
-        # print(f"ERROR: Failed to import data_collection module: {e}.", file=sys.stderr)
-        raise typer.Exit(code=1)
+    num_collection_actions = sum(collection_actions)
+    num_removal_actions = sum(removal_actions)
 
-    logger.info("Executing policy data collection command...")
-
-    # Update data collection config flags based on CLI options accessed via context parameters.
-    data_config.CRAWLER.RESET_CRAWL = ctx.params.get('reset_crawl', False)
-    data_config.CRAWLER.RESUME_CRAWL = ctx.params.get('resume_crawl', False) and not data_config.CRAWLER.RESET_CRAWL
-
-    # Retrieve other specific action flags from context parameters.
-    collect_one_url = ctx.params.get('collect_one')
-    run_crawl_only = ctx.params.get('crawl_only', False)
-    run_scrape_only = ctx.params.get('scrape_only', False)
-
-    # Execute the requested data collection action.
-    # Pass the standard logger instance down to the functions.
-    if collect_all:
-        logger.info("Running full data collection pipeline...")
-        collect_policies.collect_all(config=data_config, logger=logger)
-    elif collect_one_url:
-        logger.info(f"Collecting single URL: {collect_one_url}")
-        collect_policies.collect_one(url=collect_one_url, config=data_config, logger=logger)
-    elif run_crawl_only:
-        logger.info("Running crawling step only...")
-        crawl.main(config=data_config, logger=logger)
-    elif run_scrape_only:
-        logger.info("Running scraping/classification step only...")
-        scrape.main(config=data_config, logger=logger)
-    else:
-        # If no valid action specified, show help.
-        logger.info("No policy collection action specified. Use --all, --one, --crawl, or --scrape.")
+    # --- Validation: Ensure only one primary action ---
+    if num_collection_actions + num_removal_actions == 0:
+        # If no action specified, show help.
+        print("No action specified for 'policy' command. Choose one action (e.g., --all, --crawl, --remove-id).")
         typer.echo(ctx.get_help())
         raise typer.Exit()
+    elif num_collection_actions + num_removal_actions > 1:
+        print("ERROR: Multiple actions specified. Choose only one of --all, --one, --crawl, --scrape, --remove-id, or --remove-title.")
+        typer.echo(ctx.get_help())
+        raise typer.Exit(code=1)
 
-    logger.info("Policy data collection command finished.")
+    # --- Execute Collection/Processing Action ---
+    if num_collection_actions == 1:
+        # Get data_collection logger and config
+        logger = logging.getLogger("ydrpolicy.data_collection")
+        data_config = ctx.meta["data_config"]
+        try:
+            from ydrpolicy.data_collection import collect_policies, crawl, scrape
+        except ImportError as e:
+            logger.critical(f"Failed to import data_collection modules: {e}")
+            raise typer.Exit(code=1)
+
+        logger.info("Executing policy data collection/processing action...")
+
+        # Update relevant config flags only if doing collection
+        data_config.CRAWLER.RESET_CRAWL = reset_crawl
+        data_config.CRAWLER.RESUME_CRAWL = resume_crawl and not reset_crawl
+
+        if collect_all:
+            logger.info("Running full data collection pipeline...")
+            collect_policies.collect_all(config=data_config)
+        elif collect_one is not None:
+            logger.info(f"Collecting single URL: {collect_one}")
+            collect_policies.collect_one(url=collect_one, config=data_config)
+        elif crawl_only:
+            logger.info("Running crawling step only...")
+            crawl.main(config=data_config)
+        elif scrape_only:
+            logger.info("Running scraping/classification step only...")
+            scrape.main(config=data_config)
+
+        logger.info("Policy data collection/processing action finished.")
+
+    # --- Execute Removal Action ---
+    elif num_removal_actions == 1:
+        # Get backend logger and config
+        logger = logging.getLogger("ydrpolicy.backend.scripts") # Logger for script actions
+        backend_config = ctx.meta["backend_config"]
+        try:
+            from ydrpolicy.backend.scripts.remove_policy import run_remove
+        except ImportError as e:
+            logger.critical(f"Failed to import remove_policy script: {e}")
+            raise typer.Exit(code=1)
+
+        # Determine identifier and type
+        identifier = remove_id if remove_id is not None else remove_title
+        id_type = "ID" if remove_id is not None else "Title"
+        target_db_url = db_url_remove or str(backend_config.DATABASE.DATABASE_URL)
+
+        logger.info(f"Executing remove-policy action for {id_type}: '{identifier}'")
+
+        # Confirmation prompt unless --force is used
+        if not force_remove:
+            try:
+                confirm = typer.confirm(
+                    f"==> WARNING <==\nAre you sure you want to permanently remove policy {id_type} '{identifier}' and ALL associated data (chunks, images, history links)? This cannot be undone.",
+                    abort=True # Abort if user answers no
+                )
+            except typer.Abort:
+                logger.info("Policy removal cancelled by user.")
+                raise typer.Exit() # Exit cleanly
+            except EOFError: # Handle non-interactive environments
+                logger.warning("Input stream closed. Assuming cancellation for policy removal.")
+                raise typer.Exit()
+
+        logger.warning(f"Proceeding with removal of policy {id_type}: '{identifier}'...")
+
+        # Call the core removal logic function
+        success = asyncio.run(run_remove(identifier=identifier, db_url=target_db_url)) # Pass correct db_url
+
+        # Report final status
+        if success:
+            logger.info(f"SUCCESS: Successfully removed policy identified by {id_type}: '{identifier}'.")
+        else:
+            logger.error(f"FAILURE: Failed to remove policy identified by {id_type}: '{identifier}'. Check logs for details.")
+            raise typer.Exit(code=1) # Exit with error code on failure
+
+        logger.info("Remove-policy action finished.")
+
+    else:
+        # This case should technically be caught by the initial validation
+        logger.error("Internal error: Invalid action state in policy command.")
+        raise typer.Exit(code=1)
 
 
 # --- MCP Server Command ---

@@ -5,12 +5,12 @@ import os
 import json
 from types import SimpleNamespace
 from typing import Dict, Optional, Union, List
+from openai import OpenAI
 from pydantic import BaseModel, Field
 import logging
 
 # Third-party imports
 from mistralai import Mistral
-from litellm import completion
 
 # Local imports
 from ydrpolicy.data_collection.crawl.processors import llm_prompts
@@ -104,7 +104,8 @@ def analyze_content_for_policies(content: str, url: str, links: list = None, con
         
         try:
             # Get completion from LLM with proper Pydantic model
-            response = completion(
+            openai_client = OpenAI(api_key=config.LLM.OPENAI_API_KEY)
+            response = openai_client.chat.completions.create(
                 model=config.LLM.CRAWLER_LLM_MODEL,
                 messages=messages,
                 response_format={"type": "json_object"}
@@ -133,7 +134,8 @@ def analyze_content_for_policies(content: str, url: str, links: list = None, con
             logger.warning(f"Error parsing LLM response: {str(parsing_error)}")
             # Try direct JSON approach as fallback
             try:
-                response = completion(
+                openai_client = OpenAI(api_key=config.LLM.OPENAI_API_KEY)
+                response = openai_client.chat.completions.create(
                     model=config.LLM.CRAWLER_LLM_MODEL,
                     messages=messages,
                     response_format={"type": "json_object"}

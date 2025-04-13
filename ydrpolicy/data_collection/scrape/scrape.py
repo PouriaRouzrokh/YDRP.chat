@@ -13,7 +13,7 @@ from ydrpolicy.data_collection.config import config as default_config # Renamed 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
-def main(config: SimpleNamespace = None, logger: logging.Logger = None):
+def main(config: SimpleNamespace = None):
     """Main function to run the policy classification and processing step."""
     # Load environment variables if not already loaded
     load_dotenv()
@@ -21,15 +21,6 @@ def main(config: SimpleNamespace = None, logger: logging.Logger = None):
     # Use provided config or default
     if config is None:
         config = default_config
-
-    # If no logger is provided, create a new one
-    if logger is None:
-        log_path = getattr(config.LOGGING, 'SCRAPER_LOG_FILE', os.path.join(config.PATHS.DATA_DIR, "logs", "scraper.log"))
-        logger = DataCollectionLogger(
-            name="scrape_main",
-            level=logging.INFO,
-            path=log_path
-        )
 
     # Get the path to the crawled policies data CSV
     crawled_policies_data_path = os.path.join(config.PATHS.RAW_DATA_DIR, "crawled_policies_data.csv")
@@ -85,7 +76,6 @@ def main(config: SimpleNamespace = None, logger: logging.Logger = None):
         original_df,
         base_path=config.PATHS.MARKDOWN_DIR, # Critical: Point to where raw MD files are
         config=config,
-        logger=logger
     )
 
     # Save the updated DataFrame (includes classification results and output paths)
@@ -116,5 +106,5 @@ if __name__ == "__main__":
     main_logger.info("\n" + "="*80 + "\nSTARTING POLICY CLASSIFICATION & PROCESSING\n" + "="*80)
 
     main_logger.info("\n" + "="*80 + "\nSTARTING POLICY CLASSIFICATION & PROCESSING\n" + "="*80)
-    main(config=main_config, logger=main_logger)
+    main(config=main_config)
     main_logger.info("\n" + "="*80 + "\nPOLICY CLASSIFICATION & PROCESSING FINISHED\n" + "="*80)
