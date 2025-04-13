@@ -18,7 +18,7 @@ from ydrpolicy.backend.services.chat_service import ChatService
 # Initialize logger
 logger = logging.getLogger(__name__)
 
-from ydrpolicy.backend.database.engine import get_async_session # For potential repo injection later
+from ydrpolicy.backend.database.engine import get_async_session  # For potential repo injection later
 
 # --- Dependency Injection Refinement (Example) ---
 # Option 1: Simple instance creation (as before)
@@ -45,6 +45,7 @@ router = APIRouter(
     tags=["Chat"],
 )
 
+
 # Use simple dependency for now
 def get_chat_service() -> ChatService:
     """FastAPI dependency to get the ChatService instance."""
@@ -65,41 +66,46 @@ def get_chat_service() -> ChatService:
         200: {"content": {"text/event-stream": {}}},
         422: {"description": "Validation Error (e.g., missing user_id)"},
         500: {"description": "Internal Server Error during processing"},
-    }
+    },
 )
 async def stream_chat(
     # Use the updated ChatRequest schema
     request: ChatRequest = Body(...),
-    chat_service: ChatService = Depends(get_chat_service)
+    chat_service: ChatService = Depends(get_chat_service),
 ):
     """
     Handles streaming chat requests with history persistence.
     """
-    logger.info(f"API: Received chat stream request for user {request.user_id}, chat {request.chat_id}: {request.message[:100]}...")
+    logger.info(
+        f"API: Received chat stream request for user {request.user_id}, chat {request.chat_id}: {request.message[:100]}..."
+    )
 
     async def event_generator() -> AsyncGenerator[str, None]:
         """Generates SSE formatted JSON strings for each stream chunk."""
         try:
             # Pass user_id, message, and optional chat_id to the service
             async for chunk in chat_service.process_user_message_stream(
-                user_id=request.user_id,
-                message=request.message,
-                chat_id=request.chat_id
+                user_id=request.user_id, message=request.message, chat_id=request.chat_id
             ):
                 json_chunk = chunk.model_dump_json(exclude_unset=True)
-                yield f"data: {json_chunk}\n\n" # SSE format
-                await asyncio.sleep(0.01) # Yield control briefly
+                yield f"data: {json_chunk}\n\n"  # SSE format
+                await asyncio.sleep(0.01)  # Yield control briefly
 
-            logger.info(f"API: Finished streaming response for user {request.user_id}, chat {request.chat_id or 'new'}.")
+            logger.info(
+                f"API: Finished streaming response for user {request.user_id}, chat {request.chat_id or 'new'}."
+            )
             # Ensure a final "end" event or rely on the status event from the service
             # yield "data: {\"type\": \"stream_end\", \"data\": {\"message\": \"Stream finished\"}}\n\n"
 
         except Exception as e:
-             logger.error(f"Error during stream event generation for user {request.user_id}, chat {request.chat_id}: {e}", exc_info=True)
-             error_chunk = StreamChunk(type="error", data={"message": f"Streaming generation failed: {str(e)}"})
-             try:
-                 yield f"data: {error_chunk.model_dump_json()}\n\n"
-             except Exception as yield_err:
-                  logger.error(f"Failed even to yield error chunk: {yield_err}")
+            logger.error(
+                f"Error during stream event generation for user {request.user_id}, chat {request.chat_id}: {e}",
+                exc_info=True,
+            )
+            error_chunk = StreamChunk(type="error", data={"message": f"Streaming generation failed: {str(e)}"})
+            try:
+                yield f"data: {error_chunk.model_dump_json()}\n\n"
+            except Exception as yield_err:
+                logger.error(f"Failed even to yield error chunk: {yield_err}")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

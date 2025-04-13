@@ -111,17 +111,13 @@ def collect_one(url: str, config: SimpleNamespace) -> None:
             temp_ocr_ts: Optional[str] = None  # Variable to hold timestamp from OCR
             try:
                 # Assign tuple return value first
-                ocr_result = crawl_pdf_to_md(
-                    final_url_accessed, doc_output_dir_for_ocr, config
-                )
+                ocr_result = crawl_pdf_to_md(final_url_accessed, doc_output_dir_for_ocr, config)
 
                 # ** FIX: Unpack ONLY if it's a valid tuple **
                 if isinstance(ocr_result, tuple) and len(ocr_result) == 2:
                     temp_ocr_path, temp_ocr_ts = ocr_result
                 else:
-                    logger.warning(
-                        "pdf_to_markdown did not return the expected (path, timestamp) tuple."
-                    )
+                    logger.warning("pdf_to_markdown did not return the expected (path, timestamp) tuple.")
                     temp_ocr_path = None
                     temp_ocr_ts = None
 
@@ -134,13 +130,9 @@ def collect_one(url: str, config: SimpleNamespace) -> None:
                     logger.info(
                         f"OCR OK. Len: {len(markdown_content)}. Raw Path: {raw_markdown_file_path}. Timestamp: {raw_timestamp}"
                     )
-                    ocr_success = (
-                        True  # Mark OCR as successful (path and timestamp are valid)
-                    )
+                    ocr_success = True  # Mark OCR as successful (path and timestamp are valid)
                 else:
-                    logger.warning(
-                        "OCR via pdf_to_markdown failed or returned invalid/non-existent path."
-                    )
+                    logger.warning("OCR via pdf_to_markdown failed or returned invalid/non-existent path.")
                     markdown_content = None
                     raw_markdown_file_path = None
                     raw_timestamp = None
@@ -155,9 +147,7 @@ def collect_one(url: str, config: SimpleNamespace) -> None:
             if not ocr_success:
                 logger.info("OCR failed or TS invalid. Trying page source fallback...")
                 try:
-                    WebDriverWait(driver, 10).until(
-                        EC.presence_of_element_located((By.TAG_NAME, "body"))
-                    )
+                    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
                     html = driver.page_source
                     markdown_content = html_to_markdown(html) if html else None
                     if markdown_content:
@@ -179,9 +169,7 @@ def collect_one(url: str, config: SimpleNamespace) -> None:
                     logger.warning("HTML empty/login?")
                 logger.info(f"HTML length: {len(html) if html else 0}")
                 markdown_content = html_to_markdown(html) if html else None
-                logger.info(
-                    f"MD length: {len(markdown_content) if markdown_content else 0}"
-                )
+                logger.info(f"MD length: {len(markdown_content) if markdown_content else 0}")
             except Exception as e:
                 logger.error(f"Page source error: {e}")
                 markdown_content = None
@@ -189,9 +177,7 @@ def collect_one(url: str, config: SimpleNamespace) -> None:
 
         # Step 3: Save Retrieved Markdown (if needed) & Ensure Timestamp
         if not markdown_content:
-            logger.error(
-                f"Failed get MD for {url} (Final: {final_url_accessed}). Abort."
-            )
+            logger.error(f"Failed get MD for {url} (Final: {final_url_accessed}). Abort.")
             return
 
         if not raw_markdown_file_path:  # If content came from page source, save it now
@@ -199,11 +185,11 @@ def collect_one(url: str, config: SimpleNamespace) -> None:
             now = datetime.datetime.now()
             raw_timestamp = now.strftime("%Y%m%d%H%M%S%f")  # Generate timestamp
             md_filename = f"{raw_timestamp}.md"
-            raw_markdown_file_path = os.path.join(
-                config.PATHS.MARKDOWN_DIR, md_filename
-            )
+            raw_markdown_file_path = os.path.join(config.PATHS.MARKDOWN_DIR, md_filename)
             try:
-                header = f"# Source URL: {url}\n# Final URL: {final_url_accessed}\n# Timestamp: {raw_timestamp}\n\n---\n\n"
+                header = (
+                    f"# Source URL: {url}\n# Final URL: {final_url_accessed}\n# Timestamp: {raw_timestamp}\n\n---\n\n"
+                )
                 with open(raw_markdown_file_path, "w", encoding="utf-8") as f:
                     f.write(header + markdown_content)
                 logger.info(f"Saved Raw Markdown: {raw_markdown_file_path}")
@@ -247,10 +233,7 @@ def collect_one(url: str, config: SimpleNamespace) -> None:
                 response_format=PolicyExtraction,
             )
             response_content = response.choices[0].message.content
-            if (
-                hasattr(response.choices[0].message, "refusal")
-                and response.choices[0].message.refusal
-            ):
+            if hasattr(response.choices[0].message, "refusal") and response.choices[0].message.refusal:
                 logger.error(f"API refused: {response.choices[0].message.refusal}")
                 llm_result["reasoning"] = "API refused"
             else:
@@ -269,24 +252,16 @@ def collect_one(url: str, config: SimpleNamespace) -> None:
             # Step 5: Create Structure & Copy if Policy
             # (Logic remains the same, relies on correct raw_timestamp)
             if llm_result["contains_policy"]:
-                logger.info(
-                    "Step 5: Creating policy output structure & copying files..."
-                )
+                logger.info("Step 5: Creating policy output structure & copying files...")
                 source_markdown_path = raw_markdown_file_path
                 policy_title_str = llm_result.get("policy_title") or "untitled_policy"
                 sanitized_title = sanitize_filename(policy_title_str)
-                dest_folder_name = (
-                    f"{sanitized_title}_{raw_timestamp}"  # Use determined raw_timestamp
-                )
-                dest_policy_dir = os.path.join(
-                    config.PATHS.SCRAPED_POLICIES_DIR, dest_folder_name
-                )
+                dest_folder_name = f"{sanitized_title}_{raw_timestamp}"  # Use determined raw_timestamp
+                dest_policy_dir = os.path.join(config.PATHS.SCRAPED_POLICIES_DIR, dest_folder_name)
                 os.makedirs(dest_policy_dir, exist_ok=True)
                 dest_md_path = os.path.join(dest_policy_dir, "content.md")
                 dest_txt_path = os.path.join(dest_policy_dir, "content.txt")
-                source_img_dir = os.path.join(
-                    os.path.dirname(source_markdown_path), raw_timestamp
-                )
+                source_img_dir = os.path.join(os.path.dirname(source_markdown_path), raw_timestamp)
                 try:
                     shutil.copy2(source_markdown_path, dest_md_path)
                     logger.info(f"SUCCESS: Copied MD -> {dest_md_path}")
@@ -308,9 +283,7 @@ def collect_one(url: str, config: SimpleNamespace) -> None:
                                     count += 1
                                 except Exception as e:
                                     logger.warning(f"Img copy fail {item}: {e}")
-                        logger.info(
-                            f"SUCCESS: Copied {count} image(s) -> {dest_policy_dir}"
-                        )
+                        logger.info(f"SUCCESS: Copied {count} image(s) -> {dest_policy_dir}")
                     else:
                         logger.debug(f"No image source dir found: {source_img_dir}")
                 except Exception as e:

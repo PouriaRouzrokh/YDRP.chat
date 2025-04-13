@@ -5,12 +5,14 @@ from ydrpolicy.backend.config import config
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+
 def ensure_directories():
     """Ensure all required directories exist."""
     for path_name, path_value in vars(config.PATHS).items():
         if isinstance(path_value, str) and not os.path.exists(path_value):
             os.makedirs(path_value, exist_ok=True)
             logger.info(f"Created directory: {path_value}")
+
 
 # Create a function to get the absolute path from a relative path
 def get_abs_path(relative_path):

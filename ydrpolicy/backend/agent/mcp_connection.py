@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 # Store the server instance globally or manage it via dependency injection
 _mcp_server_instance: Optional[MCPServerSse] = None
 
+
 async def get_mcp_server() -> MCPServerSse:
     """
     Gets or creates the MCPServerSse instance for the YDR Policy tools.
@@ -48,9 +49,9 @@ async def get_mcp_server() -> MCPServerSse:
             # We set cache_tools_list=True assuming the tools don't change during runtime.
             # Set cache_tools_list=False if tools might be added/removed dynamically.
             _mcp_server_instance = MCPServerSse(
-                name="YDRPolicyMCPClient", # Name for this client connection
+                name="YDRPolicyMCPClient",  # Name for this client connection
                 params={"url": mcp_url},
-                cache_tools_list=True # Cache the tool list for performance
+                cache_tools_list=True,  # Cache the tool list for performance
             )
             logger.info("MCPServerSse instance created.")
         except Exception as e:
@@ -58,6 +59,7 @@ async def get_mcp_server() -> MCPServerSse:
             raise ConnectionError(f"Could not initialize connection to MCP server at {mcp_url}") from e
 
     return _mcp_server_instance
+
 
 @asynccontextmanager
 async def mcp_server_connection() -> AsyncGenerator[MCPServerSse, None]:
@@ -90,6 +92,7 @@ async def mcp_server_connection() -> AsyncGenerator[MCPServerSse, None]:
         _mcp_server_instance = None
         raise ConnectionError(f"MCP server connection failed: {e}") from e
 
+
 async def close_mcp_connection():
     """
     Closes the global MCP server connection if it exists.
@@ -104,7 +107,7 @@ async def close_mcp_connection():
             # For now, assuming the context manager handles cleanup. If issues arise,
             # explicit cleanup logic might be needed here.
             # await _mcp_server_instance.close() # If an explicit close method exists
-             pass # Relying on context manager for now
+            pass  # Relying on context manager for now
         except Exception as e:
             logger.error(f"Error closing MCP connection: {e}", exc_info=True)
         _mcp_server_instance = None

@@ -27,9 +27,7 @@ def generate_pdf_raw_timestamp_name() -> Tuple[str, str]:
 
 
 # **** MODIFIED FUNCTION SIGNATURE AND RETURN VALUE ****
-def pdf_to_markdown(
-    pdf_url: str, output_folder: str, config: SimpleNamespace
-) -> Tuple[Optional[str], Optional[str]]:
+def pdf_to_markdown(pdf_url: str, output_folder: str, config: SimpleNamespace) -> Tuple[Optional[str], Optional[str]]:
     """
     Convert PDF to markdown using timestamp naming. Saves MD and images.
     Returns (markdown_path, timestamp_basename) on success, (None, None) on failure.
@@ -87,9 +85,7 @@ def pdf_to_markdown(
 
 
 # --- save_base64_image, replace_images_in_markdown, get_combined_markdown remain unchanged ---
-def save_base64_image(
-    base64_str: str, output_dir: str, img_name: str = None
-) -> Optional[str]:
+def save_base64_image(base64_str: str, output_dir: str, img_name: str = None) -> Optional[str]:
     """Saves a base64 encoded image to a file. Returns path or None."""
     if not os.path.exists(output_dir):
         try:
@@ -99,10 +95,7 @@ def save_base64_image(
             return None
     if img_name is None:
         img_name = f"image_{uuid.uuid4().hex[:8]}.png"
-    elif not any(
-        img_name.lower().endswith(ext)
-        for ext in [".png", ".jpg", ".jpeg", ".gif", ".bmp"]
-    ):
+    elif not any(img_name.lower().endswith(ext) for ext in [".png", ".jpg", ".jpeg", ".gif", ".bmp"]):
         img_name += ".png"
     if "," in base64_str:
         try:
@@ -128,9 +121,7 @@ def save_base64_image(
         return None
 
 
-def replace_images_in_markdown(
-    markdown_str: str, images_dict: dict, doc_images_dir: str
-) -> str:
+def replace_images_in_markdown(markdown_str: str, images_dict: dict, doc_images_dir: str) -> str:
     """Saves images and replaces placeholders with direct filename links."""
     id_to_rel_path = {}
     for img_id, base64_data in images_dict.items():
@@ -172,9 +163,7 @@ def get_combined_markdown(ocr_response, doc_images_dir: str) -> str:
         page_markdown = getattr(page, "markdown", "")
         if not page_markdown:
             logger.warning(f"No markdown for page {page_num}.")
-        updated_markdown = replace_images_in_markdown(
-            page_markdown, image_data, doc_images_dir
-        )
+        updated_markdown = replace_images_in_markdown(page_markdown, image_data, doc_images_dir)
         markdowns.append(updated_markdown)
         page_num += 1
     return "\n\n---\n\n".join(markdowns)

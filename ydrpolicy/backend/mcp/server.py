@@ -7,12 +7,12 @@ It defines specific tools that can be called by an MCP client (like the Agent).
 These tools interact with the application's database to retrieve policy information.
 The server can be run using either stdio or http transport.
 """
-import logging # Import standard logging
+import logging  # Import standard logging
 from typing import Any, Dict, List, Optional
-import uvicorn # Used for running the server over HTTP
+import uvicorn  # Used for running the server over HTTP
 
 from mcp.server.fastmcp import FastMCP
-from rich.logging import RichHandler # Import RichHandler to identify it for removal in stdio mode
+from rich.logging import RichHandler  # Import RichHandler to identify it for removal in stdio mode
 
 from ydrpolicy.backend.config import config
 from ydrpolicy.backend.database.engine import get_async_session
@@ -32,6 +32,7 @@ mcp = FastMCP("ydrpolicy_mcp")
 # Tools are functions exposed via MCP that the agent can call.
 # The @mcp.tool() decorator handles registration and schema generation
 # based on type hints and docstrings.
+
 
 @mcp.tool()
 async def find_similar_chunks(query: str, k: int, threshold: Optional[float] = None) -> str:
@@ -58,7 +59,7 @@ async def find_similar_chunks(query: str, k: int, threshold: Optional[float] = N
 
     try:
         logger.debug("Generating embedding for the query...")
-        query_embedding = await embed_text(query) # Generate embedding for the input query
+        query_embedding = await embed_text(query)  # Generate embedding for the input query
         logger.debug(f"Generated embedding with dimension: {len(query_embedding)}")
 
         # Obtain a database session to interact with the repository
@@ -67,9 +68,7 @@ async def find_similar_chunks(query: str, k: int, threshold: Optional[float] = N
             logger.debug(f"Searching for chunks with k={k}, threshold={sim_threshold}...")
             # Call the repository method to perform the vector search
             similar_chunks = await policy_repo.search_chunks_by_embedding(
-                embedding=query_embedding,
-                limit=k,
-                similarity_threshold=sim_threshold
+                embedding=query_embedding, limit=k, similarity_threshold=sim_threshold
             )
             logger.info(f"Found {len(similar_chunks)} similar chunks.")
 
@@ -80,23 +79,23 @@ async def find_similar_chunks(query: str, k: int, threshold: Optional[float] = N
         output_lines = [f"Found {len(similar_chunks)} similar policy chunks (Top {k} requested):"]
         for i, chunk_info in enumerate(similar_chunks):
             # Extract relevant details from each chunk result dictionary
-            chunk_id = chunk_info.get('id', 'N/A')
-            similarity_score = chunk_info.get('similarity', 0.0)
-            policy_id = chunk_info.get('policy_id', 'N/A')
-            policy_title = chunk_info.get('policy_title', 'N/A') # Get policy title
-            content_snippet = chunk_info.get('content', '')[:200] + '...' # Limit snippet length
+            chunk_id = chunk_info.get("id", "N/A")
+            similarity_score = chunk_info.get("similarity", 0.0)
+            policy_id = chunk_info.get("policy_id", "N/A")
+            policy_title = chunk_info.get("policy_title", "N/A")  # Get policy title
+            content_snippet = chunk_info.get("content", "")[:200] + "..."  # Limit snippet length
 
             # Append formatted result to the output list
             output_lines.append(
                 f"\n--- Result {i+1} ---\n"
                 f"  Chunk ID: {chunk_id}\n"
                 f"  Policy ID: {policy_id}\n"
-                f"  Policy Title: {policy_title}\n" # Include title
+                f"  Policy Title: {policy_title}\n"  # Include title
                 f"  Similarity: {similarity_score:.4f}\n"
                 f"  Content Snippet: {content_snippet}"
             )
 
-        return "\n".join(output_lines) # Return a single formatted string
+        return "\n".join(output_lines)  # Return a single formatted string
 
     except Exception as e:
         logger.error(f"Error in find_similar_chunks: {e}", exc_info=True)
@@ -137,8 +136,8 @@ async def get_policy_from_ID(policy_id: int) -> str:
         # Extract details from the retrieved policy object
         retrieved_policy_id = policy.id
         policy_title = policy.title
-        policy_url = policy.source_url if policy.source_url else 'N/A' # Handle missing URL
-        policy_markdown = policy.markdown_content # Get the full markdown
+        policy_url = policy.source_url if policy.source_url else "N/A"  # Handle missing URL
+        policy_markdown = policy.markdown_content  # Get the full markdown
 
         # Format the output string
         output = (
@@ -158,6 +157,7 @@ async def get_policy_from_ID(policy_id: int) -> str:
 
 
 # --- Server Startup Logic ---
+
 
 def start_mcp_server(host: str, port: int, transport: str):
     """
@@ -181,25 +181,25 @@ def start_mcp_server(host: str, port: int, transport: str):
     # Conditionally disable console logging for stdio mode
     # This prevents log messages from interfering with MCP JSON-RPC communication
     # over stdin/stdout. File logging remains active.
-    if transport == 'stdio':
+    if transport == "stdio":
         logger.info("Configuring logger for stdio mode (disabling console propagation)...")
         logger.propagate = False
         logger.info("Disabled log propagation for stdio mode (console logs suppressed).")
 
     # Start the server based on the chosen transport
     try:
-        if transport == 'stdio':
+        if transport == "stdio":
             logger.info("Running MCP server with stdio transport.")
             # The FastMCP library handles stdio communication directly via .run()
             mcp.run(transport=transport)
-        elif transport == 'http':
+        elif transport == "http":
             logger.info(f"Running MCP server with http transport via uvicorn on {host}:{port}.")
             # For HTTP, treat the 'mcp' object as an ASGI application and run it with uvicorn
             uvicorn.run(
-                mcp, # The FastMCP instance is the ASGI application
+                mcp,  # The FastMCP instance is the ASGI application
                 host=host,
                 port=port,
-                log_level=config.LOGGING.LEVEL.lower(), # Use log level from config
+                log_level=config.LOGGING.LEVEL.lower(),  # Use log level from config
                 # Default workers=1 is usually fine for MCP server
             )
         else:
@@ -212,7 +212,7 @@ def start_mcp_server(host: str, port: int, transport: str):
     except Exception as e:
         # Log any exceptions during server execution
         logger.error(f"MCP server run failed: {e}", exc_info=True)
-        raise # Re-raise the exception to indicate failure
+        raise  # Re-raise the exception to indicate failure
 
 
 # --- Main Execution Block ---
@@ -234,7 +234,7 @@ if __name__ == "__main__":
         logger.info("MCP server stopped by user (KeyboardInterrupt).")
     except Exception as e:
         # Errors are logged within start_mcp_server, just exit cleanly
-        logger.debug(f"MCP server exited with error: {e}") # Log error at debug level here
+        logger.debug(f"MCP server exited with error: {e}")  # Log error at debug level here
         pass
 
     logger.info("MCP server process stopped.")

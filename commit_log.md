@@ -1,5 +1,10 @@
 # Commit History
 
+## commit 21 (4/13/2025 - 09:36)
+
+- Ensured the agent runs fine in the terminal mode.
+- Reformatted all codes using black.
+
 ## commit 20 (4/13/2025 - 00:29)
 
 Applied black to certain files

@@ -35,6 +35,7 @@ Interaction Flow:
 8. Do not invent information or policies. Stick strictly to the content provided by the tools.
 """
 
+
 async def create_policy_agent(use_mcp: bool = True) -> Agent:
     """
     Factory function to create the Yale Radiology Policy Agent instance.
@@ -61,28 +62,35 @@ async def create_policy_agent(use_mcp: bool = True) -> Agent:
             # Optionally raise the error if MCP is critical
             # raise e
         except Exception as e:
-             logger.error(f"Unexpected error configuring MCP server: {e}. Agent will run without MCP tools.", exc_info=True)
-
+            logger.error(
+                f"Unexpected error configuring MCP server: {e}. Agent will run without MCP tools.", exc_info=True
+            )
 
     # Define agent settings
     agent_settings = {
         "name": "YDR Policy Assistant",
         "instructions": SYSTEM_PROMPT,
-        "model": config.OPENAI.MODEL, # Use model from config
-        "model_settings": ModelSettings(
-            temperature=config.OPENAI.TEMPERATURE,
-            # max_tokens=config.OPENAI.MAX_TOKENS, # Max tokens usually applies to completion, not the model setting itself directly here
-            # tool_choice="auto" # Let the agent decide when to use tools based on instructions
-        ),
+        "model": config.OPENAI.MODEL,  # Use model from config
         "mcp_servers": mcp_servers if use_mcp else [],
         # No specific 'tools' list needed here if they come *only* from MCP
     }
 
+    # Only add model_settings if the model is not o3-mini, o3-preview, or o1-preview
+    if config.OPENAI.MODEL not in ["o3-mini", "o3-preview", "o1-preview"]:
+        agent_settings["model_settings"] = (
+            ModelSettings(
+                temperature=config.OPENAI.TEMPERATURE,
+                # max_tokens=config.OPENAI.MAX_TOKENS, # Max tokens usually applies to completion, not the model setting itself directly here
+                # tool_choice="auto" # Let the agent decide when to use tools based on instructions
+            ),
+        )
+
     # Filter out mcp_servers if not use_mcp
     if not use_mcp:
         del agent_settings["mcp_servers"]
-        agent_settings["instructions"] = agent_settings["instructions"].split("Available Tools:")[0] + \
-            "\nNote: Tools are currently disabled."
+        agent_settings["instructions"] = (
+            agent_settings["instructions"].split("Available Tools:")[0] + "\nNote: Tools are currently disabled."
+        )
 
     try:
         policy_agent = Agent(**agent_settings)

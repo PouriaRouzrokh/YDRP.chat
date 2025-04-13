@@ -66,9 +66,7 @@ async def create_database(db_url: str) -> bool:
             conn = await asyncpg.connect(admin_url)
 
             # Check if the database exists
-            result = await conn.fetchval(
-                "SELECT 1 FROM pg_database WHERE datname = $1", db_name
-            )
+            result = await conn.fetchval("SELECT 1 FROM pg_database WHERE datname = $1", db_name)
 
             if not result:
                 logger.info(f"Creating database '{db_name}'...")
@@ -88,23 +86,17 @@ async def create_database(db_url: str) -> bool:
             if conn is None:  # Check if we failed before even connecting
                 try:
                     conn_admin = await asyncpg.connect(admin_url)
-                    logger.info(
-                        f"Re-attempting database creation for '{db_name}' via admin connection..."
-                    )
+                    logger.info(f"Re-attempting database creation for '{db_name}' via admin connection...")
                     await conn_admin.execute(f'CREATE DATABASE "{db_name}"')
                     logger.info(f"SUCCESS: Database '{db_name}' created.")
                     await conn_admin.close()
                     return True
                 except Exception as create_err:
-                    logger.error(
-                        f"Failed to create database '{db_name}' via admin connection: {create_err}"
-                    )
+                    logger.error(f"Failed to create database '{db_name}' via admin connection: {create_err}")
                     return False
             else:
                 # This case shouldn't normally be reached if creation logic is sound
-                logger.error(
-                    f"Database '{db_name}' seems not to exist, but creation logic didn't run as expected."
-                )
+                logger.error(f"Database '{db_name}' seems not to exist, but creation logic didn't run as expected.")
                 return False
 
         except Exception as e:
@@ -131,11 +123,7 @@ async def create_extension(engine: AsyncEngine, extension_name: str) -> None:
     logger.info(f"Ensuring extension '{extension_name}' exists...")
     try:
         async with engine.begin() as conn:
-            await conn.execute(
-                text(
-                    f"CREATE EXTENSION IF NOT EXISTS {extension_name} SCHEMA public"
-                )  # Specify schema
-            )
+            await conn.execute(text(f"CREATE EXTENSION IF NOT EXISTS {extension_name} SCHEMA public"))  # Specify schema
         logger.info(f"Extension '{extension_name}' checked/created.")
     except Exception as e:
         logger.error(f"Error creating extension '{extension_name}': {e}")
@@ -199,9 +187,7 @@ async def process_new_policy_folder(
     extraction_reasoning: Optional[str] = None,
 ):
     """Processes a single new policy folder and adds its data to the DB."""
-    logger.info(
-        f"Processing new policy: '{policy_title}' from folder: {os.path.basename(folder_path)}"
-    )
+    logger.info(f"Processing new policy: '{policy_title}' from folder: {os.path.basename(folder_path)}")
 
     md_path = os.path.join(folder_path, "content.md")
     txt_path = os.path.join(folder_path, "content.txt")
@@ -219,15 +205,11 @@ async def process_new_policy_folder(
             markdown_content = f_md.read()
         with open(txt_path, "r", encoding="utf-8") as f_txt:
             text_content = f_txt.read()
-        logger.debug(
-            f"  Read content.md ({len(markdown_content)} chars) and content.txt ({len(text_content)} chars)."
-        )
+        logger.debug(f"  Read content.md ({len(markdown_content)} chars) and content.txt ({len(text_content)} chars).")
 
         # 2. Create Policy object
         # Try to extract source URL from markdown header if possible
-        source_url_match = re.search(
-            r"^# Source URL: (.*)$", markdown_content, re.MULTILINE
-        )
+        source_url_match = re.search(r"^# Source URL: (.*)$", markdown_content, re.MULTILINE)
         source_url = source_url_match.group(1).strip() if source_url_match else None
 
         policy = Policy(
@@ -254,8 +236,7 @@ async def process_new_policy_folder(
         image_files = [
             f
             for f in os.listdir(folder_path)
-            if f.lower().startswith("img-")
-            and f.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".bmp"))
+            if f.lower().startswith("img-") and f.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".bmp"))
         ]
         image_count = 0
         for img_filename in image_files:
@@ -269,9 +250,7 @@ async def process_new_policy_folder(
                 session.add(image)
                 image_count += 1
             except Exception as img_err:
-                logger.error(
-                    f"  Error creating Image object for '{img_filename}': {img_err}"
-                )
+                logger.error(f"  Error creating Image object for '{img_filename}': {img_err}")
         if image_count > 0:
             await session.flush()  # Flush images together
             logger.info(f"  Added {image_count} Image records.")
@@ -285,9 +264,7 @@ async def process_new_policy_folder(
         logger.info(f"  Split text content into {len(chunks)} chunks.")
 
         if not chunks:
-            logger.warning(
-                f"  No chunks generated for policy '{policy_title}'. Skipping embedding and chunk creation."
-            )
+            logger.warning(f"  No chunks generated for policy '{policy_title}'. Skipping embedding and chunk creation.")
             return  # Nothing more to do for this policy
 
         # 5. Generate Embeddings (in batches if possible)
@@ -321,27 +298,19 @@ async def process_new_policy_folder(
                 session.add(chunk)
                 chunk_count += 1
             except Exception as chunk_err:
-                logger.error(
-                    f"  Error creating PolicyChunk object for index {i}: {chunk_err}"
-                )
+                logger.error(f"  Error creating PolicyChunk object for index {i}: {chunk_err}")
         if chunk_count > 0:
             logger.info(f"  Added {chunk_count} PolicyChunk records to session.")
 
     except FileNotFoundError as fnf_err:
-        logger.error(
-            f"  File not found during processing of '{policy_title}': {fnf_err}"
-        )
+        logger.error(f"  File not found during processing of '{policy_title}': {fnf_err}")
     except IntegrityError as ie:
         # This might happen if the unique constraint on title is violated
         # despite our initial check (e.g., race condition in parallel processing)
-        logger.error(
-            f"  Database integrity error (likely duplicate title) for '{policy_title}': {ie}"
-        )
+        logger.error(f"  Database integrity error (likely duplicate title) for '{policy_title}': {ie}")
         # Rollback might be needed here if not handled by the outer context manager
     except Exception as e:
-        logger.error(
-            f"  Unexpected error processing policy '{policy_title}': {e}", exc_info=True
-        )
+        logger.error(f"  Unexpected error processing policy '{policy_title}': {e}", exc_info=True)
         # Depending on the severity, consider rolling back or raising
 
 
@@ -361,9 +330,7 @@ async def populate_database_from_scraped_policies():
     # Create mappings from both timestamp and URL to extraction_reasoning from the CSV file
     timestamp_to_description = {}
     url_to_description = {}
-    csv_path = os.path.join(
-        config.PATHS.PROCESSED_DATA_DIR, "processed_policies_log.csv"
-    )
+    csv_path = os.path.join(config.PATHS.PROCESSED_DATA_DIR, "processed_policies_log.csv")
     if os.path.exists(csv_path):
         try:
             logger.info(f"Reading policy descriptions from CSV: {csv_path}")
@@ -393,9 +360,7 @@ async def populate_database_from_scraped_policies():
                     f"Loaded {len(timestamp_to_description)} timestamp mappings and {len(url_to_description)} URL mappings for policy descriptions"
                 )
             else:
-                logger.warning(
-                    f"CSV file missing extraction_reasoning column. Found: {policy_df.columns.tolist()}"
-                )
+                logger.warning(f"CSV file missing extraction_reasoning column. Found: {policy_df.columns.tolist()}")
         except Exception as e:
             logger.error(f"Error reading policy descriptions from CSV: {e}")
     else:
@@ -422,12 +387,8 @@ async def populate_database_from_scraped_policies():
 
                 match = folder_pattern.match(folder_name)
                 if not match:
-                    logger.warning(
-                        f"Skipping folder with unexpected name format: {folder_name}"
-                    )
-                    logger.debug(
-                        f"Folder name '{folder_name}' did not match expected pattern '^(.+)_(\\d{{20}})$'"
-                    )
+                    logger.warning(f"Skipping folder with unexpected name format: {folder_name}")
+                    logger.debug(f"Folder name '{folder_name}' did not match expected pattern '^(.+)_(\\d{{20}})$'")
                     skipped_count += 1
                     continue
 
@@ -441,9 +402,7 @@ async def populate_database_from_scraped_policies():
                 should_process = True
                 if policy_title in existing_policies:
                     # Check if this is a newer version based on timestamp
-                    existing_metadata = existing_policies[policy_title].get(
-                        "metadata", {}
-                    )
+                    existing_metadata = existing_policies[policy_title].get("metadata", {})
                     if existing_metadata and "scrape_timestamp" in existing_metadata:
                         existing_timestamp = existing_metadata["scrape_timestamp"]
                         if existing_timestamp >= scrape_timestamp:
@@ -458,23 +417,17 @@ async def populate_database_from_scraped_policies():
                             )
                             # We'll process this newer version, but first delete the old one
                             existing_id = existing_policies[policy_title]["id"]
-                            logger.info(
-                                f"Deleting old version of policy with ID: {existing_id}"
-                            )
+                            logger.info(f"Deleting old version of policy with ID: {existing_id}")
                             await policy_repo.delete_by_id(existing_id)
                     else:
                         # No timestamp in metadata, consider it as potentially new
-                        logger.debug(
-                            f"Existing policy '{policy_title}' has no timestamp metadata. Will replace it."
-                        )
+                        logger.debug(f"Existing policy '{policy_title}' has no timestamp metadata. Will replace it.")
                         existing_id = existing_policies[policy_title]["id"]
                         await policy_repo.delete_by_id(existing_id)
 
                 if should_process:
                     # First try to get extraction reasoning using timestamp
-                    extraction_reasoning = timestamp_to_description.get(
-                        scrape_timestamp
-                    )
+                    extraction_reasoning = timestamp_to_description.get(scrape_timestamp)
 
                     # If not found by timestamp, try to get source URL from markdown and use it to look up
                     if not extraction_reasoning and url_to_description:
@@ -492,26 +445,16 @@ async def populate_database_from_scraped_policies():
                                     )
                                     if source_url_match:
                                         source_url = source_url_match.group(1).strip()
-                                        extraction_reasoning = url_to_description.get(
-                                            source_url
-                                        )
+                                        extraction_reasoning = url_to_description.get(source_url)
                                         if extraction_reasoning:
-                                            logger.debug(
-                                                f"Found description via URL matching for '{source_url}'"
-                                            )
+                                            logger.debug(f"Found description via URL matching for '{source_url}'")
                             except Exception as file_err:
-                                logger.error(
-                                    f"Error reading markdown file for URL extraction: {file_err}"
-                                )
+                                logger.error(f"Error reading markdown file for URL extraction: {file_err}")
 
                     if extraction_reasoning:
-                        logger.debug(
-                            f"Found description for policy: {extraction_reasoning[:50]}..."
-                        )
+                        logger.debug(f"Found description for policy: {extraction_reasoning[:50]}...")
                     else:
-                        logger.debug(
-                            f"No description found for policy in folder '{folder_name}'"
-                        )
+                        logger.debug(f"No description found for policy in folder '{folder_name}'")
 
                     # Process the new policy folder
                     await process_new_policy_folder(
@@ -555,15 +498,11 @@ async def init_db(db_url: Optional[str] = None, populate: bool = True) -> None:
     # 1. Ensure the database itself exists
     db_exists_or_created = await create_database(db_url)
     if not db_exists_or_created:
-        logger.critical(
-            f"Failed to ensure database exists at {db_url}. Aborting initialization."
-        )
+        logger.critical(f"Failed to ensure database exists at {db_url}. Aborting initialization.")
         return  # Stop if database creation/verification failed
 
     # 2. Create engine to connect to the specific database
-    engine = create_async_engine(
-        db_url, echo=config.API.DEBUG
-    )  # Use debug setting for echo
+    engine = create_async_engine(db_url, echo=config.API.DEBUG)  # Use debug setting for echo
 
     try:
         # 3. Create required PostgreSQL extensions (e.g., vector)
@@ -617,15 +556,11 @@ async def drop_db(db_url: Optional[str] = None, force: bool = False) -> None:
         # Construct the postgres admin URL (no specific database)
         admin_url = f"{parsed.scheme}://{parsed.netloc}/postgres"
 
-        logger.warning(
-            f"Attempting to drop database '{db_name}'... THIS WILL DELETE ALL DATA!"
-        )
+        logger.warning(f"Attempting to drop database '{db_name}'... THIS WILL DELETE ALL DATA!")
 
         # Skip confirmation if force=True
         if not force:
-            confirm = input(
-                f"Are you sure you want to drop database '{db_name}'? (yes/no): "
-            )
+            confirm = input(f"Are you sure you want to drop database '{db_name}'? (yes/no): ")
             if confirm.lower() != "yes":
                 logger.info("Database drop cancelled.")
                 return
@@ -669,17 +604,13 @@ if __name__ == "__main__":
     # Example usage: python -m ydrpolicy.backend.database.init_db [--populate | --drop]
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Initialize or drop the YDR Policy RAG database."
-    )
+    parser = argparse.ArgumentParser(description="Initialize or drop the YDR Policy RAG database.")
     parser.add_argument(
         "--populate",
         action="store_true",
         help="Populate the database with new policies found in the processed data directory.",
     )
-    parser.add_argument(
-        "--drop", action="store_true", help="Drop the database (USE WITH CAUTION!)."
-    )
+    parser.add_argument("--drop", action="store_true", help="Drop the database (USE WITH CAUTION!).")
     parser.add_argument("--db_url", help="Optional database URL to override config.")
     parser.add_argument(
         "--no-populate",

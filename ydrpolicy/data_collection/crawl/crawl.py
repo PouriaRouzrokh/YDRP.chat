@@ -2,17 +2,18 @@
 
 import logging
 import os
-import sys # Import sys for exit
+import sys  # Import sys for exit
 from types import SimpleNamespace
 
 from dotenv import load_dotenv
 
 # Import the updated crawler class
 from ydrpolicy.data_collection.crawl.crawler import YaleCrawler
-from ydrpolicy.data_collection.config import config as default_config # Renamed import
+from ydrpolicy.data_collection.config import config as default_config  # Renamed import
 
 # Initialize logger
 logger = logging.getLogger(__name__)
+
 
 def main(config: SimpleNamespace = None):
     """Main function to run the crawler."""
@@ -39,6 +40,7 @@ def main(config: SimpleNamespace = None):
     if config.CRAWLER.RESET_CRAWL:
         # Import here to avoid circular dependency if state manager uses logger
         from ydrpolicy.data_collection.crawl.crawler_state import CrawlerState
+
         state_manager = CrawlerState(os.path.join(config.PATHS.RAW_DATA_DIR, "state"))
         state_manager.clear_state()
         logger.info("Crawler state has been reset. Starting fresh crawl.")
@@ -51,7 +53,6 @@ def main(config: SimpleNamespace = None):
             except OSError as e:
                 logger.error(f"Failed to remove CSV during reset: {e}")
 
-
     # Display configuration settings
     logger.info(f"Starting crawler with settings:")
     logger.info(f"  - Start URL: {config.CRAWLER.MAIN_URL}")
@@ -62,19 +63,18 @@ def main(config: SimpleNamespace = None):
     logger.info(f"  - Raw Output Dir: {config.PATHS.MARKDOWN_DIR}")
     logger.info(f"  - CSV Log: {os.path.join(config.PATHS.RAW_DATA_DIR, 'crawled_policies_data.csv')}")
 
-
     # Initialize and start the crawler using the updated YaleCrawler class
     try:
         # Ensure output directories exist before starting
         os.makedirs(config.PATHS.RAW_DATA_DIR, exist_ok=True)
         os.makedirs(config.PATHS.MARKDOWN_DIR, exist_ok=True)
         os.makedirs(config.PATHS.DOCUMENT_DIR, exist_ok=True)
-        os.makedirs(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), exist_ok=True) # State dir
+        os.makedirs(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), exist_ok=True)  # State dir
 
         crawler = YaleCrawler(
             config=config,
         )
-        crawler.start() # This now includes the login pause and crawl loop
+        crawler.start()  # This now includes the login pause and crawl loop
 
         logger.info(f"Crawling finished. Raw data saved in {config.PATHS.MARKDOWN_DIR}. See CSV log.")
 
@@ -84,9 +84,10 @@ def main(config: SimpleNamespace = None):
     except Exception as e:
         logger.error(f"Critical error during crawling: {str(e)}", exc_info=True)
         # Attempt to save state if crawler didn't handle it
-        if 'crawler' in locals() and hasattr(crawler, 'save_state') and not crawler.stopping:
-             logger.warning("Attempting emergency state save...")
-             crawler.save_state()
+        if "crawler" in locals() and hasattr(crawler, "save_state") and not crawler.stopping:
+            logger.warning("Attempting emergency state save...")
+            crawler.save_state()
+
 
 if __name__ == "__main__":
     # This block is for running the crawl process directly
@@ -94,17 +95,21 @@ if __name__ == "__main__":
     print("============================")
     print("This script crawls Yale Medicine pages, saving raw content.")
     print(f"Raw markdown/images will be saved in '{default_config.PATHS.MARKDOWN_DIR}' using timestamp names.")
-    print(f"A CSV log will be created at: '{os.path.join(default_config.PATHS.RAW_DATA_DIR, 'crawled_policies_data.csv')}'")
+    print(
+        f"A CSV log will be created at: '{os.path.join(default_config.PATHS.RAW_DATA_DIR, 'crawled_policies_data.csv')}'"
+    )
     print("Press Ctrl+C to stop gracefully (state will be saved).")
     print()
 
     # Create default logger for direct execution
-    log_file_path = getattr(default_config.LOGGING, 'CRAWLER_LOG_FILE', os.path.join(default_config.PATHS.DATA_DIR, "logs", "crawler.log"))
+    log_file_path = getattr(
+        default_config.LOGGING, "CRAWLER_LOG_FILE", os.path.join(default_config.PATHS.DATA_DIR, "logs", "crawler.log")
+    )
     try:
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
     except OSError as e:
         print(f"Warning: Could not create log directory {os.path.dirname(log_file_path)}: {e}")
-        log_file_path = None # Disable file logging if dir creation fails
+        log_file_path = None  # Disable file logging if dir creation fails
 
     main_logger = logging.getLogger(__name__)
     main_logger.setLevel(logging.INFO)

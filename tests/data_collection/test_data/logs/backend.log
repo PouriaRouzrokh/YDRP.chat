@@ -347,3 +347,91 @@ DETAIL:  Key (policy_id)=(13) is not present in table "policies".
 2025-04-13 00:09:38,402 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
 2025-04-13 00:09:38,403 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
 2025-04-13 00:09:38,403 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http transport via uvicorn on 0.0.0.0:8001.
+2025-04-13 01:08:35,686 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-13 01:08:35,687 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-13 01:08:35,687 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-13 01:08:35,688 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-13 01:08:36,087 - ydrpolicy.backend.agent - CRITICAL - Failed to import agent modules: cannot import name 'RunStatus' from 'agents.run_context' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run_context.py). Ensure dependencies are installed.
+2025-04-13 01:09:12,350 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-13 01:09:12,350 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-13 01:09:12,351 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-13 01:09:12,351 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-13 01:09:12,646 - ydrpolicy.backend.agent - CRITICAL - Failed to import agent modules: cannot import name 'RunStatus' from 'agents' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/__init__.py). Ensure dependencies are installed.
+2025-04-13 01:16:47,498 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-13 01:16:47,498 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-13 01:16:47,499 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-13 01:16:47,499 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-13 01:16:47,793 - ydrpolicy.backend.agent - CRITICAL - Failed to import agent modules: cannot import name 'RunStatus' from 'agents.run_context' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run_context.py). Ensure dependencies are installed.
+2025-04-13 01:27:41,259 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-13 01:27:41,259 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-13 01:27:41,259 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-13 01:27:41,260 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-13 01:27:41,260 - ydrpolicy.backend.agent - CRITICAL - Failed agent import: cannot import name 'RunEvents' from 'agents' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/__init__.py)
+2025-04-13 01:32:08,704 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-13 01:32:08,705 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-13 01:32:08,705 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-13 01:32:08,705 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-13 01:32:08,706 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
+2025-04-13 01:32:08,707 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-13 01:32:12,931 - ydrpolicy.backend.agent.terminal - ERROR - Stream processing error: Error code: 400 - {'error': {'message': "Unsupported parameter: 'temperature' is not supported with this model.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': None}}
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 433, in terminal_chat
+    async for event in result_stream.stream_events():
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/result.py", line 186, in stream_events
+    raise self._stored_exception
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 548, in _run_streamed_impl
+    turn_result = await cls._run_single_turn_streamed(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 655, in _run_single_turn_streamed
+    async for event in model.stream_response(
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/models/openai_responses.py", line 141, in stream_response
+    stream = await self._fetch_response(
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/models/openai_responses.py", line 234, in _fetch_response
+    return await self._client.responses.create(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/resources/responses/responses.py", line 1417, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1767, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1461, in request
+    return await self._request(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1562, in _request
+    raise self._make_status_error_from_response(err.response) from None
+openai.BadRequestError: Error code: 400 - {'error': {'message': "Unsupported parameter: 'temperature' is not supported with this model.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': None}}
+2025-04-13 01:32:13,153 - ydrpolicy.backend.agent.terminal - WARNING - Keeping previous history list due to agent run failure.
+2025-04-13 01:32:28,051 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-13 09:10:26,459 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-13 09:10:26,460 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-13 09:10:26,460 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-13 09:10:26,460 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-13 09:10:26,462 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
+2025-04-13 09:10:26,462 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-13 09:18:38,467 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-13 09:18:41,896 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-13 09:18:41,896 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-13 09:18:41,896 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-13 09:18:41,897 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-13 09:18:41,897 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
+2025-04-13 09:18:41,897 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-13 09:26:24,771 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-13 09:26:24,773 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-13 09:32:00,825 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-13 09:32:00,825 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-13 09:32:00,825 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-13 09:32:00,826 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-13 09:32:00,828 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
+2025-04-13 09:32:00,828 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-13 09:32:05,144 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-13 09:32:05,146 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-13 09:33:41,383 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-13 09:33:41,383 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-13 09:33:41,383 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-13 09:33:41,383 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-13 09:33:41,384 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
+2025-04-13 09:33:41,384 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-13 09:35:12,699 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-13 09:35:12,702 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.

@@ -15,6 +15,7 @@ from ydrpolicy.backend.database.repository.base import BaseRepository
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+
 class ChatRepository(BaseRepository[Chat]):
     """Repository for managing Chat objects in the database."""
 
@@ -94,11 +95,11 @@ class ChatRepository(BaseRepository[Chat]):
         # Optional: Verify user exists first
         user_check = await self.session.get(User, user_id)
         if not user_check:
-             logger.error(f"Cannot create chat: User with ID {user_id} not found.")
-             raise ValueError(f"User with ID {user_id} not found.")
+            logger.error(f"Cannot create chat: User with ID {user_id} not found.")
+            raise ValueError(f"User with ID {user_id} not found.")
 
         new_chat = Chat(user_id=user_id, title=title)
-        chat = await self.create(new_chat) # Uses BaseRepository.create
+        chat = await self.create(new_chat)  # Uses BaseRepository.create
         logger.info(f"SUCCESS: Successfully created chat ID {chat.id} for user ID {user_id}.")
         return chat
 

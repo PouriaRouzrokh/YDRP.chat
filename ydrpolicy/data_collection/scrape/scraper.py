@@ -40,9 +40,7 @@ def sanitize_filename(name: str, max_len: int = 80) -> str:
 class PolicyExtraction(BaseModel):
     """Schema for the updated OpenAI API response (classification + title)."""
 
-    contains_policy: bool = Field(
-        description="Whether the file contains actual policy text"
-    )
+    contains_policy: bool = Field(description="Whether the file contains actual policy text")
     # Added policy_title field as requested by the new prompt
     policy_title: Optional[str] = Field(
         None,
@@ -117,9 +115,7 @@ def scrape_policies(
     if "file_path" not in df.columns:
         raise ValueError("DataFrame must contain a 'file_path' column.")
     if not base_path:
-        raise ValueError(
-            "base_path argument is required to locate source markdown files."
-        )
+        raise ValueError("base_path argument is required to locate source markdown files.")
 
     if not config.LLM.OPENAI_API_KEY:
         logger.error("OPENAI_API_KEY not found. Cannot perform classification.")
@@ -133,20 +129,14 @@ def scrape_policies(
     # Store results as list of dictionaries before updating DataFrame
     results_list = []
     os.makedirs(config.PATHS.SCRAPED_POLICIES_DIR, exist_ok=True)
-    logger.info(
-        f"Target base directory for scraped policies: {config.PATHS.SCRAPED_POLICIES_DIR}"
-    )
+    logger.info(f"Target base directory for scraped policies: {config.PATHS.SCRAPED_POLICIES_DIR}")
 
     # Regex to extract timestamp from raw filename (YYYYMMDDHHMMSSffffff)
     timestamp_pattern = re.compile(r"(\d{20})")  # Matches 20 digits
 
-    for index, row in tqdm(
-        df.iterrows(), total=len(df), desc="Classifying & Processing Files"
-    ):
+    for index, row in tqdm(df.iterrows(), total=len(df), desc="Classifying & Processing Files"):
         relative_markdown_path = row["file_path"]
-        source_markdown_path = os.path.normpath(
-            os.path.join(base_path, relative_markdown_path)
-        )
+        source_markdown_path = os.path.normpath(os.path.join(base_path, relative_markdown_path))
         source_filename = os.path.basename(source_markdown_path)
 
         # Extract timestamp from the source filename (expected format: <timestamp>.md)
@@ -173,9 +163,7 @@ def scrape_policies(
 
         try:
             if not os.path.exists(source_markdown_path):
-                logger.error(
-                    f"Source file not found: {source_markdown_path}. Skipping."
-                )
+                logger.error(f"Source file not found: {source_markdown_path}. Skipping.")
                 current_result["reasoning"] = "Source file not found"
                 results_list.append(current_result)
                 continue
@@ -189,9 +177,7 @@ def scrape_policies(
             max_prompt_len = 30000  # Adjust based on model context limits
             content_for_llm = content
             if len(content) > max_prompt_len:
-                logger.warning(
-                    f"Content length ({len(content)}) exceeds limit ({max_prompt_len}), truncating for LLM."
-                )
+                logger.warning(f"Content length ({len(content)}) exceeds limit ({max_prompt_len}), truncating for LLM.")
                 content_for_llm = content[:max_prompt_len] + "\n\n[CONTENT TRUNCATED]"
 
             # Call OpenAI API using the updated PolicyExtraction model (includes title)
@@ -210,13 +196,8 @@ def scrape_policies(
             # Parse LLM response
             response_content = response.choices[0].message.content
             llm_result_data = None
-            if (
-                hasattr(response.choices[0].message, "refusal")
-                and response.choices[0].message.refusal
-            ):
-                logger.error(
-                    f"API refused to process: {response.choices[0].message.refusal}"
-                )
+            if hasattr(response.choices[0].message, "refusal") and response.choices[0].message.refusal:
+                logger.error(f"API refused to process: {response.choices[0].message.refusal}")
                 llm_result_data = {
                     "contains_policy": False,
                     "policy_title": None,
@@ -240,14 +221,10 @@ def scrape_policies(
 
             # Update current_result with LLM output
             current_result["contains_policy"] = llm_result_data["contains_policy"]
-            current_result["policy_title"] = llm_result_data.get(
-                "policy_title"
-            )  # Use .get for optional field
+            current_result["policy_title"] = llm_result_data.get("policy_title")  # Use .get for optional field
             current_result["reasoning"] = llm_result_data["reasoning"]
 
-            logger.info(
-                f"LLM Classification: Contains Policy = {current_result['contains_policy']}"
-            )
+            logger.info(f"LLM Classification: Contains Policy = {current_result['contains_policy']}")
             logger.info(f"LLM Policy Title: {current_result['policy_title']}")
             logger.info(f"LLM Reasoning: {current_result['reasoning']}")
 
@@ -255,17 +232,13 @@ def scrape_policies(
             if current_result["contains_policy"]:
                 # Use extracted title (or default) and sanitize it for the folder name
                 policy_title_str = (
-                    current_result["policy_title"]
-                    if current_result["policy_title"]
-                    else "untitled_policy"
+                    current_result["policy_title"] if current_result["policy_title"] else "untitled_policy"
                 )
                 sanitized_title = sanitize_filename(policy_title_str)
 
                 # Create destination folder name: <sanitized_title>_<raw_timestamp>
                 dest_folder_name = f"{sanitized_title}_{raw_timestamp}"
-                dest_policy_dir = os.path.join(
-                    config.PATHS.SCRAPED_POLICIES_DIR, dest_folder_name
-                )
+                dest_policy_dir = os.path.join(config.PATHS.SCRAPED_POLICIES_DIR, dest_folder_name)
                 os.makedirs(dest_policy_dir, exist_ok=True)
                 logger.info(f"Created/Ensured destination directory: {dest_policy_dir}")
 
@@ -275,82 +248,54 @@ def scrape_policies(
 
                 # Define expected source image directory (created by pdf_processor)
                 # Structure: <base_path>/<raw_timestamp>/
-                source_img_dir = os.path.join(
-                    os.path.dirname(source_markdown_path), raw_timestamp
-                )
+                source_img_dir = os.path.join(os.path.dirname(source_markdown_path), raw_timestamp)
 
                 try:
                     # 1. Copy the original source markdown file to <dest_policy_dir>/content.md
                     shutil.copy2(source_markdown_path, dest_md_path)
                     logger.info(f"SUCCESS: Copied raw markdown to: {dest_md_path}")
-                    current_result["policy_content_path"] = (
-                        dest_md_path  # Store path to content.md
-                    )
+                    current_result["policy_content_path"] = dest_md_path  # Store path to content.md
 
                     # 2. Read the newly copied content.md and create filtered content.txt
                     with open(dest_md_path, "r", encoding="utf-8") as md_file:
-                        markdown_lines = (
-                            md_file.readlines()
-                        )  # Read lines to preserve endings for filtering
+                        markdown_lines = md_file.readlines()  # Read lines to preserve endings for filtering
                     filtered_content = _filter_markdown_for_txt(markdown_lines)
                     with open(dest_txt_path, "w", encoding="utf-8") as txt_file:
                         txt_file.write(filtered_content)
-                    logger.info(
-                        f"SUCCESS: Created filtered text version at: {dest_txt_path}"
-                    )
+                    logger.info(f"SUCCESS: Created filtered text version at: {dest_txt_path}")
 
                     # 3. Copy images from source image directory directly into the destination policy directory
                     if os.path.isdir(source_img_dir):
-                        logger.info(
-                            f"Checking for images in source directory: {source_img_dir}"
-                        )
+                        logger.info(f"Checking for images in source directory: {source_img_dir}")
                         copied_image_count = 0
                         items_in_source = os.listdir(source_img_dir)
                         if not items_in_source:
                             logger.debug("Source image directory is empty.")
                         else:
                             for item_name in items_in_source:
-                                source_item_path = os.path.join(
-                                    source_img_dir, item_name
-                                )
+                                source_item_path = os.path.join(source_img_dir, item_name)
                                 # Destination is directly inside destination_policy_dir
-                                destination_item_path = os.path.join(
-                                    dest_policy_dir, item_name
-                                )
+                                destination_item_path = os.path.join(dest_policy_dir, item_name)
                                 if os.path.isfile(source_item_path):
                                     try:
-                                        shutil.copy2(
-                                            source_item_path, destination_item_path
-                                        )
+                                        shutil.copy2(source_item_path, destination_item_path)
                                         copied_image_count += 1
                                     except Exception as img_copy_err:
-                                        logger.warning(
-                                            f"Failed to copy image '{item_name}': {img_copy_err}"
-                                        )
+                                        logger.warning(f"Failed to copy image '{item_name}': {img_copy_err}")
                             if copied_image_count > 0:
-                                logger.info(
-                                    f"SUCCESS: Copied {copied_image_count} image(s) to: {dest_policy_dir}"
-                                )
+                                logger.info(f"SUCCESS: Copied {copied_image_count} image(s) to: {dest_policy_dir}")
                             else:
-                                logger.debug(
-                                    "No image files were copied from source directory."
-                                )
+                                logger.debug("No image files were copied from source directory.")
                     else:
-                        logger.debug(
-                            f"No source image directory found at: {source_img_dir}"
-                        )
+                        logger.debug(f"No source image directory found at: {source_img_dir}")
 
                 except Exception as copy_err:
-                    logger.error(
-                        f"Error during file processing/copying for {source_markdown_path}: {copy_err}"
-                    )
+                    logger.error(f"Error during file processing/copying for {source_markdown_path}: {copy_err}")
                     current_result["policy_content_path"] = None  # Reset path on error
                     current_result["reasoning"] += " | File Processing/Copy Error"
             else:
                 # If LLM classified as not containing policy
-                logger.info(
-                    "File classified as not containing policy. No output structure created."
-                )
+                logger.info("File classified as not containing policy. No output structure created.")
                 current_result["policy_content_path"] = None
 
         except FileNotFoundError:
@@ -370,23 +315,15 @@ def scrape_policies(
     # Update the DataFrame with results from the list
     df = df.copy()  # Avoid SettingWithCopyWarning
     df["contains_policy"] = [r.get("contains_policy", False) for r in results_list]
-    df["policy_title"] = [
-        r.get("policy_title") for r in results_list
-    ]  # Add title column
+    df["policy_title"] = [r.get("policy_title") for r in results_list]  # Add title column
     df["policy_content_path"] = [r.get("policy_content_path") for r in results_list]
-    df["extraction_reasoning"] = [
-        r.get("reasoning", "Unknown Error") for r in results_list
-    ]
+    df["extraction_reasoning"] = [r.get("reasoning", "Unknown Error") for r in results_list]
 
     # Final summary logging
     logger.info(f"\n{'='*80}\nPOLICY CLASSIFICATION & PROCESSING COMPLETE\n{'='*80}")
     positive_count = sum(df["contains_policy"])
     logger.info(f"Total files processed: {len(df)}")
-    logger.info(
-        f"Files classified as containing policies (processed): {positive_count}"
-    )
-    logger.info(
-        f"Files classified as NOT containing policies: {len(df) - positive_count}"
-    )
+    logger.info(f"Files classified as containing policies (processed): {positive_count}")
+    logger.info(f"Files classified as NOT containing policies: {len(df) - positive_count}")
 
     return df

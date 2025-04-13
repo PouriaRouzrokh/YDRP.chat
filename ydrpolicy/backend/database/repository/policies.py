@@ -63,7 +63,7 @@ class PolicyRepository(BaseRepository[Policy]):
         stmt = (
             select(Policy)
             .where(Policy.title.ilike(f"%{title_query}%"))
-            .order_by(desc(Policy.updated_at)) # Order by most recent
+            .order_by(desc(Policy.updated_at))  # Order by most recent
             .limit(limit)
         )
         result = await self.session.execute(stmt)
@@ -83,8 +83,8 @@ class PolicyRepository(BaseRepository[Policy]):
             select(Policy)
             .where(Policy.id == policy_id)
             .options(
-                selectinload(Policy.chunks).order_by(PolicyChunk.chunk_index), # Load chunks ordered by index
-                selectinload(Policy.images)  # Load images
+                selectinload(Policy.chunks).order_by(PolicyChunk.chunk_index),  # Load chunks ordered by index
+                selectinload(Policy.images),  # Load images
             )
         )
         result = await self.session.execute(stmt)
@@ -111,7 +111,7 @@ class PolicyRepository(BaseRepository[Policy]):
         try:
             # Delete the policy object. Cascades should handle chunks and images.
             await self.session.delete(policy_to_delete)
-            await self.session.flush() # Execute the delete operation
+            await self.session.flush()  # Execute the delete operation
             logger.info(f"SUCCESS: Successfully deleted policy ID {policy_id} and associated data.")
             return True
         except Exception as e:
@@ -137,7 +137,6 @@ class PolicyRepository(BaseRepository[Policy]):
         # Call delete_by_id using the found policy's ID
         return await self.delete_by_id(policy_to_delete.id)
 
-
     async def full_text_search(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
         """
         Perform a full-text search on entire policies (title, description, text_content).
@@ -150,9 +149,10 @@ class PolicyRepository(BaseRepository[Policy]):
             List of matching policies with relevance scores
         """
         # Convert the query to use '&' for AND logic between terms
-        search_query = ' & '.join(query.split())
+        search_query = " & ".join(query.split())
 
-        stmt = text("""
+        stmt = text(
+            """
             SELECT
                 p.id,
                 p.title,
@@ -166,16 +166,13 @@ class PolicyRepository(BaseRepository[Policy]):
             ORDER BY
                 relevance DESC
             LIMIT :limit
-        """)
-
-        result = await self.session.execute(
-            stmt,
-            {"query": search_query, "limit": limit}
+        """
         )
+
+        result = await self.session.execute(stmt, {"query": search_query, "limit": limit})
 
         # Fetch results as mappings (dict-like objects)
         return [dict(row) for row in result.mappings()]
-
 
     async def text_search_chunks(self, query: str, limit: int = None) -> List[Dict[str, Any]]:
         """
@@ -192,9 +189,10 @@ class PolicyRepository(BaseRepository[Policy]):
         logger.info(f"Performing text-only search for query: '{query}' with limit={limit}")
 
         # Convert the query to use '&' for AND logic
-        search_query = ' & '.join(query.split())
+        search_query = " & ".join(query.split())
 
-        stmt = text("""
+        stmt = text(
+            """
             SELECT
                 pc.id,
                 pc.policy_id,
@@ -212,16 +210,13 @@ class PolicyRepository(BaseRepository[Policy]):
             ORDER BY
                 text_score DESC
             LIMIT :limit
-        """)
-
-        result = await self.session.execute(
-            stmt,
-            {"query": search_query, "limit": limit}
+        """
         )
+
+        result = await self.session.execute(stmt, {"query": search_query, "limit": limit})
 
         # Fetch results as mappings
         return [dict(row) for row in result.mappings()]
-
 
     async def get_recent_policies(self, limit: int = 10) -> List[Policy]:
         """
@@ -237,7 +232,6 @@ class PolicyRepository(BaseRepository[Policy]):
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
-
     async def get_recently_updated_policies(self, limit: int = 10) -> List[Policy]:
         """
         Get most recently updated policies.
@@ -251,7 +245,6 @@ class PolicyRepository(BaseRepository[Policy]):
         stmt = select(Policy).order_by(desc(Policy.updated_at)).limit(limit)
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
-
 
     async def create_chunk(self, chunk: PolicyChunk) -> PolicyChunk:
         """
@@ -268,7 +261,6 @@ class PolicyRepository(BaseRepository[Policy]):
         await self.session.refresh(chunk)
         return chunk
 
-
     async def get_chunks_by_policy_id(self, policy_id: int) -> List[PolicyChunk]:
         """
         Get all chunks for a specific policy, ordered by index.
@@ -279,14 +271,9 @@ class PolicyRepository(BaseRepository[Policy]):
         Returns:
             List of PolicyChunk objects
         """
-        stmt = (
-            select(PolicyChunk)
-            .where(PolicyChunk.policy_id == policy_id)
-            .order_by(PolicyChunk.chunk_index)
-        )
+        stmt = select(PolicyChunk).where(PolicyChunk.policy_id == policy_id).order_by(PolicyChunk.chunk_index)
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
-
 
     async def get_chunk_by_id(self, chunk_id: int) -> Optional[PolicyChunk]:
         """
@@ -302,7 +289,6 @@ class PolicyRepository(BaseRepository[Policy]):
         result = await self.session.execute(stmt)
         return result.scalars().first()
 
-
     async def get_chunk_neighbors(self, chunk_id: int, window: int = 1) -> Dict[str, Optional[PolicyChunk]]:
         """
         Get the neighboring chunks (previous and next) for a given chunk ID.
@@ -317,7 +303,7 @@ class PolicyRepository(BaseRepository[Policy]):
         """
         target_chunk = await self.get_chunk_by_id(chunk_id)
         if not target_chunk:
-            return {'previous': None, 'next': None}
+            return {"previous": None, "next": None}
 
         policy_id = target_chunk.policy_id
         target_index = target_chunk.chunk_index
@@ -328,9 +314,9 @@ class PolicyRepository(BaseRepository[Policy]):
             .where(
                 PolicyChunk.policy_id == policy_id,
                 PolicyChunk.chunk_index >= target_index - window,
-                PolicyChunk.chunk_index < target_index
+                PolicyChunk.chunk_index < target_index,
             )
-            .order_by(PolicyChunk.chunk_index) # Ascending to get closest first if window > 1
+            .order_by(PolicyChunk.chunk_index)  # Ascending to get closest first if window > 1
         )
         prev_result = await self.session.execute(prev_stmt)
         previous_chunks = list(prev_result.scalars().all())
@@ -341,24 +327,20 @@ class PolicyRepository(BaseRepository[Policy]):
             .where(
                 PolicyChunk.policy_id == policy_id,
                 PolicyChunk.chunk_index > target_index,
-                PolicyChunk.chunk_index <= target_index + window
+                PolicyChunk.chunk_index <= target_index + window,
             )
-            .order_by(PolicyChunk.chunk_index) # Ascending to get closest first
+            .order_by(PolicyChunk.chunk_index)  # Ascending to get closest first
         )
         next_result = await self.session.execute(next_stmt)
         next_chunks = list(next_result.scalars().all())
 
         return {
-            'previous': previous_chunks or None, # Return None if list is empty
-            'next': next_chunks or None # Return None if list is empty
+            "previous": previous_chunks or None,  # Return None if list is empty
+            "next": next_chunks or None,  # Return None if list is empty
         }
 
-
     async def search_chunks_by_embedding(
-        self,
-        embedding: List[float],
-        limit: int = None,
-        similarity_threshold: float = None
+        self, embedding: List[float], limit: int = None, similarity_threshold: float = None
     ) -> List[Dict[str, Any]]:
         """
         Find chunks similar to the given embedding using cosine similarity.
@@ -372,12 +354,15 @@ class PolicyRepository(BaseRepository[Policy]):
             List of chunks with similarity scores
         """
         limit = limit if limit is not None else config.RAG.TOP_K
-        similarity_threshold = similarity_threshold if similarity_threshold is not None else config.RAG.SIMILARITY_THRESHOLD
+        similarity_threshold = (
+            similarity_threshold if similarity_threshold is not None else config.RAG.SIMILARITY_THRESHOLD
+        )
 
         logger.info(f"Performing vector-only search with limit={limit}, threshold={similarity_threshold}")
 
         # <=> is cosine distance. Similarity = 1 - distance.
-        stmt = text("""
+        stmt = text(
+            """
             SELECT
                 pc.id,
                 pc.policy_id,
@@ -395,20 +380,20 @@ class PolicyRepository(BaseRepository[Policy]):
             ORDER BY
                 similarity DESC
             LIMIT :limit
-        """)
+        """
+        )
 
         result = await self.session.execute(
             stmt,
             {
-                "embedding": str(embedding), # Cast list to string for pgvector
+                "embedding": str(embedding),  # Cast list to string for pgvector
                 "threshold": similarity_threshold,
-                "limit": limit
-             }
+                "limit": limit,
+            },
         )
 
         # Fetch results as mappings
         return [dict(row) for row in result.mappings()]
-
 
     async def hybrid_search(
         self,
@@ -416,7 +401,7 @@ class PolicyRepository(BaseRepository[Policy]):
         embedding: List[float],
         vector_weight: float = None,
         limit: int = None,
-        similarity_threshold: float = None
+        similarity_threshold: float = None,
     ) -> List[Dict[str, Any]]:
         """
         Perform a hybrid search using both vector similarity and text search.
@@ -433,16 +418,19 @@ class PolicyRepository(BaseRepository[Policy]):
         """
         vector_weight = vector_weight if vector_weight is not None else config.RAG.VECTOR_WEIGHT
         limit = limit if limit is not None else config.RAG.TOP_K
-        similarity_threshold = similarity_threshold if similarity_threshold is not None else config.RAG.SIMILARITY_THRESHOLD
+        similarity_threshold = (
+            similarity_threshold if similarity_threshold is not None else config.RAG.SIMILARITY_THRESHOLD
+        )
 
         logger.info(f"Performing hybrid search with query='{query}', weight={vector_weight}, limit={limit}")
 
         # Prepare the text search query
-        text_query = ' & '.join(query.split())
+        text_query = " & ".join(query.split())
 
         # Combine vector and text search with weighted scoring
         # Use CTEs for clarity
-        stmt = text("""
+        stmt = text(
+            """
             WITH vector_search AS (
                 SELECT
                     pc.id,
@@ -488,22 +476,22 @@ class PolicyRepository(BaseRepository[Policy]):
             ORDER BY
                 combined_score DESC
             LIMIT :limit
-        """)
+        """
+        )
 
         result = await self.session.execute(
             stmt,
             {
-                "embedding": str(embedding), # Cast list to string for pgvector
+                "embedding": str(embedding),  # Cast list to string for pgvector
                 "query": text_query,
                 "threshold": similarity_threshold,
                 "vector_weight": vector_weight,
-                "limit": limit
-            }
+                "limit": limit,
+            },
         )
 
         # Fetch results as mappings
         return [dict(row) for row in result.mappings()]
-
 
     async def get_policies_from_chunks(self, chunk_results: List[Dict[str, Any]]) -> List[Policy]:
         """
@@ -534,9 +522,7 @@ class PolicyRepository(BaseRepository[Policy]):
         stmt = (
             select(Policy)
             .where(Policy.id.in_(policy_ids_ordered))
-            .options(
-                selectinload(Policy.images) # Eager load images
-            )
+            .options(selectinload(Policy.images))  # Eager load images
         )
         result = await self.session.execute(stmt)
         policies_map = {p.id: p for p in result.scalars().all()}
@@ -545,13 +531,12 @@ class PolicyRepository(BaseRepository[Policy]):
         ordered_policies = [policies_map[pid] for pid in policy_ids_ordered if pid in policies_map]
         return ordered_policies
 
-
     async def log_policy_update(
         self,
-        policy_id: Optional[int], # Make policy_id optional for logging deletion of non-existent item
+        policy_id: Optional[int],  # Make policy_id optional for logging deletion of non-existent item
         admin_id: Optional[int],
         action: str,
-        details: Optional[Dict] = None
+        details: Optional[Dict] = None,
     ) -> PolicyUpdate:
         """
         Log a policy update operation.
@@ -580,7 +565,6 @@ class PolicyRepository(BaseRepository[Policy]):
         logger.info(f"Logged policy update: policy_id={policy_id}, action={action}, admin_id={admin_id}")
         return policy_update
 
-
     async def get_policy_update_history(self, policy_id: int, limit: int = 50) -> List[PolicyUpdate]:
         """
         Get update history for a specific policy.
@@ -597,7 +581,7 @@ class PolicyRepository(BaseRepository[Policy]):
             .where(PolicyUpdate.policy_id == policy_id)
             .order_by(desc(PolicyUpdate.created_at))
             .limit(limit)
-            .options(joinedload(PolicyUpdate.admin)) # Optionally load admin info
+            .options(joinedload(PolicyUpdate.admin))  # Optionally load admin info
         )
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
