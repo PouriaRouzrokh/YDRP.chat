@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 20 (4/13/2025 - 00:29)
+
+Applied black to certain files
+
 ## commit 19 (4/13/2025 - 00:10)
 
 - Debugged the logging issues.

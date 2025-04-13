@@ -7,11 +7,14 @@ from types import SimpleNamespace
 import pandas as pd
 from dotenv import load_dotenv
 
-from ydrpolicy.data_collection.scrape.scraper import scrape_policies # Uses the updated function
-from ydrpolicy.data_collection.config import config as default_config # Renamed import
+from ydrpolicy.data_collection.scrape.scraper import (
+    scrape_policies,
+)  # Uses the updated function
+from ydrpolicy.data_collection.config import config as default_config  # Renamed import
 
 # Initialize logger
 logger = logging.getLogger(__name__)
+
 
 def main(config: SimpleNamespace = None):
     """Main function to run the policy classification and processing step."""
@@ -23,7 +26,9 @@ def main(config: SimpleNamespace = None):
         config = default_config
 
     # Get the path to the crawled policies data CSV
-    crawled_policies_data_path = os.path.join(config.PATHS.RAW_DATA_DIR, "crawled_policies_data.csv")
+    crawled_policies_data_path = os.path.join(
+        config.PATHS.RAW_DATA_DIR, "crawled_policies_data.csv"
+    )
 
     # Validate environment variables needed for scraping
     if not config.LLM.OPENAI_API_KEY and not os.environ.get("OPENAI_API_KEY"):
@@ -39,13 +44,17 @@ def main(config: SimpleNamespace = None):
     try:
         os.makedirs(config.PATHS.SCRAPED_POLICIES_DIR, exist_ok=True)
     except OSError as e:
-        logger.error(f"Failed to create output directory {config.PATHS.SCRAPED_POLICIES_DIR}: {e}")
-        return # Cannot proceed without output directory
+        logger.error(
+            f"Failed to create output directory {config.PATHS.SCRAPED_POLICIES_DIR}: {e}"
+        )
+        return  # Cannot proceed without output directory
 
     # Log configuration settings relevant to scraping
     logger.info(f"Starting policy classification/processing with:")
     logger.info(f"  - Input CSV: {crawled_policies_data_path}")
-    logger.info(f"  - Raw Markdown Base Path: {config.PATHS.MARKDOWN_DIR}") # Base path for source MD files
+    logger.info(
+        f"  - Raw Markdown Base Path: {config.PATHS.MARKDOWN_DIR}"
+    )  # Base path for source MD files
     logger.info(f"  - Output Directory: {config.PATHS.SCRAPED_POLICIES_DIR}")
     logger.info(f"  - Classification LLM model: {config.LLM.SCRAPER_LLM_MODEL}")
 
@@ -60,12 +69,14 @@ def main(config: SimpleNamespace = None):
         logger.info(f"Reading input data from: {crawled_policies_data_path}")
         original_df = pd.read_csv(crawled_policies_data_path)
         # Check if necessary column exists
-        if 'file_path' not in original_df.columns:
-             logger.error("Input CSV must contain a 'file_path' column pointing to raw markdown files.")
-             return
+        if "file_path" not in original_df.columns:
+            logger.error(
+                "Input CSV must contain a 'file_path' column pointing to raw markdown files."
+            )
+            return
         if original_df.empty:
-             logger.warning("Input CSV is empty. No files to process.")
-             return
+            logger.warning("Input CSV is empty. No files to process.")
+            return
     except Exception as e:
         logger.error(f"Failed to read input CSV {crawled_policies_data_path}: {e}")
         return
@@ -74,14 +85,18 @@ def main(config: SimpleNamespace = None):
     # Pass the MARKDOWN_DIR as the base_path where the relative paths in the CSV can be found
     df_processed = scrape_policies(
         original_df,
-        base_path=config.PATHS.MARKDOWN_DIR, # Critical: Point to where raw MD files are
+        base_path=config.PATHS.MARKDOWN_DIR,  # Critical: Point to where raw MD files are
         config=config,
     )
 
     # Save the updated DataFrame (includes classification results and output paths)
-    output_path = os.path.join(config.PATHS.PROCESSED_DATA_DIR, "processed_policies_log.csv") # Changed name slightly
+    output_path = os.path.join(
+        config.PATHS.PROCESSED_DATA_DIR, "processed_policies_log.csv"
+    )  # Changed name slightly
     try:
-        os.makedirs(os.path.dirname(output_path), exist_ok=True) # Ensure processed dir exists
+        os.makedirs(
+            os.path.dirname(output_path), exist_ok=True
+        )  # Ensure processed dir exists
         logger.info(f"Saving processing log to: {output_path}")
         df_processed.to_csv(output_path, index=False)
         logger.info("Policy classification and processing completed successfully.")
@@ -99,12 +114,22 @@ if __name__ == "__main__":
     print()
 
     # Create default logger for direct execution
-    log_file = getattr(main_config.LOGGING, 'SCRAPER_LOG_FILE', os.path.join(main_config.PATHS.DATA_DIR, "logs", "scraper.log"))
+    log_file = getattr(
+        main_config.LOGGING,
+        "SCRAPER_LOG_FILE",
+        os.path.join(main_config.PATHS.DATA_DIR, "logs", "scraper.log"),
+    )
     os.makedirs(os.path.dirname(log_file), exist_ok=True)
     main_logger = logging.getLogger(__name__)
     main_logger.setLevel(logging.INFO)
-    main_logger.info("\n" + "="*80 + "\nSTARTING POLICY CLASSIFICATION & PROCESSING\n" + "="*80)
+    main_logger.info(
+        "\n" + "=" * 80 + "\nSTARTING POLICY CLASSIFICATION & PROCESSING\n" + "=" * 80
+    )
 
-    main_logger.info("\n" + "="*80 + "\nSTARTING POLICY CLASSIFICATION & PROCESSING\n" + "="*80)
+    main_logger.info(
+        "\n" + "=" * 80 + "\nSTARTING POLICY CLASSIFICATION & PROCESSING\n" + "=" * 80
+    )
     main(config=main_config)
-    main_logger.info("\n" + "="*80 + "\nPOLICY CLASSIFICATION & PROCESSING FINISHED\n" + "="*80)
+    main_logger.info(
+        "\n" + "=" * 80 + "\nPOLICY CLASSIFICATION & PROCESSING FINISHED\n" + "=" * 80
+    )
