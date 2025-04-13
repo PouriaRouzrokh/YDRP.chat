@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 18 (4/12/2025 - 20:34)
+
+Removed the code for removing rich handler from mcp server.
+
 ## commit 17 (4/12/2025 - 20:30)
 
 Debugged the logging mechanism for the data collection scripts

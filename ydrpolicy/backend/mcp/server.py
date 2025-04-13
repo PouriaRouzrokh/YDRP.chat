@@ -182,21 +182,9 @@ def start_mcp_server(host: str, port: int, transport: str):
     # This prevents log messages from interfering with MCP JSON-RPC communication
     # over stdin/stdout. File logging remains active.
     if transport == 'stdio':
-        logger.info("Configuring logger for stdio mode (removing console handler)...")
-        # Access the standard logger instance directly
-        handler_to_remove = None
-        # Iterate through handlers attached to the logger obtained via getLogger()
-        for handler in logger.handlers: # Use 'logger.handlers' directly
-            if isinstance(handler, RichHandler): # Identify the console handler
-                handler_to_remove = handler
-                break
-        if handler_to_remove:
-            logger.removeHandler(handler_to_remove) # Use 'logger.removeHandler' directly
-            logger.info("Removed RichHandler for stdio mode.") # Log to file
-        else:
-            logger.warning("Could not find RichHandler to remove for stdio mode (already removed or never added?).")
-        # Optionally, you could also increase the level specifically for stdio
-        # logger.setLevel(logging.WARNING) # Suppress INFO/DEBUG messages even in file log for stdio
+        logger.info("Configuring logger for stdio mode (disabling console propagation)...")
+        logger.propagate = False
+        logger.info("Disabled log propagation for stdio mode (console logs suppressed).")
 
     # Start the server based on the chosen transport
     try:
