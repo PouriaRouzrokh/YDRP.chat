@@ -18,10 +18,9 @@ from ydrpolicy.data_collection.crawl.processors.llm_processor import \
     process_document_with_ocr
 from ydrpolicy.data_collection.crawl.processors.pdf_processor import \
     pdf_to_markdown
-from ydrpolicy.data_collection.logger import DataCollectionLogger
 
 # Set up logging
-logger = DataCollectionLogger(name="document_processor", level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def download_document(url: str, output_dir: str, config: SimpleNamespace) -> str:
     """

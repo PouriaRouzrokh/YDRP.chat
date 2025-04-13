@@ -71,7 +71,7 @@ async def create_database(db_url: str) -> bool:
                 logger.info(f"Creating database '{db_name}'...")
                 # Use CREATE DATABASE command
                 await conn.execute(f'CREATE DATABASE "{db_name}"')
-                logger.success(f"Database '{db_name}' created.")
+                logger.info(f"SUCCESS: Database '{db_name}' created.")
             else:
                 logger.info(f"Database '{db_name}' already exists.")
 
@@ -85,7 +85,7 @@ async def create_database(db_url: str) -> bool:
                      conn_admin = await asyncpg.connect(admin_url)
                      logger.info(f"Re-attempting database creation for '{db_name}' via admin connection...")
                      await conn_admin.execute(f'CREATE DATABASE "{db_name}"')
-                     logger.success(f"Database '{db_name}' created.")
+                     logger.info(f"SUCCESS: Database '{db_name}' created.")
                      await conn_admin.close()
                      return True
                  except Exception as create_err:
@@ -232,7 +232,7 @@ async def process_new_policy_folder(
         session.add(policy)
         await session.flush()
         await session.refresh(policy) # Ensure ID and defaults are loaded
-        logger.success(f"  Created Policy record with ID: {policy.id}")
+        logger.info(f"SUCCESS: Created Policy record with ID: {policy.id}")
 
         # 3. Process and add Images
         image_files = [
@@ -502,7 +502,7 @@ async def init_db(db_url: Optional[str] = None, populate: bool = True) -> None:
         else:
             logger.info("Skipping data population step.")
 
-        logger.success("Database initialization completed successfully.")
+        logger.info("SUCCESS: Database initialization completed successfully.")
 
     except Exception as e:
         logger.error(f"Database initialization failed: {e}", exc_info=True)
@@ -567,7 +567,7 @@ async def drop_db(db_url: Optional[str] = None, force: bool = False) -> None:
             logger.info(f"Dropping database '{db_name}'...")
             await conn.execute(f'DROP DATABASE IF EXISTS "{db_name}";')
 
-            logger.success(f"Database '{db_name}' dropped successfully.")
+            logger.info(f"SUCCESS: Database '{db_name}' dropped successfully.")
         except Exception as e:
             logger.error(f"Error dropping database '{db_name}': {e}")
             # Consider raising specific errors if needed

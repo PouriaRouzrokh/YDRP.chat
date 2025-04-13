@@ -112,7 +112,7 @@ class PolicyRepository(BaseRepository[Policy]):
             # Delete the policy object. Cascades should handle chunks and images.
             await self.session.delete(policy_to_delete)
             await self.session.flush() # Execute the delete operation
-            logger.success(f"Successfully deleted policy ID {policy_id} and associated data.")
+            logger.info(f"SUCCESS: Successfully deleted policy ID {policy_id} and associated data.")
             return True
         except Exception as e:
             logger.error(f"Error deleting policy ID {policy_id}: {e}", exc_info=True)

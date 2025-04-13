@@ -1,889 +1,163 @@
-2025-04-09 19:48:16,034 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 19:48:16,034 - DBInit - INFO - Starting database initialization...
-2025-04-09 19:48:16,035 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 19:48:16,377 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 19:54:01,107 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 19:54:01,107 - DBInit - INFO - Starting database initialization...
-2025-04-09 19:54:01,108 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 19:54:01,538 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:02:03,509 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:02:03,509 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:02:03,509 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:02:03,871 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:05:16,284 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:05:16,285 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:05:16,285 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:05:24,891 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:10:15,747 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:10:15,747 - DBRemove - WARNING - Command to remove entire database initiated.
-2025-04-09 20:10:19,465 - DBRemove - WARNING - Proceeding with database removal (drop)...
-2025-04-09 20:10:23,525 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
-2025-04-09 20:25:10,938 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:25:10,938 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:25:10,939 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:25:20,162 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:29:06,369 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:29:06,370 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:29:06,370 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:29:06,865 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:36:25,958 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:36:25,959 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:36:25,959 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:36:26,821 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:37:48,409 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:37:48,409 - DBRemove - WARNING - Command to remove entire database initiated.
-2025-04-09 20:37:50,766 - DBRemove - WARNING - Proceeding with database removal (drop)...
-2025-04-09 20:37:52,917 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
-2025-04-09 20:37:56,678 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:37:56,678 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:37:56,679 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:37:57,381 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:39:00,985 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:39:00,986 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:39:00,986 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:39:09,052 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:44:03,387 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:44:03,388 - DBRemove - WARNING - Command to remove entire database initiated.
-2025-04-09 20:44:07,423 - DBRemove - WARNING - Proceeding with database removal (drop)...
-2025-04-09 20:44:10,567 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
-2025-04-09 20:44:15,930 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:44:15,931 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:44:15,931 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:44:26,767 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:48:54,613 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:48:54,615 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:48:54,615 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:48:57,164 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:51:10,512 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:51:10,512 - DBInit - INFO - Starting database initialization...
-2025-04-09 20:51:10,513 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 20:51:11,716 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 20:57:34,100 - PolicyRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:57:34,101 - PolicyRemove - WARNING - Policy removal initiated for ID: '12'.
-2025-04-09 20:57:37,409 - PolicyRemove - WARNING - Proceeding with removal of policy ID: '12'...
-2025-04-09 20:57:37,552 - RemovePolicyScript - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:57:37,584 - RemovePolicyScript - INFO - Attempting to delete policy ID 12 ('Staff_Workplace_Policies')...
-2025-04-09 20:57:37,681 - RemovePolicyScript - ERROR - An error occurred during database operation: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(12) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 12, 'delete', '{"identifier_type": "id", "identifier_value": 12, "title": "Staff_Workplace_Policies"}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 545, in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 176, in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 267, in __bind_execute
-    data, status, _ = await self.__do_execute(
-                      ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 256, in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "asyncpg/protocol/protocol.pyx", line 206, in bind_execute
-asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(12) is not present in table "policies".
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
-    self.dialect.do_execute(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
-    cursor.execute(statement, parameters)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
-    self._adapt_connection.await_(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
-    self._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
-    self._adapt_connection._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
-    raise translated_error from error
-sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(12) is not present in table "policies".
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/scripts/remove_policy.py", line 112, in run_remove
-    await policy_repo.log_policy_update(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/database/repository/policies.py", line 575, in log_policy_update
-    await self.session.flush()
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 802, in flush
-    await greenlet_spawn(self.sync_session.flush, objects=objects)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
-    result = context.switch(value)
-             ^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4353, in flush
-    self._flush(objects)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4488, in _flush
-    with util.safe_reraise():
-         ^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
-    raise exc_value.with_traceback(exc_tb)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4449, in _flush
-    flush_context.execute()
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
-    rec.execute(self)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
-    util.preloaded.orm_persistence.save_obj(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
-    _emit_insert_statements(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
-    result = connection.execute(
-             ^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1416, in execute
-    return meth(
-           ^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
-    return connection._execute_clauseelement(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1638, in _execute_clauseelement
-    ret = self._execute_context(
-          ^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1843, in _execute_context
-    return self._exec_single_context(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1983, in _exec_single_context
-    self._handle_dbapi_exception(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2352, in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
-    self.dialect.do_execute(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
-    cursor.execute(statement, parameters)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
-    self._adapt_connection.await_(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
-    self._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
-    self._adapt_connection._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
-    raise translated_error from error
-sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(12) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 12, 'delete', '{"identifier_type": "id", "identifier_value": 12, "title": "Staff_Workplace_Policies"}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-2025-04-09 20:57:38,368 - PolicyRemove - ERROR - Failed to remove policy '12'. Check previous logs for details.
-2025-04-09 20:58:55,427 - PolicyRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:58:55,427 - PolicyRemove - WARNING - Policy removal initiated for ID: '11'.
-2025-04-09 20:58:58,103 - PolicyRemove - WARNING - Proceeding with removal of policy ID: '11'...
-2025-04-09 20:58:58,243 - RemovePolicyScript - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:58:58,272 - RemovePolicyScript - ERROR - Policy with ID 11 not found.
-2025-04-09 20:58:58,275 - RemovePolicyScript - ERROR - An error occurred during database operation: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(11) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 11, 'delete_failed', '{"identifier_type": "id", "identifier_value": 11}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 545, in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 176, in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 267, in __bind_execute
-    data, status, _ = await self.__do_execute(
-                      ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 256, in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "asyncpg/protocol/protocol.pyx", line 206, in bind_execute
-asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(11) is not present in table "policies".
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
-    self.dialect.do_execute(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
-    cursor.execute(statement, parameters)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
-    self._adapt_connection.await_(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
-    self._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
-    self._adapt_connection._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
-    raise translated_error from error
-sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(11) is not present in table "policies".
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/scripts/remove_policy.py", line 112, in run_remove
-    await policy_repo.log_policy_update(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/database/repository/policies.py", line 575, in log_policy_update
-    await self.session.flush()
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 802, in flush
-    await greenlet_spawn(self.sync_session.flush, objects=objects)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
-    result = context.switch(value)
-             ^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4353, in flush
-    self._flush(objects)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4488, in _flush
-    with util.safe_reraise():
-         ^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
-    raise exc_value.with_traceback(exc_tb)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4449, in _flush
-    flush_context.execute()
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
-    rec.execute(self)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
-    util.preloaded.orm_persistence.save_obj(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
-    _emit_insert_statements(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
-    result = connection.execute(
-             ^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1416, in execute
-    return meth(
-           ^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
-    return connection._execute_clauseelement(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1638, in _execute_clauseelement
-    ret = self._execute_context(
-          ^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1843, in _execute_context
-    return self._exec_single_context(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1983, in _exec_single_context
-    self._handle_dbapi_exception(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2352, in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
-    self.dialect.do_execute(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
-    cursor.execute(statement, parameters)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
-    self._adapt_connection.await_(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
-    self._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
-    self._adapt_connection._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
-    raise translated_error from error
-sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(11) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 11, 'delete_failed', '{"identifier_type": "id", "identifier_value": 11}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-2025-04-09 20:58:58,959 - RemovePolicyScript - ERROR - Failed to log policy removal error after rollback: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(11) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 11, 'delete_failed', '{"identifier_type": "id", "identifier_value": 11, "error": "(sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class \'asyncpg.exceptions.Forei ... (445 characters truncated) ... delete_failed\', \'{\\"identifier_type\\": \\"id\\", \\"identifier_value\\": 11}\')]\\n(Background on this error at: https://sqlalche.me/e/20/gkpj)"}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-2025-04-09 20:58:58,961 - PolicyRemove - ERROR - Failed to remove policy '11'. Check previous logs for details.
-2025-04-09 20:59:05,293 - PolicyRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:59:05,294 - PolicyRemove - WARNING - Policy removal initiated for ID: '12'.
-2025-04-09 20:59:06,846 - PolicyRemove - WARNING - Proceeding with removal of policy ID: '12'...
-2025-04-09 20:59:06,984 - RemovePolicyScript - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 20:59:07,015 - RemovePolicyScript - INFO - Attempting to delete policy ID 12 ('Staff_Workplace_Policies')...
-2025-04-09 20:59:07,103 - RemovePolicyScript - ERROR - An error occurred during database operation: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(12) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 12, 'delete', '{"identifier_type": "id", "identifier_value": 12, "title": "Staff_Workplace_Policies"}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 545, in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 176, in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 267, in __bind_execute
-    data, status, _ = await self.__do_execute(
-                      ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 256, in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "asyncpg/protocol/protocol.pyx", line 206, in bind_execute
-asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(12) is not present in table "policies".
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
-    self.dialect.do_execute(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
-    cursor.execute(statement, parameters)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
-    self._adapt_connection.await_(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
-    self._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
-    self._adapt_connection._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
-    raise translated_error from error
-sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(12) is not present in table "policies".
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/scripts/remove_policy.py", line 112, in run_remove
-    await policy_repo.log_policy_update(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/ydrpolicy/backend/database/repository/policies.py", line 575, in log_policy_update
-    await self.session.flush()
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 802, in flush
-    await greenlet_spawn(self.sync_session.flush, objects=objects)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
-    result = context.switch(value)
-             ^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4353, in flush
-    self._flush(objects)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4488, in _flush
-    with util.safe_reraise():
-         ^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
-    raise exc_value.with_traceback(exc_tb)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4449, in _flush
-    flush_context.execute()
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
-    rec.execute(self)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
-    util.preloaded.orm_persistence.save_obj(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
-    _emit_insert_statements(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
-    result = connection.execute(
-             ^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1416, in execute
-    return meth(
-           ^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
-    return connection._execute_clauseelement(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1638, in _execute_clauseelement
-    ret = self._execute_context(
-          ^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1843, in _execute_context
-    return self._exec_single_context(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1983, in _exec_single_context
-    self._handle_dbapi_exception(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2352, in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
-    self.dialect.do_execute(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
-    cursor.execute(statement, parameters)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
-    self._adapt_connection.await_(
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
-    self._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
-    self._adapt_connection._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDR Policy Scraping/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
-    raise translated_error from error
-sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(12) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 12, 'delete', '{"identifier_type": "id", "identifier_value": 12, "title": "Staff_Workplace_Policies"}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-2025-04-09 20:59:07,786 - PolicyRemove - ERROR - Failed to remove policy '12'. Check previous logs for details.
-2025-04-09 21:01:51,754 - PolicyRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 21:01:51,754 - PolicyRemove - WARNING - Policy removal initiated for ID: '12'.
-2025-04-09 21:01:53,481 - PolicyRemove - WARNING - Proceeding with removal of policy ID: '12'...
-2025-04-09 21:01:53,622 - RemovePolicyScript - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 21:01:53,655 - RemovePolicyScript - INFO - Attempting to delete policy ID 12 ('Staff_Workplace_Policies')...
-2025-04-09 21:01:53,755 - PolicyRemove - INFO - [green]SUCCESS:[/green] Policy '12' removed successfully.
-2025-04-09 21:22:03,616 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 21:22:03,617 - DBRemove - WARNING - Command to remove entire database initiated.
-2025-04-09 21:22:04,273 - DBRemove - WARNING - Proceeding with database removal (drop)...
-2025-04-09 21:22:06,345 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
-2025-04-09 21:22:09,958 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/test_data/logs/backend.log
-2025-04-09 21:22:09,958 - DBInit - INFO - Starting database initialization...
-2025-04-09 21:22:09,958 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 21:22:26,100 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 21:37:02,448 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/tests/data_collection/test_data/logs/backend.log
-2025-04-09 21:37:02,448 - DBRemove - WARNING - Command to remove entire database initiated.
-2025-04-09 21:37:02,946 - DBRemove - WARNING - Proceeding with database removal (drop)...
-2025-04-09 21:37:04,189 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
-2025-04-09 21:37:10,699 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/tests/data_collection/test_data/logs/backend.log
-2025-04-09 21:37:10,699 - DBInit - INFO - Starting database initialization...
-2025-04-09 21:37:10,699 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 21:37:20,916 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 22:21:06,700 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/tests/data_collection/test_data/logs/backend.log
-2025-04-09 22:21:06,700 - DBRemove - WARNING - Command to remove entire database initiated.
-2025-04-09 22:21:08,417 - DBRemove - WARNING - Proceeding with database removal (drop)...
-2025-04-09 22:21:10,408 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
-2025-04-09 22:21:27,703 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDR Policy Scraping/tests/data_collection/test_data/logs/backend.log
-2025-04-09 22:21:27,704 - DBInit - INFO - Starting database initialization...
-2025-04-09 22:21:27,704 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 22:21:40,260 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-09 23:15:45,801 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/tests/data_collection/test_data/logs/backend.log
-2025-04-09 23:15:45,802 - DBRemove - WARNING - Command to remove entire database initiated.
-2025-04-09 23:15:47,597 - DBRemove - WARNING - Proceeding with database removal (drop)...
-2025-04-09 23:15:58,807 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
-2025-04-09 23:16:05,661 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/tests/data_collection/test_data/logs/backend.log
-2025-04-09 23:16:05,661 - DBInit - INFO - Starting database initialization...
-2025-04-09 23:16:05,661 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-09 23:16:14,020 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-10 20:42:53,537 - DBRemove - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/engine/tests/data_collection/test_data/logs/backend.log
-2025-04-10 20:42:53,538 - DBRemove - WARNING - Command to remove entire database initiated.
-2025-04-10 20:42:55,629 - DBRemove - WARNING - Proceeding with database removal (drop)...
-2025-04-10 20:43:03,460 - DBRemove - INFO - [green]SUCCESS:[/green] Database removal (drop) completed.
-2025-04-10 20:43:08,931 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/engine/tests/data_collection/test_data/logs/backend.log
-2025-04-10 20:43:08,931 - DBInit - INFO - Starting database initialization...
-2025-04-10 20:43:08,932 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-10 20:43:25,408 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/engine/tests/data_collection/test_data/logs/backend.log
-2025-04-10 20:43:25,408 - DBInit - INFO - Starting database initialization...
-2025-04-10 20:43:25,409 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-10 20:43:40,475 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-11 00:17:30,069 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 00:17:30,072 - MCPServer - INFO - Running MCP server directly...
-2025-04-11 00:17:30,072 - MCPServer - INFO - Starting MCP server on 0.0.0.0:8001 via http transport...
-2025-04-11 00:27:20,299 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 00:27:20,299 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
-2025-04-11 00:27:20,618 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 00:27:20,620 - MCPServer - INFO - Starting MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-11 00:27:20,621 - MCPServer - INFO - Running MCP server with stdio transport.
-2025-04-11 00:41:50,258 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 00:41:50,259 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
-2025-04-11 00:41:50,606 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 00:41:50,609 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-11 00:41:50,609 - MCPServer - INFO - Running MCP server with stdio transport.
-2025-04-11 00:44:26,043 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 00:44:26,043 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
-2025-04-11 00:44:26,356 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 00:44:26,359 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-11 00:44:26,360 - MCPServer - INFO - Running MCP server with stdio transport.
-2025-04-11 07:53:33,719 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 07:53:33,720 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
-2025-04-11 07:53:34,194 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 07:53:34,197 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-11 07:53:34,197 - MCPServer - INFO - Running MCP server with stdio transport.
-2025-04-11 07:54:00,564 - DBInit - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 07:54:00,565 - DBInit - INFO - Starting database initialization...
-2025-04-11 07:54:00,565 - DBInit - INFO - Initializing database structure and populating data...
-2025-04-11 07:54:01,157 - DBInit - INFO - [green]SUCCESS:[/green] Database initialization process completed successfully.
-2025-04-11 08:02:35,695 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 08:02:35,695 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
-2025-04-11 08:02:36,027 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 08:02:36,030 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-11 08:02:36,030 - MCPServer - INFO - Running MCP server with stdio transport.
-2025-04-11 08:15:49,582 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 08:15:49,582 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
-2025-04-11 08:15:50,206 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 08:15:50,209 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-11 08:15:50,210 - MCPServer - INFO - Running MCP server with stdio transport.
-2025-04-11 08:17:04,252 - MCPServer - INFO - MCP server process finished.
-2025-04-11 08:17:04,264 - MCP - ERROR - [red]FAILURE:[/red] MCP Server failed to start or crashed: a coroutine was expected, got None
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 258, in mcp_start
-    asyncio.run(start_mcp_server(host=server_host, port=server_port, transport=server_transport))
-  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 89, in run
-    raise ValueError("a coroutine was expected, got {!r}".format(coro))
-ValueError: a coroutine was expected, got None
-2025-04-11 08:17:16,279 - MCP - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 08:17:16,279 - MCP - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio...
-2025-04-11 08:17:16,822 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 08:17:16,825 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-11 08:17:16,826 - MCPServer - INFO - Running MCP server with stdio transport.
-2025-04-11 08:27:01,931 - MCPServer - INFO - MCP server process finished.
-2025-04-11 08:27:01,945 - MCP - ERROR - [red]FAILURE:[/red] MCP Server failed to start or crashed: a coroutine was expected, got None
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 258, in mcp_start
-    asyncio.run(start_mcp_server(host=server_host, port=server_port, transport=server_transport))
-  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 89, in run
-    raise ValueError("a coroutine was expected, got {!r}".format(coro))
-ValueError: a coroutine was expected, got None
-2025-04-11 08:30:02,587 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 08:30:02,589 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-11 08:30:02,590 - MCPServer - INFO - Running MCP server with stdio transport.
-2025-04-11 08:30:27,209 - MCPServer - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-11 08:30:27,212 - MCPServer - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-11 08:30:27,213 - MCPServer - INFO - Running MCP server with stdio transport.
-2025-04-11 08:32:18,331 - MCPServer - INFO - MCP server process finished.
-2025-04-12 15:47:40,871 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 15:47:40,871 - YDRPolicyCLI - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 15:47:48,609 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 15:47:48,610 - YDRPolicyCLI - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 15:48:20,481 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 15:48:20,482 - YDRPolicyCLI - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 15:48:20,968 - YDRPolicyCLI - INFO - Executing database command...
-2025-04-12 15:48:20,969 - YDRPolicyCLI - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 15:48:24,042 - YDRPolicyCLI - INFO - Database command finished.
-2025-04-12 15:48:36,659 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 15:48:36,660 - YDRPolicyCLI - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 15:48:37,013 - YDRPolicyCLI - INFO - Executing database command...
-2025-04-12 15:48:37,014 - YDRPolicyCLI - INFO - Database initialization and population requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 15:48:47,720 - YDRPolicyCLI - INFO - Database command finished.
-2025-04-12 15:49:24,906 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 15:49:24,906 - YDRPolicyCLI - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 15:49:25,180 - YDRPolicyCLI - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
-2025-04-12 15:49:25,223 - YDRPolicyCLI - ERROR - MCP server failed: FastMCP.run() got an unexpected keyword argument 'host'
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 178, in mcp_command
-    mcp_server.start_mcp_server(host=host, port=port, transport=transport)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/mcp/server.py", line 136, in start_mcp_server
-    mcp.run(host=host, port=port, transport=transport)
-TypeError: FastMCP.run() got an unexpected keyword argument 'host'
-2025-04-12 16:04:54,188 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:04:54,188 - YDRPolicyCLI - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:04:54,562 - YDRPolicyCLI - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
-2025-04-12 16:05:01,949 - YDRPolicyCLI - INFO - MCP server process finished.
-2025-04-12 16:05:10,084 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:05:10,084 - YDRPolicyCLI - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:05:10,356 - YDRPolicyCLI - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 16:05:29,043 - YDRPolicyCLI - INFO - MCP server stopped by user (KeyboardInterrupt).
-2025-04-12 16:05:29,046 - YDRPolicyCLI - INFO - MCP server process finished.
-2025-04-12 16:05:32,875 - YDRPolicyCLI - INFO - Backend logging initialized. Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:05:32,875 - YDRPolicyCLI - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:05:33,142 - YDRPolicyCLI - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
-2025-04-12 16:07:10,596 - YDRPolicyCLI - INFO - MCP server process finished.
-2025-04-12 16:12:56,509 - YDRPolicyCLI - INFO - Backend logging initialized for 'YDRPolicyCLI' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:12:56,510 - YDRPolicyCLI - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:12:56,671 - YDRPolicyCLI - ERROR - Failed to import mcp.server module: cannot import name 'logger' from 'ydrpolicy.backend.logger' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/logger.py). Ensure backend components are installed.
-2025-04-12 16:22:34,679 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:22:34,680 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:22:34,804 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:39,532 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:39,533 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:23:39,652 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:39,663 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:39,711 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:39,865 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:39,865 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:39,868 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
-2025-04-12 16:23:39,868 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
-2025-04-12 16:23:39,869 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http transport via uvicorn on 0.0.0.0:8001.
-2025-04-12 16:23:44,361 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
-2025-04-12 16:23:44,363 - __main__ - INFO - MCP server process finished.
-2025-04-12 16:23:49,803 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:49,804 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:23:49,924 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:49,933 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:49,960 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:50,074 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:50,075 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:23:50,077 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 16:23:50,078 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
-2025-04-12 16:23:50,078 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
-2025-04-12 16:23:50,078 - ydrpolicy.backend.mcp.server - INFO - Removed RichHandler for stdio mode.
-2025-04-12 16:23:50,078 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
-2025-04-12 16:23:57,571 - __main__ - INFO - MCP server stopped by user (KeyboardInterrupt).
-2025-04-12 16:23:57,573 - __main__ - INFO - MCP server process finished.
-2025-04-12 16:24:15,514 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:15,515 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:24:15,812 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:15,819 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:15,820 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:15,822 - ydrpolicy.backend.services.chunking - INFO - Backend logging initialized for 'ydrpolicy.backend.services.chunking' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:15,957 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:15,958 - ydrpolicy.backend.database.init_db - INFO - Backend logging initialized for 'ydrpolicy.backend.database.init_db' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:15,960 - ydrpolicy.backend.utils.paths - INFO - Backend logging initialized for 'ydrpolicy.backend.utils.paths' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:15,960 - __main__ - INFO - Executing database command...
-2025-04-12 16:24:15,960 - __main__ - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 16:24:15,961 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
-2025-04-12 16:24:18,366 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
-2025-04-12 16:24:18,372 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
-2025-04-12 16:24:18,373 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
-2025-04-12 16:24:18,415 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green] Database 'ydrpolicy' dropped successfully.
-2025-04-12 16:24:18,419 - __main__ - INFO - Database command finished.
-2025-04-12 16:24:22,484 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:22,485 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:24:22,700 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:22,707 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:22,708 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:22,708 - ydrpolicy.backend.services.chunking - INFO - Backend logging initialized for 'ydrpolicy.backend.services.chunking' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:22,847 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:22,847 - ydrpolicy.backend.database.init_db - INFO - Backend logging initialized for 'ydrpolicy.backend.database.init_db' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:22,848 - ydrpolicy.backend.utils.paths - INFO - Backend logging initialized for 'ydrpolicy.backend.utils.paths' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:22,848 - __main__ - INFO - Executing database command...
-2025-04-12 16:24:22,848 - __main__ - INFO - Database initialization and population requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 16:24:22,849 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 16:24:22,849 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
-2025-04-12 16:24:22,859 - ydrpolicy.backend.database.init_db - INFO - Creating database 'ydrpolicy'...
-2025-04-12 16:24:22,922 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green] Database 'ydrpolicy' created.
-2025-04-12 16:24:22,925 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
-2025-04-12 16:24:22,944 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
-2025-04-12 16:24:22,945 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
-2025-04-12 16:24:22,974 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
-2025-04-12 16:24:22,975 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
-2025-04-12 16:24:22,980 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
-2025-04-12 16:24:22,981 - ydrpolicy.backend.database.init_db - INFO - Starting data population from scraped_policies directory...
-2025-04-12 16:24:22,981 - ydrpolicy.backend.database.init_db - INFO - Scanning scraped policies directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/scraped_policies
-2025-04-12 16:24:22,981 - ydrpolicy.backend.database.init_db - INFO - Reading policy descriptions from CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/processed_policies_log.csv
-2025-04-12 16:24:22,985 - ydrpolicy.backend.database.init_db - INFO - Loaded 17 timestamp mappings and 17 URL mappings for policy descriptions
-2025-04-12 16:24:22,986 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
-2025-04-12 16:24:22,986 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
-2025-04-12 16:24:22,987 - ydrpolicy.backend.database.init_db - INFO - Fetching existing policy information from database...
-2025-04-12 16:24:22,999 - ydrpolicy.backend.database.init_db - INFO - Found 0 existing policies in database.
-2025-04-12 16:24:23,000 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Yale_University_Policy_on_Conflict_of_Interest' from folder: Yale_University_Policy_on_Conflict_of_Interest_20250409192912567168
-2025-04-12 16:24:23,008 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 1
-2025-04-12 16:24:23,008 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
-2025-04-12 16:24:23,067 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
-2025-04-12 16:24:23,874 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
-2025-04-12 16:24:23,876 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
-2025-04-12 16:24:23,878 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
-2025-04-12 16:24:23,879 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Residents_Wellbeing_Policy' from folder: Residents_Wellbeing_Policy_20250409193300717366
-2025-04-12 16:24:23,912 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 2
-2025-04-12 16:24:23,913 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
-2025-04-12 16:24:23,914 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
-2025-04-12 16:24:24,401 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
-2025-04-12 16:24:24,403 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
-2025-04-12 16:24:24,404 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
-2025-04-12 16:24:24,404 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy' from folder: School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy_20250409193128387433
-2025-04-12 16:24:24,424 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 3
-2025-04-12 16:24:24,425 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
-2025-04-12 16:24:24,426 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
-2025-04-12 16:24:25,226 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
-2025-04-12 16:24:25,227 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
-2025-04-12 16:24:25,228 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
-2025-04-12 16:24:25,229 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Controller_s_Office_Factsheet' from folder: Controller_s_Office_Factsheet_20250409194424987413
-2025-04-12 16:24:25,245 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 4
-2025-04-12 16:24:25,247 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 21 chunks.
-2025-04-12 16:24:25,248 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 21 texts
-2025-04-12 16:24:25,775 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 21 embeddings
-2025-04-12 16:24:25,776 - ydrpolicy.backend.database.init_db - INFO -   Generated 21 embeddings.
-2025-04-12 16:24:25,777 - ydrpolicy.backend.database.init_db - INFO -   Added 21 PolicyChunk records to session.
-2025-04-12 16:24:25,778 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Appointment_Application_Requirements_Process' from folder: Voluntary_Faculty_Appointment_Application_Requirements_Process_20250409193339788344
-2025-04-12 16:24:25,817 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 5
-2025-04-12 16:24:25,818 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 3 chunks.
-2025-04-12 16:24:25,818 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
-2025-04-12 16:24:26,438 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
-2025-04-12 16:24:26,440 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
-2025-04-12 16:24:26,442 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records to session.
-2025-04-12 16:24:26,443 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Workday_Finance_User-Based_Security_Groups_Request_Process' from folder: Workday_Finance_User-Based_Security_Groups_Request_Process_20250409194153006635
-2025-04-12 16:24:26,455 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 6
-2025-04-12 16:24:26,457 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 3 chunks.
-2025-04-12 16:24:26,458 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
-2025-04-12 16:24:26,764 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
-2025-04-12 16:24:26,766 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
-2025-04-12 16:24:26,766 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records to session.
-2025-04-12 16:24:26,768 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Staff_Workplace_Policies' from folder: Staff_Workplace_Policies_20250409204542316052
-2025-04-12 16:24:26,813 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 7
-2025-04-12 16:24:26,823 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 333 chunks.
-2025-04-12 16:24:26,824 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 333 texts
-2025-04-12 16:24:28,291 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 333 embeddings
-2025-04-12 16:24:28,292 - ydrpolicy.backend.database.init_db - INFO -   Generated 333 embeddings.
-2025-04-12 16:24:28,297 - ydrpolicy.backend.database.init_db - INFO -   Added 333 PolicyChunk records to session.
-2025-04-12 16:24:28,297 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Grand_Rounds_Allowable_Expenses' from folder: Grand_Rounds_Allowable_Expenses_20250409192920823251
-2025-04-12 16:24:28,572 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 8
-2025-04-12 16:24:28,573 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
-2025-04-12 16:24:28,573 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
-2025-04-12 16:24:28,973 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
-2025-04-12 16:24:28,975 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
-2025-04-12 16:24:28,976 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
-2025-04-12 16:24:28,977 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Guidelines_Clarification' from folder: Voluntary_Faculty_Guidelines_Clarification_20250409193316792165
-2025-04-12 16:24:28,995 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 9
-2025-04-12 16:24:28,997 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
-2025-04-12 16:24:28,998 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
-2025-04-12 16:24:29,742 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
-2025-04-12 16:24:29,744 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
-2025-04-12 16:24:29,745 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
-2025-04-12 16:24:29,746 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Guidelines_for_Appointment' from folder: Guidelines_for_Appointment_20250409193232742762
-2025-04-12 16:24:29,770 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 10
-2025-04-12 16:24:29,771 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 6 chunks.
-2025-04-12 16:24:29,772 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 6 texts
-2025-04-12 16:24:30,639 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 6 embeddings
-2025-04-12 16:24:30,641 - ydrpolicy.backend.database.init_db - INFO -   Generated 6 embeddings.
-2025-04-12 16:24:30,642 - ydrpolicy.backend.database.init_db - INFO -   Added 6 PolicyChunk records to session.
-2025-04-12 16:24:30,643 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP' from folder: Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP_20250409193528279122
-2025-04-12 16:24:30,663 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 11
-2025-04-12 16:24:30,665 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
-2025-04-12 16:24:30,665 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
-2025-04-12 16:24:31,355 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
-2025-04-12 16:24:31,357 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
-2025-04-12 16:24:31,358 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
-2025-04-12 16:24:31,359 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'YDR_Conflict_of_Interest_Policy' from folder: YDR_Conflict_of_Interest_Policy_20250409192856529523
-2025-04-12 16:24:31,375 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green]   Created Policy record with ID: 12
-2025-04-12 16:24:31,376 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 7 chunks.
-2025-04-12 16:24:31,376 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 7 texts
-2025-04-12 16:24:31,763 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 7 embeddings
-2025-04-12 16:24:31,765 - ydrpolicy.backend.database.init_db - INFO -   Generated 7 embeddings.
-2025-04-12 16:24:31,766 - ydrpolicy.backend.database.init_db - INFO -   Added 7 PolicyChunk records to session.
-2025-04-12 16:24:31,784 - ydrpolicy.backend.database.init_db - INFO - Database population finished. Processed 12 new policies. Skipped 0 folders.
-2025-04-12 16:24:31,785 - ydrpolicy.backend.database.init_db - INFO - [green]SUCCESS:[/green] Database initialization completed successfully.
-2025-04-12 16:24:31,797 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
-2025-04-12 16:24:31,798 - __main__ - INFO - Database command finished.
-2025-04-12 16:24:38,689 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:38,690 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:24:38,812 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:38,821 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:38,847 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:38,967 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:38,968 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:38,970 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 16:24:38,971 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
-2025-04-12 16:24:38,971 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
-2025-04-12 16:24:38,971 - ydrpolicy.backend.mcp.server - INFO - Removed RichHandler for stdio mode.
-2025-04-12 16:24:38,971 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
-2025-04-12 16:24:46,153 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:24:46,154 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:31:10,602 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:31:10,603 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:31:10,757 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:31:10,771 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:31:10,811 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:31:10,950 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:31:10,950 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:31:10,953 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 16:31:10,953 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
-2025-04-12 16:31:10,953 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
-2025-04-12 16:31:10,953 - ydrpolicy.backend.mcp.server - INFO - Removed RichHandler for stdio mode.
-2025-04-12 16:31:10,953 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
-2025-04-12 16:32:40,107 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:32:40,108 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:33:32,034 - __main__ - INFO - Backend logging initialized for '__main__' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:33:32,036 - __main__ - INFO - 
-================================================================================
-YDR Policy RAG Engine CLI - Starting
-================================================================================
-2025-04-12 16:33:32,177 - ydrpolicy.backend.database.engine - INFO - Backend logging initialized for 'ydrpolicy.backend.database.engine' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:33:32,189 - ydrpolicy.backend.database.models - INFO - Backend logging initialized for 'ydrpolicy.backend.database.models' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:33:32,219 - ydrpolicy.backend.database.repository.policies - INFO - Backend logging initialized for 'ydrpolicy.backend.database.repository.policies' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:33:32,524 - ydrpolicy.backend.services.embeddings - INFO - Backend logging initialized for 'ydrpolicy.backend.services.embeddings' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:33:32,525 - ydrpolicy.backend.mcp.server - INFO - Backend logging initialized for 'ydrpolicy.backend.mcp.server' (Console ON). Log file: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/logs/backend.log
-2025-04-12 16:33:32,529 - __main__ - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 16:33:32,529 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
-2025-04-12 16:33:32,530 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
-2025-04-12 16:33:32,530 - ydrpolicy.backend.mcp.server - INFO - Removed RichHandler for stdio mode.
-2025-04-12 16:33:32,530 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
-2025-04-12 16:45:59,278 - __main__ - INFO - MCP server stopped by user (KeyboardInterrupt).
-2025-04-12 16:45:59,281 - __main__ - INFO - MCP server process finished.
-2025-04-12 17:07:29,718 - ydrpolicy.backend.database - INFO - Executing database command...
-2025-04-12 17:07:29,718 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 17:07:29,718 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
-2025-04-12 17:07:32,010 - ydrpolicy.backend.database.init_db - INFO - Database drop cancelled.
-2025-04-12 17:07:32,012 - ydrpolicy.backend.database - INFO - Database command finished.
-2025-04-12 17:07:43,346 - ydrpolicy.backend.mcp - WARNING - Running MCP in stdio mode with logging enabled. Console logs might interfere with stdio protocol.
-2025-04-12 17:07:43,346 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 17:07:43,346 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
-2025-04-12 17:07:43,347 - ydrpolicy.backend.mcp - ERROR - MCP server failed to start: 'Logger' object has no attribute 'logger'
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 289, in mcp_command
-    mcp_server.start_mcp_server(host=run_host, port=run_port, transport=run_transport)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/mcp/server.py", line 185, in start_mcp_server
-    underlying_logger = logger.logger # Get the actual logging.Logger instance
-                        ^^^^^^^^^^^^^
-AttributeError: 'Logger' object has no attribute 'logger'
-2025-04-12 17:09:39,580 - ydrpolicy.backend.mcp - WARNING - Running MCP in stdio mode with logging enabled. Console logs might interfere with stdio protocol.
-2025-04-12 17:09:39,582 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 17:09:39,582 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
-2025-04-12 17:09:39,582 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
-2025-04-12 17:09:39,582 - ydrpolicy.backend.mcp.server - WARNING - Could not find RichHandler to remove for stdio mode (already removed or never added?).
-2025-04-12 17:09:39,583 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
-2025-04-12 17:09:44,405 - ydrpolicy.backend.mcp - INFO - MCP server startup interrupted by user.
-2025-04-12 17:09:44,407 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
-2025-04-12 17:09:51,364 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
-2025-04-12 17:09:51,365 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
-2025-04-12 17:09:51,365 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http transport via uvicorn on 0.0.0.0:8001.
-2025-04-12 17:09:53,818 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
-2025-04-12 17:09:53,820 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
-2025-04-12 17:11:34,630 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
-2025-04-12 17:11:34,630 - __main__ - INFO - MCP server process finished.
-2025-04-12 17:11:39,269 - ydrpolicy.backend.mcp - WARNING - Running MCP in stdio mode with logging enabled. Console logs might interfere with stdio protocol.
-2025-04-12 17:11:39,269 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 17:11:39,269 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
-2025-04-12 17:11:39,270 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
-2025-04-12 17:11:39,270 - ydrpolicy.backend.mcp.server - WARNING - Could not find RichHandler to remove for stdio mode (already removed or never added?).
-2025-04-12 17:11:39,270 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
-2025-04-12 17:12:13,642 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
-2025-04-12 17:12:13,643 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-12 17:16:35,731 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-12 17:16:35,731 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 17:16:35,732 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
+2025-04-12 17:16:36,702 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
+2025-04-12 17:16:36,707 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
+2025-04-12 17:16:36,707 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
+2025-04-12 17:16:36,752 - ydrpolicy.backend.database.init_db - ERROR - Error dropping database 'ydrpolicy': 'Logger' object has no attribute 'success'
+2025-04-12 17:16:36,756 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-12 20:28:15,503 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-12 20:28:15,504 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 20:28:15,504 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
+2025-04-12 20:28:17,147 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
+2025-04-12 20:28:17,153 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
+2025-04-12 20:28:17,154 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
+2025-04-12 20:28:17,155 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' dropped successfully.
+2025-04-12 20:28:17,161 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-12 20:28:22,784 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-12 20:28:22,784 - ydrpolicy.backend.database - INFO - Database initialization (no population) requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 20:28:22,785 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 20:28:22,785 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-12 20:28:22,795 - ydrpolicy.backend.database.init_db - INFO - Creating database 'ydrpolicy'...
+2025-04-12 20:28:22,860 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' created.
+2025-04-12 20:28:22,863 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
+2025-04-12 20:28:22,883 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
+2025-04-12 20:28:22,883 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
+2025-04-12 20:28:22,914 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
+2025-04-12 20:28:22,915 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
+2025-04-12 20:28:22,920 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
+2025-04-12 20:28:22,921 - ydrpolicy.backend.database.init_db - INFO - Skipping data population step.
+2025-04-12 20:28:22,921 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
+2025-04-12 20:28:22,925 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
+2025-04-12 20:28:22,926 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-12 20:28:43,681 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-12 20:28:43,681 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 20:28:43,682 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
+2025-04-12 20:28:45,665 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
+2025-04-12 20:28:45,671 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
+2025-04-12 20:28:45,672 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
+2025-04-12 20:28:45,704 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' dropped successfully.
+2025-04-12 20:28:45,707 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-12 20:28:54,666 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-12 20:28:54,667 - ydrpolicy.backend.database - INFO - Database initialization (no population) requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 20:28:54,667 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 20:28:54,668 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-12 20:28:54,676 - ydrpolicy.backend.database.init_db - INFO - Creating database 'ydrpolicy'...
+2025-04-12 20:28:54,738 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' created.
+2025-04-12 20:28:54,740 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
+2025-04-12 20:28:54,757 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
+2025-04-12 20:28:54,757 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
+2025-04-12 20:28:54,785 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
+2025-04-12 20:28:54,786 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
+2025-04-12 20:28:54,789 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
+2025-04-12 20:28:54,790 - ydrpolicy.backend.database.init_db - INFO - Skipping data population step.
+2025-04-12 20:28:54,790 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
+2025-04-12 20:28:54,794 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
+2025-04-12 20:28:54,795 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-12 20:29:18,927 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-12 20:29:18,927 - ydrpolicy.backend.database - INFO - Database initialization and population requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 20:29:18,928 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-12 20:29:18,928 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-12 20:29:18,937 - ydrpolicy.backend.database.init_db - INFO - Database 'ydrpolicy' already exists.
+2025-04-12 20:29:18,941 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
+2025-04-12 20:29:18,951 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
+2025-04-12 20:29:18,951 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
+2025-04-12 20:29:18,958 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
+2025-04-12 20:29:18,958 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
+2025-04-12 20:29:18,964 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
+2025-04-12 20:29:18,964 - ydrpolicy.backend.database.init_db - INFO - Starting data population from scraped_policies directory...
+2025-04-12 20:29:18,965 - ydrpolicy.backend.database.init_db - INFO - Scanning scraped policies directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/scraped_policies
+2025-04-12 20:29:18,965 - ydrpolicy.backend.database.init_db - INFO - Reading policy descriptions from CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/processed_policies_log.csv
+2025-04-12 20:29:18,969 - ydrpolicy.backend.database.init_db - INFO - Loaded 17 timestamp mappings and 17 URL mappings for policy descriptions
+2025-04-12 20:29:18,969 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-12 20:29:18,970 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-12 20:29:18,970 - ydrpolicy.backend.database.init_db - INFO - Fetching existing policy information from database...
+2025-04-12 20:29:18,987 - ydrpolicy.backend.database.init_db - INFO - Found 0 existing policies in database.
+2025-04-12 20:29:18,988 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Yale_University_Policy_on_Conflict_of_Interest' from folder: Yale_University_Policy_on_Conflict_of_Interest_20250409192912567168
+2025-04-12 20:29:19,002 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 1
+2025-04-12 20:29:19,003 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
+2025-04-12 20:29:19,078 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
+2025-04-12 20:29:20,212 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
+2025-04-12 20:29:20,213 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
+2025-04-12 20:29:20,214 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
+2025-04-12 20:29:20,215 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Residents_Wellbeing_Policy' from folder: Residents_Wellbeing_Policy_20250409193300717366
+2025-04-12 20:29:20,248 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 2
+2025-04-12 20:29:20,249 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
+2025-04-12 20:29:20,249 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
+2025-04-12 20:29:20,894 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
+2025-04-12 20:29:20,895 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
+2025-04-12 20:29:20,896 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
+2025-04-12 20:29:20,897 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy' from folder: School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy_20250409193128387433
+2025-04-12 20:29:20,922 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 3
+2025-04-12 20:29:20,923 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
+2025-04-12 20:29:20,924 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
+2025-04-12 20:29:21,405 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
+2025-04-12 20:29:21,406 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
+2025-04-12 20:29:21,407 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
+2025-04-12 20:29:21,408 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Controller_s_Office_Factsheet' from folder: Controller_s_Office_Factsheet_20250409194424987413
+2025-04-12 20:29:21,429 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 4
+2025-04-12 20:29:21,431 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 21 chunks.
+2025-04-12 20:29:21,431 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 21 texts
+2025-04-12 20:29:22,042 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 21 embeddings
+2025-04-12 20:29:22,042 - ydrpolicy.backend.database.init_db - INFO -   Generated 21 embeddings.
+2025-04-12 20:29:22,043 - ydrpolicy.backend.database.init_db - INFO -   Added 21 PolicyChunk records to session.
+2025-04-12 20:29:22,044 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Appointment_Application_Requirements_Process' from folder: Voluntary_Faculty_Appointment_Application_Requirements_Process_20250409193339788344
+2025-04-12 20:29:22,082 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 5
+2025-04-12 20:29:22,082 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 3 chunks.
+2025-04-12 20:29:22,083 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
+2025-04-12 20:29:22,251 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
+2025-04-12 20:29:22,252 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
+2025-04-12 20:29:22,252 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records to session.
+2025-04-12 20:29:22,255 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Workday_Finance_User-Based_Security_Groups_Request_Process' from folder: Workday_Finance_User-Based_Security_Groups_Request_Process_20250409194153006635
+2025-04-12 20:29:22,267 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 6
+2025-04-12 20:29:22,269 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 3 chunks.
+2025-04-12 20:29:22,269 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
+2025-04-12 20:29:22,839 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
+2025-04-12 20:29:22,840 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
+2025-04-12 20:29:22,841 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records to session.
+2025-04-12 20:29:22,844 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Staff_Workplace_Policies' from folder: Staff_Workplace_Policies_20250409204542316052
+2025-04-12 20:29:22,889 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 7
+2025-04-12 20:29:22,899 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 333 chunks.
+2025-04-12 20:29:22,899 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 333 texts
+2025-04-12 20:29:24,438 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 333 embeddings
+2025-04-12 20:29:24,438 - ydrpolicy.backend.database.init_db - INFO -   Generated 333 embeddings.
+2025-04-12 20:29:24,443 - ydrpolicy.backend.database.init_db - INFO -   Added 333 PolicyChunk records to session.
+2025-04-12 20:29:24,443 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Grand_Rounds_Allowable_Expenses' from folder: Grand_Rounds_Allowable_Expenses_20250409192920823251
+2025-04-12 20:29:24,718 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 8
+2025-04-12 20:29:24,719 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
+2025-04-12 20:29:24,719 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
+2025-04-12 20:29:25,419 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
+2025-04-12 20:29:25,420 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
+2025-04-12 20:29:25,420 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
+2025-04-12 20:29:25,421 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Guidelines_Clarification' from folder: Voluntary_Faculty_Guidelines_Clarification_20250409193316792165
+2025-04-12 20:29:25,436 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 9
+2025-04-12 20:29:25,437 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
+2025-04-12 20:29:25,438 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
+2025-04-12 20:29:26,118 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
+2025-04-12 20:29:26,119 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
+2025-04-12 20:29:26,120 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
+2025-04-12 20:29:26,121 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Guidelines_for_Appointment' from folder: Guidelines_for_Appointment_20250409193232742762
+2025-04-12 20:29:26,148 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 10
+2025-04-12 20:29:26,149 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 6 chunks.
+2025-04-12 20:29:26,150 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 6 texts
+2025-04-12 20:29:26,485 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 6 embeddings
+2025-04-12 20:29:26,487 - ydrpolicy.backend.database.init_db - INFO -   Generated 6 embeddings.
+2025-04-12 20:29:26,487 - ydrpolicy.backend.database.init_db - INFO -   Added 6 PolicyChunk records to session.
+2025-04-12 20:29:26,488 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP' from folder: Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP_20250409193528279122
+2025-04-12 20:29:26,509 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 11
+2025-04-12 20:29:26,510 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
+2025-04-12 20:29:26,511 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
+2025-04-12 20:29:27,159 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
+2025-04-12 20:29:27,161 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
+2025-04-12 20:29:27,162 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
+2025-04-12 20:29:27,164 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'YDR_Conflict_of_Interest_Policy' from folder: YDR_Conflict_of_Interest_Policy_20250409192856529523
+2025-04-12 20:29:27,182 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 12
+2025-04-12 20:29:27,183 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 7 chunks.
+2025-04-12 20:29:27,183 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 7 texts
+2025-04-12 20:29:27,855 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 7 embeddings
+2025-04-12 20:29:27,856 - ydrpolicy.backend.database.init_db - INFO -   Generated 7 embeddings.
+2025-04-12 20:29:27,857 - ydrpolicy.backend.database.init_db - INFO -   Added 7 PolicyChunk records to session.
+2025-04-12 20:29:27,877 - ydrpolicy.backend.database.init_db - INFO - Database population finished. Processed 12 new policies. Skipped 0 folders.
+2025-04-12 20:29:27,878 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
+2025-04-12 20:29:27,883 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
+2025-04-12 20:29:27,885 - ydrpolicy.backend.database - INFO - Database command finished.

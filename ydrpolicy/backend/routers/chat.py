@@ -75,7 +75,7 @@ async def stream_chat(
     """
     Handles streaming chat requests with history persistence.
     """
-    logger.api(f"Received chat stream request for user {request.user_id}, chat {request.chat_id}: {request.message[:100]}...")
+    logger.info(f"API: Received chat stream request for user {request.user_id}, chat {request.chat_id}: {request.message[:100]}...")
 
     async def event_generator() -> AsyncGenerator[str, None]:
         """Generates SSE formatted JSON strings for each stream chunk."""
@@ -90,7 +90,7 @@ async def stream_chat(
                 yield f"data: {json_chunk}\n\n" # SSE format
                 await asyncio.sleep(0.01) # Yield control briefly
 
-            logger.api(f"Finished streaming response for user {request.user_id}, chat {request.chat_id or 'new'}.")
+            logger.info(f"API: Finished streaming response for user {request.user_id}, chat {request.chat_id or 'new'}.")
             # Ensure a final "end" event or rely on the status event from the service
             # yield "data: {\"type\": \"stream_end\", \"data\": {\"message\": \"Stream finished\"}}\n\n"
 

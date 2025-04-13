@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 17 (4/12/2025 - 20:30)
+
+Debugged the logging mechanism for the data collection scripts
+
 ## commit 16 (4/12/2025 - 17:13)
 
 Switched to default logging through Python. Added no logging option to main.py

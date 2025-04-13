@@ -7,10 +7,11 @@ from types import SimpleNamespace
 import pandas as pd
 from dotenv import load_dotenv
 
-from ydrpolicy.data_collection.logger import DataCollectionLogger
 from ydrpolicy.data_collection.scrape.scraper import scrape_policies # Uses the updated function
 from ydrpolicy.data_collection.config import config as default_config # Renamed import
 
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 def main(config: SimpleNamespace = None, logger: logging.Logger = None):
     """Main function to run the policy classification and processing step."""
@@ -110,11 +111,9 @@ if __name__ == "__main__":
     # Create default logger for direct execution
     log_file = getattr(main_config.LOGGING, 'SCRAPER_LOG_FILE', os.path.join(main_config.PATHS.DATA_DIR, "logs", "scraper.log"))
     os.makedirs(os.path.dirname(log_file), exist_ok=True)
-    main_logger = DataCollectionLogger(
-        name="scrape_script",
-        level=logging.INFO,
-        path=log_file
-    )
+    main_logger = logging.getLogger(__name__)
+    main_logger.setLevel(logging.INFO)
+    main_logger.info("\n" + "="*80 + "\nSTARTING POLICY CLASSIFICATION & PROCESSING\n" + "="*80)
 
     main_logger.info("\n" + "="*80 + "\nSTARTING POLICY CLASSIFICATION & PROCESSING\n" + "="*80)
     main(config=main_config, logger=main_logger)

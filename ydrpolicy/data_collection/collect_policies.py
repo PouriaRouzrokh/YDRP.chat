@@ -2,6 +2,7 @@
 
 import os
 import logging
+import sys
 import urllib.parse
 import re
 import datetime
@@ -22,7 +23,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from dotenv import load_dotenv
 
 from ydrpolicy.data_collection.config import config as default_config
-from ydrpolicy.data_collection.logger import DataCollectionLogger
 
 from ydrpolicy.data_collection.crawl.processors.document_processor import (
     download_document as crawl_download_doc,
@@ -40,6 +40,9 @@ from ydrpolicy.data_collection.scrape.llm_prompts import SCRAPER_LLM_SYSTEM_PROM
 from ydrpolicy.data_collection.crawl.crawl import main as crawl_main
 from ydrpolicy.data_collection.scrape.scrape import main as scrape_main
 
+# Initialize logger
+logger = logging.getLogger(__name__)
+
 # --- Helper Functions ---
 
 def is_document_url(url: str, config: SimpleNamespace) -> bool:
@@ -56,7 +59,7 @@ def is_document_url(url: str, config: SimpleNamespace) -> bool:
 
 # --- Main Collection Functions ---
 
-def collect_one(url: str, config: SimpleNamespace, logger: logging.Logger) -> None:
+def collect_one(url: str, config: SimpleNamespace) -> None:
     """Collects, processes, classifies, and copies a single policy URL."""
     logger.info(f"Starting collect_one for URL: {url}")
     logger.warning("Browser opens & pauses for login/navigation.")
@@ -199,11 +202,11 @@ def collect_one(url: str, config: SimpleNamespace, logger: logging.Logger) -> No
                 dest_txt_path = os.path.join(dest_policy_dir, "content.txt")
                 source_img_dir = os.path.join(os.path.dirname(source_markdown_path), raw_timestamp)
                 try:
-                    shutil.copy2(source_markdown_path, dest_md_path); logger.success(f"Copied MD -> {dest_md_path}")
+                    shutil.copy2(source_markdown_path, dest_md_path); logger.info(f"SUCCESS: Copied MD -> {dest_md_path}")
                     with open(dest_md_path, 'r', encoding='utf-8') as md_f: lines = md_f.readlines()
                     filtered_content = _filter_markdown_for_txt(lines)
                     with open(dest_txt_path, 'w', encoding='utf-8') as txt_f: txt_f.write(filtered_content)
-                    logger.success(f"Created TXT -> {dest_txt_path}")
+                    logger.info(f"SUCCESS: Created TXT -> {dest_txt_path}")
                     if os.path.isdir(source_img_dir):
                         logger.info(f"Copying images from: {source_img_dir}")
                         count = 0
@@ -212,7 +215,7 @@ def collect_one(url: str, config: SimpleNamespace, logger: logging.Logger) -> No
                             if os.path.isfile(s):
                                 try: shutil.copy2(s, d); count += 1
                                 except Exception as e: logger.warning(f"Img copy fail {item}: {e}")
-                        logger.success(f"Copied {count} image(s) -> {dest_policy_dir}")
+                        logger.info(f"SUCCESS: Copied {count} image(s) -> {dest_policy_dir}")
                     else: logger.debug(f"No image source dir found: {source_img_dir}")
                 except Exception as e: logger.error(f"Copy/Process error for {source_markdown_path}: {e}")
             else: logger.info("Step 5: Not policy. No output structure created.")
@@ -226,11 +229,11 @@ def collect_one(url: str, config: SimpleNamespace, logger: logging.Logger) -> No
 
 
 # --- collect_all function (Unchanged) ---
-def collect_all(config: SimpleNamespace, logger: logging.Logger) -> None:
+def collect_all(config: SimpleNamespace) -> None:
     """Runs the full crawl and scrape (classify/copy) process sequentially."""
     logger.info("Starting collect_all process...")
     logger.info("=" * 80); logger.info("STEP 1: CRAWLING..."); logger.info("=" * 80)
-    try: crawl_main(config=config, logger=logger); logger.success("Crawling process completed.")
+    try: crawl_main(config=config, logger=logger); logger.info("SUCCESS: Crawling process completed.")
     except SystemExit as e: 
         logger.warning(f"Crawling exited code {e.code}.");
         if e.code != 0: logger.error("Aborting collect_all."); return
@@ -240,20 +243,29 @@ def collect_all(config: SimpleNamespace, logger: logging.Logger) -> None:
         csv_path = os.path.join(config.PATHS.RAW_DATA_DIR, "crawled_policies_data.csv")
         if not os.path.exists(csv_path): logger.error(f"Input file not found: {csv_path}. Aborting scraping."); return
         scrape_main(config=config, logger=logger) # Uses updated scrape_policies
-        logger.success("Scraping process completed.")
+        logger.info("SUCCESS: Scraping process completed.")
     except Exception as e: logger.error(f"Scraping failed: {e}", exc_info=True)
-    logger.info("=" * 80); logger.success("collect_all process finished."); logger.info("=" * 80)
+    logger.info("=" * 80); logger.info("SUCCESS: collect_all process finished."); logger.info("=" * 80)
 
-# --- Main execution block (Unchanged) ---
+# --- Main execution block ---
 if __name__ == "__main__":
+    # Setup logging here if run directly (or rely on root config if main.py setup runs first)
+    # For direct run, let's configure minimally if no handlers exist
+    if not logging.getLogger("ydrpolicy.data_collection").hasHandlers():
+         logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+         print("NOTICE: Basic logging configured for direct script execution.", file=sys.stderr)
+
     load_dotenv()
-    main_logger = DataCollectionLogger(name="collect_policies", level=logging.INFO, path=os.path.join(default_config.PATHS.DATA_DIR, "logs", "collect_policies.log"))
-    main_logger.info(f"\n{'='*80}\nPOLICY COLLECTION SCRIPT STARTED\n{'='*80}")
+    # Use the module-level logger, setup is assumed to be done by main.py or basicConfig above
+    logger.info(f"\n{'='*80}\nPOLICY COLLECTION SCRIPT STARTED\n{'='*80}")
     mode = 'one' # Set mode: 'all' or 'one'
-    if mode == 'all': main_logger.info("Running collect_all..."); collect_all(config=default_config, logger=main_logger)
+    if mode == 'all':
+        logger.info("Running collect_all...")
+        collect_all(config=default_config) # Removed logger pass
     elif mode == 'one':
-        # url = "https://medicine.yale.edu/diagnosticradiology/patientcare/policies/intraosseousneedlecontrastinjection/"
-        url = "https://files-profile.medicine.yale.edu/documents/d74f0972-b42b-4547-b0f0-41f6a1cf1793" # PDF link example
-        main_logger.info(f"Running collect_one for URL: {url}"); collect_one(url=url, config=default_config, logger=main_logger)
-    else: main_logger.error(f"Invalid mode: {mode}.")
-    main_logger.info("Policy collection script finished.")
+        url = "https://files-profile.medicine.yale.edu/documents/d74f0972-b42b-4547-b0f0-41f6a1cf1793"
+        logger.info(f"Running collect_one for URL: {url}")
+        collect_one(url=url, config=default_config) # Removed logger pass
+    else:
+        logger.error(f"Invalid mode: {mode}.")
+    logger.info("Policy collection script finished.")

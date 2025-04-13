@@ -14,8 +14,10 @@ from openai import OpenAI
 from pydantic import BaseModel, Field
 from tqdm import tqdm
 
-from ydrpolicy.data_collection.logger import DataCollectionLogger
 from ydrpolicy.data_collection.scrape.llm_prompts import SCRAPER_LLM_SYSTEM_PROMPT
+
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 # Helper function to sanitize policy titles for directory/file names
 def sanitize_filename(name: str, max_len: int = 80) -> str:
@@ -82,7 +84,6 @@ def scrape_policies(
         df: pd.DataFrame,
         base_path: str = None, # Base path to raw markdown files (e.g., MARKDOWN_DIR)
         config: SimpleNamespace = None,
-        logger: logging.Logger = None
     ) -> pd.DataFrame:
     """
     Processes Markdown files: classifies using LLM (extracting title), and if policy,
@@ -103,8 +104,6 @@ def scrape_policies(
         raise ValueError("DataFrame must contain a 'file_path' column.")
     if not base_path:
         raise ValueError("base_path argument is required to locate source markdown files.")
-    if logger is None:
-        logger = DataCollectionLogger(name="scrape_policies_default", level=logging.INFO)
 
     if not config.LLM.OPENAI_API_KEY:
         logger.error("OPENAI_API_KEY not found. Cannot perform classification.")
@@ -227,7 +226,7 @@ def scrape_policies(
                 try:
                     # 1. Copy the original source markdown file to <dest_policy_dir>/content.md
                     shutil.copy2(source_markdown_path, dest_md_path)
-                    logger.success(f"Copied raw markdown to: {dest_md_path}")
+                    logger.info(f"SUCCESS: Copied raw markdown to: {dest_md_path}")
                     current_result['policy_content_path'] = dest_md_path # Store path to content.md
 
                     # 2. Read the newly copied content.md and create filtered content.txt
@@ -236,7 +235,7 @@ def scrape_policies(
                     filtered_content = _filter_markdown_for_txt(markdown_lines)
                     with open(dest_txt_path, 'w', encoding='utf-8') as txt_file:
                         txt_file.write(filtered_content)
-                    logger.success(f"Created filtered text version at: {dest_txt_path}")
+                    logger.info(f"SUCCESS: Created filtered text version at: {dest_txt_path}")
 
                     # 3. Copy images from source image directory directly into the destination policy directory
                     if os.path.isdir(source_img_dir):
@@ -257,7 +256,7 @@ def scrape_policies(
                                     except Exception as img_copy_err:
                                         logger.warning(f"Failed to copy image '{item_name}': {img_copy_err}")
                             if copied_image_count > 0:
-                                logger.success(f"Copied {copied_image_count} image(s) to: {dest_policy_dir}")
+                                logger.info(f"SUCCESS: Copied {copied_image_count} image(s) to: {dest_policy_dir}")
                             else:
                                 logger.debug("No image files were copied from source directory.")
                     else:

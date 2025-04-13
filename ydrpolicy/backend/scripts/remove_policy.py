@@ -202,7 +202,7 @@ async def main_cli():
 
     # Report final status
     if success:
-        logger.success(f"Successfully removed policy identified by {id_type}: '{identifier}'.")
+        logger.info(f"SUCCESS: Successfully removed policy identified by {id_type}: '{identifier}'.")
     else:
         logger.error(f"Failed to remove policy identified by {id_type}: '{identifier}'. Check logs for details.")
         sys.exit(1) # Exit with error code

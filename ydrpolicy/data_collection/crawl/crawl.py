@@ -9,10 +9,12 @@ from dotenv import load_dotenv
 
 # Import the updated crawler class
 from ydrpolicy.data_collection.crawl.crawler import YaleCrawler
-from ydrpolicy.data_collection.logger import DataCollectionLogger
 from ydrpolicy.data_collection.config import config as default_config # Renamed import
 
-def main(config: SimpleNamespace = None, logger: logging.Logger = None):
+# Initialize logger
+logger = logging.getLogger(__name__)
+
+def main(config: SimpleNamespace = None):
     """Main function to run the crawler."""
     # Load environment variables
     load_dotenv()
@@ -21,22 +23,9 @@ def main(config: SimpleNamespace = None, logger: logging.Logger = None):
     if config is None:
         config = default_config
 
-    # If no logger is provided, create a new one
-    if logger is None:
-        log_path = getattr(config.LOGGING, 'CRAWLER_LOG_FILE', os.path.join(config.PATHS.DATA_DIR, "logs", "crawler.log"))
-        # Ensure log directory exists before initializing logger
-        try:
-            os.makedirs(os.path.dirname(log_path), exist_ok=True)
-        except OSError as e:
-            print(f"Error creating log directory {os.path.dirname(log_path)}: {e}", file=sys.stderr)
-            # Fallback to no file logging? Or raise error? For now, continue without file log.
-            log_path = None
-
-        logger = DataCollectionLogger(
-            name="crawl_main",
-            level=logging.INFO, # Adjust level as needed
-            path=log_path
-        )
+    # Validate environment variables potentially needed by processors (e.g., Mistral)
+    if not config.LLM.MISTRAL_API_KEY and not os.environ.get("MISTRAL_API_KEY"):
+        logger.warning("MISTRAL_API_KEY not found. PDF OCR processing may fail.")
 
     # Validate environment variables potentially needed by processors (e.g., Mistral)
     if not config.LLM.MISTRAL_API_KEY and not os.environ.get("MISTRAL_API_KEY"):
@@ -118,11 +107,8 @@ if __name__ == "__main__":
         print(f"Warning: Could not create log directory {os.path.dirname(log_file_path)}: {e}")
         log_file_path = None # Disable file logging if dir creation fails
 
-    main_logger = DataCollectionLogger(
-        name="crawl_script",
-        level=logging.INFO,
-        path=log_file_path
-    )
+    main_logger = logging.getLogger(__name__)
+    main_logger.setLevel(logging.INFO)
 
     main_logger.info(f"\n{'='*80}\nSTARTING CRAWLER PROCESS\n{'='*80}")
     main(config=default_config, logger=main_logger)

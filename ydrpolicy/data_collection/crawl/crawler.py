@@ -37,8 +37,8 @@ from ydrpolicy.data_collection.crawl.processors.llm_processor import \
     analyze_content_for_policies
 from ydrpolicy.data_collection.crawl.processors import llm_prompts as crawler_llm_prompts
 
-from ydrpolicy.data_collection.logger import DataCollectionLogger
-
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 class YaleCrawler:
     """Class for crawling Yale Medicine webpages and documents using priority-based algorithm."""
@@ -46,7 +46,6 @@ class YaleCrawler:
     def __init__(
             self,
             config: SimpleNamespace,
-            logger: Optional[logging.Logger] = None
         ):
         """Initialize the crawler."""
         self.visited_urls = set()
@@ -55,7 +54,7 @@ class YaleCrawler:
         self.current_url: Optional[str] = None
         self.current_depth: int = 0
         self.config = config
-        self.logger = logger if logger else DataCollectionLogger(name="YaleCrawler", level=logging.INFO)
+        self.logger = logging.getLogger(__name__)
         self.state_manager = CrawlerState(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), self.logger)
         self.stopping = False
         signal.signal(signal.SIGINT, lambda s, f: self.signal_handler(s, f))

@@ -99,7 +99,7 @@ class ChatRepository(BaseRepository[Chat]):
 
         new_chat = Chat(user_id=user_id, title=title)
         chat = await self.create(new_chat) # Uses BaseRepository.create
-        logger.success(f"Successfully created chat ID {chat.id} for user ID {user_id}.")
+        logger.info(f"SUCCESS: Successfully created chat ID {chat.id} for user ID {user_id}.")
         return chat
 
     async def update_chat_title(self, chat_id: int, user_id: int, new_title: str) -> Optional[Chat]:
@@ -124,7 +124,7 @@ class ChatRepository(BaseRepository[Chat]):
         # updated_at is handled automatically by the model definition
         await self.session.flush()
         await self.session.refresh(chat)
-        logger.success(f"Successfully updated title for chat ID {chat_id}.")
+        logger.info(f"SUCCESS: Successfully updated title for chat ID {chat_id}.")
         return chat
 
     async def delete_chat(self, chat_id: int, user_id: int) -> bool:
@@ -148,7 +148,7 @@ class ChatRepository(BaseRepository[Chat]):
         try:
             await self.session.delete(chat)
             await self.session.flush()
-            logger.success(f"Successfully deleted chat ID {chat_id} and its messages.")
+            logger.info(f"SUCCESS: Successfully deleted chat ID {chat_id} and its messages.")
             return True
         except Exception as e:
             logger.error(f"Error deleting chat ID {chat_id}: {e}", exc_info=True)

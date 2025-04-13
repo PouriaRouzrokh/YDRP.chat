@@ -86,7 +86,7 @@ async def create_policy_agent(use_mcp: bool = True) -> Agent:
 
     try:
         policy_agent = Agent(**agent_settings)
-        logger.success("Policy Agent instance created successfully.")
+        logger.info("SUCCESS: Policy Agent instance created successfully.")
         return policy_agent
     except Exception as e:
         logger.error(f"Failed to create Agent instance: {e}", exc_info=True)

@@ -12,9 +12,9 @@ from types import SimpleNamespace
 from typing import Tuple, Optional, Dict, List # Added more types
 
 from mistralai import Mistral
-from ydrpolicy.data_collection.logger import DataCollectionLogger
 
-logger = DataCollectionLogger(name="pdf_processor", level=logging.INFO)
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 def generate_pdf_raw_timestamp_name() -> Tuple[str, str]:
     """Generates timestamp-based base name and markdown filename."""

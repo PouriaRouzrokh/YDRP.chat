@@ -7,10 +7,13 @@ import os
 import pickle
 from typing import Any, Dict, List, Set, Tuple
 
+# Initialize logger
+logger = logging.getLogger(__name__)
+
 class CrawlerState:
     """Class for managing the crawler state to enable resuming from where it left off."""
     
-    def __init__(self, state_dir: str, logger: logging.Logger):
+    def __init__(self, state_dir: str):
         """
         Initialize the crawler state manager.
         
@@ -20,7 +23,7 @@ class CrawlerState:
         self.state_dir = state_dir
         self.state_file = os.path.join(state_dir, "crawler_state.json")
         self.queue_file = os.path.join(state_dir, "priority_queue.pkl")
-        self.logger = logger
+        self.logger = logging.getLogger(__name__)
         
         # Create the state directory if it doesn't exist
         os.makedirs(state_dir, exist_ok=True)

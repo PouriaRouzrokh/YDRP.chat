@@ -14,10 +14,9 @@ from litellm import completion
 
 # Local imports
 from ydrpolicy.data_collection.crawl.processors import llm_prompts
-from ydrpolicy.data_collection.logger import DataCollectionLogger
-
-# Set up logging
-logger = DataCollectionLogger(name="llm_processor", level=logging.INFO)
+    
+# Initialize logger
+logger = logging.getLogger(__name__)
 
 class PolicyContent(BaseModel):
     """Pydantic model for structured policy content extraction."""
