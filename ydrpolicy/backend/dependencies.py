@@ -3,7 +3,7 @@
 FastAPI dependencies for authentication and other common utilities.
 """
 import logging
-from typing import Annotated # Use Annotated
+from typing import Annotated  # Use Annotated
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -13,7 +13,7 @@ from ydrpolicy.backend.utils.auth_utils import decode_token
 from ydrpolicy.backend.database.engine import get_session
 from ydrpolicy.backend.database.models import User
 from ydrpolicy.backend.database.repository.users import UserRepository
-from ydrpolicy.backend.schemas.auth import TokenData # Import TokenData schema
+from ydrpolicy.backend.schemas.auth import TokenData  # Import TokenData schema
 
 logger = logging.getLogger(__name__)
 
@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
 # This dependency extracts the token from the "Authorization: Bearer <token>" header
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
+
 async def get_current_user(
-    token: Annotated[str, Depends(oauth2_scheme)],
-    session: AsyncSession = Depends(get_session)
+    token: Annotated[str, Depends(oauth2_scheme)], session: AsyncSession = Depends(get_session)
 ) -> User:
     """
     Dependency to get the current user from the JWT token.
@@ -48,9 +48,9 @@ async def get_current_user(
     # Use TokenData Pydantic model for validation and clarity
     try:
         token_data = TokenData(**payload)
-    except Exception: # Catch Pydantic validation error or other issues
-         logger.warning("Token payload validation failed.")
-         raise credentials_exception
+    except Exception:  # Catch Pydantic validation error or other issues
+        logger.warning("Token payload validation failed.")
+        raise credentials_exception
 
     if token_data.email is None:
         logger.warning("Token payload missing 'sub' (email).")
@@ -65,9 +65,8 @@ async def get_current_user(
     logger.debug(f"Authenticated user via token: {user.email}")
     return user
 
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)]
-) -> User:
+
+async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]) -> User:
     """
     Dependency that builds on get_current_user to ensure the user is active.
     (Currently, your User model doesn't have `is_active`, so this is placeholder).

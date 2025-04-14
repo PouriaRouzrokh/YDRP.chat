@@ -1,5 +1,11 @@
 # Commit History
 
+## commit 26 (4/14/2025 - 14:44)
+
+Updated the readme.md
+Added a for_frontend_dev.md
+Applied black to all scripts.
+
 ## commit 25 (4/14/2025 - 14:35)
 
 Added authentication mechanism.

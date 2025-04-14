@@ -9,11 +9,13 @@ import logging
 from typing import Any, Dict, List, Optional
 
 import uvicorn
+
 # No longer need Starlette or Route directly if using mcp.sse_app()
 # from starlette.applications import Starlette
 # from starlette.routing import Route
 
 from mcp.server.fastmcp import FastMCP
+
 # No longer need SseServerTransport directly
 # from mcp.server.sse import SseServerTransport
 from rich.logging import RichHandler
@@ -126,6 +128,7 @@ async def get_policy_from_ID(policy_id: int) -> str:
 # --- REMOVED ASGI App Setup for HTTP/SSE ---
 # We will now use mcp.sse_app() directly
 
+
 # --- Server Startup Logic ---
 def start_mcp_server(host: str, port: int, transport: str):
     """
@@ -160,14 +163,14 @@ def start_mcp_server(host: str, port: int, transport: str):
     try:
         if transport == "stdio":
             logger.info("Running MCP server with stdio transport.")
-            mcp.run(transport=transport) # Stdio is handled by FastMCP directly
+            mcp.run(transport=transport)  # Stdio is handled by FastMCP directly
         elif transport == "http":
             logger.info(f"Running MCP server with http/sse transport via uvicorn on {host}:{port}.")
             # ******************** CHANGE IS HERE ********************
             # Get the ASGI app specifically designed for SSE from FastMCP
             sse_asgi_app = mcp.sse_app()
             uvicorn.run(
-                sse_asgi_app, # Run the app provided by FastMCP
+                sse_asgi_app,  # Run the app provided by FastMCP
                 host=host,
                 port=port,
                 log_level=config.LOGGING.LEVEL.lower(),
@@ -181,6 +184,7 @@ def start_mcp_server(host: str, port: int, transport: str):
     except Exception as e:
         logger.error(f"MCP server run failed: {e}", exc_info=True)
         raise
+
 
 # --- Main Execution Block ---
 if __name__ == "__main__":

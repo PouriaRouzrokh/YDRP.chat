@@ -15,15 +15,17 @@ import os
 import sys
 from pathlib import Path
 from typing import List, Dict, Any, Optional
+
 # Import necessary components from agents library
 from agents import Agent, Runner, RunResult, RunResultStreaming
-from agents.exceptions import AgentsException, MaxTurnsExceeded, UserError # Import UserError
-from agents.mcp import MCPServerSse # Import MCPServerSse for type checking
+from agents.exceptions import AgentsException, MaxTurnsExceeded, UserError  # Import UserError
+from agents.mcp import MCPServerSse  # Import MCPServerSse for type checking
 from agents.tracing import set_tracing_disabled  # Import the function
 import typer
 import uvicorn
 import logging
 from openai.types.chat import ChatCompletionMessageParam
+
 # No ToolCallItem import needed
 
 # --- Add project root to sys.path ---
@@ -44,6 +46,7 @@ app = typer.Typer(
     add_completion=False,
     rich_markup_mode="markdown",
 )
+
 
 # --- Main App Callback ---
 @app.callback(invoke_without_command=True)
@@ -276,8 +279,8 @@ def mcp_command(
 
     if run_transport == "stdio" and not log_disabled:
         logger.warning(
-             "Running MCP in stdio mode with console logging potentially enabled (if --no-log not used). "
-             "Attempting to disable console handler dynamically."
+            "Running MCP in stdio mode with console logging potentially enabled (if --no-log not used). "
+            "Attempting to disable console handler dynamically."
         )
 
     logger.info(f"Attempting to start MCP server on {run_host}:{run_port} via {run_transport} transport...")
@@ -345,7 +348,11 @@ def agent_command(
                 print("-" * 60)
                 if use_mcp_flag and agent and agent.mcp_servers:
                     mcp_server_instance = agent.mcp_servers[0]
-                async with mcp_server_instance if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse) else null_async_context() as active_mcp_connection:
+                async with (
+                    mcp_server_instance
+                    if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse)
+                    else null_async_context()
+                ) as active_mcp_connection:
                     if use_mcp_flag:
                         if mcp_server_instance and active_mcp_connection is not None:
                             term_logger.info("Terminal Mode: MCP connection established via async context.")
@@ -356,47 +363,88 @@ def agent_command(
                         run_succeeded = False
                         try:
                             user_input = input("You: ")
-                            if user_input.lower() in ["quit", "exit"]: break
-                            if not user_input.strip(): continue
+                            if user_input.lower() in ["quit", "exit"]:
+                                break
+                            if not user_input.strip():
+                                continue
                             new_user_message: ChatCompletionMessageParam = {"role": "user", "content": user_input}
                             current_run_input_list = agent_input_list + [new_user_message]
                             print("Agent: ", end="", flush=True)
                             result_stream: Optional[RunResultStreaming] = None
                             try:
-                                if not agent: print("\n[Critical Error: Agent not initialized.]"); break
+                                if not agent:
+                                    print("\n[Critical Error: Agent not initialized.]")
+                                    break
                                 result_stream = Runner.run_streamed(starting_agent=agent, input=current_run_input_list)
                                 async for event in result_stream.stream_events():
-                                    if event.type == "raw_response_event" and hasattr(event.data, "delta") and event.data.delta:
+                                    if (
+                                        event.type == "raw_response_event"
+                                        and hasattr(event.data, "delta")
+                                        and event.data.delta
+                                    ):
                                         print(event.data.delta, end="", flush=True)
                                     elif event.type == "run_item_stream_event":
-                                        if hasattr(event, 'item') and hasattr(event.item, 'type'):
+                                        if hasattr(event, "item") and hasattr(event.item, "type"):
                                             item: Any = event.item
                                             if item.type == "tool_call_item":
-                                                if hasattr(item, 'raw_item') and hasattr(item.raw_item, 'name'):
+                                                if hasattr(item, "raw_item") and hasattr(item.raw_item, "name"):
                                                     tool_name = item.raw_item.name
                                                     print(f"\n[Calling tool: {tool_name}...]", end="", flush=True)
                                                 else:
-                                                    print(f"\n[Calling tool: (unknown name - item.raw_item.name not found)]", end="", flush=True)
-                                                    term_logger.warning("Could not find tool name via item.raw_item.name in tool_call_item.")
-                                            elif item.type == "tool_call_output_item": print(f"\n[Tool output received.]", end="", flush=True)
-                                        else: term_logger.warning(f"Received run_item_stream_event without a valid item: {event}")
+                                                    print(
+                                                        f"\n[Calling tool: (unknown name - item.raw_item.name not found)]",
+                                                        end="",
+                                                        flush=True,
+                                                    )
+                                                    term_logger.warning(
+                                                        "Could not find tool name via item.raw_item.name in tool_call_item."
+                                                    )
+                                            elif item.type == "tool_call_output_item":
+                                                print(f"\n[Tool output received.]", end="", flush=True)
+                                        else:
+                                            term_logger.warning(
+                                                f"Received run_item_stream_event without a valid item: {event}"
+                                            )
                                 run_succeeded = True
                                 term_logger.debug("Agent stream completed successfully.")
-                            except UserError as ue: print(f"\n[Agent UserError: {ue}]"); term_logger.error(f"Agent run UserError: {ue}", exc_info=True); print("[MCP Connection error detected. Check MCP server status.]")
-                            except (AgentsException, MaxTurnsExceeded) as agent_err: print(f"\n[Agent Error: {agent_err}]"); term_logger.error(f"Agent run error: {agent_err}", exc_info=True)
-                            except AttributeError as ae: print(f"\n[Error processing stream event: {ae}]"); term_logger.error(f"Stream processing AttributeError: {ae}", exc_info=True)
-                            except Exception as stream_err: print(f"\n[Error: {stream_err}]"); term_logger.error(f"Stream processing error: {stream_err}", exc_info=True)
+                            except UserError as ue:
+                                print(f"\n[Agent UserError: {ue}]")
+                                term_logger.error(f"Agent run UserError: {ue}", exc_info=True)
+                                print("[MCP Connection error detected. Check MCP server status.]")
+                            except (AgentsException, MaxTurnsExceeded) as agent_err:
+                                print(f"\n[Agent Error: {agent_err}]")
+                                term_logger.error(f"Agent run error: {agent_err}", exc_info=True)
+                            except AttributeError as ae:
+                                print(f"\n[Error processing stream event: {ae}]")
+                                term_logger.error(f"Stream processing AttributeError: {ae}", exc_info=True)
+                            except Exception as stream_err:
+                                print(f"\n[Error: {stream_err}]")
+                                term_logger.error(f"Stream processing error: {stream_err}", exc_info=True)
                             print()
                             if run_succeeded and result_stream is not None:
                                 agent_input_list = result_stream.to_input_list()
                                 term_logger.debug(f"Updated history list. Length: {len(agent_input_list)}")
-                                if len(agent_input_list) > MAX_HISTORY_TURNS_TERMINAL * 2: agent_input_list = agent_input_list[-(MAX_HISTORY_TURNS_TERMINAL * 2) :]; term_logger.debug(f"Truncated history list to {len(agent_input_list)}.")
-                            elif not run_succeeded: term_logger.warning("Keeping previous history list due to agent run failure.")
-                        except EOFError: term_logger.info("EOF received"); break
-                        except KeyboardInterrupt: term_logger.info("Interrupt received"); break
-                        except Exception as loop_err: term_logger.error(f"Terminal loop error: {loop_err}", exc_info=True); print(f"\n[Error: {loop_err}]")
-            except Exception as start_err: term_logger.critical(f"Terminal agent start failed: {start_err}", exc_info=True); print(f"\n[Critical Setup Error: {start_err}]")
-            finally: term_logger.info("Terminal chat session ended."); print("\nExiting terminal mode.")
+                                if len(agent_input_list) > MAX_HISTORY_TURNS_TERMINAL * 2:
+                                    agent_input_list = agent_input_list[-(MAX_HISTORY_TURNS_TERMINAL * 2) :]
+                                    term_logger.debug(f"Truncated history list to {len(agent_input_list)}.")
+                            elif not run_succeeded:
+                                term_logger.warning("Keeping previous history list due to agent run failure.")
+                        except EOFError:
+                            term_logger.info("EOF received")
+                            break
+                        except KeyboardInterrupt:
+                            term_logger.info("Interrupt received")
+                            break
+                        except Exception as loop_err:
+                            term_logger.error(f"Terminal loop error: {loop_err}", exc_info=True)
+                            print(f"\n[Error: {loop_err}]")
+            except Exception as start_err:
+                term_logger.critical(f"Terminal agent start failed: {start_err}", exc_info=True)
+                print(f"\n[Critical Setup Error: {start_err}]")
+            finally:
+                term_logger.info("Terminal chat session ended.")
+                print("\nExiting terminal mode.")
+
         asyncio.run(terminal_chat())
         logger.info("Terminal agent process finished.")
 
@@ -416,7 +464,7 @@ def agent_command(
         try:
             effective_log_level_name = logging.getLevelName(logging.getLogger().getEffectiveLevel())
             uvicorn.run(
-                "ydrpolicy.backend.api_main:app", # Ensure this points to your FastAPI app instance
+                "ydrpolicy.backend.api_main:app",  # Ensure this points to your FastAPI app instance
                 host=run_api_host,
                 port=run_api_port,
                 workers=api_workers,
@@ -427,6 +475,7 @@ def agent_command(
         except Exception as e:
             logger.critical(f"Failed to start FastAPI server: {e}", exc_info=True)
             raise typer.Exit(code=1)
+
 
 # --- Main Execution Guard ---
 # (Keep existing main execution guard)

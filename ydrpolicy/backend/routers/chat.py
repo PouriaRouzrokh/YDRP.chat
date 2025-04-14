@@ -3,15 +3,16 @@
 API Router for chat interactions with the YDR Policy Agent, including history.
 """
 import asyncio
-import json # Needed for tool call input parsing
+import json  # Needed for tool call input parsing
 import logging
-from typing import Any, AsyncGenerator, Dict, List, Optional, Annotated # Added types and Annotated
+from typing import Any, AsyncGenerator, Dict, List, Optional, Annotated  # Added types and Annotated
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query, status # Added status
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, status  # Added status
 from fastapi.responses import StreamingResponse
-from sqlalchemy.ext.asyncio import AsyncSession # Added AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession  # Added AsyncSession
 
 from ydrpolicy.backend.config import config
+
 # Import necessary schemas
 from ydrpolicy.backend.schemas.chat import (
     ChatRequest,
@@ -20,14 +21,17 @@ from ydrpolicy.backend.schemas.chat import (
     StreamChunk,
     # Specific data schemas for StreamChunk payload (Optional but good for clarity)
     ErrorData,
-    StreamChunkData
+    StreamChunkData,
 )
 from ydrpolicy.backend.services.chat_service import ChatService
+
 # Correctly import the dependency function that yields the session
 from ydrpolicy.backend.database.engine import get_session
+
 # Import Repositories needed for history
 from ydrpolicy.backend.database.repository.chats import ChatRepository
 from ydrpolicy.backend.database.repository.messages import MessageRepository
+
 # Import the authentication dependency and User model for typing
 from ydrpolicy.backend.dependencies import get_current_active_user
 from ydrpolicy.backend.database.models import User
@@ -53,6 +57,7 @@ router = APIRouter(
     prefix="/chat",
     tags=["Chat"],
 )
+
 
 # --- Streaming Endpoint - NOW PROTECTED ---
 @router.post(
@@ -88,8 +93,7 @@ async def stream_chat(
     if request.user_id != current_user.id:
         logger.warning(f"User ID mismatch: Token user ID {current_user.id} != Request body user ID {request.user_id}")
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="User ID in request does not match authenticated user."
+            status_code=status.HTTP_403_FORBIDDEN, detail="User ID in request does not match authenticated user."
         )
 
     logger.info(
@@ -101,15 +105,13 @@ async def stream_chat(
         try:
             # Pass user_id from the *authenticated* user
             async for chunk in chat_service.process_user_message_stream(
-                user_id=current_user.id, # Use authenticated user ID
-                message=request.message,
-                chat_id=request.chat_id
+                user_id=current_user.id, message=request.message, chat_id=request.chat_id  # Use authenticated user ID
             ):
                 # Ensure chunk has necessary fields before dumping
-                if hasattr(chunk, 'type') and hasattr(chunk, 'data'):
+                if hasattr(chunk, "type") and hasattr(chunk, "data"):
                     json_chunk = chunk.model_dump_json(exclude_unset=True)
                     yield f"data: {json_chunk}\n\n"  # SSE format
-                    await asyncio.sleep(0.01) # Yield control briefly
+                    await asyncio.sleep(0.01)  # Yield control briefly
                 else:
                     logger.error(f"Invalid chunk received from service: {chunk!r}")
 
@@ -118,34 +120,33 @@ async def stream_chat(
             )
 
         except Exception as e:
-            logger.error(f"Error during stream event generation for user {current_user.id}, chat {request.chat_id}: {e}", exc_info=True)
+            logger.error(
+                f"Error during stream event generation for user {current_user.id}, chat {request.chat_id}: {e}",
+                exc_info=True,
+            )
             # Use the helper function from ChatService to create error chunk
             try:
                 error_payload = ErrorData(message=f"Streaming generation failed: {str(e)}")
                 # Access helper method if available, otherwise recreate manually
-                if hasattr(chat_service, '_create_stream_chunk'):
-                     error_chunk = chat_service._create_stream_chunk("error", error_payload)
-                else: # Manual fallback if helper is not accessible/refactored
-                     error_chunk = StreamChunk(type="error", data=StreamChunkData(**error_payload.model_dump()))
+                if hasattr(chat_service, "_create_stream_chunk"):
+                    error_chunk = chat_service._create_stream_chunk("error", error_payload)
+                else:  # Manual fallback if helper is not accessible/refactored
+                    error_chunk = StreamChunk(type="error", data=StreamChunkData(**error_payload.model_dump()))
                 yield f"data: {error_chunk.model_dump_json()}\n\n"
             except Exception as yield_err:
                 logger.error(f"Failed even to yield error chunk: {yield_err}")
-
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
 # --- List User Chats Endpoint - NOW PROTECTED ---
 @router.get(
-    "", # GET request to the base /chat prefix
+    "",  # GET request to the base /chat prefix
     response_model=List[ChatSummary],
     summary="List chat sessions for the current user",
     description="Retrieves a list of chat sessions belonging to the authenticated user, ordered by the most recently updated.",
     response_description="A list of chat session summaries.",
-    responses={
-        401: {"description": "Authentication required"},
-        500: {"description": "Internal Server Error"}
-    }
+    responses={401: {"description": "Authentication required"}, 500: {"description": "Internal Server Error"}},
 )
 async def list_user_chats(
     skip: int = Query(0, ge=0, description="Number of chat sessions to skip (for pagination)."),
@@ -158,7 +159,9 @@ async def list_user_chats(
     """
     Fetches a paginated list of chat summaries for the authenticated user.
     """
-    logger.info(f"API: Received request to list chats for user {current_user.id} (authenticated) (skip={skip}, limit={limit}).")
+    logger.info(
+        f"API: Received request to list chats for user {current_user.id} (authenticated) (skip={skip}, limit={limit})."
+    )
     try:
         # Instantiate the repository INSIDE the endpoint, passing the actual session
         chat_repo = ChatRepository(session)
@@ -181,10 +184,10 @@ async def list_user_chats(
     response_description="A list of messages within the chat session.",
     responses={
         401: {"description": "Authentication required"},
-        403: {"description": "User not authorized to access this chat"}, # Handled by ownership check
+        403: {"description": "User not authorized to access this chat"},  # Handled by ownership check
         404: {"description": "Chat session not found"},
         500: {"description": "Internal Server Error"},
-    }
+    },
 )
 async def get_chat_messages(
     chat_id: int,
@@ -199,7 +202,9 @@ async def get_chat_messages(
     Fetches a paginated list of messages for a specific chat session,
     ensuring the user owns the chat.
     """
-    logger.info(f"API: Received request for messages in chat {chat_id} for user {current_user.id} (authenticated) (skip={skip}, limit={limit}).")
+    logger.info(
+        f"API: Received request for messages in chat {chat_id} for user {current_user.id} (authenticated) (skip={skip}, limit={limit})."
+    )
     try:
         # Instantiate repositories INSIDE the endpoint with the actual session
         chat_repo = ChatRepository(session)
@@ -212,11 +217,13 @@ async def get_chat_messages(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found.")
 
         # If ownership is confirmed, fetch the messages
-        messages = await msg_repo.get_by_chat_id_ordered(chat_id=chat_id, limit=None) # Get all first
-        paginated_messages = messages[skip : skip + limit] # Slice for pagination
+        messages = await msg_repo.get_by_chat_id_ordered(chat_id=chat_id, limit=None)  # Get all first
+        paginated_messages = messages[skip : skip + limit]  # Slice for pagination
         # Pydantic converts Message models to MessageSummary based on response_model
         return paginated_messages
     except Exception as e:
         logger.error(f"Error fetching messages for chat {chat_id}, user {current_user.id}: {e}", exc_info=True)
         # Rollback handled by generator context manager
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve chat messages.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve chat messages."
+        )

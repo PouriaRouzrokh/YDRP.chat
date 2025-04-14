@@ -6,9 +6,9 @@ Handles errors via exceptions from the agent runner.
 Manages MCP connection lifecycle using async context manager.
 """
 import asyncio
-import contextlib # For null_async_context
+import contextlib  # For null_async_context
 import datetime
-import json # For safe parsing of tool arguments
+import json  # For safe parsing of tool arguments
 import logging  # Use standard logging
 from typing import Any, AsyncGenerator, Dict, List, Optional, Tuple
 
@@ -21,15 +21,18 @@ from agents.exceptions import (
     OutputGuardrailTripwireTriggered,
     UserError,
 )
-from agents.mcp import MCPServerSse # For type checking and context management
+from agents.mcp import MCPServerSse  # For type checking and context management
+
 # Import only the necessary event types from agents.stream_events
 from agents.stream_events import (
     RawResponsesStreamEvent,
     RunItemStreamEvent,
     StreamEvent,
 )
+
 # OpenAI types
 from openai.types.chat import ChatCompletionMessageParam
+
 # Only import the specific response types actually used
 from openai.types.responses import ResponseTextDeltaEvent
 
@@ -39,13 +42,14 @@ from ydrpolicy.backend.database.engine import get_async_session
 from ydrpolicy.backend.database.models import Message as DBMessage
 from ydrpolicy.backend.database.repository.chats import ChatRepository
 from ydrpolicy.backend.database.repository.messages import MessageRepository
+
 # Import all specific data schemas AND the wrapper StreamChunkData
 from ydrpolicy.backend.schemas.chat import (
     ChatInfoData,
     ErrorData,
     StatusData,
     StreamChunk,
-    StreamChunkData, # The wrapper
+    StreamChunkData,  # The wrapper
     TextDeltaData,
     ToolCallData,
     ToolOutputData,
@@ -54,13 +58,15 @@ from ydrpolicy.backend.schemas.chat import (
 logger = logging.getLogger(__name__)
 
 # Constants
-MAX_HISTORY_MESSAGES = 20 # Max user/assistant message pairs for history context
+MAX_HISTORY_MESSAGES = 20  # Max user/assistant message pairs for history context
+
 
 # Helper dummy async context manager (used when MCP is disabled)
 @contextlib.asynccontextmanager
 async def null_async_context(*args, **kwargs):
     """A dummy async context manager that does nothing."""
     yield None
+
 
 class ChatService:
     """
@@ -89,7 +95,7 @@ class ChatService:
                 logger.info("Policy Agent initialized successfully in ChatService.")
             except Exception as e:
                 logger.error(f"Failed to initialize agent in ChatService: {e}", exc_info=True)
-                self._agent = None # Ensure agent is None on failure
+                self._agent = None  # Ensure agent is None on failure
 
     async def get_agent(self) -> Agent:
         """
@@ -105,7 +111,7 @@ class ChatService:
             if self._init_task is None or self._init_task.done():
                 # Start initialization task if not already running
                 self._init_task = asyncio.create_task(self._initialize_agent())
-            await self._init_task # Wait for initialization to complete
+            await self._init_task  # Wait for initialization to complete
         if self._agent is None:
             # Check again after waiting, raise if still None
             raise RuntimeError("Agent initialization failed. Cannot proceed.")
@@ -146,14 +152,13 @@ class ChatService:
             A correctly formatted StreamChunk object.
         """
         # Use model_dump() to get dict from Pydantic model, then pass kwargs to StreamChunkData
-        payload_dict = payload.model_dump(exclude_unset=True) if hasattr(payload, 'model_dump') else payload
+        payload_dict = payload.model_dump(exclude_unset=True) if hasattr(payload, "model_dump") else payload
         if not isinstance(payload_dict, dict):
-             # Fallback if payload wasn't a Pydantic model or dict
-             logger.warning(f"Payload for chunk type '{chunk_type}' was not a dict or Pydantic model, wrapping as is.")
-             payload_dict = {"value": payload_dict}
+            # Fallback if payload wasn't a Pydantic model or dict
+            logger.warning(f"Payload for chunk type '{chunk_type}' was not a dict or Pydantic model, wrapping as is.")
+            payload_dict = {"value": payload_dict}
 
         return StreamChunk(type=chunk_type, data=StreamChunkData(**payload_dict))
-
 
     async def process_user_message_stream(
         self, user_id: int, message: str, chat_id: Optional[int] = None
@@ -182,25 +187,31 @@ class ChatService:
         agent: Optional[Agent] = None
 
         try:
-            agent = await self.get_agent() # Get the agent instance
+            agent = await self.get_agent()  # Get the agent instance
 
             # Get the MCP server instance if configured
             mcp_server_instance = None
             if self.use_mcp and agent and agent.mcp_servers:
-                 mcp_server_instance = agent.mcp_servers[0]
+                mcp_server_instance = agent.mcp_servers[0]
 
             # Use 'async with' to manage the MCP connection lifecycle
-            async with mcp_server_instance if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse) else null_async_context() as active_mcp_connection:
+            async with (
+                mcp_server_instance
+                if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse)
+                else null_async_context()
+            ) as active_mcp_connection:
                 # Check for connection errors if MCP was expected
                 if self.use_mcp:
                     if mcp_server_instance and active_mcp_connection is None:
                         error_message = "MCP connection failed during context entry."
                         logger.error(error_message)
                         final_status_str = "error"
-                        yield self._create_stream_chunk("error", ErrorData(message="Could not connect to required tools server."))
-                        return # Stop processing
+                        yield self._create_stream_chunk(
+                            "error", ErrorData(message="Could not connect to required tools server.")
+                        )
+                        return  # Stop processing
                     elif mcp_server_instance:
-                         logger.info("API Mode: MCP connection established via async context.")
+                        logger.info("API Mode: MCP connection established via async context.")
 
                 # --- Proceed with DB operations and agent run INSIDE the context manager ---
                 async with get_async_session() as session:
@@ -212,24 +223,30 @@ class ChatService:
                     if processed_chat_id:
                         chat = await chat_repo.get_by_user_and_id(chat_id=processed_chat_id, user_id=user_id)
                         if not chat:
-                            error_message = f"Chat ID {processed_chat_id} not found or does not belong to user ID {user_id}."
+                            error_message = (
+                                f"Chat ID {processed_chat_id} not found or does not belong to user ID {user_id}."
+                            )
                             logger.error(error_message)
                             final_status_str = "error"
                             yield self._create_stream_chunk("error", ErrorData(message=error_message))
-                            return # Stop processing early
+                            return  # Stop processing early
                         history_messages = await msg_repo.get_by_chat_id_ordered(
                             chat_id=processed_chat_id, limit=MAX_HISTORY_MESSAGES * 2
                         )
                         chat_title = chat.title
                         logger.debug(f"Loaded {len(history_messages)} messages for chat ID {processed_chat_id}.")
-                        yield self._create_stream_chunk("chat_info", ChatInfoData(chat_id=processed_chat_id, title=chat_title))
+                        yield self._create_stream_chunk(
+                            "chat_info", ChatInfoData(chat_id=processed_chat_id, title=chat_title)
+                        )
                     else:
                         new_title = message[:80] + ("..." if len(message) > 80 else "")
                         new_chat = await chat_repo.create_chat(user_id=user_id, title=new_title)
                         processed_chat_id = new_chat.id
                         chat_title = new_chat.title
                         logger.info(f"Created new chat ID {processed_chat_id} for user {user_id}.")
-                        yield self._create_stream_chunk("chat_info", ChatInfoData(chat_id=processed_chat_id, title=chat_title))
+                        yield self._create_stream_chunk(
+                            "chat_info", ChatInfoData(chat_id=processed_chat_id, title=chat_title)
+                        )
 
                     # 2. Save User Message to DB
                     try:
@@ -237,7 +254,9 @@ class ChatService:
                         logger.debug(f"Saved user message to chat ID {processed_chat_id}.")
                     except Exception as db_err:
                         error_message = "Failed to save your message."
-                        logger.error(f"DB error saving user message for chat {processed_chat_id}: {db_err}", exc_info=True)
+                        logger.error(
+                            f"DB error saving user message for chat {processed_chat_id}: {db_err}", exc_info=True
+                        )
                         final_status_str = "error"
                         yield self._create_stream_chunk("error", ErrorData(message=error_message))
                         return
@@ -270,25 +289,30 @@ class ChatService:
                                     agent_response_content += delta_text
                                     yield self._create_stream_chunk("text_delta", TextDeltaData(delta=delta_text))
                             elif event.type == "run_item_stream_event":
-                                item = event.item # Type here could be ToolCallItem, ToolCallOutputItem etc.
+                                item = event.item  # Type here could be ToolCallItem, ToolCallOutputItem etc.
                                 if item.type == "tool_call_item":
-                                    current_tool_call_item = item # Store the item itself
+                                    current_tool_call_item = item  # Store the item itself
                                     # Access the actual tool call info via raw_item
                                     tool_call_info = item.raw_item
-                                    if hasattr(tool_call_info, 'name'):
+                                    if hasattr(tool_call_info, "name"):
                                         tool_name = tool_call_info.name
-                                        tool_input_raw = getattr(tool_call_info, 'arguments', "{}") # Arguments are json string
+                                        tool_input_raw = getattr(
+                                            tool_call_info, "arguments", "{}"
+                                        )  # Arguments are json string
                                         # Try parsing arguments safely
                                         try:
-                                             parsed_input = json.loads(tool_input_raw)
+                                            parsed_input = json.loads(tool_input_raw)
                                         except json.JSONDecodeError:
-                                             logger.warning(f"Could not parse tool input JSON: {tool_input_raw}")
-                                             parsed_input = {"raw_arguments": tool_input_raw} # Keep raw if not json
+                                            logger.warning(f"Could not parse tool input JSON: {tool_input_raw}")
+                                            parsed_input = {"raw_arguments": tool_input_raw}  # Keep raw if not json
 
                                         # Ensure tool_call_id exists on the item before yielding
-                                        tool_call_id = getattr(item, 'tool_call_id', 'unknown_call_id')
+                                        tool_call_id = getattr(item, "tool_call_id", "unknown_call_id")
 
-                                        yield self._create_stream_chunk("tool_call", ToolCallData(id=tool_call_id, name=tool_name, input=parsed_input))
+                                        yield self._create_stream_chunk(
+                                            "tool_call",
+                                            ToolCallData(id=tool_call_id, name=tool_name, input=parsed_input),
+                                        )
                                         logger.info(f"Agent calling tool: {tool_name} in chat {processed_chat_id}")
                                     else:
                                         logger.warning(f"ToolCallItem structure missing name: {item!r}")
@@ -296,18 +320,25 @@ class ChatService:
                                 elif item.type == "tool_call_output_item":
                                     if current_tool_call_item:
                                         # Ensure output_item has tool_call_id before pairing
-                                        output_tool_call_id = getattr(item, 'tool_call_id', None)
+                                        output_tool_call_id = getattr(item, "tool_call_id", None)
                                         if output_tool_call_id:
                                             tool_calls_data.append((current_tool_call_item, item))
                                         else:
-                                             logger.warning(f"ToolCallOutputItem missing tool_call_id for chat {processed_chat_id}")
-                                        current_tool_call_item = None # Reset after attempting pairing
+                                            logger.warning(
+                                                f"ToolCallOutputItem missing tool_call_id for chat {processed_chat_id}"
+                                            )
+                                        current_tool_call_item = None  # Reset after attempting pairing
                                     else:
-                                        logger.warning(f"Received tool output without matching tool call for chat {processed_chat_id}")
+                                        logger.warning(
+                                            f"Received tool output without matching tool call for chat {processed_chat_id}"
+                                        )
                                     tool_output = item.output
                                     # Ensure tool_call_id exists on the item before yielding
-                                    output_tool_call_id_yield = getattr(item, 'tool_call_id', 'unknown_call_id')
-                                    yield self._create_stream_chunk("tool_output", ToolOutputData(tool_call_id=output_tool_call_id_yield, output=tool_output))
+                                    output_tool_call_id_yield = getattr(item, "tool_call_id", "unknown_call_id")
+                                    yield self._create_stream_chunk(
+                                        "tool_output",
+                                        ToolOutputData(tool_call_id=output_tool_call_id_yield, output=tool_output),
+                                    )
                                     logger.info(f"Tool output received for chat {processed_chat_id}")
                             elif event.type == "agent_updated_stream_event":
                                 logger.info(f"Agent updated to: {event.new_agent.name} in chat {processed_chat_id}")
@@ -322,7 +353,9 @@ class ChatService:
                         error_message = f"Agent UserError: {str(ue)}"
                         logger.error(error_message, exc_info=True)
                         final_status_str = "error"
-                        yield self._create_stream_chunk("error", ErrorData(message="Agent configuration or connection error."))
+                        yield self._create_stream_chunk(
+                            "error", ErrorData(message="Agent configuration or connection error.")
+                        )
                     except (
                         MaxTurnsExceeded,
                         InputGuardrailTripwireTriggered,
@@ -333,11 +366,13 @@ class ChatService:
                         logger.error(error_message, exc_info=True)
                         final_status_str = "error"
                         yield self._create_stream_chunk("error", ErrorData(message=error_message))
-                    except Exception as stream_err: # Catch other errors during streaming
+                    except Exception as stream_err:  # Catch other errors during streaming
                         error_message = f"Error during agent stream: {str(stream_err)}"
                         logger.error(error_message, exc_info=True)
                         final_status_str = "error"
-                        yield self._create_stream_chunk("error", ErrorData(message="An error occurred during agent processing."))
+                        yield self._create_stream_chunk(
+                            "error", ErrorData(message="An error occurred during agent processing.")
+                        )
                     # --- End Try/Except around stream ---
 
                     # 5. Save Agent Response and Tool Usage to DB (only if run succeeded)
@@ -347,14 +382,21 @@ class ChatService:
                                 assistant_msg = await msg_repo.create_message(
                                     chat_id=processed_chat_id, role="assistant", content=agent_response_content.strip()
                                 )
-                                logger.debug(f"Saved assistant message ID {assistant_msg.id} to chat ID {processed_chat_id}.")
+                                logger.debug(
+                                    f"Saved assistant message ID {assistant_msg.id} to chat ID {processed_chat_id}."
+                                )
                                 # Save tool usage linked to the assistant message
                                 if tool_calls_data:
                                     for call_item, output_item in tool_calls_data:
                                         # Add extra safety checks here
-                                        if call_item and output_item and hasattr(call_item, 'raw_item') and hasattr(output_item, 'output'):
-                                            tool_call_info = call_item.raw_item # Get the raw tool call
-                                            tool_input_raw = getattr(tool_call_info, 'arguments', "{}")
+                                        if (
+                                            call_item
+                                            and output_item
+                                            and hasattr(call_item, "raw_item")
+                                            and hasattr(output_item, "output")
+                                        ):
+                                            tool_call_info = call_item.raw_item  # Get the raw tool call
+                                            tool_input_raw = getattr(tool_call_info, "arguments", "{}")
                                             try:
                                                 parsed_input = json.loads(tool_input_raw)
                                             except json.JSONDecodeError:
@@ -362,22 +404,31 @@ class ChatService:
 
                                             await msg_repo.create_tool_usage_for_message(
                                                 message_id=assistant_msg.id,
-                                                tool_name=getattr(tool_call_info, 'name', "unknown"),
+                                                tool_name=getattr(tool_call_info, "name", "unknown"),
                                                 tool_input=parsed_input,
                                                 tool_output=output_item.output,
                                             )
                                         else:
-                                            logger.warning(f"Skipping saving incomplete tool usage data for msg {assistant_msg.id}: call={call_item!r}, output={output_item!r}")
-                                    logger.debug(f"Saved {len(tool_calls_data)} tool usage records for message ID {assistant_msg.id}.")
+                                            logger.warning(
+                                                f"Skipping saving incomplete tool usage data for msg {assistant_msg.id}: call={call_item!r}, output={output_item!r}"
+                                            )
+                                    logger.debug(
+                                        f"Saved {len(tool_calls_data)} tool usage records for message ID {assistant_msg.id}."
+                                    )
                             except Exception as db_err:
                                 logger.error(
                                     f"Failed to save assistant response/tools to DB for chat {processed_chat_id}: {db_err}",
                                     exc_info=True,
                                 )
                                 # Yield error even if DB save fails after successful run
-                                yield self._create_stream_chunk("error", ErrorData(message="Failed to save assistant's response (run was complete)."))
+                                yield self._create_stream_chunk(
+                                    "error",
+                                    ErrorData(message="Failed to save assistant's response (run was complete)."),
+                                )
                         else:
-                            logger.warning(f"Agent finished run for chat {processed_chat_id} successfully but produced no text content.")
+                            logger.warning(
+                                f"Agent finished run for chat {processed_chat_id} successfully but produced no text content."
+                            )
                     elif final_status_str != "error":
                         logger.warning(
                             f"Agent run finished with unexpected status '{final_status_str}' for chat {processed_chat_id}. Assistant response not saved."
@@ -393,7 +444,7 @@ class ChatService:
             # Yield error chunk if possible
             try:
                 yield self._create_stream_chunk("error", ErrorData(message="An unexpected server error occurred."))
-            except Exception: # Ignore if yield fails during critical error
+            except Exception:  # Ignore if yield fails during critical error
                 pass
         finally:
             # --- No explicit MCP close needed here, 'async with' handles it ---
@@ -401,8 +452,8 @@ class ChatService:
             # --- Always yield final status ---
             if final_status_str == "unknown" and error_message:
                 final_status_str = "error"
-            elif final_status_str == "unknown": # If no error but not marked complete
-                final_status_str = "error" # Assume error if not explicitly completed
+            elif final_status_str == "unknown":  # If no error but not marked complete
+                final_status_str = "error"  # Assume error if not explicitly completed
                 logger.warning(f"Final status was 'unknown' for chat {processed_chat_id}, marking as 'error'.")
 
             logger.info(f"Sending final status '{final_status_str}' for chat {processed_chat_id}")

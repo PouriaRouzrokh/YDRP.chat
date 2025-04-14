@@ -4,16 +4,17 @@ import sys
 import os
 import logging
 import time
-import re # Import re for timestamp matching
+import re  # Import re for timestamp matching
 from dotenv import load_dotenv
 
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
-dotenv_path = os.path.join(project_root, '.env')
+dotenv_path = os.path.join(project_root, ".env")
 load_dotenv(dotenv_path=dotenv_path)
 
 from ydrpolicy.data_collection.collect_policies import collect_one
 from ydrpolicy.data_collection.config import config
+
 
 def test_collect_one():
     """
@@ -39,8 +40,10 @@ def test_collect_one():
     # --- Ensure API keys ---
     config.LLM.OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
     config.LLM.MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY")
-    if not config.LLM.OPENAI_API_KEY: print("WARNING: OPENAI_API_KEY missing.")
-    if not config.LLM.MISTRAL_API_KEY: print("WARNING: MISTRAL_API_KEY missing.")
+    if not config.LLM.OPENAI_API_KEY:
+        print("WARNING: OPENAI_API_KEY missing.")
+    if not config.LLM.MISTRAL_API_KEY:
+        print("WARNING: MISTRAL_API_KEY missing.")
 
     # --- Define Test URL ---
     test_url = "https://medicine.yale.edu/diagnosticradiology/patientcare/policies/intraosseousneedlecontrastinjection/"
@@ -65,16 +68,21 @@ def test_collect_one():
         print("--- Running Assertions ---")
         raw_markdown_files_found = []
         if os.path.exists(config.PATHS.MARKDOWN_DIR):
-            raw_markdown_files_found = [f for f in os.listdir(config.PATHS.MARKDOWN_DIR) if f.endswith('.md') and re.match(r"\d{20}\.md", f)]
+            raw_markdown_files_found = [
+                f for f in os.listdir(config.PATHS.MARKDOWN_DIR) if f.endswith(".md") and re.match(r"\d{20}\.md", f)
+            ]
         print(f"Raw Timestamped Markdown files found ({len(raw_markdown_files_found)}): {raw_markdown_files_found}")
         assert len(raw_markdown_files_found) > 0, "No raw timestamped markdown file was created."
 
         # Find the policy directory created within scraped_policies (expecting <title>_<timestamp> format)
         policy_dirs_found = []
-        expected_dir_pattern = re.compile(r".+_\d{20}$") # Ends with _<20-digit-timestamp>
+        expected_dir_pattern = re.compile(r".+_\d{20}$")  # Ends with _<20-digit-timestamp>
         if os.path.exists(config.PATHS.SCRAPED_POLICIES_DIR):
-             policy_dirs_found = [d for d in os.listdir(config.PATHS.SCRAPED_POLICIES_DIR)
-                                  if os.path.isdir(os.path.join(config.PATHS.SCRAPED_POLICIES_DIR, d)) and expected_dir_pattern.match(d)]
+            policy_dirs_found = [
+                d
+                for d in os.listdir(config.PATHS.SCRAPED_POLICIES_DIR)
+                if os.path.isdir(os.path.join(config.PATHS.SCRAPED_POLICIES_DIR, d)) and expected_dir_pattern.match(d)
+            ]
 
         print(f"Processed Policy output directories found ({len(policy_dirs_found)}): {policy_dirs_found}")
         assert len(policy_dirs_found) > 0, "No processed policy output directory (<title>_<timestamp>) was created."
@@ -101,7 +109,9 @@ def test_collect_one():
         # assert txt_size < md_size, "content.txt filtering did not reduce size"
 
         # Check for images directly in the policy dir
-        images_in_policy_dir = [f for f in os.listdir(policy_output_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+        images_in_policy_dir = [
+            f for f in os.listdir(policy_output_dir) if f.lower().endswith((".png", ".jpg", ".jpeg", ".gif"))
+        ]
         print(f"Images found in policy dir ({len(images_in_policy_dir)}): {images_in_policy_dir}")
         # assert len(images_in_policy_dir) > 0, "Expected images but none found."
 
@@ -111,6 +121,7 @@ def test_collect_one():
         test_logger.error(f"Error during test_collect_one: {e}", exc_info=True)
         print(f"ERROR during test_collect_one: {e}")
         raise
+
 
 if __name__ == "__main__":
     print("Running test_collect_one directly...")

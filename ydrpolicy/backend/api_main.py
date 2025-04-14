@@ -10,7 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from ydrpolicy.backend.config import config
 from ydrpolicy.backend.routers import chat as chat_router  # Import the chat router
-from ydrpolicy.backend.routers import auth as auth_router # Import the auth router
+from ydrpolicy.backend.routers import auth as auth_router  # Import the auth router
 
 
 # Import other routers as needed

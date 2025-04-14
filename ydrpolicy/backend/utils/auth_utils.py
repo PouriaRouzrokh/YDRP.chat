@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 # bcrypt is a good default scheme
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     Verifies a plain password against a stored hash.
@@ -36,6 +37,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         logger.error(f"Error verifying password: {e}", exc_info=True)
         return False
 
+
 def hash_password(password: str) -> str:
     """
     Hashes a plain password using the configured context.
@@ -48,11 +50,13 @@ def hash_password(password: str) -> str:
     """
     return pwd_context.hash(password)
 
+
 # --- JWT Token Handling ---
 
 SECRET_KEY = config.API.JWT_SECRET
 ALGORITHM = config.API.JWT_ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = config.API.JWT_EXPIRATION
+
 
 def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
     """
@@ -79,6 +83,7 @@ def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta]
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     logger.debug(f"Created access token for sub: {data.get('sub')}, expires: {expire}")
     return encoded_jwt
+
 
 def decode_token(token: str) -> Optional[Dict[str, Any]]:
     """

@@ -58,9 +58,11 @@ _config_dict = {
         "DEBUG": False,
         "CORS_ORIGINS": ["http://localhost:3000"],
         # --- JWT Settings ---
-        "JWT_SECRET": os.environ.get("JWT_SECRET", "a_very_insecure_default_secret_key_please_change"), # CHANGE THIS IN .env!
+        "JWT_SECRET": os.environ.get(
+            "JWT_SECRET", "a_very_insecure_default_secret_key_please_change"
+        ),  # CHANGE THIS IN .env!
         "JWT_ALGORITHM": "HS256",
-        "JWT_EXPIRATION": 30, # Default: Access tokens expire in 30 minutes
+        "JWT_EXPIRATION": 30,  # Default: Access tokens expire in 30 minutes
     },
     # Logging settings
     "LOGGING": {

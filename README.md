@@ -1,200 +1,311 @@
-# Yale Radiology Policies RAG Application (Engine)
+# Yale Radiology Policies RAG Application (Engine) V0.2.0
 
 ## Project Overview
 
-The Yale Radiology Policies RAG Application is a comprehensive system designed to make Yale Diagnostic Radiology departmental policies accessible and interactive through large language models (LLMs). The system leverages modern retrieval-augmented generation (RAG) techniques to provide accurate policy information to users through natural language interactions or direct API access. It includes components for collecting policies from Yale sources, processing them into a structured database with vector embeddings, and providing interfaces for querying this information. This repository contains the scripts for the core functionalities of the application (a.k.a. engine) - referring to all functionalities apart from the UI. The UI will be developed in a separate repository.
+The Yale Radiology Policies RAG Application is a comprehensive system designed to make Yale Diagnostic Radiology departmental policies accessible and interactive through large language models (LLMs). The system leverages modern retrieval-augmented generation (RAG) techniques to provide accurate policy information to users through natural language interactions or direct API access.
 
-## Modes of Operation (CLI Interface)
+It includes components for:
 
-The primary interaction with the project's engine functionalities (data collection, database management, server processes) is through the main Command Line Interface (CLI) accessible via `python -m ydrpolicy.main`. The CLI provides the following modes:
+1. **Data Collection:** Crawling Yale web sources, downloading documents, extracting text and images.
+2. **Processing & Classification:** Converting content to Markdown/Text, using LLMs to identify actual policies and extract titles.
+3. **Database Storage:** Storing policy metadata, text content, image references, user information, chat history, and vector embeddings (using `pgvector`) in a PostgreSQL database.
+4. **Retrieval & Generation:** Providing tools (via MCP) for semantic search (RAG) over the policy data.
+5. **Agent Interaction:** Exposing a chat agent (via API or terminal) that uses the retrieval tools to answer user questions based on the indexed policies, with support for persistent chat history and user authentication.
 
-### 1. `policy` Mode
+This repository contains the scripts for the core engine functionalities – everything apart from the user interface. The UI will be developed in a separate repository.
 
-Manages the data collection pipeline (finding, downloading, processing policy files) and handles the removal of individual policies from the database.
+## Technology Stack
 
-- **`policy collect-all`**: Runs the full data collection pipeline. It crawls starting points (like the Yale Radiology intranet), downloads potential policy documents/pages, converts them to Markdown/Text, uses an LLM to classify them and extract titles, and saves structured results ( `content.md`, `content.txt`, `img-*.*`) into timestamped folders named `<policy_title>_<timestamp>` within `data/processed/`. This _prepares_ policies but doesn't add them to the database.
-- **`policy collect-one --url <URL>`**: Performs the full collection pipeline (download, process, classify, structure files) for a single specified URL, saving the result to `data/processed/` if it's identified as a policy. Does not add to the database.
-- **`policy crawl-all`**: Runs only the crawling part - finding, downloading, and saving raw content (Markdown, images) to `data/raw/` and creating `crawled_policies_data.csv`. Does not classify or populate `data/processed/`.
-- **`policy scrape-all`**: Runs only the scraping/classification part. It reads `crawled_policies_data.csv`, processes the corresponding raw files from `data/raw/` using an LLM, and creates the structured folders in `data/processed/` for those identified as policies.
-- **`policy remove --id <ID>` / `policy remove --title <TITLE>`**: Removes a _single policy_ and its associated data (chunks, images, embeddings) _from the database_. It identifies the policy by its database ID or exact title. Requires confirmation unless `--force` is used. **Note:** This does _not_ delete the corresponding folder from the `data/processed/` filesystem.
+### Backend
 
-### 2. `database` Mode
+- **Python**: Core programming language (3.10+)
+- **FastAPI**: Modern, high-performance web framework for building the API.
+- **Uvicorn**: ASGI server to run the FastAPI application.
+- **PostgreSQL + pgvector**: Relational database with vector storage capabilities for RAG.
+- **SQLAlchemy**: ORM for database interactions (async via `asyncpg` driver).
+- **OpenAI API**: For LLM generation (chat agent) and text embeddings.
+- **Agents SDK (`openai/agentic-sdk-python`)**: Framework for building the agent logic and tool usage.
+- **MCP (`modelcontextprotocol/mcp-python`)**: Protocol and library for exposing tools (RAG functions) to the agent via HTTP/SSE or stdio.
+- **Asyncio**: For asynchronous programming, enabling efficient I/O operations.
+- **Pydantic**: Data validation, settings management, and API schema definition.
+- **JWT (`python-jose`)**: For creating and validating JSON Web Tokens for authentication.
+- **Password Hashing (`passlib[bcrypt]`)**: For securely storing user passwords.
+- **Typer**: CLI framework for `main.py`.
+- **HTTPX**: Async HTTP client (used internally by SDKs).
+- **(Optional) Mistral API**: Used in data collection for potential OCR tasks.
 
-Manages the PostgreSQL database itself, including schema setup and data ingestion from the processed files.
+### Data Collection and Processing
 
-- **`database init [--no-populate]`**: Initializes a new database environment. It connects to PostgreSQL, creates the database if it doesn't exist, creates the necessary `vector` extension, creates all tables based on `models.py` using SQLAlchemy's `create_all`, and applies search vector triggers. **Crucially**, if `--no-populate` is _not_ used, it then scans the `data/processed/` directory. For any policy folder (`<title>_<timestamp>`) where the `<title>` doesn't already exist in the database's `policies` table, it reads `content.md`, `content.txt`, finds `img-*.*` files, creates the corresponding `Policy`, `Image`, and `PolicyChunk` records, generates embeddings for the chunks (using the configured embedding service, e.g., OpenAI), and inserts everything into the database. This command is safe to re-run; it will only populate _new_ policies found in `data/processed/`.
-- **`database remove [--force]`**: Completely **DROPS** the entire application database from the PostgreSQL server, deleting all tables, data, and schema. **This is irreversible.** Requires confirmation unless `--force` is used.
-
-### 3. `mcp` Mode (Placeholder)
-
-Intended for managing the MCP (Model Context Protocol) server, which would provide specialized retrieval tools (RAG, keyword search) for LLMs.
-
-- **`mcp start`**: (Not Implemented) Placeholder command to start the MCP server.
-
-### 4. `agent` Mode (Placeholder)
-
-Intended for interacting with the core chat agent functionality directly (e.g., for testing or specific integrations).
-
-- **`agent chat`**: (Not Implemented) Placeholder command to start an interactive chat session via the CLI.
+- **Selenium**: Web automation for crawling complex, Javascript-heavy sites.
+- **Requests**: HTTP library for simpler web requests and document downloads.
+- **PDF Processing Libraries**: Tools used internally by data collection scripts.
+- **Markdown Processing**: Libraries like `markdownify` for converting HTML to Markdown.
+- **Pandas**: Used for managing crawled data logs.
 
 ## System Architecture
 
 ```
 ┌─────────────────────────────────────┐
 │                                     │
-│  Frontend Service (Next.js)         │
-│  [Port: 3000]                       │
+│ Frontend Service (e.g., Next.js)    │
+│ [Typically Port: 3000]              │
 │                                     │
 └──────────────────┬──────────────────┘
-                   │
+                   │ (HTTP API Calls + SSE)
+                   ▼
+┌─────────────────────────────────────┐ ┌─────────────────────┐
+│                                     │ (MCP Call) │                 │
+│ Backend API (FastAPI/Uvicorn)       │───────────>│ MCP Server       │
+│ [Default Port: 8000]                │<───────────│ [Default Port: 8001] │
+│                                     │ (MCP Result)│                 │
+│ - Auth Endpoints (/auth/token)      │             │ - RAG Tools       │
+│ - Chat Endpoints (/chat/...)        │             │ - find_similar_chunks│
+│ - Chat Service & History Mgmt       │             │ - get_policy_from_ID│
+│ - Policy Agent Logic (Agents SDK)   │             │                 │
+│ - Database Repositories             │             └─────────────────────┘
+│ - JWT Authentication                │
+│                                     │
+└──────────────────┬──────────────────┘
+                   │ (SQLAlchemy Async)
                    ▼
 ┌─────────────────────────────────────┐
 │                                     │
-│  Backend API (FastAPI)              │
-│  [Port: 8000]                       │
-│                                     │
-│  - Database Models & Migrations     │
-│  - Chat Agent API (/api/chat)       │
-│  - Policy Management                │
-│  - Authentication                   │
-│                                     │
-└──────────────────┬──────────────────┘
-          │                 │
-          │                 ▼
-          │        ┌─────────────────────┐
-          │        │                     │
-          │        │  MCP Server         │
-          │        │  [Port: 8001]       │
-          │        │                     │
-          │        │  - RAG Tools        │
-          │        │  - Keyword Search   │
-          │        │  - Hybrid Search    │
-          │        │                     │
-          │        └─────────────────────┘
-          │
-          ▼
-┌─────────────────────────────────────┐
-│                                     │
-│  PostgreSQL + pgvector               │
-│  [Port: 5432]                       │
-│                                     │
+│ PostgreSQL + pgvector Database      │
+│ [Default Port: 5432]                │
+│ (Stores Policies, Chunks, Users,    │
+│ Chats, Messages)                    │
 └─────────────────────────────────────┘
-
-     ↑
-     │ (Data Pipeline)
-     │
+                   ↑
+                   │ (Data Pipeline via CLI)
+                   │
 ┌─────────────────────────────────────┐
 │                                     │
-│  Data Collection                    │
-│  - Yale Intranet Crawler            │
-│  - Policy Content Scraper           │
-│  - LLM-powered Extractor            │
+│ Data Collection & Processing        │
+│ (Via main.py policy &               │
+│ main.py database --populate)        │
+│ - Crawler (Selenium/Requests)       │
+│ - Scraper/Classifier (LLM)          │
+│ - DB Populator (Embedding, Insert)  │
+│ - User Seeding (from JSON)          │
 │                                     │
 └─────────────────────────────────────┘
 ```
 
-## High-Level Understanding of Chat Functionality
+## Setup and Installation
 
-Here's how the different components work together to provide the chat functionality, focusing on the primary API flow with history:
+1. **Prerequisites:**
 
-### Entry Point (main.py -> Uvicorn -> api_main.py):
+   - Python 3.10+
+   - PostgreSQL server (version compatible with `pgvector`) with the `pgvector` extension enabled within the target database.
+   - `uv` (Python package manager): Recommended. Install via `pip install uv` or see official `uv` docs. (Or use `pip`).
 
-- When you run uv run main.py agent, it eventually starts the Uvicorn server.
-- Uvicorn loads the FastAPI application defined in api_main.py.
-- api_main.py sets up the overall FastAPI app, including CORS, lifespan events (startup/shutdown), and includes routers.
+2. **Clone Repository:**
 
-### API Request (routers/chat.py):
+   ```bash
+   git clone <repository_url>
+   cd ydrp_engine
+   ```
 
-- The UI (or your testing tool) sends a POST request to /chat/stream.
-- The request body matches the ChatRequest schema (schemas/chat.py), containing user_id, the message, and optionally a chat_id.
-- FastAPI validates the request.
-- The stream_chat function in routers/chat.py is called.
-- It uses dependency injection (Depends) to get an instance of ChatService.
+3. **Create Virtual Environment (Recommended):**
 
-### Service Layer Orchestration (services/chat_service.py):
+   ```bash
+   # Using uv
+   uv venv .venv
+   source .venv/bin/activate # Linux/macOS
+   # .venv\Scripts\activate # Windows
 
-- The ChatService instance's process_user_message_stream method takes over. This is the core orchestrator.
-- Database Interaction (Setup): It asynchronously opens a database session (get_async_session) and creates instances of ChatRepository and MessageRepository.
+   # Or using standard venv
+   # python -m venv .venv
+   # source .venv/bin/activate # Linux/macOS
+   # .venv\Scripts\activate # Windows
+   ```
 
-### History/Chat Management:
+4. **Install Dependencies:**
 
-- If a chat_id is provided, it uses ChatRepository to find the chat and verify it belongs to the user_id. If found, it uses MessageRepository to load the recent message history for that chat.
-- If no chat_id is provided, it uses ChatRepository to create a new chat session for the user_id, generating a title based on the first message. The new chat_id is stored.
-- It immediately streams back a chat_info chunk containing the chat_id (either existing or new).
-- Save User Message: It uses MessageRepository to save the current user message to the database, linked to the correct chat_id.
-- Agent Input Formatting: It calls \_format_history_for_agent to convert the loaded database messages into a single string format suitable for the LLM, prepending it to the current user message. It applies basic length limits.
-- Agent Initialization: It ensures the Agent instance (defined in agent/policy_agent.py) is initialized via get_agent(). This agent has the specific instructions, the configured OpenAI model (config.OPENAI.MODEL), and knows about the MCP server connection (managed by agent/mcp_connection.py).
-- Run Agent: It calls Runner.run_streamed(agent, formatted_input). This starts the agent execution loop provided by the OpenAI Agents SDK.
+   ```bash
+   # Using uv (reads pyproject.toml)
+   uv sync
 
-### Agent Execution (SDK Runner & agent/policy_agent.py):
+   # Or using pip (if you have requirements.txt)
+   # pip install -r requirements.txt
+   ```
 
-- The Runner sends the formatted input (history + message) to the configured LLM (e.g., gpt-4-turbo).
-- The LLM processes the input based on the agent's instructions (in policy_agent.py).
-- Tool Decision: Based on the instructions ("Use find_similar_chunks first..."), the LLM might decide to call a tool. It generates a tool call request.
+   _Note: Ensure your dependency file includes `fastapi[all]`, `openai`, `agents-sdk`, `mcp[cli]`, `sqlalchemy[asyncpg]`, `psycopg` (or `psycopg2-binary`), `pgvector-sqlalchemy`, `typer`, `python-dotenv`, `pandas`, `selenium`, `markdownify`, `python-jose[cryptography]`, `passlib[bcrypt]`, `python-multipart`._
 
-### MCP Interaction:
+5. **Configuration (`.env` file):**
 
-- The Runner detects the tool call request.
-- It looks at the agent.mcp_servers list (which contains the instance managed by agent/mcp_connection.py).
-- It calls call_tool(tool_name, tool_args) on the MCPServerSse client instance.
-- The MCPServerSse client sends the request over HTTP to your running MCP server process (mcp/server.py).
+   - Create a `.env` file in the project root (you can copy `.env.example` if provided).
+   - Edit `.env` and provide **required** values:
+     - `DATABASE_URL`: Your PostgreSQL connection string (e.g., `postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy`). The user needs permissions to create databases and extensions.
+     - `OPENAI_API_KEY`: Your OpenAI API key (used for embeddings and agent generation).
+     - `JWT_SECRET`: **Crucially, change this to a strong, unique secret key.** Generate one using `python -c 'import secrets; print(secrets.token_hex(32))'`.
+   - Optional:
+     - `MISTRAL_API_KEY`: If used for OCR in data collection.
+     - Adjust `JWT_EXPIRATION` (in minutes, default 30) in `config.py` if needed.
 
-### MCP Server (mcp/server.py):
+6. **Create User Seed File (Required for Auth):**
 
-- Receives the request.
-- Executes the corresponding tool function (find_similar_chunks or get_policy_from_ID).
-- These tool functions interact with the database (PolicyRepository) to perform searches or lookups.
-- The tool function returns its result to the MCP server process.
-- The MCP server process sends the result back over HTTP to the MCPServerSse client.
+   - Create an `auth` directory in the project root: `mkdir auth`
+   - Create a file named `auth/users.json`.
+   - Populate it with initial user(s) in JSON list format. **Use strong passwords!**
+     ```json
+     [
+       {
+         "email": "admin@example.com",
+         "full_name": "Administrator",
+         "password": "YOUR_SECURE_ADMIN_PASSWORD",
+         "is_admin": true
+       },
+       {
+         "email": "testuser@example.com",
+         "full_name": "Test User",
+         "password": "YOUR_SECURE_USER_PASSWORD",
+         "is_admin": false
+       }
+     ]
+     ```
+   - _(Security Note: Storing plain passwords in JSON is insecure for production. This is for initial setup/development)._
 
-### Agent Execution (cont.):
+7. **Initialize Database:**
+   - Ensure your PostgreSQL server is running.
+   - Run the database initialization command. This creates the DB (if needed), enables `pgvector`, creates tables, and **seeds users** from `users.json`.
+     ```bash
+     # Create schema and seed users, but don't populate policies yet
+     uv run main.py database --init --no-populate
+     ```
 
-- The Runner receives the tool result from the MCPServerSse client.
-- It sends the tool result back to the LLM for processing.
-- The LLM uses the tool result to formulate its final text response.
-- The Runner streams the LLM's response (text deltas) and information about tool calls/outputs back to the ChatService.
+## CLI Commands Reference (`main.py`)
 
-### Service Layer (Streaming & Saving):
+Interact with the engine via `uv run main.py <command> [options]`.
 
-- process_user_message_stream receives events from the Runner.
-- It converts these events into StreamChunk objects (text deltas, tool call/output info, status).
-- It yields these chunks to the router using the async generator pattern.
-- It accumulates the full text of the assistant's response.
-- After the stream ends: If the agent run was successful, it uses MessageRepository to save the accumulated assistant response text and any ToolUsage records (linking tool calls/outputs to the assistant message) to the database.
+_(Run `uv run main.py --help` for a full list)_
 
-### API Response (routers/chat.py):
+### 1. `database` Command
 
-- The stream_chat function receives each yielded StreamChunk from the service.
-- It formats the chunk as a Server-Sent Event (SSE) string (data: <json>\n\n).
-- The StreamingResponse sends these SSE events back to the client/UI.
+Manages the database schema, user seeding, and policy data population.
 
-### Important Functions/Concepts:
+- **`uv run main.py database --init [--no-populate]`**
 
-- ChatService.process_user_message_stream: The main orchestrator coordinating DB interaction, agent execution, and streaming.
-- create_policy_agent (agent/policy_agent.py): Defines the agent's "personality," instructions, model, and connection to tools (via MCP).
-- Runner.run_streamed (SDK): Executes the agent, handles the LLM calls, tool calls, and provides the event stream.
-- Repositories (ChatRepository, MessageRepository, PolicyRepository): Encapsulate all database logic, keeping the service layer cleaner.
-- History Management: Loading past messages, formatting them for the LLM context, and saving new messages are crucial for conversation flow.
-- Streaming (AsyncGenerator, StreamChunk, SSE): Enables real-time feedback to the user as the agent thinks and responds.
-- MCP (mcp/server.py, agent/mcp_connection.py): Provides the mechanism for the agent to use external tools (your RAG functions).
+  - **Purpose:** Initializes the database structure and seeds users from `auth/users.json`. Optionally populates policies.
+  - **Actions:**
+    - Connects to PostgreSQL, creates the database (if needed) and `vector` extension.
+    - Creates all tables defined in `models.py`.
+    - Applies full-text search triggers.
+    - Reads `auth/users.json`, hashes passwords, and inserts any users not already present in the DB based on email.
+    - If `--no-populate` is **NOT** used (or if `--populate` is explicitly used later), it proceeds to populate policies (see below).
+  - **Use Case:** First-time setup, resetting the schema, adding predefined users.
 
-## Technology Stack
+- **`uv run main.py database --populate`**
 
-### Backend
+  - **Purpose:** Populates the database with new or updated policy data found in the processed data directory (`data/processed/scraped_policies/`). Implicitly runs `--init` actions if needed but focuses on data loading.
+  - **Actions:**
+    - Ensures DB schema exists (like `--init`, but safe to run if already initialized).
+    - Scans `data/processed/scraped_policies/` for `<title>_<timestamp>` folders.
+    - Compares found policies (by title and timestamp) with existing DB records.
+    - Deletes older versions from the DB if a newer timestamped folder is found.
+    - For new policies or newer versions: reads content, chunks text, generates embeddings (via OpenAI), and inserts `Policy`, `Image`, `PolicyChunk` records into the DB.
+  - **Use Case:** Adding policies to the agent's knowledge base after they have been collected and processed by the `policy` command.
 
-- **FastAPI**: Modern, high-performance web framework for building APIs with Python
-- **PostgreSQL + pgvector**: Relational database with vector storage capabilities
-- **SQLAlchemy**: ORM for database interactions
-- **OpenAI API**: For LLM capabilities (embedding and generation)
-- **Google Gemini API**: Alternative LLM provider
-- **MCP Protocol**: For tool integration with LLMs
-- **Async Programming**: Leveraging Python's asyncio for high concurrency
-- **Pydantic**: Data validation and settings management
-- **JWT**: For authentication and session management
+- **`uv run main.py database --drop [--force]`**
 
-### Data Collection and Processing
+  - **Purpose:** **Permanently deletes** the entire application database.
+  - **Actions:** Connects to PostgreSQL and executes `DROP DATABASE`.
+  - **Options:** `--force` skips confirmation.
+  - **Use Case:** Complete reset during development/testing. **Irreversible.**
 
-- **Selenium**: Web automation for crawling complex sites
-- **Requests**: HTTP library for simpler web requests
-- **PDF Processing**: Libraries for extracting text from PDFs
-- **Markdown Processing**: Tools for converting and standardizing content
+- **Common Options:**
+  - `--db-url <URL>`: Override the `DATABASE_URL` from `.env`.
+  - `--no-populate`: (With `--init`) Explicitly skip the policy population step, only create schema and seed users.
+
+### 2. `policy` Command
+
+Manages the data collection/processing pipeline (filesystem operations) and database _removal_.
+
+- **`uv run main.py policy --collect-all`**
+
+  - **Purpose:** Runs the full data finding, downloading, processing, and classification pipeline. Prepares policy data folders on the filesystem. **Does NOT populate DB.**
+  - **Actions:** Crawls sources, downloads/converts content (saving raw versions), classifies using LLM, extracts titles, creates structured folders (`<title>_<timestamp>`) in `data/processed/scraped_policies/`.
+  - **Use Case:** Refreshing policy data from source. Needs `database --populate` afterwards.
+
+- **`uv run main.py policy --collect-one --url <URL>`**
+
+  - **Purpose:** Processes a single URL through the full pipeline. Prepares folder if identified as policy. **Does NOT populate DB.**
+  - **Use Case:** Adding/testing a single known policy URL. Needs `database --populate` afterwards.
+
+- **`uv run main.py policy --crawl-all`**
+
+  - **Purpose:** Runs only the crawling stage (finding/downloading raw content).
+  - **Actions:** Saves raw markdown/images, creates `crawled_policies_data.csv`. Does not classify or create processed folders.
+  - **Use Case:** Refreshing raw data only.
+
+- **`uv run main.py policy --scrape-all`**
+
+  - **Purpose:** Runs only the classification/processing stage on existing raw data.
+  - **Actions:** Reads CSV, analyzes raw files via LLM, creates structured processed folders. **Does NOT populate DB.**
+  - **Use Case:** Classifying previously crawled data.
+
+- **`uv run main.py policy --remove-id <ID> [--force]`** or **`uv run main.py policy --remove-title <TITLE> [--force]`**
+
+  - **Purpose:** Removes a policy and its associated data (chunks, images) **from the database ONLY**.
+  - **Actions:** Finds policy by ID or title in DB and deletes it. Logs the action. **Does NOT delete filesystem folders.**
+  - **Use Case:** Removing outdated/incorrect policies from the agent's knowledge.
+
+- **Common Options:**
+  - `--reset-crawl`: (With `--collect-all` / `--crawl-all`) Clears crawler state.
+  - `--resume-crawl`: (With `--collect-all` / `--crawl-all`) Resumes crawl from saved state.
+  - `--force`: (With `--remove-*`) Skips confirmation prompt.
+  - `--db-url <URL>`: (With `--remove-*`) Specifies DB URL for removal.
+
+### 3. `mcp` Command
+
+Manages the Model Context Protocol (MCP) server, which provides tools to the agent.
+
+- **`uv run main.py mcp [--transport http]`** (or default)
+
+  - **Purpose:** Starts MCP server using HTTP/SSE transport.
+  - **Actions:** Runs Uvicorn on default port 8001, serving the MCP tools (`find_similar_chunks`, `get_policy_from_ID`) over SSE on the `/sse` endpoint.
+  - **Use Case:** **Required** when running the agent in API mode (`main.py agent`). Run in a separate terminal.
+
+- **`uv run main.py mcp --transport stdio [--no-log]`**
+
+  - **Purpose:** Starts MCP server using standard input/output.
+  - **Use Case:** Direct integration with stdio clients (less common).
+
+- **Common Options:**
+  - `--host <HOST>`: Set listen host for HTTP mode (default `0.0.0.0`).
+  - `--port <PORT>`: Set listen port for HTTP mode (default `8001`).
+  - `--no-log`: (With `stdio`) Disable logging to avoid protocol interference.
+
+### 4. `agent` Command
+
+Runs the chat agent application.
+
+- **`uv run main.py agent`**
+
+  - **Purpose:** Starts the main FastAPI web server for the agent API.
+  - **Actions:** Runs Uvicorn on default port 8000, serving the API endpoints (including `/auth/token`, `/chat`, `/chat/stream`). Connects to the MCP server (if not disabled) when handling requests.
+  - **Use Case:** Standard mode for running the backend service for the frontend UI. Requires MCP server running separately if tools are needed.
+
+- **`uv run main.py agent --terminal`**
+
+  - **Purpose:** Runs an interactive chat session directly in the terminal. Uses temporary session history.
+  - **Actions:** Initializes agent, connects to MCP server (if not disabled), and provides a command-line chat prompt.
+  - **Use Case:** Testing agent responses, instructions, and tool usage directly. Requires MCP server running separately if tools are needed.
+
+- **Common Options:**
+  - `--no-mcp`: Disable connection to and usage of the MCP server and its tools.
+  - `--host <HOST>`: (API Mode) Set listen host for FastAPI (default `0.0.0.0`).
+  - `--port <PORT>`: (API Mode) Set listen port for FastAPI (default `8000`).
+  - `--workers <NUM>`: (API Mode) Set number of Uvicorn workers (default `1`).
+  - `--log-level <LEVEL>`: Override default log level (e.g., `debug`).
+  - `--trace`: Enable trace uploading to OpenAI platform (requires compatible SDK setup).
+
+### Common Workflow Example
+
+1. **(First time) Create `auth/users.json` with initial users/passwords.**
+2. **(First time or after schema change) Init DB & Seed Users:** `uv run main.py database --init --no-populate`
+3. **Collect & Process Policy Data:** `uv run main.py policy --collect-all`
+4. **Populate Policies into DB:** `uv run main.py database --populate`
+5. **Start MCP Server:** `uv run main.py mcp --transport http` (in Terminal 1)
+6. **Start Agent API Server:** `uv run main.py agent` (in Terminal 2)
+7. **Interact:** Use the frontend UI (pointing to `http://localhost:8000`) or the API docs (`http://localhost:8000/docs`).
