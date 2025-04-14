@@ -1,5 +1,10 @@
 # Commit History
 
+## commit 22 (4/14/2025 - 02:18)
+
+Debugged running the agent sdk with mcp servers in the http mode. 
+All scripts now work fine in the terminal mode. FastAPI mode remains untested.
+
 ## commit 21 (4/13/2025 - 09:36)
 
 - Ensured the agent runs fine in the terminal mode.

@@ -1,437 +1,483 @@
-2025-04-12 17:16:35,731 - ydrpolicy.backend.database - INFO - Executing database command...
-2025-04-12 17:16:35,731 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 17:16:35,732 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
-2025-04-12 17:16:36,702 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
-2025-04-12 17:16:36,707 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
-2025-04-12 17:16:36,707 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
-2025-04-12 17:16:36,752 - ydrpolicy.backend.database.init_db - ERROR - Error dropping database 'ydrpolicy': 'Logger' object has no attribute 'success'
-2025-04-12 17:16:36,756 - ydrpolicy.backend.database - INFO - Database command finished.
-2025-04-12 20:28:15,503 - ydrpolicy.backend.database - INFO - Executing database command...
-2025-04-12 20:28:15,504 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 20:28:15,504 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
-2025-04-12 20:28:17,147 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
-2025-04-12 20:28:17,153 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
-2025-04-12 20:28:17,154 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
-2025-04-12 20:28:17,155 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' dropped successfully.
-2025-04-12 20:28:17,161 - ydrpolicy.backend.database - INFO - Database command finished.
-2025-04-12 20:28:22,784 - ydrpolicy.backend.database - INFO - Executing database command...
-2025-04-12 20:28:22,784 - ydrpolicy.backend.database - INFO - Database initialization (no population) requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 20:28:22,785 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 20:28:22,785 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
-2025-04-12 20:28:22,795 - ydrpolicy.backend.database.init_db - INFO - Creating database 'ydrpolicy'...
-2025-04-12 20:28:22,860 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' created.
-2025-04-12 20:28:22,863 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
-2025-04-12 20:28:22,883 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
-2025-04-12 20:28:22,883 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
-2025-04-12 20:28:22,914 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
-2025-04-12 20:28:22,915 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
-2025-04-12 20:28:22,920 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
-2025-04-12 20:28:22,921 - ydrpolicy.backend.database.init_db - INFO - Skipping data population step.
-2025-04-12 20:28:22,921 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
-2025-04-12 20:28:22,925 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
-2025-04-12 20:28:22,926 - ydrpolicy.backend.database - INFO - Database command finished.
-2025-04-12 20:28:43,681 - ydrpolicy.backend.database - INFO - Executing database command...
-2025-04-12 20:28:43,681 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 20:28:43,682 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
-2025-04-12 20:28:45,665 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
-2025-04-12 20:28:45,671 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
-2025-04-12 20:28:45,672 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
-2025-04-12 20:28:45,704 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' dropped successfully.
-2025-04-12 20:28:45,707 - ydrpolicy.backend.database - INFO - Database command finished.
-2025-04-12 20:28:54,666 - ydrpolicy.backend.database - INFO - Executing database command...
-2025-04-12 20:28:54,667 - ydrpolicy.backend.database - INFO - Database initialization (no population) requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 20:28:54,667 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 20:28:54,668 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
-2025-04-12 20:28:54,676 - ydrpolicy.backend.database.init_db - INFO - Creating database 'ydrpolicy'...
-2025-04-12 20:28:54,738 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' created.
-2025-04-12 20:28:54,740 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
-2025-04-12 20:28:54,757 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
-2025-04-12 20:28:54,757 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
-2025-04-12 20:28:54,785 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
-2025-04-12 20:28:54,786 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
-2025-04-12 20:28:54,789 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
-2025-04-12 20:28:54,790 - ydrpolicy.backend.database.init_db - INFO - Skipping data population step.
-2025-04-12 20:28:54,790 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
-2025-04-12 20:28:54,794 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
-2025-04-12 20:28:54,795 - ydrpolicy.backend.database - INFO - Database command finished.
-2025-04-12 20:29:18,927 - ydrpolicy.backend.database - INFO - Executing database command...
-2025-04-12 20:29:18,927 - ydrpolicy.backend.database - INFO - Database initialization and population requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 20:29:18,928 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 20:29:18,928 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
-2025-04-12 20:29:18,937 - ydrpolicy.backend.database.init_db - INFO - Database 'ydrpolicy' already exists.
-2025-04-12 20:29:18,941 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
-2025-04-12 20:29:18,951 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
-2025-04-12 20:29:18,951 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
-2025-04-12 20:29:18,958 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
-2025-04-12 20:29:18,958 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
-2025-04-12 20:29:18,964 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
-2025-04-12 20:29:18,964 - ydrpolicy.backend.database.init_db - INFO - Starting data population from scraped_policies directory...
-2025-04-12 20:29:18,965 - ydrpolicy.backend.database.init_db - INFO - Scanning scraped policies directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/scraped_policies
-2025-04-12 20:29:18,965 - ydrpolicy.backend.database.init_db - INFO - Reading policy descriptions from CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/processed_policies_log.csv
-2025-04-12 20:29:18,969 - ydrpolicy.backend.database.init_db - INFO - Loaded 17 timestamp mappings and 17 URL mappings for policy descriptions
-2025-04-12 20:29:18,969 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
-2025-04-12 20:29:18,970 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
-2025-04-12 20:29:18,970 - ydrpolicy.backend.database.init_db - INFO - Fetching existing policy information from database...
-2025-04-12 20:29:18,987 - ydrpolicy.backend.database.init_db - INFO - Found 0 existing policies in database.
-2025-04-12 20:29:18,988 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Yale_University_Policy_on_Conflict_of_Interest' from folder: Yale_University_Policy_on_Conflict_of_Interest_20250409192912567168
-2025-04-12 20:29:19,002 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 1
-2025-04-12 20:29:19,003 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
-2025-04-12 20:29:19,078 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
-2025-04-12 20:29:20,212 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
-2025-04-12 20:29:20,213 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
-2025-04-12 20:29:20,214 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
-2025-04-12 20:29:20,215 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Residents_Wellbeing_Policy' from folder: Residents_Wellbeing_Policy_20250409193300717366
-2025-04-12 20:29:20,248 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 2
-2025-04-12 20:29:20,249 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
-2025-04-12 20:29:20,249 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
-2025-04-12 20:29:20,894 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
-2025-04-12 20:29:20,895 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
-2025-04-12 20:29:20,896 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
-2025-04-12 20:29:20,897 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy' from folder: School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy_20250409193128387433
-2025-04-12 20:29:20,922 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 3
-2025-04-12 20:29:20,923 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
-2025-04-12 20:29:20,924 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
-2025-04-12 20:29:21,405 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
-2025-04-12 20:29:21,406 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
-2025-04-12 20:29:21,407 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
-2025-04-12 20:29:21,408 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Controller_s_Office_Factsheet' from folder: Controller_s_Office_Factsheet_20250409194424987413
-2025-04-12 20:29:21,429 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 4
-2025-04-12 20:29:21,431 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 21 chunks.
-2025-04-12 20:29:21,431 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 21 texts
-2025-04-12 20:29:22,042 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 21 embeddings
-2025-04-12 20:29:22,042 - ydrpolicy.backend.database.init_db - INFO -   Generated 21 embeddings.
-2025-04-12 20:29:22,043 - ydrpolicy.backend.database.init_db - INFO -   Added 21 PolicyChunk records to session.
-2025-04-12 20:29:22,044 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Appointment_Application_Requirements_Process' from folder: Voluntary_Faculty_Appointment_Application_Requirements_Process_20250409193339788344
-2025-04-12 20:29:22,082 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 5
-2025-04-12 20:29:22,082 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 3 chunks.
-2025-04-12 20:29:22,083 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
-2025-04-12 20:29:22,251 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
-2025-04-12 20:29:22,252 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
-2025-04-12 20:29:22,252 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records to session.
-2025-04-12 20:29:22,255 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Workday_Finance_User-Based_Security_Groups_Request_Process' from folder: Workday_Finance_User-Based_Security_Groups_Request_Process_20250409194153006635
-2025-04-12 20:29:22,267 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 6
-2025-04-12 20:29:22,269 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 3 chunks.
-2025-04-12 20:29:22,269 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
-2025-04-12 20:29:22,839 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
-2025-04-12 20:29:22,840 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
-2025-04-12 20:29:22,841 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records to session.
-2025-04-12 20:29:22,844 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Staff_Workplace_Policies' from folder: Staff_Workplace_Policies_20250409204542316052
-2025-04-12 20:29:22,889 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 7
-2025-04-12 20:29:22,899 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 333 chunks.
-2025-04-12 20:29:22,899 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 333 texts
-2025-04-12 20:29:24,438 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 333 embeddings
-2025-04-12 20:29:24,438 - ydrpolicy.backend.database.init_db - INFO -   Generated 333 embeddings.
-2025-04-12 20:29:24,443 - ydrpolicy.backend.database.init_db - INFO -   Added 333 PolicyChunk records to session.
-2025-04-12 20:29:24,443 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Grand_Rounds_Allowable_Expenses' from folder: Grand_Rounds_Allowable_Expenses_20250409192920823251
-2025-04-12 20:29:24,718 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 8
-2025-04-12 20:29:24,719 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
-2025-04-12 20:29:24,719 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
-2025-04-12 20:29:25,419 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
-2025-04-12 20:29:25,420 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
-2025-04-12 20:29:25,420 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
-2025-04-12 20:29:25,421 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Guidelines_Clarification' from folder: Voluntary_Faculty_Guidelines_Clarification_20250409193316792165
-2025-04-12 20:29:25,436 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 9
-2025-04-12 20:29:25,437 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 9 chunks.
-2025-04-12 20:29:25,438 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
-2025-04-12 20:29:26,118 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
-2025-04-12 20:29:26,119 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
-2025-04-12 20:29:26,120 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records to session.
-2025-04-12 20:29:26,121 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Guidelines_for_Appointment' from folder: Guidelines_for_Appointment_20250409193232742762
-2025-04-12 20:29:26,148 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 10
-2025-04-12 20:29:26,149 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 6 chunks.
-2025-04-12 20:29:26,150 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 6 texts
-2025-04-12 20:29:26,485 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 6 embeddings
-2025-04-12 20:29:26,487 - ydrpolicy.backend.database.init_db - INFO -   Generated 6 embeddings.
-2025-04-12 20:29:26,487 - ydrpolicy.backend.database.init_db - INFO -   Added 6 PolicyChunk records to session.
-2025-04-12 20:29:26,488 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP' from folder: Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP_20250409193528279122
-2025-04-12 20:29:26,509 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 11
-2025-04-12 20:29:26,510 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
-2025-04-12 20:29:26,511 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
-2025-04-12 20:29:27,159 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
-2025-04-12 20:29:27,161 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
-2025-04-12 20:29:27,162 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
-2025-04-12 20:29:27,164 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'YDR_Conflict_of_Interest_Policy' from folder: YDR_Conflict_of_Interest_Policy_20250409192856529523
-2025-04-12 20:29:27,182 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 12
-2025-04-12 20:29:27,183 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 7 chunks.
-2025-04-12 20:29:27,183 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 7 texts
-2025-04-12 20:29:27,855 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 7 embeddings
-2025-04-12 20:29:27,856 - ydrpolicy.backend.database.init_db - INFO -   Generated 7 embeddings.
-2025-04-12 20:29:27,857 - ydrpolicy.backend.database.init_db - INFO -   Added 7 PolicyChunk records to session.
-2025-04-12 20:29:27,877 - ydrpolicy.backend.database.init_db - INFO - Database population finished. Processed 12 new policies. Skipped 0 folders.
-2025-04-12 20:29:27,878 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
-2025-04-12 20:29:27,883 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
-2025-04-12 20:29:27,885 - ydrpolicy.backend.database - INFO - Database command finished.
-2025-04-12 20:30:33,826 - ydrpolicy.backend.mcp - WARNING - Running MCP in stdio mode with logging enabled. Console logs might interfere with stdio protocol.
-2025-04-12 20:30:33,826 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 20:30:33,827 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
-2025-04-12 20:30:33,827 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (removing console handler)...
-2025-04-12 20:30:33,827 - ydrpolicy.backend.mcp.server - WARNING - Could not find RichHandler to remove for stdio mode (already removed or never added?).
-2025-04-12 20:30:33,828 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
-2025-04-12 20:31:17,727 - ydrpolicy.backend.mcp - INFO - MCP server startup interrupted by user.
-2025-04-12 20:31:17,728 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
-2025-04-12 20:31:24,440 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
-2025-04-12 20:31:24,440 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
-2025-04-12 20:31:24,441 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http transport via uvicorn on 0.0.0.0:8001.
-2025-04-12 20:31:29,112 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
-2025-04-12 20:31:29,114 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
-2025-04-12 20:33:38,366 - ydrpolicy.backend.mcp - WARNING - Running MCP in stdio mode with logging enabled. Console logs might interfere with stdio protocol.
-2025-04-12 20:33:38,366 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
-2025-04-12 20:33:38,366 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
-2025-04-12 20:33:38,367 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (disabling console propagation)...
-2025-04-12 20:33:45,298 - ydrpolicy.backend.mcp - INFO - MCP server startup interrupted by user.
-2025-04-12 20:33:45,299 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
-2025-04-12 23:30:33,857 - ydrpolicy.backend.scripts - INFO - Executing remove-policy action for ID: '13'
-2025-04-12 23:30:40,067 - ydrpolicy.backend.scripts - WARNING - Proceeding with removal of policy ID: '13'...
-2025-04-12 23:30:40,069 - ydrpolicy.backend.scripts.remove_policy - INFO - Using custom database URL for removal: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 23:30:40,118 - ydrpolicy.backend.scripts.remove_policy - ERROR - Policy with ID 13 not found.
-2025-04-12 23:30:40,123 - ydrpolicy.backend.scripts.remove_policy - ERROR - An error occurred during database operation: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(13) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 13, 'delete_failed', '{"identifier_type": "id", "identifier_value": 13}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
+2025-04-14 01:22:10,605 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 01:22:10,606 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 01:22:10,606 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 01:22:23,424 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 01:22:23,424 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 01:22:23,424 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 01:22:23,425 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 01:22:23,427 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 01:22:23,428 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 01:22:23,428 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 01:22:23,428 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 01:22:23,428 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 01:22:23,429 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 01:22:31,880 - ydrpolicy.backend.agent.terminal - ERROR - Agent run error: Server not initialized. Make sure you call `connect()` first.
 Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 545, in _prepare_and_execute
-    self._rows = deque(await prepared_stmt.fetch(*parameters))
-                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 176, in fetch
-    data = await self.__bind_execute(args, 0, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 267, in __bind_execute
-    data, status, _ = await self.__do_execute(
-                      ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/asyncpg/prepared_stmt.py", line 256, in __do_execute
-    return await executor(protocol)
-           ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "asyncpg/protocol/protocol.pyx", line 206, in bind_execute
-asyncpg.exceptions.ForeignKeyViolationError: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(13) is not present in table "policies".
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
-    self.dialect.do_execute(
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
-    cursor.execute(statement, parameters)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
-    self._adapt_connection.await_(
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
-    self._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
-    self._adapt_connection._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
-    raise translated_error from error
-sqlalchemy.dialects.postgresql.asyncpg.AsyncAdapt_asyncpg_dbapi.IntegrityError: <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(13) is not present in table "policies".
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/scripts/remove_policy.py", line 132, in run_remove
-    await policy_repo.log_policy_update(
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/database/repository/policies.py", line 577, in log_policy_update
-    await self.session.flush()
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 802, in flush
-    await greenlet_spawn(self.sync_session.flush, objects=objects)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 203, in greenlet_spawn
-    result = context.switch(value)
-             ^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4353, in flush
-    self._flush(objects)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4488, in _flush
-    with util.safe_reraise():
-         ^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py", line 146, in __exit__
-    raise exc_value.with_traceback(exc_tb)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 4449, in _flush
-    flush_context.execute()
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 466, in execute
-    rec.execute(self)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py", line 642, in execute
-    util.preloaded.orm_persistence.save_obj(
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 93, in save_obj
-    _emit_insert_statements(
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py", line 1233, in _emit_insert_statements
-    result = connection.execute(
-             ^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1416, in execute
-    return meth(
-           ^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 523, in _execute_on_connection
-    return connection._execute_clauseelement(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1638, in _execute_clauseelement
-    ret = self._execute_context(
-          ^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1843, in _execute_context
-    return self._exec_single_context(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1983, in _exec_single_context
-    self._handle_dbapi_exception(
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2352, in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1964, in _exec_single_context
-    self.dialect.do_execute(
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 942, in do_execute
-    cursor.execute(statement, parameters)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 580, in execute
-    self._adapt_connection.await_(
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 132, in await_only
-    return current.parent.switch(awaitable)  # type: ignore[no-any-return,attr-defined] # noqa: E501
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 196, in greenlet_spawn
-    value = await result
-            ^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 558, in _prepare_and_execute
-    self._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 508, in _handle_exception
-    self._adapt_connection._handle_exception(error)
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/postgresql/asyncpg.py", line 792, in _handle_exception
-    raise translated_error from error
-sqlalchemy.exc.IntegrityError: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(13) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 13, 'delete_failed', '{"identifier_type": "id", "identifier_value": 13}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-2025-04-12 23:30:40,817 - ydrpolicy.backend.scripts.remove_policy - WARNING - Policy removal failed: (sqlalchemy.dialects.postgresql.asyncpg.IntegrityError) <class 'asyncpg.exceptions.ForeignKeyViolationError'>: insert or update on table "policy_updates" violates foreign key constraint "policy_updates_policy_id_fkey"
-DETAIL:  Key (policy_id)=(13) is not present in table "policies".
-[SQL: INSERT INTO policy_updates (admin_id, policy_id, action, details, created_at) VALUES ($1::INTEGER, $2::INTEGER, $3::VARCHAR, $4::JSON, now()) RETURNING policy_updates.id, policy_updates.created_at]
-[parameters: (None, 13, 'delete_failed', '{"identifier_type": "id", "identifier_value": 13}')]
-(Background on this error at: https://sqlalche.me/e/20/gkpj)
-2025-04-12 23:30:40,823 - ydrpolicy.backend.scripts - ERROR - FAILURE: Failed to remove policy identified by ID: '13'. Check logs for details.
-2025-04-12 23:31:04,433 - ydrpolicy.backend.scripts - INFO - Executing remove-policy action for ID: '11'
-2025-04-12 23:31:06,103 - ydrpolicy.backend.scripts - WARNING - Proceeding with removal of policy ID: '11'...
-2025-04-12 23:31:06,105 - ydrpolicy.backend.scripts.remove_policy - INFO - Using custom database URL for removal: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 23:31:06,160 - ydrpolicy.backend.scripts.remove_policy - INFO - Attempting to delete policy ID 11 ('Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP')...
-2025-04-12 23:31:06,164 - ydrpolicy.backend.database.repository.policies - INFO - Logged policy update: policy_id=11, action=delete, admin_id=None
-2025-04-12 23:31:06,165 - ydrpolicy.backend.database.repository.policies - WARNING - Attempting to delete policy with ID: 11 and all associated data.
-2025-04-12 23:31:06,191 - ydrpolicy.backend.database.repository.policies - INFO - SUCCESS: Successfully deleted policy ID 11 and associated data.
-2025-04-12 23:31:06,197 - ydrpolicy.backend.scripts - INFO - SUCCESS: Successfully removed policy identified by ID: '11'.
-2025-04-12 23:31:06,197 - ydrpolicy.backend.scripts - INFO - Remove-policy action finished.
-2025-04-12 23:33:55,004 - ydrpolicy.backend.database - INFO - Executing database command...
-2025-04-12 23:33:55,004 - ydrpolicy.backend.database - INFO - Database initialization and population requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 23:33:55,005 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
-2025-04-12 23:33:55,005 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
-2025-04-12 23:33:55,014 - ydrpolicy.backend.database.init_db - INFO - Database 'ydrpolicy' already exists.
-2025-04-12 23:33:55,017 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
-2025-04-12 23:33:55,028 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
-2025-04-12 23:33:55,028 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
-2025-04-12 23:33:55,034 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
-2025-04-12 23:33:55,034 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
-2025-04-12 23:33:55,041 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
-2025-04-12 23:33:55,041 - ydrpolicy.backend.database.init_db - INFO - Starting data population from scraped_policies directory...
-2025-04-12 23:33:55,042 - ydrpolicy.backend.database.init_db - INFO - Scanning scraped policies directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/scraped_policies
-2025-04-12 23:33:55,042 - ydrpolicy.backend.database.init_db - INFO - Reading policy descriptions from CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/processed_policies_log.csv
-2025-04-12 23:33:55,045 - ydrpolicy.backend.database.init_db - INFO - Loaded 17 timestamp mappings and 17 URL mappings for policy descriptions
-2025-04-12 23:33:55,046 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
-2025-04-12 23:33:55,046 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
-2025-04-12 23:33:55,046 - ydrpolicy.backend.database.init_db - INFO - Fetching existing policy information from database...
-2025-04-12 23:33:55,062 - ydrpolicy.backend.database.init_db - INFO - Found 11 existing policies in database.
-2025-04-12 23:33:55,062 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP' from folder: Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP_20250409193528279122
-2025-04-12 23:33:55,078 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record with ID: 13
-2025-04-12 23:33:55,080 - ydrpolicy.backend.database.init_db - INFO -   Split text content into 5 chunks.
-2025-04-12 23:33:55,173 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
-2025-04-12 23:33:56,285 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
-2025-04-12 23:33:56,287 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
-2025-04-12 23:33:56,288 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records to session.
-2025-04-12 23:33:56,312 - ydrpolicy.backend.database.init_db - INFO - Database population finished. Processed 1 new policies. Skipped 11 folders.
-2025-04-12 23:33:56,313 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
-2025-04-12 23:33:56,317 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
-2025-04-12 23:33:56,318 - ydrpolicy.backend.database - INFO - Database command finished.
-2025-04-13 00:09:38,402 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
-2025-04-13 00:09:38,403 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
-2025-04-13 00:09:38,403 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http transport via uvicorn on 0.0.0.0:8001.
-2025-04-13 01:08:35,686 - ydrpolicy.backend.agent - INFO - Executing agent command...
-2025-04-13 01:08:35,687 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
-2025-04-13 01:08:35,687 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
-2025-04-13 01:08:35,688 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
-2025-04-13 01:08:36,087 - ydrpolicy.backend.agent - CRITICAL - Failed to import agent modules: cannot import name 'RunStatus' from 'agents.run_context' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run_context.py). Ensure dependencies are installed.
-2025-04-13 01:09:12,350 - ydrpolicy.backend.agent - INFO - Executing agent command...
-2025-04-13 01:09:12,350 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
-2025-04-13 01:09:12,351 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
-2025-04-13 01:09:12,351 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
-2025-04-13 01:09:12,646 - ydrpolicy.backend.agent - CRITICAL - Failed to import agent modules: cannot import name 'RunStatus' from 'agents' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/__init__.py). Ensure dependencies are installed.
-2025-04-13 01:16:47,498 - ydrpolicy.backend.agent - INFO - Executing agent command...
-2025-04-13 01:16:47,498 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
-2025-04-13 01:16:47,499 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
-2025-04-13 01:16:47,499 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
-2025-04-13 01:16:47,793 - ydrpolicy.backend.agent - CRITICAL - Failed to import agent modules: cannot import name 'RunStatus' from 'agents.run_context' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run_context.py). Ensure dependencies are installed.
-2025-04-13 01:27:41,259 - ydrpolicy.backend.agent - INFO - Executing agent command...
-2025-04-13 01:27:41,259 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
-2025-04-13 01:27:41,259 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
-2025-04-13 01:27:41,260 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
-2025-04-13 01:27:41,260 - ydrpolicy.backend.agent - CRITICAL - Failed agent import: cannot import name 'RunEvents' from 'agents' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/__init__.py)
-2025-04-13 01:32:08,704 - ydrpolicy.backend.agent - INFO - Executing agent command...
-2025-04-13 01:32:08,705 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
-2025-04-13 01:32:08,705 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
-2025-04-13 01:32:08,705 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
-2025-04-13 01:32:08,706 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
-2025-04-13 01:32:08,707 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
-2025-04-13 01:32:12,931 - ydrpolicy.backend.agent.terminal - ERROR - Stream processing error: Error code: 400 - {'error': {'message': "Unsupported parameter: 'temperature' is not supported with this model.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': None}}
-Traceback (most recent call last):
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 433, in terminal_chat
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 505, in terminal_chat
     async for event in result_stream.stream_events():
   File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/result.py", line 186, in stream_events
     raise self._stored_exception
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 548, in _run_streamed_impl
-    turn_result = await cls._run_single_turn_streamed(
-                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 655, in _run_single_turn_streamed
-    async for event in model.stream_response(
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/models/openai_responses.py", line 141, in stream_response
-    stream = await self._fetch_response(
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/models/openai_responses.py", line 234, in _fetch_response
-    return await self._client.responses.create(
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/resources/responses/responses.py", line 1417, in create
-    return await self._post(
-           ^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1767, in post
-    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1461, in request
-    return await self._request(
-           ^^^^^^^^^^^^^^^^^^^^
-  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/_base_client.py", line 1562, in _request
-    raise self._make_status_error_from_response(err.response) from None
-openai.BadRequestError: Error code: 400 - {'error': {'message': "Unsupported parameter: 'temperature' is not supported with this model.", 'type': 'invalid_request_error', 'param': 'temperature', 'code': None}}
-2025-04-13 01:32:13,153 - ydrpolicy.backend.agent.terminal - WARNING - Keeping previous history list due to agent run failure.
-2025-04-13 01:32:28,051 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
-2025-04-13 09:10:26,459 - ydrpolicy.backend.agent - INFO - Executing agent command...
-2025-04-13 09:10:26,460 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
-2025-04-13 09:10:26,460 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
-2025-04-13 09:10:26,460 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
-2025-04-13 09:10:26,462 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
-2025-04-13 09:10:26,462 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
-2025-04-13 09:18:38,467 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
-2025-04-13 09:18:41,896 - ydrpolicy.backend.agent - INFO - Executing agent command...
-2025-04-13 09:18:41,896 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
-2025-04-13 09:18:41,896 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
-2025-04-13 09:18:41,897 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
-2025-04-13 09:18:41,897 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
-2025-04-13 09:18:41,897 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
-2025-04-13 09:26:24,771 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
-2025-04-13 09:26:24,773 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
-2025-04-13 09:32:00,825 - ydrpolicy.backend.agent - INFO - Executing agent command...
-2025-04-13 09:32:00,825 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
-2025-04-13 09:32:00,825 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
-2025-04-13 09:32:00,826 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
-2025-04-13 09:32:00,828 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
-2025-04-13 09:32:00,828 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
-2025-04-13 09:32:05,144 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
-2025-04-13 09:32:05,146 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
-2025-04-13 09:33:41,383 - ydrpolicy.backend.agent - INFO - Executing agent command...
-2025-04-13 09:33:41,383 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
-2025-04-13 09:33:41,383 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
-2025-04-13 09:33:41,383 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
-2025-04-13 09:33:41,384 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
-2025-04-13 09:33:41,384 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
-2025-04-13 09:35:12,699 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
-2025-04-13 09:35:12,702 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 518, in _run_streamed_impl
+    all_tools = await cls._get_all_tools(current_agent)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 931, in _get_all_tools
+    return await agent.get_all_tools()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/agent.py", line 231, in get_all_tools
+    mcp_tools = await self.get_mcp_tools()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/agent.py", line 227, in get_mcp_tools
+    return await MCPUtil.get_all_function_tools(self.mcp_servers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/mcp/util.py", line 27, in get_all_function_tools
+    server_tools = await cls.get_function_tools(server)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/mcp/util.py", line 44, in get_function_tools
+    tools = await server.list_tools()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/mcp/server.py", line 115, in list_tools
+    raise UserError("Server not initialized. Make sure you call `connect()` first.")
+agents.exceptions.UserError: Server not initialized. Make sure you call `connect()` first.
+2025-04-14 01:22:31,984 - ydrpolicy.backend.agent.terminal - WARNING - Keeping previous history list due to agent run failure.
+2025-04-14 01:22:44,895 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 01:22:44,897 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 01:22:50,204 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 01:22:50,204 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 01:22:50,204 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 01:22:54,867 - ydrpolicy.backend.agent.mcp_connection - INFO - Closing MCP server connection...
+2025-04-14 01:22:54,869 - ydrpolicy.backend.agent.mcp_connection - INFO - MCP server connection closed.
+2025-04-14 01:22:54,870 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 01:22:54,871 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 01:22:57,857 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 01:22:57,857 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 01:22:57,857 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 01:22:57,857 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 01:22:57,858 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 01:22:57,858 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 01:22:57,858 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 01:22:57,859 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 01:22:57,859 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 01:22:57,859 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 01:23:00,124 - ydrpolicy.backend.agent.terminal - ERROR - Agent run error: Server not initialized. Make sure you call `connect()` first.
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 505, in terminal_chat
+    async for event in result_stream.stream_events():
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/result.py", line 186, in stream_events
+    raise self._stored_exception
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 518, in _run_streamed_impl
+    all_tools = await cls._get_all_tools(current_agent)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 931, in _get_all_tools
+    return await agent.get_all_tools()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/agent.py", line 231, in get_all_tools
+    mcp_tools = await self.get_mcp_tools()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/agent.py", line 227, in get_mcp_tools
+    return await MCPUtil.get_all_function_tools(self.mcp_servers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/mcp/util.py", line 27, in get_all_function_tools
+    server_tools = await cls.get_function_tools(server)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/mcp/util.py", line 44, in get_function_tools
+    tools = await server.list_tools()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/mcp/server.py", line 115, in list_tools
+    raise UserError("Server not initialized. Make sure you call `connect()` first.")
+agents.exceptions.UserError: Server not initialized. Make sure you call `connect()` first.
+2025-04-14 01:23:00,226 - ydrpolicy.backend.agent.terminal - WARNING - Keeping previous history list due to agent run failure.
+2025-04-14 01:25:42,196 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 01:25:42,198 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 01:25:45,355 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 01:25:45,356 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 01:25:45,356 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 01:25:52,533 - ydrpolicy.backend.agent.mcp_connection - INFO - Closing MCP server connection...
+2025-04-14 01:25:52,535 - ydrpolicy.backend.agent.mcp_connection - INFO - MCP server connection closed.
+2025-04-14 01:25:52,535 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 01:25:52,536 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 01:25:55,475 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 01:25:55,476 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 01:25:55,476 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 01:25:55,476 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 01:25:55,477 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 01:25:55,477 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 01:25:55,477 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 01:25:55,478 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 01:25:55,478 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 01:25:55,478 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 01:25:58,644 - ydrpolicy.backend.agent.terminal - ERROR - Agent run error: Server not initialized. Make sure you call `connect()` first.
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 505, in terminal_chat
+    async for event in result_stream.stream_events():
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/result.py", line 186, in stream_events
+    raise self._stored_exception
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 518, in _run_streamed_impl
+    all_tools = await cls._get_all_tools(current_agent)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/run.py", line 931, in _get_all_tools
+    return await agent.get_all_tools()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/agent.py", line 231, in get_all_tools
+    mcp_tools = await self.get_mcp_tools()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/agent.py", line 227, in get_mcp_tools
+    return await MCPUtil.get_all_function_tools(self.mcp_servers)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/mcp/util.py", line 27, in get_all_function_tools
+    server_tools = await cls.get_function_tools(server)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/mcp/util.py", line 44, in get_function_tools
+    tools = await server.list_tools()
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/mcp/server.py", line 115, in list_tools
+    raise UserError("Server not initialized. Make sure you call `connect()` first.")
+agents.exceptions.UserError: Server not initialized. Make sure you call `connect()` first.
+2025-04-14 01:25:58,745 - ydrpolicy.backend.agent.terminal - WARNING - Keeping previous history list due to agent run failure.
+2025-04-14 01:28:04,909 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 01:28:04,911 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 01:28:07,546 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 01:28:07,546 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 01:28:07,547 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 01:28:12,401 - ydrpolicy.backend.agent.mcp_connection - INFO - Closing MCP server connection...
+2025-04-14 01:28:12,402 - ydrpolicy.backend.agent.mcp_connection - INFO - MCP server connection closed.
+2025-04-14 01:28:12,403 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 01:28:15,130 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 01:28:15,130 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 01:28:15,130 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 01:28:15,130 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 01:28:15,132 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 01:28:15,132 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 01:28:15,133 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 01:28:15,133 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 01:28:15,133 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 01:28:15,133 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 01:29:48,916 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 01:29:48,918 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 01:29:52,310 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 01:29:52,310 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 01:29:52,310 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 01:29:55,422 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 01:29:57,738 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 01:29:57,738 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 01:29:57,738 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 01:29:57,739 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 01:29:57,739 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 01:29:57,739 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 01:29:57,740 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 01:29:57,740 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 01:29:57,740 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 01:29:57,741 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 01:29:57,762 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connected.
+2025-04-14 01:30:28,265 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='MRI contrasts policy...', k=5, threshold=None
+2025-04-14 01:30:28,821 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 01:30:28,851 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 01:30:28,852 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 01:30:28,904 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 01:30:28,910 - ydrpolicy.backend.agent.terminal - ERROR - Stream processing error: 'ToolCallItem' object has no attribute 'tool_call'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 410, in terminal_chat
+    f"\n[Calling tool: {event.item.tool_call.function.name}...]",
+                        ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ToolCallItem' object has no attribute 'tool_call'
+2025-04-14 01:30:28,947 - ydrpolicy.backend.agent.terminal - WARNING - Keeping previous history list due to agent run failure.
+2025-04-14 01:53:44,342 - ydrpolicy.backend.agent.terminal - ERROR - Terminal Mode: MCP close error: 'MCPServerSse' object has no attribute 'close'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 477, in terminal_chat
+AttributeError: 'MCPServerSse' object has no attribute 'close'
+2025-04-14 01:53:44,381 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 01:53:44,442 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 01:57:39,030 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 01:57:39,030 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 01:57:39,030 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 01:57:39,031 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 01:57:39,032 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 01:57:39,032 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 01:57:39,032 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 01:57:39,033 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 01:57:39,033 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 01:57:39,033 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 01:57:39,054 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connected.
+2025-04-14 01:58:34,262 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='contrast coverage...', k=5, threshold=None
+2025-04-14 01:58:34,891 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 01:58:34,900 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 01:58:34,910 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 01:58:47,057 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='contrast agent coverage radiology...', k=5, threshold=None
+2025-04-14 01:58:47,591 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 01:58:47,600 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 01:58:47,607 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 01:58:55,082 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='contrast agent coverage Yale Diagnostic Radiology...', k=5, threshold=None
+2025-04-14 01:58:55,577 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 01:58:55,586 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 01:58:55,596 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 01:59:04,727 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='contrast agent coverage radiology guidelines...', k=5, threshold=None
+2025-04-14 01:59:05,203 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 01:59:05,211 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 01:59:05,220 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 01:59:05,901 - ydrpolicy.backend.agent.terminal - ERROR - Terminal Mode: MCP close error: 'MCPServerSse' object has no attribute 'close'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 365, in terminal_chat
+    user_input = input("You: ")
+                 ^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 464, in terminal_chat
+    term_logger.info("Interrupt received")
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1539, in info
+    self._log(INFO, msg, args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1682, in _log
+    record = self.makeRecord(self.name, level, fn, lno, msg, args,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1651, in makeRecord
+    rv = _logRecordFactory(name, level, fn, lno, msg, args, exc_info, func,
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 328, in __init__
+    self.levelname = getLevelName(level)
+                     ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 148, in getLevelName
+    result = _levelToName.get(level)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 479, in terminal_chat
+    await mcp_server_instance.close() # Close explicitly
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MCPServerSse' object has no attribute 'close'
+2025-04-14 01:59:06,084 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:02:47,235 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:02:47,235 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:02:47,235 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:02:47,236 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:02:47,237 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:02:47,237 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:02:47,237 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:02:47,238 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:02:47,238 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:02:47,238 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:02:47,259 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connected.
+2025-04-14 02:03:00,933 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='What is the Yale policy on contrast coverage?...', k=5, threshold=None
+2025-04-14 02:03:01,542 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:03:01,587 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:03:01,598 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 02:03:08,613 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='contrast coverage Yale Radiology policy...', k=5, threshold=None
+2025-04-14 02:03:09,428 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:03:09,439 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:03:09,447 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 02:03:14,967 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='contrast coverage radiology policy Yale...', k=5, threshold=None
+2025-04-14 02:03:15,528 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:03:15,540 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:03:15,549 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 02:03:20,396 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='contrast coverage diagnostic radiology policy Yale...', k=5, threshold=None
+2025-04-14 02:03:20,884 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:03:20,894 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:03:20,903 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 02:05:31,305 - ydrpolicy.backend.agent.terminal - ERROR - Terminal Mode: MCP close error: 'MCPServerSse' object has no attribute 'close'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 479, in terminal_chat
+    await mcp_server_instance.close() # Close explicitly
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MCPServerSse' object has no attribute 'close'
+2025-04-14 02:05:31,361 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:05:31,415 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:05:42,689 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:05:42,689 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:05:42,690 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:05:42,690 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:05:42,690 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:05:42,691 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:05:42,691 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:05:42,691 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:05:42,692 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:05:42,692 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:05:42,711 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connected.
+2025-04-14 02:06:05,586 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='resident shifts on high volume hours Yale policy...', k=5, threshold=None
+2025-04-14 02:06:05,981 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:06:05,991 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:06:06,001 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 02:06:09,567 - ydrpolicy.backend.mcp.server - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-14 02:06:09,598 - ydrpolicy.backend.agent.terminal - WARNING - Could not find name via item.raw_item.function.name in tool_call_item.
+2025-04-14 02:09:28,910 - ydrpolicy.backend.agent.terminal - ERROR - Terminal Mode: MCP close error: 'MCPServerSse' object has no attribute 'close'
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 678, in run_until_complete
+    self.run_forever()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 645, in run_forever
+    self._run_once()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 1961, in _run_once
+    event_list = self._selector.select(timeout)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/selectors.py", line 566, in select
+    kev_list = self._selector.control(None, max_ev, timeout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    future.remove_done_callback(_run_until_complete_cb)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 157, in _on_sigint
+    raise KeyboardInterrupt()
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 307, in terminal_chat
+    log_disabled = ctx.meta["log_disabled"]
+                                     ^^^^^^^
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 409, in terminal_chat
+    # ******************** FINAL CORRECTED ACCESS ********************
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1539, in info
+    self._log(INFO, msg, args, **kwargs)
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1682, in _log
+    record = self.makeRecord(self.name, level, fn, lno, msg, args,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1651, in makeRecord
+    rv = _logRecordFactory(name, level, fn, lno, msg, args, exc_info, func,
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 333, in __init__
+    self.module = os.path.splitext(self.filename)[0]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 125, in splitext
+  File "<frozen genericpath>", line 133, in _splitext
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 423, in terminal_chat
+AttributeError: 'MCPServerSse' object has no attribute 'close'
+2025-04-14 02:09:32,278 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:09:32,278 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:09:32,278 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:09:32,279 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:09:32,279 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:09:32,279 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:09:32,280 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:09:32,280 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:09:32,280 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:09:32,280 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:09:32,301 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connected.
+2025-04-14 02:09:36,721 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='Yale policy on resident shifts on high volume hour...', k=5, threshold=None
+2025-04-14 02:09:37,333 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:09:37,343 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:09:41,022 - ydrpolicy.backend.mcp.server - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-14 02:09:49,275 - ydrpolicy.backend.agent.terminal - ERROR - Terminal Mode: MCP close error: 'MCPServerSse' object has no attribute 'close'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 481, in terminal_chat
+    await mcp_server_instance.close() # Close explicitly
+          ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MCPServerSse' object has no attribute 'close'
+2025-04-14 02:09:49,329 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:09:49,385 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:12:22,970 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:12:22,970 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:12:22,970 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:12:22,971 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:12:22,971 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:12:22,971 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:12:22,972 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:12:22,972 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:12:22,972 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:12:22,973 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:12:22,994 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connection established via async context.
+2025-04-14 02:12:25,069 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:12:25,071 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:12:28,757 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:12:28,758 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:12:28,758 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:12:28,758 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:12:28,759 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:12:28,759 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:12:28,759 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:12:28,759 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:12:28,760 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:12:28,760 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:12:28,780 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connection established via async context.
+2025-04-14 02:12:45,576 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='Yale policy on resident shifts on high volume hour...', k=5, threshold=None
+2025-04-14 02:12:45,950 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:12:45,959 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:12:53,562 - ydrpolicy.backend.mcp.server - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-14 02:13:00,398 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:13:00,401 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:13:09,270 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:13:09,271 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:13:09,271 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-14 02:13:09,271 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:13:09,272 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
+2025-04-14 02:13:09,272 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:13:09,273 - ydrpolicy.backend.agent.terminal - CRITICAL - Terminal agent start failed: 'coroutine' object does not support the asynchronous context manager protocol
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 351, in terminal_chat
+    async with mcp_server_instance if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse) else asyncio.sleep(0) as active_mcp_connection: # type: ignore
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: 'coroutine' object does not support the asynchronous context manager protocol
+2025-04-14 02:13:09,297 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:13:09,297 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:15:24,600 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:15:24,600 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:15:24,600 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-14 02:15:24,601 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:15:24,601 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
+2025-04-14 02:15:24,601 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:15:33,170 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:15:33,172 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:15:38,514 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:15:38,515 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:15:38,515 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:15:38,515 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:15:38,516 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:15:38,516 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:15:38,516 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:15:38,517 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:15:38,517 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:15:38,517 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:15:38,537 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connection established via async context.
+2025-04-14 02:15:56,320 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='resident shift during high volume hours policy...', k=5, threshold=None
+2025-04-14 02:15:56,554 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:15:56,566 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:15:59,842 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='resident shift high volume hours diagnostic radiol...', k=5, threshold=None
+2025-04-14 02:16:00,451 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:16:00,460 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:16:08,313 - ydrpolicy.backend.mcp.server - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-14 02:16:19,725 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:16:19,727 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:16:24,086 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 02:16:24,087 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 02:16:27,599 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 02:16:27,599 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 02:16:27,600 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 02:16:28,530 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 02:16:28,533 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 02:16:33,671 - ydrpolicy.backend.mcp - WARNING - Running MCP in stdio mode with console logging potentially enabled (if --no-log not used). Attempting to disable console handler dynamically.
+2025-04-14 02:16:33,672 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via stdio transport...
+2025-04-14 02:16:33,672 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using stdio transport...
+2025-04-14 02:16:33,672 - ydrpolicy.backend.mcp.server - INFO - Configuring logger for stdio mode (disabling console handler)...
+2025-04-14 02:16:33,673 - ydrpolicy.backend.mcp.server - INFO - Removed RichHandler: <RichHandler (INFO)>
+2025-04-14 02:16:33,673 - ydrpolicy.backend.mcp.server - INFO - Console logging disabled for stdio mode.
+2025-04-14 02:16:33,673 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
+2025-04-14 02:16:34,981 - ydrpolicy.backend.mcp - INFO - MCP server startup interrupted by user.
+2025-04-14 02:16:34,982 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
