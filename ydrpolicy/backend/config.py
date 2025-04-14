@@ -18,6 +18,7 @@ _config_dict = {
     "PATHS": {
         # "DATA_DIR": os.path.join(_BASE_DIR, "data"),
         "DATA_DIR": os.path.join(_BASE_DIR, "tests", "data_collection", "test_data"),
+        "AUTH_DIR": os.path.join(_BASE_DIR, "auth"),
     },
     # Database settings
     "DATABASE": {
@@ -56,9 +57,10 @@ _config_dict = {
         "PORT": 8000,
         "DEBUG": False,
         "CORS_ORIGINS": ["http://localhost:3000"],
-        "JWT_SECRET": os.environ.get("JWT_SECRET", "changeme_in_production"),
+        # --- JWT Settings ---
+        "JWT_SECRET": os.environ.get("JWT_SECRET", "a_very_insecure_default_secret_key_please_change"), # CHANGE THIS IN .env!
         "JWT_ALGORITHM": "HS256",
-        "JWT_EXPIRATION": 3600,  # 1 hour in seconds
+        "JWT_EXPIRATION": 30, # Default: Access tokens expire in 30 minutes
     },
     # Logging settings
     "LOGGING": {
@@ -74,8 +76,7 @@ _config_dict["PATHS"]["PROCESSED_DATA_DIR"] = os.path.join(_config_dict["PATHS"]
 _config_dict["PATHS"]["SCRAPED_POLICIES_DIR"] = os.path.join(
     _config_dict["PATHS"]["PROCESSED_DATA_DIR"], "scraped_policies"
 )
-_config_dict["PATHS"]["UPLOADS_DIR"] = os.path.join(_config_dict["PATHS"]["DATA_DIR"], "uploads")
-_config_dict["PATHS"]["AUTH_DIR"] = os.path.join(_config_dict["PATHS"]["DATA_DIR"], "auth")
+_config_dict["PATHS"]["USERS_SEED_FILE"] = os.path.join(_config_dict["PATHS"]["AUTH_DIR"], "users.json")
 _config_dict["PATHS"]["LOGS_DIR"] = os.path.join(_config_dict["PATHS"]["DATA_DIR"], "logs")
 _config_dict["LOGGING"] = {
     "LEVEL": os.environ.get("LOG_LEVEL", "INFO"),

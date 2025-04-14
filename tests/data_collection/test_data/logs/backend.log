@@ -1166,3 +1166,438 @@ AttributeError: '_AsyncGeneratorContextManager' object has no attribute 'execute
 2025-04-14 13:26:51,736 - ydrpolicy.backend.database.engine - INFO - Database connection pool closed
 2025-04-14 13:26:51,737 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
 2025-04-14 13:26:51,738 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:03:52,365 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-14 14:03:52,365 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-14 14:03:52,366 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
+2025-04-14 14:03:53,626 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
+2025-04-14 14:03:53,631 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
+2025-04-14 14:03:54,133 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
+2025-04-14 14:03:54,187 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' dropped successfully.
+2025-04-14 14:03:54,193 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-14 14:03:59,620 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-14 14:03:59,621 - ydrpolicy.backend.database - INFO - Database initialization (no population) requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-14 14:03:59,621 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy (Populate: False)
+2025-04-14 14:03:59,621 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-14 14:03:59,630 - ydrpolicy.backend.database.init_db - INFO - Creating database 'ydrpolicy'...
+2025-04-14 14:03:59,703 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' created.
+2025-04-14 14:10:16,216 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-14 14:10:16,217 - ydrpolicy.backend.database - INFO - Database initialization (no population) requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-14 14:10:16,217 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy (Populate: False)
+2025-04-14 14:10:16,218 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-14 14:10:16,226 - ydrpolicy.backend.database.init_db - INFO - Database 'ydrpolicy' already exists.
+2025-04-14 14:10:16,229 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
+2025-04-14 14:10:16,267 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
+2025-04-14 14:10:16,267 - ydrpolicy.backend.database.init_db - INFO - Creating tables, seeding users, and potentially populating policies...
+2025-04-14 14:10:16,268 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
+2025-04-14 14:10:16,268 - ydrpolicy.backend.database.init_db - ERROR - Database initialization failed during session operations: 'Session' object has no attribute '_run_ddl_visitor'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/database/init_db.py", line 375, in init_db
+    await session.run_sync(Base.metadata.create_all)
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py", line 398, in run_sync
+    return await greenlet_spawn(
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py", line 190, in greenlet_spawn
+    result = context.switch(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/sqlalchemy/sql/schema.py", line 5907, in create_all
+    bind._run_ddl_visitor(
+    ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Session' object has no attribute '_run_ddl_visitor'
+2025-04-14 14:10:16,432 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
+2025-04-14 14:10:16,433 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-14 14:12:01,701 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-14 14:12:01,702 - ydrpolicy.backend.database - INFO - Database initialization (no population) requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-14 14:12:01,702 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy (Populate: False)
+2025-04-14 14:12:01,702 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-14 14:12:01,710 - ydrpolicy.backend.database.init_db - INFO - Database 'ydrpolicy' already exists.
+2025-04-14 14:12:01,714 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
+2025-04-14 14:12:01,723 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
+2025-04-14 14:12:01,724 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
+2025-04-14 14:12:01,783 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
+2025-04-14 14:12:01,783 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
+2025-04-14 14:12:01,800 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
+2025-04-14 14:12:01,800 - ydrpolicy.backend.database.init_db - INFO - Seeding users and potentially populating policies...
+2025-04-14 14:12:01,800 - ydrpolicy.backend.database.init_db - INFO - Attempting to seed users from: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/auth/users.json
+2025-04-14 14:12:01,809 - ydrpolicy.backend.database.init_db - ERROR - Error preparing user 'admin@example.com' for creation: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt')
+2025-04-14 14:12:01,811 - ydrpolicy.backend.database.init_db - ERROR - Error preparing user 'testuser1@example.com' for creation: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt')
+2025-04-14 14:12:01,812 - ydrpolicy.backend.database.init_db - ERROR - Error preparing user 'testuser2@example.com' for creation: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt')
+2025-04-14 14:12:01,813 - ydrpolicy.backend.database.init_db - ERROR - Error preparing user 'testuser3@example.com' for creation: bcrypt: no backends available -- recommend you install one (e.g. 'pip install bcrypt')
+2025-04-14 14:12:01,813 - ydrpolicy.backend.database.init_db - INFO - User seeding complete. Prepared: 0, Skipped: 0
+2025-04-14 14:12:01,813 - ydrpolicy.backend.database.init_db - INFO - Skipping policy data population step.
+2025-04-14 14:12:01,814 - ydrpolicy.backend.database.init_db - INFO - User seeding and policy population committed.
+2025-04-14 14:12:01,814 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
+2025-04-14 14:12:01,821 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
+2025-04-14 14:12:01,822 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-14 14:12:24,283 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-14 14:12:24,283 - ydrpolicy.backend.database - INFO - Database initialization (no population) requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-14 14:12:24,284 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy (Populate: False)
+2025-04-14 14:12:24,284 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-14 14:12:24,290 - ydrpolicy.backend.database.init_db - INFO - Database 'ydrpolicy' already exists.
+2025-04-14 14:12:24,293 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
+2025-04-14 14:12:24,302 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
+2025-04-14 14:12:24,302 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
+2025-04-14 14:12:24,308 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
+2025-04-14 14:12:24,309 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
+2025-04-14 14:12:24,315 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
+2025-04-14 14:12:24,315 - ydrpolicy.backend.database.init_db - INFO - Seeding users and potentially populating policies...
+2025-04-14 14:12:24,315 - ydrpolicy.backend.database.init_db - INFO - Attempting to seed users from: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/auth/users.json
+2025-04-14 14:12:24,800 - ydrpolicy.backend.database.init_db - INFO - Prepared new user for creation: admin@example.com (Admin: True)
+2025-04-14 14:12:24,994 - ydrpolicy.backend.database.init_db - INFO - Prepared new user for creation: testuser1@example.com (Admin: False)
+2025-04-14 14:12:25,182 - ydrpolicy.backend.database.init_db - INFO - Prepared new user for creation: testuser2@example.com (Admin: False)
+2025-04-14 14:12:25,370 - ydrpolicy.backend.database.init_db - INFO - Prepared new user for creation: testuser3@example.com (Admin: False)
+2025-04-14 14:12:25,370 - ydrpolicy.backend.database.init_db - INFO - User seeding complete. Prepared: 4, Skipped: 0
+2025-04-14 14:12:25,370 - ydrpolicy.backend.database.init_db - INFO - Skipping policy data population step.
+2025-04-14 14:12:25,371 - ydrpolicy.backend.database.init_db - INFO - User seeding and policy population committed.
+2025-04-14 14:12:25,372 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
+2025-04-14 14:12:25,375 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
+2025-04-14 14:12:25,376 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-14 14:13:29,883 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-14 14:13:29,883 - ydrpolicy.backend.database - WARNING - Database drop requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-14 14:13:29,883 - ydrpolicy.backend.database.init_db - WARNING - Attempting to drop database 'ydrpolicy'... THIS WILL DELETE ALL DATA!
+2025-04-14 14:13:30,502 - ydrpolicy.backend.database.init_db - INFO - Terminating active connections to 'ydrpolicy'...
+2025-04-14 14:13:30,507 - ydrpolicy.backend.database.init_db - INFO - Connections terminated.
+2025-04-14 14:13:31,010 - ydrpolicy.backend.database.init_db - INFO - Dropping database 'ydrpolicy'...
+2025-04-14 14:13:31,048 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' dropped successfully.
+2025-04-14 14:13:31,053 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-14 14:13:35,731 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-14 14:13:35,732 - ydrpolicy.backend.database - INFO - Database initialization (no population) requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-14 14:13:35,732 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy (Populate: False)
+2025-04-14 14:13:35,733 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-14 14:13:35,741 - ydrpolicy.backend.database.init_db - INFO - Creating database 'ydrpolicy'...
+2025-04-14 14:13:35,801 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database 'ydrpolicy' created.
+2025-04-14 14:13:35,803 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
+2025-04-14 14:13:35,821 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
+2025-04-14 14:13:35,821 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
+2025-04-14 14:13:35,851 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
+2025-04-14 14:13:35,851 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
+2025-04-14 14:13:35,855 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
+2025-04-14 14:13:35,855 - ydrpolicy.backend.database.init_db - INFO - Seeding users and potentially populating policies...
+2025-04-14 14:13:35,855 - ydrpolicy.backend.database.init_db - INFO - Attempting to seed users from: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/auth/users.json
+2025-04-14 14:13:36,075 - ydrpolicy.backend.database.init_db - INFO - Prepared new user for creation: admin@example.com (Admin: True)
+2025-04-14 14:13:36,246 - ydrpolicy.backend.database.init_db - INFO - Prepared new user for creation: testuser1@example.com (Admin: False)
+2025-04-14 14:13:36,415 - ydrpolicy.backend.database.init_db - INFO - Prepared new user for creation: testuser2@example.com (Admin: False)
+2025-04-14 14:13:36,583 - ydrpolicy.backend.database.init_db - INFO - Prepared new user for creation: testuser3@example.com (Admin: False)
+2025-04-14 14:13:36,584 - ydrpolicy.backend.database.init_db - INFO - User seeding complete. Prepared: 4, Skipped: 0
+2025-04-14 14:13:36,584 - ydrpolicy.backend.database.init_db - INFO - Skipping policy data population step.
+2025-04-14 14:13:36,586 - ydrpolicy.backend.database.init_db - INFO - User seeding and policy population committed.
+2025-04-14 14:13:36,586 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
+2025-04-14 14:13:36,599 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
+2025-04-14 14:13:36,599 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-14 14:14:04,401 - ydrpolicy.backend.database - INFO - Executing database command...
+2025-04-14 14:14:04,402 - ydrpolicy.backend.database - INFO - Database initialization and population requested for URL: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy
+2025-04-14 14:14:04,402 - ydrpolicy.backend.database.init_db - INFO - Starting database initialization for: postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy (Populate: True)
+2025-04-14 14:14:04,403 - ydrpolicy.backend.database.init_db - INFO - Checking if database 'ydrpolicy' exists...
+2025-04-14 14:14:04,411 - ydrpolicy.backend.database.init_db - INFO - Database 'ydrpolicy' already exists.
+2025-04-14 14:14:04,414 - ydrpolicy.backend.database.init_db - INFO - Ensuring extension 'vector' exists...
+2025-04-14 14:14:04,425 - ydrpolicy.backend.database.init_db - INFO - Extension 'vector' checked/created.
+2025-04-14 14:14:04,425 - ydrpolicy.backend.database.init_db - INFO - Creating database tables if they don't exist...
+2025-04-14 14:14:04,433 - ydrpolicy.backend.database.init_db - INFO - Tables checked/created.
+2025-04-14 14:14:04,433 - ydrpolicy.backend.database.init_db - INFO - Applying search vector triggers...
+2025-04-14 14:14:04,438 - ydrpolicy.backend.database.init_db - INFO - Search vector triggers applied.
+2025-04-14 14:14:04,439 - ydrpolicy.backend.database.init_db - INFO - Seeding users and potentially populating policies...
+2025-04-14 14:14:04,439 - ydrpolicy.backend.database.init_db - INFO - Attempting to seed users from: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/auth/users.json
+2025-04-14 14:14:04,446 - ydrpolicy.backend.database.init_db - INFO - User seeding complete. Prepared: 0, Skipped: 4
+2025-04-14 14:14:04,447 - ydrpolicy.backend.database.init_db - INFO - Starting policy data population from scraped_policies directory...
+2025-04-14 14:14:04,447 - ydrpolicy.backend.database.init_db - INFO - Scanning scraped policies directory: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/scraped_policies
+2025-04-14 14:14:04,451 - ydrpolicy.backend.database.init_db - INFO - Reading policy descriptions from CSV: /Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/tests/data_collection/test_data/processed/processed_policies_log.csv
+2025-04-14 14:14:04,452 - ydrpolicy.backend.database.init_db - INFO - Loaded 17 timestamp mappings and 17 URL mappings.
+2025-04-14 14:14:04,453 - ydrpolicy.backend.database.init_db - INFO - Fetching existing policy information from database...
+2025-04-14 14:14:04,455 - ydrpolicy.backend.database.init_db - INFO - Found 0 existing policies in database.
+2025-04-14 14:14:04,455 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Yale_University_Policy_on_Conflict_of_Interest' from folder: Yale_University_Policy_on_Conflict_of_Interest_20250409192912567168
+2025-04-14 14:14:04,473 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 1
+2025-04-14 14:14:04,473 - ydrpolicy.backend.database.init_db - INFO -   Split text into 9 chunks.
+2025-04-14 14:14:04,485 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
+2025-04-14 14:14:05,811 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
+2025-04-14 14:14:05,812 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
+2025-04-14 14:14:05,839 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records.
+2025-04-14 14:14:05,840 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Residents_Wellbeing_Policy' from folder: Residents_Wellbeing_Policy_20250409193300717366
+2025-04-14 14:14:05,847 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 2
+2025-04-14 14:14:05,848 - ydrpolicy.backend.database.init_db - INFO -   Split text into 9 chunks.
+2025-04-14 14:14:05,848 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
+2025-04-14 14:14:06,993 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
+2025-04-14 14:14:06,994 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
+2025-04-14 14:14:07,015 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records.
+2025-04-14 14:14:07,016 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy' from folder: School_of_Medicine_Sabbatical_and_Triennial_Leave_Policy_20250409193128387433
+2025-04-14 14:14:07,022 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 3
+2025-04-14 14:14:07,023 - ydrpolicy.backend.database.init_db - INFO -   Split text into 5 chunks.
+2025-04-14 14:14:07,023 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
+2025-04-14 14:14:09,145 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
+2025-04-14 14:14:09,146 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
+2025-04-14 14:14:09,157 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records.
+2025-04-14 14:14:09,158 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Controller_s_Office_Factsheet' from folder: Controller_s_Office_Factsheet_20250409194424987413
+2025-04-14 14:14:09,164 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 4
+2025-04-14 14:14:09,165 - ydrpolicy.backend.database.init_db - INFO -   Split text into 21 chunks.
+2025-04-14 14:14:09,166 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 21 texts
+2025-04-14 14:14:10,138 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 21 embeddings
+2025-04-14 14:14:10,139 - ydrpolicy.backend.database.init_db - INFO -   Generated 21 embeddings.
+2025-04-14 14:14:10,177 - ydrpolicy.backend.database.init_db - INFO -   Added 21 PolicyChunk records.
+2025-04-14 14:14:10,178 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Appointment_Application_Requirements_Process' from folder: Voluntary_Faculty_Appointment_Application_Requirements_Process_20250409193339788344
+2025-04-14 14:14:10,181 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 5
+2025-04-14 14:14:10,182 - ydrpolicy.backend.database.init_db - INFO -   Split text into 3 chunks.
+2025-04-14 14:14:10,182 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
+2025-04-14 14:14:11,598 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
+2025-04-14 14:14:11,599 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
+2025-04-14 14:14:11,609 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records.
+2025-04-14 14:14:11,612 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Workday_Finance_User-Based_Security_Groups_Request_Process' from folder: Workday_Finance_User-Based_Security_Groups_Request_Process_20250409194153006635
+2025-04-14 14:14:11,618 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 6
+2025-04-14 14:14:11,620 - ydrpolicy.backend.database.init_db - INFO -   Split text into 3 chunks.
+2025-04-14 14:14:11,620 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 3 texts
+2025-04-14 14:14:12,521 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 3 embeddings
+2025-04-14 14:14:12,523 - ydrpolicy.backend.database.init_db - INFO -   Generated 3 embeddings.
+2025-04-14 14:14:12,531 - ydrpolicy.backend.database.init_db - INFO -   Added 3 PolicyChunk records.
+2025-04-14 14:14:12,533 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Staff_Workplace_Policies' from folder: Staff_Workplace_Policies_20250409204542316052
+2025-04-14 14:14:12,577 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 7
+2025-04-14 14:14:12,585 - ydrpolicy.backend.database.init_db - INFO -   Split text into 333 chunks.
+2025-04-14 14:14:12,586 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 333 texts
+2025-04-14 14:14:14,160 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 333 embeddings
+2025-04-14 14:14:14,161 - ydrpolicy.backend.database.init_db - INFO -   Generated 333 embeddings.
+2025-04-14 14:14:14,435 - ydrpolicy.backend.database.init_db - INFO -   Added 333 PolicyChunk records.
+2025-04-14 14:14:14,439 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Grand_Rounds_Allowable_Expenses' from folder: Grand_Rounds_Allowable_Expenses_20250409192920823251
+2025-04-14 14:14:14,442 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 8
+2025-04-14 14:14:14,443 - ydrpolicy.backend.database.init_db - INFO -   Split text into 5 chunks.
+2025-04-14 14:14:14,443 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
+2025-04-14 14:14:15,598 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
+2025-04-14 14:14:15,599 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
+2025-04-14 14:14:15,612 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records.
+2025-04-14 14:14:15,614 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Voluntary_Faculty_Guidelines_Clarification' from folder: Voluntary_Faculty_Guidelines_Clarification_20250409193316792165
+2025-04-14 14:14:15,618 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 9
+2025-04-14 14:14:15,619 - ydrpolicy.backend.database.init_db - INFO -   Split text into 9 chunks.
+2025-04-14 14:14:15,620 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 9 texts
+2025-04-14 14:14:16,457 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 9 embeddings
+2025-04-14 14:14:16,458 - ydrpolicy.backend.database.init_db - INFO -   Generated 9 embeddings.
+2025-04-14 14:14:16,479 - ydrpolicy.backend.database.init_db - INFO -   Added 9 PolicyChunk records.
+2025-04-14 14:14:16,480 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Guidelines_for_Appointment' from folder: Guidelines_for_Appointment_20250409193232742762
+2025-04-14 14:14:16,485 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 10
+2025-04-14 14:14:16,486 - ydrpolicy.backend.database.init_db - INFO -   Split text into 6 chunks.
+2025-04-14 14:14:16,487 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 6 texts
+2025-04-14 14:14:17,399 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 6 embeddings
+2025-04-14 14:14:17,400 - ydrpolicy.backend.database.init_db - INFO -   Generated 6 embeddings.
+2025-04-14 14:14:17,416 - ydrpolicy.backend.database.init_db - INFO -   Added 6 PolicyChunk records.
+2025-04-14 14:14:17,417 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP' from folder: Critical_Out-Patient_Imaging_Findings_-_Immediate_Medical_Care_SOP_20250409193528279122
+2025-04-14 14:14:17,422 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 11
+2025-04-14 14:14:17,423 - ydrpolicy.backend.database.init_db - INFO -   Split text into 5 chunks.
+2025-04-14 14:14:17,424 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 5 texts
+2025-04-14 14:14:17,811 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 5 embeddings
+2025-04-14 14:14:17,812 - ydrpolicy.backend.database.init_db - INFO -   Generated 5 embeddings.
+2025-04-14 14:14:17,826 - ydrpolicy.backend.database.init_db - INFO -   Added 5 PolicyChunk records.
+2025-04-14 14:14:17,828 - ydrpolicy.backend.database.init_db - INFO - Processing new policy: 'YDR_Conflict_of_Interest_Policy' from folder: YDR_Conflict_of_Interest_Policy_20250409192856529523
+2025-04-14 14:14:17,834 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Created Policy record ID: 12
+2025-04-14 14:14:17,835 - ydrpolicy.backend.database.init_db - INFO -   Split text into 7 chunks.
+2025-04-14 14:14:17,835 - ydrpolicy.backend.services.embeddings - INFO - Generating embeddings for 7 texts
+2025-04-14 14:14:18,665 - ydrpolicy.backend.services.embeddings - INFO - Successfully generated 7 embeddings
+2025-04-14 14:14:18,666 - ydrpolicy.backend.database.init_db - INFO -   Generated 7 embeddings.
+2025-04-14 14:14:18,684 - ydrpolicy.backend.database.init_db - INFO -   Added 7 PolicyChunk records.
+2025-04-14 14:14:18,685 - ydrpolicy.backend.database.init_db - INFO - Policy population finished. Processed/Updated: 12, Deleted old: 0, Skipped: 0
+2025-04-14 14:14:18,687 - ydrpolicy.backend.database.init_db - INFO - User seeding and policy population committed.
+2025-04-14 14:14:18,688 - ydrpolicy.backend.database.init_db - INFO - SUCCESS: Database initialization completed successfully.
+2025-04-14 14:14:18,702 - ydrpolicy.backend.database.init_db - INFO - Database engine disposed.
+2025-04-14 14:14:18,703 - ydrpolicy.backend.database - INFO - Database command finished.
+2025-04-14 14:16:44,150 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 14:16:44,150 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 14:16:44,150 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 14:16:44,151 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 14:16:44,415 - ydrpolicy.backend.agent - CRITICAL - Failed to start FastAPI server: email-validator is not installed, run `pip install pydantic[email]`
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/networks.py", line 925, in import_email_validator
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 418, in agent_command
+    uvicorn.run(
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/main.py", line 579, in run
+    server.run()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/api_main.py", line 13, in <module>
+    from ydrpolicy.backend.routers import auth as auth_router # Import the auth router
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/routers/auth.py", line 21, in <module>
+    from ydrpolicy.backend.schemas.user import UserRead
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/schemas/user.py", line 9, in <module>
+    class UserBase(BaseModel):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_model_construction.py", line 224, in __new__
+    complete_model_class(
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_model_construction.py", line 602, in complete_model_class
+    schema = cls.__get_pydantic_core_schema__(cls, handler)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/main.py", line 702, in __get_pydantic_core_schema__
+    return handler(source)
+           ^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_schema_generation_shared.py", line 84, in __call__
+    schema = self._handler(source_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_generate_schema.py", line 610, in generate_schema
+    schema = self._generate_schema_inner(obj)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_generate_schema.py", line 879, in _generate_schema_inner
+    return self._model_schema(obj)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_generate_schema.py", line 691, in _model_schema
+    {k: self._generate_md_field_schema(k, v, decorators) for k, v in fields.items()},
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_generate_schema.py", line 1071, in _generate_md_field_schema
+    common_field = self._common_field_schema(name, field_info, decorators)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_generate_schema.py", line 1263, in _common_field_schema
+    schema = self._apply_annotations(
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_generate_schema.py", line 2056, in _apply_annotations
+    schema = get_inner_schema(source_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_schema_generation_shared.py", line 84, in __call__
+    schema = self._handler(source_type)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_generate_schema.py", line 2035, in inner_handler
+    from_property = self._generate_schema_from_property(obj, source_type)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/_internal/_generate_schema.py", line 759, in _generate_schema_from_property
+    schema = get_schema(
+             ^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/networks.py", line 965, in __get_pydantic_core_schema__
+    import_email_validator()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/networks.py", line 927, in import_email_validator
+    raise ImportError('email-validator is not installed, run `pip install pydantic[email]`') from e
+ImportError: email-validator is not installed, run `pip install pydantic[email]`
+2025-04-14 14:17:05,398 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 14:17:05,399 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 14:17:05,399 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 14:17:05,399 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 14:17:05,627 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:17:05,627 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 14:17:05,628 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 14:17:05,628 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 14:17:05,628 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 14:17:05,628 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 14:17:05,629 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:19:39,936 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 14:19:39,960 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 14:19:39,961 - ydrpolicy.backend.routers.auth - INFO - Attempting login for user: testuser1@example.com
+2025-04-14 14:19:40,198 - ydrpolicy.backend.routers.auth - INFO - Login successful, token created for user: testuser1@example.com
+2025-04-14 14:22:59,419 - ydrpolicy.backend.routers.auth - INFO - Attempting login for user: testuser1@example.com
+2025-04-14 14:22:59,621 - ydrpolicy.backend.routers.auth - INFO - Login successful, token created for user: testuser1@example.com
+2025-04-14 14:26:28,146 - ydrpolicy.backend.routers.auth - INFO - Attempting login for user: testuser1@example.com
+2025-04-14 14:26:28,342 - ydrpolicy.backend.routers.auth - INFO - Login successful, token created for user: testuser1@example.com
+2025-04-14 14:27:08,868 - ydrpolicy.backend.routers.auth - INFO - Fetching details for authenticated user: testuser1@example.com
+2025-04-14 14:27:48,582 - ydrpolicy.backend.routers.chat - INFO - API: Received request to list chats for user 2 (authenticated) (skip=0, limit=100).
+2025-04-14 14:28:23,837 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 14:28:23,844 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 2 (authenticated), chat 0: Hi. This is Pouria. Who are you?...
+2025-04-14 14:28:23,848 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 2, chat 0, message: 'Hi. This is Pouria. Who are you?...'
+2025-04-14 14:28:23,849 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 14:28:23,850 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 14:28:23,850 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 14:28:23,851 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 14:28:23,852 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 14:28:23,852 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 14:28:23,853 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 14:28:23,853 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 14:28:23,897 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 14:28:23,898 - ydrpolicy.backend.database.repository.chats - INFO - Creating new chat for user ID 2 with title 'Hi. This is Pouria. Who are you?'.
+2025-04-14 14:28:23,906 - ydrpolicy.backend.database.repository.chats - INFO - SUCCESS: Successfully created chat ID 1 for user ID 2.
+2025-04-14 14:28:23,907 - ydrpolicy.backend.services.chat_service - INFO - Created new chat ID 1 for user 2.
+2025-04-14 14:28:23,923 - ydrpolicy.backend.services.chat_service - INFO - Agent updated to: YDR Policy Assistant in chat 1
+2025-04-14 14:28:30,875 - ydrpolicy.backend.services.chat_service - INFO - Agent stream completed successfully for chat 1.
+2025-04-14 14:28:30,885 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'complete' for chat 1
+2025-04-14 14:28:30,897 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 2, chat new.
+2025-04-14 14:29:06,738 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 14:29:06,741 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 2 (authenticated), chat 1: Can you tell me Yale policies on residents shift in high volume hours?...
+2025-04-14 14:29:06,743 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 2, chat 1, message: 'Can you tell me Yale policies on residents shift in high volume hours?...'
+2025-04-14 14:29:06,744 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 14:29:06,744 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 14:29:06,745 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 14:29:06,746 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 14:29:06,746 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 14:29:06,784 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 14:29:06,807 - ydrpolicy.backend.services.chat_service - INFO - Agent updated to: YDR Policy Assistant in chat 1
+2025-04-14 14:29:10,045 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='residents shift high volume hours...', k=5, threshold=None
+2025-04-14 14:29:10,824 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 14:29:10,865 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 14:29:10,888 - ydrpolicy.backend.services.chat_service - INFO - Agent calling tool: find_similar_chunks in chat 1
+2025-04-14 14:29:10,889 - ydrpolicy.backend.services.chat_service - WARNING - ToolCallOutputItem missing tool_call_id for chat 1
+2025-04-14 14:29:10,900 - ydrpolicy.backend.services.chat_service - INFO - Tool output received for chat 1
+2025-04-14 14:29:17,832 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='Yale Diagnostic Radiology policies residents shift...', k=5, threshold=None
+2025-04-14 14:29:18,801 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 14:29:18,816 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 14:29:18,837 - ydrpolicy.backend.services.chat_service - INFO - Agent calling tool: find_similar_chunks in chat 1
+2025-04-14 14:29:18,838 - ydrpolicy.backend.services.chat_service - WARNING - ToolCallOutputItem missing tool_call_id for chat 1
+2025-04-14 14:29:18,851 - ydrpolicy.backend.services.chat_service - INFO - Tool output received for chat 1
+2025-04-14 14:29:30,476 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='residents high volume shifts diagnostic radiology ...', k=5, threshold=None
+2025-04-14 14:29:31,395 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 14:29:31,409 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 14:29:31,431 - ydrpolicy.backend.services.chat_service - INFO - Agent calling tool: find_similar_chunks in chat 1
+2025-04-14 14:29:31,433 - ydrpolicy.backend.services.chat_service - WARNING - ToolCallOutputItem missing tool_call_id for chat 1
+2025-04-14 14:29:31,445 - ydrpolicy.backend.services.chat_service - INFO - Tool output received for chat 1
+2025-04-14 14:29:46,941 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='diagnostic radiology residents scheduling high vol...', k=5, threshold=None
+2025-04-14 14:29:47,986 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 14:29:47,995 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 14:29:48,011 - ydrpolicy.backend.services.chat_service - INFO - Agent calling tool: find_similar_chunks in chat 1
+2025-04-14 14:29:48,011 - ydrpolicy.backend.services.chat_service - WARNING - ToolCallOutputItem missing tool_call_id for chat 1
+2025-04-14 14:29:48,023 - ydrpolicy.backend.services.chat_service - INFO - Tool output received for chat 1
+2025-04-14 14:30:01,490 - ydrpolicy.backend.mcp.server - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-14 14:30:01,537 - ydrpolicy.backend.services.chat_service - INFO - Agent calling tool: get_policy_from_ID in chat 1
+2025-04-14 14:30:01,537 - ydrpolicy.backend.services.chat_service - WARNING - ToolCallOutputItem missing tool_call_id for chat 1
+2025-04-14 14:30:01,548 - ydrpolicy.backend.services.chat_service - INFO - Tool output received for chat 1
+2025-04-14 14:30:14,707 - ydrpolicy.backend.services.chat_service - INFO - Agent stream completed successfully for chat 1.
+2025-04-14 14:30:14,714 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'complete' for chat 1
+2025-04-14 14:30:14,727 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 2, chat 1.
+2025-04-14 14:32:50,851 - ydrpolicy.backend.routers.chat - INFO - API: Received request to list chats for user 2 (authenticated) (skip=0, limit=100).
+2025-04-14 14:33:05,199 - ydrpolicy.backend.routers.chat - INFO - API: Received request for messages in chat 1 for user 2 (authenticated) (skip=0, limit=100).
+2025-04-14 14:34:02,830 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:34:02,833 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Initiated...
+2025-04-14 14:34:02,833 - ydrpolicy.backend.agent.mcp_connection - INFO - Closing MCP server connection...
+2025-04-14 14:34:02,834 - ydrpolicy.backend.agent.mcp_connection - INFO - MCP server connection closed.
+2025-04-14 14:34:02,835 - ydrpolicy.backend.database.engine - INFO - Closing database connection pool
+2025-04-14 14:34:02,840 - ydrpolicy.backend.database.engine - INFO - Database connection pool closed
+2025-04-14 14:34:02,842 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
+2025-04-14 14:34:02,842 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:34:13,276 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 14:34:13,276 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 14:34:13,276 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 14:34:13,276 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 14:34:13,558 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:34:13,559 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 14:34:13,559 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 14:34:13,559 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 14:34:13,560 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 14:34:13,560 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 14:34:13,560 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:34:49,276 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 14:34:49,299 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 14:34:49,299 - ydrpolicy.backend.routers.auth - INFO - Attempting login for user: testuser1@example.com
+2025-04-14 14:34:49,814 - ydrpolicy.backend.routers.auth - INFO - Login successful, token created for user: testuser1@example.com
+2025-04-14 14:34:54,852 - ydrpolicy.backend.routers.chat - INFO - API: Received request for messages in chat 1 for user 2 (authenticated) (skip=0, limit=100).
+2025-04-14 14:35:05,787 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:35:05,789 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Initiated...
+2025-04-14 14:35:05,790 - ydrpolicy.backend.database.engine - INFO - Closing database connection pool
+2025-04-14 14:35:05,795 - ydrpolicy.backend.database.engine - INFO - Database connection pool closed
+2025-04-14 14:35:05,797 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
+2025-04-14 14:35:05,798 - ydrpolicy.backend.api_main - INFO - ================================================================================

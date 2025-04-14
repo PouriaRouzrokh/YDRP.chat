@@ -10,6 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from ydrpolicy.backend.config import config
 from ydrpolicy.backend.routers import chat as chat_router  # Import the chat router
+from ydrpolicy.backend.routers import auth as auth_router # Import the auth router
+
 
 # Import other routers as needed
 # from ydrpolicy.backend.routers import auth as auth_router
@@ -79,6 +81,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(chat_router.router)
+app.include_router(auth_router.router)
 # Include other routers (e.g., for listing chats, fetching history explicitly) later
 
 

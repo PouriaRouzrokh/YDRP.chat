@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 25 (4/14/2025 - 14:35)
+
+Added authentication mechanism.
+
 ## commit 24 (4/14/2025 - 13:27)
 
 Added get apis for chats and messages.
