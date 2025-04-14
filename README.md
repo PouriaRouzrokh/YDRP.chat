@@ -53,16 +53,16 @@ This repository contains the scripts for the core engine functionalities – eve
 └──────────────────┬──────────────────┘
                    │ (HTTP API Calls + SSE)
                    ▼
-┌─────────────────────────────────────┐ ┌─────────────────────┐
-│                                     │ (MCP Call) │                 │
-│ Backend API (FastAPI/Uvicorn)       │───────────>│ MCP Server       │
-│ [Default Port: 8000]                │<───────────│ [Default Port: 8001] │
-│                                     │ (MCP Result)│                 │
-│ - Auth Endpoints (/auth/token)      │             │ - RAG Tools       │
-│ - Chat Endpoints (/chat/...)        │             │ - find_similar_chunks│
-│ - Chat Service & History Mgmt       │             │ - get_policy_from_ID│
-│ - Policy Agent Logic (Agents SDK)   │             │                 │
-│ - Database Repositories             │             └─────────────────────┘
+┌─────────────────────────────────────┐    ┌──────────────────────┐
+│                                     │    │                      │
+│ Backend API (FastAPI/Uvicorn)       │───>│ MCP Server           │
+│ [Default Port: 8000]                │<───│ [Default Port: 8001] │
+│                                     │    │                      │
+│ - Auth Endpoints (/auth/token)      │    │ - RAG Tools          │
+│ - Chat Endpoints (/chat/...)        │    │ - find_similar_chunks│
+│ - Chat Service & History Mgmt       │    │ - get_policy_from_ID │
+│ - Policy Agent Logic (Agents SDK)   │    │                      │
+│ - Database Repositories             │    └──────────────────────┘
 │ - JWT Authentication                │
 │                                     │
 └──────────────────┬──────────────────┘

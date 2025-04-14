@@ -1601,3 +1601,14 @@ ImportError: email-validator is not installed, run `pip install pydantic[email]`
 2025-04-14 14:35:05,795 - ydrpolicy.backend.database.engine - INFO - Database connection pool closed
 2025-04-14 14:35:05,797 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
 2025-04-14 14:35:05,798 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:45:59,944 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 14:45:59,945 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 14:45:59,945 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 14:45:59,945 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 14:46:00,220 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 14:46:00,221 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 14:46:00,221 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 14:46:00,221 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 14:46:00,222 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 14:46:00,222 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 14:46:00,222 - ydrpolicy.backend.api_main - INFO - ================================================================================
