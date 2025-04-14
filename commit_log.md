@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 28 (4/14/2025 - 15:40)
+
+Added for for_frontend_dev.md
+
 ## commit 27 (4/14/2025 - 14:48)
 
 updated readme.md
