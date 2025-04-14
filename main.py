@@ -316,204 +316,107 @@ def agent_command(
 
     # --- Execute Terminal Mode ---
     if terminal:
+        # --- This section remains unchanged and correct ---
         logger.info("Starting agent in terminal mode (using session history, not persistent)...")
         try:
             from ydrpolicy.backend.agent.policy_agent import create_policy_agent
             from agents.mcp import MCPServerSse
-            # Import contextlib for the dummy context manager
             import contextlib
         except ImportError as e:
             logger.critical(f"Failed agent import: {e}")
             raise typer.Exit(code=1)
 
-        # Helper dummy async context manager
         @contextlib.asynccontextmanager
         async def null_async_context(*args, **kwargs):
-            """A dummy async context manager that does nothing."""
             yield None
 
         async def terminal_chat():
-            """Async function for terminal chat loop managing MCP connection."""
             agent_input_list: List[ChatCompletionMessageParam] = []
             agent: Optional[Agent] = None
             MAX_HISTORY_TURNS_TERMINAL = 10
             term_logger = logging.getLogger("ydrpolicy.backend.agent.terminal")
-            # mcp_server_instance is still needed to pass to 'async with'
             mcp_server_instance: Optional[MCPServerSse] = None
-
             try:
                 agent = await create_policy_agent(use_mcp=use_mcp_flag)
-
                 print("\n Yale Radiology Policy Agent (Terminal Mode - Session History)")
                 print("-" * 60)
                 print(f"MCP Tools: {'Enabled' if use_mcp_flag else 'Disabled'}")
                 print("Enter query or 'quit'.")
                 print("-" * 60)
-
-                # Get the MCP server instance *before* the loop if needed
-                # It might be None if use_mcp_flag is False
                 if use_mcp_flag and agent and agent.mcp_servers:
                     mcp_server_instance = agent.mcp_servers[0]
-
-                # Use 'async with' to manage the MCP connection lifecycle if instance exists
-                # Otherwise, use the dummy context manager
                 async with mcp_server_instance if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse) else null_async_context() as active_mcp_connection:
-                    # active_mcp_connection will be the server instance if connected, or None if using dummy
-
                     if use_mcp_flag:
                         if mcp_server_instance and active_mcp_connection is not None:
                             term_logger.info("Terminal Mode: MCP connection established via async context.")
-                        elif mcp_server_instance: # Implies context entry failed
+                        elif mcp_server_instance:
                             term_logger.error("Terminal Mode: MCP connection failed during context entry.")
                             print("\n[Error connecting to MCP Tool Server. Tools will be unavailable.]")
-                        # No else needed if mcp_server_instance was None from the start
-
-                    # --- Main Chat Loop ---
                     while True:
                         run_succeeded = False
                         try:
                             user_input = input("You: ")
-                            if user_input.lower() in ["quit", "exit"]:
-                                break
-                            if not user_input.strip():
-                                continue
-
-                            new_user_message: ChatCompletionMessageParam = {
-                                "role": "user",
-                                "content": user_input,
-                            }
+                            if user_input.lower() in ["quit", "exit"]: break
+                            if not user_input.strip(): continue
+                            new_user_message: ChatCompletionMessageParam = {"role": "user", "content": user_input}
                             current_run_input_list = agent_input_list + [new_user_message]
-
                             print("Agent: ", end="", flush=True)
                             result_stream: Optional[RunResultStreaming] = None
-
-                            # --- Run agent and handle stream/errors ---
                             try:
-                                if not agent:
-                                    print("\n[Critical Error: Agent not initialized.]")
-                                    break # Exit if agent failed to create
-
-                                # Runner uses the agent instance which holds the MCP server ref
-                                # The 'async with' block above ensures the connection is managed
-                                result_stream = Runner.run_streamed(
-                                    starting_agent=agent,
-                                    input=current_run_input_list,
-                                )
-                                # --- Iterate through stream events ---
+                                if not agent: print("\n[Critical Error: Agent not initialized.]"); break
+                                result_stream = Runner.run_streamed(starting_agent=agent, input=current_run_input_list)
                                 async for event in result_stream.stream_events():
-                                    if (
-                                        event.type == "raw_response_event"
-                                        and hasattr(event.data, "delta")
-                                        and event.data.delta
-                                    ):
+                                    if event.type == "raw_response_event" and hasattr(event.data, "delta") and event.data.delta:
                                         print(event.data.delta, end="", flush=True)
                                     elif event.type == "run_item_stream_event":
                                         if hasattr(event, 'item') and hasattr(event.item, 'type'):
                                             item: Any = event.item
-
                                             if item.type == "tool_call_item":
-                                                # Use the corrected access path item.raw_item.name
                                                 if hasattr(item, 'raw_item') and hasattr(item.raw_item, 'name'):
                                                     tool_name = item.raw_item.name
                                                     print(f"\n[Calling tool: {tool_name}...]", end="", flush=True)
                                                 else:
                                                     print(f"\n[Calling tool: (unknown name - item.raw_item.name not found)]", end="", flush=True)
                                                     term_logger.warning("Could not find tool name via item.raw_item.name in tool_call_item.")
-                                            elif item.type == "tool_call_output_item":
-                                                print(f"\n[Tool output received.]", end="", flush=True)
-                                        else:
-                                            term_logger.warning(f"Received run_item_stream_event without a valid item: {event}")
-
-                                run_succeeded = True # Mark as success if loop finishes
+                                            elif item.type == "tool_call_output_item": print(f"\n[Tool output received.]", end="", flush=True)
+                                        else: term_logger.warning(f"Received run_item_stream_event without a valid item: {event}")
+                                run_succeeded = True
                                 term_logger.debug("Agent stream completed successfully.")
-
-                            # --- Catch Specific Agent/SDK Errors ---
-                            except UserError as ue:
-                                print(f"\n[Agent UserError: {ue}]")
-                                term_logger.error(f"Agent run UserError: {ue}", exc_info=True)
-                                # If it's a server init error, it might imply the context manager failed or exited early
-                                if "Server not initialized" in str(ue):
-                                    print("[MCP Connection error detected. Check MCP server status.]")
-                            except (AgentsException, MaxTurnsExceeded) as agent_err:
-                                print(f"\n[Agent Error: {agent_err}]")
-                                term_logger.error(f"Agent run error: {agent_err}", exc_info=True)
-                            except AttributeError as ae:
-                                print(f"\n[Error processing stream event: {ae}]")
-                                term_logger.error(f"Stream processing AttributeError: {ae}", exc_info=True)
-                            except Exception as stream_err:
-                                print(f"\n[Error: {stream_err}]")
-                                term_logger.error(f"Stream processing error: {stream_err}", exc_info=True)
-                            # --- End stream/error handling ---
-
-                            print() # Newline after agent response/error
-
-                            # --- Update history only on success ---
+                            except UserError as ue: print(f"\n[Agent UserError: {ue}]"); term_logger.error(f"Agent run UserError: {ue}", exc_info=True); print("[MCP Connection error detected. Check MCP server status.]")
+                            except (AgentsException, MaxTurnsExceeded) as agent_err: print(f"\n[Agent Error: {agent_err}]"); term_logger.error(f"Agent run error: {agent_err}", exc_info=True)
+                            except AttributeError as ae: print(f"\n[Error processing stream event: {ae}]"); term_logger.error(f"Stream processing AttributeError: {ae}", exc_info=True)
+                            except Exception as stream_err: print(f"\n[Error: {stream_err}]"); term_logger.error(f"Stream processing error: {stream_err}", exc_info=True)
+                            print()
                             if run_succeeded and result_stream is not None:
                                 agent_input_list = result_stream.to_input_list()
                                 term_logger.debug(f"Updated history list. Length: {len(agent_input_list)}")
-                                if len(agent_input_list) > MAX_HISTORY_TURNS_TERMINAL * 2:
-                                    agent_input_list = agent_input_list[-(MAX_HISTORY_TURNS_TERMINAL * 2) :]
-                                    term_logger.debug(f"Truncated history list to {len(agent_input_list)}.")
-                            elif not run_succeeded:
-                                term_logger.warning("Keeping previous history list due to agent run failure.")
-
-                        # Handle outer loop interrupts/errors
-                        except EOFError:
-                            term_logger.info("EOF received")
-                            break
-                        except KeyboardInterrupt:
-                            term_logger.info("Interrupt received")
-                            break
-                        except Exception as loop_err:
-                            term_logger.error(f"Terminal loop error: {loop_err}", exc_info=True)
-                            print(f"\n[Error: {loop_err}]")
-                    # --- End While Loop ---
-
-            except Exception as start_err: # Catch errors during agent init or MCP context entry
-                term_logger.critical(f"Terminal agent start failed: {start_err}", exc_info=True)
-                print(f"\n[Critical Setup Error: {start_err}]")
-            finally:
-                # --- No explicit MCP close needed here, 'async with' handles it ---
-                term_logger.info("Terminal chat session ended.")
-                print("\nExiting terminal mode.") # Inform user
-
+                                if len(agent_input_list) > MAX_HISTORY_TURNS_TERMINAL * 2: agent_input_list = agent_input_list[-(MAX_HISTORY_TURNS_TERMINAL * 2) :]; term_logger.debug(f"Truncated history list to {len(agent_input_list)}.")
+                            elif not run_succeeded: term_logger.warning("Keeping previous history list due to agent run failure.")
+                        except EOFError: term_logger.info("EOF received"); break
+                        except KeyboardInterrupt: term_logger.info("Interrupt received"); break
+                        except Exception as loop_err: term_logger.error(f"Terminal loop error: {loop_err}", exc_info=True); print(f"\n[Error: {loop_err}]")
+            except Exception as start_err: term_logger.critical(f"Terminal agent start failed: {start_err}", exc_info=True); print(f"\n[Critical Setup Error: {start_err}]")
+            finally: term_logger.info("Terminal chat session ended."); print("\nExiting terminal mode.")
         asyncio.run(terminal_chat())
         logger.info("Terminal agent process finished.")
 
     # --- Execute API Mode ---
-    # (Keep existing API mode logic - unchanged)
     else:
         logger.info(f"Starting agent via FastAPI server on {run_api_host}:{run_api_port} (History Enabled)...")
         if no_mcp:
             logger.warning("Running API with --no-mcp flag. RAG tools will be unavailable.")
-        if use_mcp_flag:
-            import httpx
-            mcp_host_for_check = backend_config.MCP.HOST if backend_config.MCP.HOST != "0.0.0.0" else "localhost"
-            mcp_check_url = f"http://{mcp_host_for_check}:{backend_config.MCP.PORT}/sse" # Check /sse endpoint
-            logger.debug(f"Checking MCP server reachability at {mcp_check_url}...")
-            try:
-                async def check_mcp():
-                    async with httpx.AsyncClient(timeout=5.0) as client:
-                        response = await client.get(mcp_check_url)
-                        if response.status_code == 200:
-                             logger.info(f"MCP server check OK (Status: {response.status_code} at {mcp_check_url}).")
-                        else:
-                             logger.warning(f"MCP server check returned status {response.status_code} at {mcp_check_url}. Proceeding.")
-                        response.raise_for_status()
-                asyncio.run(check_mcp())
-            except (httpx.RequestError, httpx.HTTPStatusError) as http_err:
-                logger.error(
-                    f"MCP server check FAILED at {mcp_check_url}: {http_err}\n"
-                    f"Ensure MCP server is running with '--transport http' and accessible.",
-                    exc_info=False,
-                )
-                raise typer.Exit(code=1)
-            except Exception as check_err:
-                logger.warning(f"MCP server check encountered an unexpected error at {mcp_check_url}: {check_err}. Proceeding...")
+
+        # *******************************************************************
+        # REMOVED MCP REACHABILITY CHECK BLOCK
+        # The check was unreliable for the SSE endpoint and prevented startup
+        # Error handling during connection attempts within ChatService is sufficient.
+        # *******************************************************************
+
+        # Start the FastAPI server
         try:
             effective_log_level_name = logging.getLevelName(logging.getLogger().getEffectiveLevel())
             uvicorn.run(
-                "ydrpolicy.backend.api_main:app",
+                "ydrpolicy.backend.api_main:app", # Ensure this points to your FastAPI app instance
                 host=run_api_host,
                 port=run_api_port,
                 workers=api_workers,
@@ -525,8 +428,8 @@ def agent_command(
             logger.critical(f"Failed to start FastAPI server: {e}", exc_info=True)
             raise typer.Exit(code=1)
 
-
 # --- Main Execution Guard ---
+# (Keep existing main execution guard)
 if __name__ == "__main__":
     print(f"\n{'='*80}\nYDR Policy RAG Engine CLI - Starting\n{'='*80}")
     app()

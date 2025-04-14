@@ -2347,6 +2347,7 @@ dependencies = [
     { name = "rich" },
     { name = "selenium" },
     { name = "sqlalchemy" },
+    { name = "starlette" },
     { name = "typer" },
     { name = "uvicorn", extra = ["standard"] },
 ]
@@ -2388,6 +2389,7 @@ requires-dist = [
     { name = "rich", specifier = ">=13.9.4" },
     { name = "selenium", specifier = ">=4.29.0" },
     { name = "sqlalchemy", specifier = ">=2.0.0" },
+    { name = "starlette", specifier = ">=0.46.1" },
     { name = "typer", extras = ["all"], specifier = ">=0.15.2" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.34.0" },
 ]

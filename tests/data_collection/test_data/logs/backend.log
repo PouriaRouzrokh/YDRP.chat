@@ -481,3 +481,421 @@ TypeError: 'coroutine' object does not support the asynchronous context manager 
 2025-04-14 02:16:33,673 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with stdio transport.
 2025-04-14 02:16:34,981 - ydrpolicy.backend.mcp - INFO - MCP server startup interrupted by user.
 2025-04-14 02:16:34,982 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 02:19:10,608 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 02:19:10,609 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 02:19:10,609 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 02:22:44,259 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:22:44,259 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:22:44,259 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:22:44,260 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:22:44,260 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:22:44,261 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:22:44,261 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:22:44,261 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:22:44,261 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:22:44,261 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:22:44,283 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connection established via async context.
+2025-04-14 02:23:04,680 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='Yale policy on resident shifts during high volume ...', k=5, threshold=None
+2025-04-14 02:23:04,990 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 02:23:05,004 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 02:23:05,004 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:23:05,041 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:23:35,678 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:23:35,681 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:23:41,273 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:23:41,274 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:23:41,274 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Disabled
+2025-04-14 02:23:41,274 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:23:41,275 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: False)...
+2025-04-14 02:23:41,275 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:23:52,688 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:23:52,692 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:24:23,332 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:24:23,332 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:24:23,333 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:24:23,333 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:24:28,352 - ydrpolicy.backend.agent - ERROR - MCP server check FAILED at http://localhost:8001/sse: 
+Ensure MCP server is running with '--transport http' and accessible.
+2025-04-14 02:26:35,631 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:26:35,631 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:26:35,631 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:26:35,632 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:26:35,632 - ydrpolicy.backend.agent - INFO - Waiting 2s for MCP server to initialize before checking...
+2025-04-14 02:26:42,670 - ydrpolicy.backend.agent - ERROR - MCP server check FAILED at http://localhost:8001/sse: 
+Ensure MCP server is running with '--transport http' and accessible.
+2025-04-14 02:28:43,370 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:28:43,370 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:28:43,370 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:28:43,371 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:28:43,371 - ydrpolicy.backend.agent - INFO - Waiting 2s for MCP server to initialize before checking...
+2025-04-14 02:28:55,419 - ydrpolicy.backend.agent - ERROR - MCP server check FAILED at http://localhost:8001/sse: 
+Ensure MCP server is running with '--transport http' and accessible on port 8001.
+2025-04-14 02:30:40,253 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:30:40,253 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:30:40,253 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:30:40,254 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:30:40,254 - ydrpolicy.backend.agent - INFO - Waiting 2s for MCP server to initialize before checking...
+2025-04-14 02:30:52,301 - ydrpolicy.backend.agent - ERROR - MCP server check FAILED at 127.0.0.1: 
+Ensure MCP server is running with '--transport http' and accessible on port 8001.
+2025-04-14 02:35:00,650 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:35:00,651 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:35:00,651 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:35:00,651 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:35:00,770 - ydrpolicy.backend.agent - CRITICAL - Failed to start FastAPI server: cannot import name 'ToolCallItem' from 'agents.stream_events' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/stream_events.py)
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 418, in agent_command
+    uvicorn.run(
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/main.py", line 579, in run
+    server.run()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/api_main.py", line 12, in <module>
+    from ydrpolicy.backend.routers import chat as chat_router  # Import the chat router
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/routers/chat.py", line 16, in <module>
+    from ydrpolicy.backend.services.chat_service import ChatService
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/services/chat_service.py", line 24, in <module>
+    from agents.stream_events import (
+ImportError: cannot import name 'ToolCallItem' from 'agents.stream_events' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/stream_events.py)
+2025-04-14 02:36:58,324 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:36:58,324 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:36:58,325 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:36:58,325 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:36:58,325 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:36:58,326 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:36:58,326 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:36:58,326 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:36:58,327 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:36:58,327 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:36:58,347 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connection established via async context.
+2025-04-14 02:37:15,119 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='resident shift during high volume hours Yale polic...', k=5, threshold=None
+2025-04-14 02:37:15,332 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:37:15,344 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:37:20,644 - ydrpolicy.backend.mcp.server - INFO - Received get_policy_from_ID request for policy_id: 7
+2025-04-14 02:37:35,260 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:37:35,263 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 02:37:41,465 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:37:41,465 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:37:41,465 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:37:41,465 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:37:41,547 - ydrpolicy.backend.agent - CRITICAL - Failed to start FastAPI server: cannot import name 'ToolCallOutputItem' from 'agents.stream_events' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/stream_events.py)
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 418, in agent_command
+    uvicorn.run(
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/main.py", line 579, in run
+    server.run()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/api_main.py", line 12, in <module>
+    from ydrpolicy.backend.routers import chat as chat_router  # Import the chat router
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/routers/chat.py", line 16, in <module>
+    from ydrpolicy.backend.services.chat_service import ChatService
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/services/chat_service.py", line 27, in <module>
+    from agents.stream_events import (
+ImportError: cannot import name 'ToolCallOutputItem' from 'agents.stream_events' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/stream_events.py)
+2025-04-14 02:38:04,995 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 02:38:04,996 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 02:38:08,730 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 02:38:08,730 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 02:38:08,731 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 02:38:15,450 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:38:15,450 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:38:15,451 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:38:15,451 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:38:15,532 - ydrpolicy.backend.agent - CRITICAL - Failed to start FastAPI server: cannot import name 'ToolCallOutputItem' from 'agents.stream_events' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/stream_events.py)
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 418, in agent_command
+    uvicorn.run(
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/main.py", line 579, in run
+    server.run()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/api_main.py", line 12, in <module>
+    from ydrpolicy.backend.routers import chat as chat_router  # Import the chat router
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/routers/chat.py", line 16, in <module>
+    from ydrpolicy.backend.services.chat_service import ChatService
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/services/chat_service.py", line 27, in <module>
+    from agents.stream_events import (
+ImportError: cannot import name 'ToolCallOutputItem' from 'agents.stream_events' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/agents/stream_events.py)
+2025-04-14 02:40:52,673 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:40:52,674 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:40:52,674 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:40:52,674 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:40:52,759 - ydrpolicy.backend.agent - CRITICAL - Failed to start FastAPI server: cannot import name 'Function' from 'openai.types.responses' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/types/responses/__init__.py)
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/main.py", line 418, in agent_command
+    uvicorn.run(
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/main.py", line 579, in run
+    server.run()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 66, in run
+    return asyncio.run(self.serve(sockets=sockets))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 195, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "uvloop/loop.pyx", line 1518, in uvloop.loop.Loop.run_until_complete
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 70, in serve
+    await self._serve(sockets)
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/server.py", line 77, in _serve
+    config.load()
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/config.py", line 435, in load
+    self.loaded_app = import_from_string(self.app)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/uvicorn/importer.py", line 19, in import_from_string
+    module = importlib.import_module(module_str)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 999, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/api_main.py", line 12, in <module>
+    from ydrpolicy.backend.routers import chat as chat_router  # Import the chat router
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/routers/chat.py", line 16, in <module>
+    from ydrpolicy.backend.services.chat_service import ChatService
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/services/chat_service.py", line 36, in <module>
+    from openai.types.responses import Function, ResponseTextDeltaEvent, ToolCall
+ImportError: cannot import name 'Function' from 'openai.types.responses' (/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/openai/types/responses/__init__.py)
+2025-04-14 02:41:53,395 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:41:53,396 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:41:53,396 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:41:53,396 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:41:53,604 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:41:53,604 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 02:41:53,604 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 02:41:53,605 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 02:41:53,605 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 02:41:53,605 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 02:41:53,605 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:45:57,074 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:45:57,076 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Initiated...
+2025-04-14 02:45:57,076 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
+2025-04-14 02:45:57,077 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:47:34,449 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:47:34,449 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:47:34,449 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:47:34,449 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:47:34,645 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:47:34,645 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 02:47:34,646 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 02:47:34,646 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 02:47:34,646 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 02:47:34,646 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 02:47:34,646 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:49:39,526 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 1, chat 0: What is the Yale policy on resident shifts in high volume hours?...
+2025-04-14 02:49:39,527 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 1, chat 0, message: 'What is the Yale policy on resident shifts in high volume hours?...'
+2025-04-14 02:49:39,528 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 02:49:39,529 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:49:39,529 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:49:39,530 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:49:39,530 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:49:39,531 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:49:39,532 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:49:39,532 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 02:49:39,570 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 02:49:39,570 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 02:49:39,581 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 02:49:39,581 - ydrpolicy.backend.database.repository.chats - INFO - Creating new chat for user ID 1 with title 'What is the Yale policy on resident shifts in high volume hours?'.
+2025-04-14 02:49:39,605 - ydrpolicy.backend.database.repository.chats - INFO - SUCCESS: Successfully created chat ID 1 for user ID 1.
+2025-04-14 02:49:39,605 - ydrpolicy.backend.services.chat_service - INFO - Created new chat ID 1 for user 1.
+2025-04-14 02:49:39,606 - ydrpolicy.backend.database.engine - ERROR - Session rolled back due to error: 1 validation error for StreamChunk
+data
+  Input should be a valid dictionary or instance of StreamChunkData [type=model_type, input_value=ChatInfoData(chat_id=1, t... in high volume hours?'), input_type=ChatInfoData]
+    For further information visit https://errors.pydantic.dev/2.10/v/model_type
+2025-04-14 02:49:39,607 - ydrpolicy.backend.services.chat_service - ERROR - Critical error in chat service for user 1, chat 0: 1 validation error for StreamChunk
+data
+  Input should be a valid dictionary or instance of StreamChunkData [type=model_type, input_value=ChatInfoData(chat_id=1, t... in high volume hours?'), input_type=ChatInfoData]
+    For further information visit https://errors.pydantic.dev/2.10/v/model_type
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/services/chat_service.py", line 209, in process_user_message_stream
+    yield StreamChunk(type="chat_info", data=ChatInfoData(chat_id=processed_chat_id, title=chat_title))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/main.py", line 214, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for StreamChunk
+data
+  Input should be a valid dictionary or instance of StreamChunkData [type=model_type, input_value=ChatInfoData(chat_id=1, t... in high volume hours?'), input_type=ChatInfoData]
+    For further information visit https://errors.pydantic.dev/2.10/v/model_type
+2025-04-14 02:49:39,631 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'error' for chat 1
+2025-04-14 02:49:39,631 - ydrpolicy.backend.routers.chat - ERROR - Error during stream event generation for user 1, chat 0: 1 validation error for StreamChunk
+data
+  Input should be a valid dictionary or instance of StreamChunkData [type=model_type, input_value=StatusData(status='error', chat_id=1), input_type=StatusData]
+    For further information visit https://errors.pydantic.dev/2.10/v/model_type
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/routers/chat.py", line 87, in event_generator
+    async for chunk in chat_service.process_user_message_stream(
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/services/chat_service.py", line 395, in process_user_message_stream
+    yield StreamChunk(type="status", data=StatusData(status=final_status_str, chat_id=processed_chat_id))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/.venv/lib/python3.12/site-packages/pydantic/main.py", line 214, in __init__
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+pydantic_core._pydantic_core.ValidationError: 1 validation error for StreamChunk
+data
+  Input should be a valid dictionary or instance of StreamChunkData [type=model_type, input_value=StatusData(status='error', chat_id=1), input_type=StatusData]
+    For further information visit https://errors.pydantic.dev/2.10/v/model_type
+2025-04-14 02:54:20,526 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:54:20,528 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Initiated...
+2025-04-14 02:54:20,529 - ydrpolicy.backend.agent.mcp_connection - INFO - Closing MCP server connection...
+2025-04-14 02:54:20,530 - ydrpolicy.backend.agent.mcp_connection - INFO - MCP server connection closed.
+2025-04-14 02:54:20,531 - ydrpolicy.backend.database.engine - INFO - Closing database connection pool
+2025-04-14 02:54:20,537 - ydrpolicy.backend.database.engine - INFO - Database connection pool closed
+2025-04-14 02:54:20,538 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
+2025-04-14 02:54:20,538 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:54:24,343 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:54:24,343 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 02:54:24,343 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:54:24,344 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 02:54:24,549 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:54:24,549 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 02:54:24,550 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 02:54:24,550 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 02:54:24,550 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 02:54:24,550 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 02:54:24,551 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:54:38,367 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 02:54:38,373 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 1, chat 0: What is the Yale policy on resident shifts in high volume hours?...
+2025-04-14 02:54:38,375 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 1, chat 0, message: 'What is the Yale policy on resident shifts in high volume hours?...'
+2025-04-14 02:54:38,376 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 02:54:38,376 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:54:38,377 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:54:38,378 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:54:38,378 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:54:38,378 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:54:38,379 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:54:38,379 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 02:54:38,414 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 02:54:38,414 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 02:54:38,425 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 02:54:38,425 - ydrpolicy.backend.database.repository.chats - INFO - Creating new chat for user ID 1 with title 'What is the Yale policy on resident shifts in high volume hours?'.
+2025-04-14 02:54:38,447 - ydrpolicy.backend.database.repository.chats - INFO - SUCCESS: Successfully created chat ID 2 for user ID 1.
+2025-04-14 02:54:38,448 - ydrpolicy.backend.services.chat_service - INFO - Created new chat ID 2 for user 1.
+2025-04-14 02:54:38,465 - ydrpolicy.backend.services.chat_service - INFO - Agent updated to: YDR Policy Assistant in chat 2
+2025-04-14 02:54:41,077 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='Yale policy on resident shifts in high volume hour...', k=5, threshold=None
+2025-04-14 02:54:41,741 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 02:54:41,762 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 02:54:41,763 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 02:54:41,804 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 02:54:41,821 - ydrpolicy.backend.services.chat_service - INFO - Agent calling tool: find_similar_chunks in chat 2
+2025-04-14 02:54:41,822 - ydrpolicy.backend.services.chat_service - WARNING - ToolCallOutputItem missing tool_call_id for chat 2
+2025-04-14 02:54:41,834 - ydrpolicy.backend.services.chat_service - INFO - Tool output received for chat 2
+2025-04-14 02:54:45,224 - ydrpolicy.backend.mcp.server - INFO - Received get_policy_from_ID request for policy_id: 2
+2025-04-14 02:54:45,267 - ydrpolicy.backend.services.chat_service - INFO - Agent calling tool: get_policy_from_ID in chat 2
+2025-04-14 02:54:45,267 - ydrpolicy.backend.services.chat_service - WARNING - ToolCallOutputItem missing tool_call_id for chat 2
+2025-04-14 02:54:45,279 - ydrpolicy.backend.services.chat_service - INFO - Tool output received for chat 2
+2025-04-14 02:54:51,258 - ydrpolicy.backend.services.chat_service - INFO - Agent stream completed successfully for chat 2.
+2025-04-14 02:54:51,263 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'complete' for chat 2
+2025-04-14 02:54:51,274 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 1, chat new.
+2025-04-14 02:56:19,947 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:56:19,949 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Initiated...
+2025-04-14 02:56:19,950 - ydrpolicy.backend.agent.mcp_connection - INFO - Closing MCP server connection...
+2025-04-14 02:56:19,951 - ydrpolicy.backend.agent.mcp_connection - INFO - MCP server connection closed.
+2025-04-14 02:56:19,951 - ydrpolicy.backend.database.engine - INFO - Closing database connection pool
+2025-04-14 02:56:19,956 - ydrpolicy.backend.database.engine - INFO - Database connection pool closed
+2025-04-14 02:56:19,957 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
+2025-04-14 02:56:19,958 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 02:56:29,384 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 02:56:29,385 - ydrpolicy.backend.agent - INFO - Agent requested mode: Terminal
+2025-04-14 02:56:29,385 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 02:56:29,385 - ydrpolicy.backend.agent - INFO - Starting agent in terminal mode (using session history, not persistent)...
+2025-04-14 02:56:29,386 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 02:56:29,386 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 02:56:29,386 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 02:56:29,387 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 02:56:29,387 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 02:56:29,387 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 02:56:29,407 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connection established via async context.
+2025-04-14 02:56:32,272 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
+2025-04-14 02:56:32,275 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.

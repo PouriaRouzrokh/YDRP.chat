@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 23 (4/14/2025 - 03:09)
+
+Ensured the agent is working fine in api mode.
+
 ## commit 22 (4/14/2025 - 02:18)
 
 Debugged running the agent sdk with mcp servers in the http mode. 
