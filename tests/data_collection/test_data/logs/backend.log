@@ -899,3 +899,270 @@ data
 2025-04-14 02:56:29,407 - ydrpolicy.backend.agent.terminal - INFO - Terminal Mode: MCP connection established via async context.
 2025-04-14 02:56:32,272 - ydrpolicy.backend.agent.terminal - INFO - Terminal chat session ended.
 2025-04-14 02:56:32,275 - ydrpolicy.backend.agent - INFO - Terminal agent process finished.
+2025-04-14 03:09:41,115 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 03:09:41,116 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 13:08:25,494 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 13:08:25,495 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 13:08:25,495 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 13:08:32,520 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 13:08:32,521 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 13:08:32,521 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 13:08:44,262 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 13:08:44,262 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 13:08:44,262 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 13:10:14,333 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 13:10:14,333 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 13:10:14,334 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 13:11:33,058 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 13:11:33,059 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 13:11:33,059 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 13:11:39,678 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 13:11:39,680 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 13:11:46,105 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 13:11:46,106 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 13:11:46,106 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 13:11:55,319 - ydrpolicy.backend.mcp.server - INFO - MCP server process finished.
+2025-04-14 13:11:55,322 - ydrpolicy.backend.mcp - INFO - MCP server process finished.
+2025-04-14 13:12:02,788 - ydrpolicy.backend.mcp - INFO - Attempting to start MCP server on 0.0.0.0:8001 via http transport...
+2025-04-14 13:12:02,789 - ydrpolicy.backend.mcp.server - INFO - Attempting to start MCP server using http transport...
+2025-04-14 13:12:02,789 - ydrpolicy.backend.mcp.server - INFO - Running MCP server with http/sse transport via uvicorn on 0.0.0.0:8001.
+2025-04-14 13:12:17,576 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 13:12:17,576 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 13:12:17,576 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 13:12:17,576 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 13:12:17,776 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:12:17,776 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 13:12:17,777 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 13:12:17,777 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 13:12:17,777 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 13:12:17,777 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 13:12:17,778 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:12:41,706 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 13:12:41,711 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 0, chat 0: Hi. This is Pouria. Nice to meet you!...
+2025-04-14 13:12:41,713 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 0, chat 0, message: 'Hi. This is Pouria. Nice to meet you!...'
+2025-04-14 13:12:41,714 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 13:12:41,714 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 13:12:41,715 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 13:12:41,715 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 13:12:41,716 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 13:12:41,717 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 13:12:41,718 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 13:12:41,719 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 13:12:41,768 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 13:12:41,769 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 13:12:41,791 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 13:12:41,791 - ydrpolicy.backend.database.repository.chats - INFO - Creating new chat for user ID 0 with title 'Hi. This is Pouria. Nice to meet you!'.
+2025-04-14 13:12:41,813 - ydrpolicy.backend.database.repository.chats - ERROR - Cannot create chat: User with ID 0 not found.
+2025-04-14 13:12:41,814 - ydrpolicy.backend.database.engine - ERROR - Session rolled back due to error: User with ID 0 not found.
+2025-04-14 13:12:41,815 - ydrpolicy.backend.services.chat_service - ERROR - Critical error in chat service for user 0, chat 0: User with ID 0 not found.
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/services/chat_service.py", line 228, in process_user_message_stream
+    new_chat = await chat_repo.create_chat(user_id=user_id, title=new_title)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/database/repository/chats.py", line 99, in create_chat
+    raise ValueError(f"User with ID {user_id} not found.")
+ValueError: User with ID 0 not found.
+2025-04-14 13:12:41,849 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'error' for chat 0
+2025-04-14 13:12:41,860 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 0, chat new.
+2025-04-14 13:13:00,387 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 13:13:00,388 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 1, chat 0: Hi. This is Pouria. Nice to meet you!...
+2025-04-14 13:13:00,390 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 1, chat 0, message: 'Hi. This is Pouria. Nice to meet you!...'
+2025-04-14 13:13:00,390 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 13:13:00,391 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 13:13:00,392 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 13:13:00,392 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 13:13:00,393 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 13:13:00,436 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 13:13:00,437 - ydrpolicy.backend.database.repository.chats - INFO - Creating new chat for user ID 1 with title 'Hi. This is Pouria. Nice to meet you!'.
+2025-04-14 13:13:00,445 - ydrpolicy.backend.database.repository.chats - INFO - SUCCESS: Successfully created chat ID 3 for user ID 1.
+2025-04-14 13:13:00,446 - ydrpolicy.backend.services.chat_service - INFO - Created new chat ID 3 for user 1.
+2025-04-14 13:13:00,462 - ydrpolicy.backend.services.chat_service - INFO - Agent updated to: YDR Policy Assistant in chat 3
+2025-04-14 13:13:04,282 - ydrpolicy.backend.services.chat_service - INFO - Agent stream completed successfully for chat 3.
+2025-04-14 13:13:04,292 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'complete' for chat 3
+2025-04-14 13:13:04,305 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 1, chat new.
+2025-04-14 13:13:34,223 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 13:13:34,224 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 1, chat 1: Hi. Who are you?!...
+2025-04-14 13:13:34,228 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 1, chat 1, message: 'Hi. Who are you?!...'
+2025-04-14 13:13:34,229 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 13:13:34,230 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 13:13:34,230 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 13:13:34,231 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 13:13:34,232 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 13:13:34,324 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 13:13:34,328 - ydrpolicy.backend.database.repository.chats - WARNING - Chat ID 1 not found or does not belong to user ID 1.
+2025-04-14 13:13:34,329 - ydrpolicy.backend.services.chat_service - ERROR - Chat ID 1 not found or does not belong to user ID 1.
+2025-04-14 13:13:34,342 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'error' for chat 1
+2025-04-14 13:13:34,353 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 1, chat 1.
+2025-04-14 13:13:51,043 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 13:13:51,043 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 1, chat 0: Hi. Who are you?!...
+2025-04-14 13:13:51,045 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 1, chat 0, message: 'Hi. Who are you?!...'
+2025-04-14 13:13:51,046 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 13:13:51,046 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 13:13:51,047 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 13:13:51,047 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 13:13:51,048 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 13:13:51,088 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 13:13:51,089 - ydrpolicy.backend.database.repository.chats - INFO - Creating new chat for user ID 1 with title 'Hi. Who are you?!'.
+2025-04-14 13:13:51,092 - ydrpolicy.backend.database.repository.chats - INFO - SUCCESS: Successfully created chat ID 4 for user ID 1.
+2025-04-14 13:13:51,093 - ydrpolicy.backend.services.chat_service - INFO - Created new chat ID 4 for user 1.
+2025-04-14 13:13:51,106 - ydrpolicy.backend.services.chat_service - INFO - Agent updated to: YDR Policy Assistant in chat 4
+2025-04-14 13:13:55,278 - ydrpolicy.backend.services.chat_service - INFO - Agent stream completed successfully for chat 4.
+2025-04-14 13:13:55,286 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'complete' for chat 4
+2025-04-14 13:13:55,298 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 1, chat new.
+2025-04-14 13:14:42,744 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 13:14:42,745 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 1, chat 4: What tools do you have access to?!...
+2025-04-14 13:14:42,746 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 1, chat 4, message: 'What tools do you have access to?!...'
+2025-04-14 13:14:42,747 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 13:14:42,748 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 13:14:42,749 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 13:14:42,749 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 13:14:42,750 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 13:14:42,790 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 13:14:42,812 - ydrpolicy.backend.services.chat_service - INFO - Agent updated to: YDR Policy Assistant in chat 4
+2025-04-14 13:14:46,581 - ydrpolicy.backend.services.chat_service - INFO - Agent stream completed successfully for chat 4.
+2025-04-14 13:14:46,589 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'complete' for chat 4
+2025-04-14 13:14:46,602 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 1, chat 4.
+2025-04-14 13:16:14,962 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 13:16:14,963 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 1, chat 4: Can you search the policies to see how the residents schedule change during high volume hours?!...
+2025-04-14 13:16:14,967 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 1, chat 4, message: 'Can you search the policies to see how the residents schedule change during high volume hours?!...'
+2025-04-14 13:16:14,968 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 13:16:14,969 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 13:16:14,970 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 13:16:14,970 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 13:16:14,971 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 13:16:15,009 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 13:16:15,026 - ydrpolicy.backend.services.chat_service - INFO - Agent updated to: YDR Policy Assistant in chat 4
+2025-04-14 13:16:18,920 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='residents schedule change during high volume hours...', k=5, threshold=None
+2025-04-14 13:16:19,666 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 13:16:19,693 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 13:16:19,694 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 13:16:19,743 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 13:16:19,765 - ydrpolicy.backend.services.chat_service - INFO - Agent calling tool: find_similar_chunks in chat 4
+2025-04-14 13:16:19,765 - ydrpolicy.backend.services.chat_service - WARNING - ToolCallOutputItem missing tool_call_id for chat 4
+2025-04-14 13:16:19,777 - ydrpolicy.backend.services.chat_service - INFO - Tool output received for chat 4
+2025-04-14 13:16:24,892 - ydrpolicy.backend.mcp.server - INFO - Received find_similar_chunks request: query='resident scheduling change during high volume hour...', k=5, threshold=None
+2025-04-14 13:16:26,034 - ydrpolicy.backend.database.repository.policies - INFO - Performing vector-only search with limit=5, threshold=0.2
+2025-04-14 13:16:26,046 - ydrpolicy.backend.mcp.server - INFO - Found 5 similar chunks.
+2025-04-14 13:16:26,064 - ydrpolicy.backend.services.chat_service - INFO - Agent calling tool: find_similar_chunks in chat 4
+2025-04-14 13:16:26,064 - ydrpolicy.backend.services.chat_service - WARNING - ToolCallOutputItem missing tool_call_id for chat 4
+2025-04-14 13:16:26,075 - ydrpolicy.backend.services.chat_service - INFO - Tool output received for chat 4
+2025-04-14 13:16:42,612 - ydrpolicy.backend.services.chat_service - INFO - Agent stream completed successfully for chat 4.
+2025-04-14 13:16:42,619 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'complete' for chat 4
+2025-04-14 13:16:42,633 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 1, chat 4.
+2025-04-14 13:19:09,953 - ydrpolicy.backend.routers.chat - WARNING - Using placeholder user ID 1 for authentication.
+2025-04-14 13:19:09,955 - ydrpolicy.backend.routers.chat - INFO - API: Received request to list chats for user 1 (skip=0, limit=100).
+2025-04-14 13:19:09,957 - ydrpolicy.backend.routers.chat - ERROR - Error fetching chats for user 1: '_AsyncGeneratorContextManager' object has no attribute 'execute'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/routers/chat.py", line 147, in list_user_chats
+    chats = await chat_repo.get_chats_by_user(user_id=user_id, skip=skip, limit=limit)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/database/repository/chats.py", line 75, in get_chats_by_user
+    result = await self.session.execute(stmt)
+                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: '_AsyncGeneratorContextManager' object has no attribute 'execute'
+2025-04-14 13:20:56,174 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:20:56,176 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Initiated...
+2025-04-14 13:20:56,177 - ydrpolicy.backend.agent.mcp_connection - INFO - Closing MCP server connection...
+2025-04-14 13:20:56,178 - ydrpolicy.backend.agent.mcp_connection - INFO - MCP server connection closed.
+2025-04-14 13:20:56,179 - ydrpolicy.backend.database.engine - INFO - Closing database connection pool
+2025-04-14 13:20:56,186 - ydrpolicy.backend.database.engine - INFO - Database connection pool closed
+2025-04-14 13:20:56,188 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
+2025-04-14 13:20:56,189 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:20:59,520 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 13:20:59,520 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 13:20:59,520 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 13:20:59,520 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 13:20:59,765 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:20:59,765 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 13:20:59,765 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 13:20:59,766 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 13:20:59,766 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 13:20:59,766 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 13:20:59,766 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:21:10,651 - ydrpolicy.backend.routers.chat - WARNING - Using placeholder user ID 1 for authentication.
+2025-04-14 13:21:10,658 - ydrpolicy.backend.routers.chat - INFO - API: Received request to list chats for user 1 (skip=0, limit=100).
+2025-04-14 13:21:10,660 - ydrpolicy.backend.routers.chat - ERROR - Error fetching chats for user 1: '_AsyncGeneratorContextManager' object has no attribute 'execute'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/routers/chat.py", line 135, in list_user_chats
+    chats = await chat_repo.get_chats_by_user(user_id=user_id, skip=skip, limit=limit)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/database/repository/chats.py", line 75, in get_chats_by_user
+    result = await self.session.execute(stmt)
+                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: '_AsyncGeneratorContextManager' object has no attribute 'execute'
+2025-04-14 13:21:44,643 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:21:44,646 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Initiated...
+2025-04-14 13:21:44,649 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
+2025-04-14 13:21:44,651 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:21:47,434 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 13:21:47,435 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 13:21:47,435 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 13:21:47,435 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 13:21:47,656 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:21:47,656 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 13:21:47,656 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 13:21:47,656 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 13:21:47,657 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 13:21:47,657 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 13:21:47,657 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:21:52,669 - ydrpolicy.backend.routers.chat - WARNING - Using placeholder user ID 1 for authentication.
+2025-04-14 13:21:52,677 - ydrpolicy.backend.routers.chat - INFO - API: Received request to list chats for user 1 (skip=0, limit=100).
+2025-04-14 13:21:52,679 - ydrpolicy.backend.routers.chat - ERROR - Error fetching chats for user 1: '_AsyncGeneratorContextManager' object has no attribute 'execute'
+Traceback (most recent call last):
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/routers/chat.py", line 135, in list_user_chats
+    chats = await chat_repo.get_chats_by_user(user_id=user_id, skip=skip, limit=limit)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/pouria/Documents/Coding/YDRP-RAG/ydrp_engine/ydrpolicy/backend/database/repository/chats.py", line 75, in get_chats_by_user
+    result = await self.session.execute(stmt)
+                   ^^^^^^^^^^^^^^^^^^^^
+AttributeError: '_AsyncGeneratorContextManager' object has no attribute 'execute'
+2025-04-14 13:23:41,118 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:23:41,121 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Initiated...
+2025-04-14 13:23:41,122 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
+2025-04-14 13:23:41,122 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:23:43,269 - ydrpolicy.backend.agent - INFO - Executing agent command...
+2025-04-14 13:23:43,269 - ydrpolicy.backend.agent - INFO - Agent requested mode: API
+2025-04-14 13:23:43,270 - ydrpolicy.backend.agent - INFO - MCP Tool Connection: Enabled
+2025-04-14 13:23:43,270 - ydrpolicy.backend.agent - INFO - Starting agent via FastAPI server on 0.0.0.0:8000 (History Enabled)...
+2025-04-14 13:23:43,511 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:23:43,511 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Initiated...
+2025-04-14 13:23:43,512 - ydrpolicy.backend.api_main - INFO - Mode: Production
+2025-04-14 13:23:43,512 - ydrpolicy.backend.api_main - INFO - CORS Origins Allowed: ['http://localhost:3000']
+2025-04-14 13:23:43,512 - ydrpolicy.backend.api_main - INFO - Verified required directories exist.
+2025-04-14 13:23:43,512 - ydrpolicy.backend.api_main - INFO - FastAPI Application Startup Complete.
+2025-04-14 13:23:43,512 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:23:48,354 - ydrpolicy.backend.routers.chat - WARNING - Using placeholder user ID 1 for authentication.
+2025-04-14 13:23:48,356 - ydrpolicy.backend.database.engine - INFO - Creating new database engine
+2025-04-14 13:23:48,383 - ydrpolicy.backend.database.engine - INFO - Database engine created successfully
+2025-04-14 13:23:48,384 - ydrpolicy.backend.routers.chat - INFO - API: Received request to list chats for user 1 (skip=0, limit=100).
+2025-04-14 13:24:32,103 - ydrpolicy.backend.routers.chat - WARNING - Using placeholder user ID 1 for authentication.
+2025-04-14 13:24:32,104 - ydrpolicy.backend.routers.chat - INFO - API: Received request for messages in chat 2 for user 1 (skip=0, limit=100).
+2025-04-14 13:25:26,010 - ydrpolicy.backend.routers.chat - WARNING - Using placeholder user ID 1 for authentication.
+2025-04-14 13:25:26,011 - ydrpolicy.backend.routers.chat - INFO - API: Received request to list chats for user 1 (skip=0, limit=100).
+2025-04-14 13:25:58,345 - ydrpolicy.backend.services.chat_service - INFO - ChatService initialized (MCP Enabled: True)
+2025-04-14 13:25:58,351 - ydrpolicy.backend.routers.chat - INFO - API: Received chat stream request for user 1, chat 0: Who are you...
+2025-04-14 13:25:58,353 - ydrpolicy.backend.services.chat_service - INFO - Processing message stream for user 1, chat 0, message: 'Who are you...'
+2025-04-14 13:25:58,354 - ydrpolicy.backend.services.chat_service - INFO - Initializing Policy Agent for ChatService...
+2025-04-14 13:25:58,354 - ydrpolicy.backend.agent.policy_agent - INFO - Creating Policy Agent (MCP Enabled: True)...
+2025-04-14 13:25:58,355 - ydrpolicy.backend.agent.mcp_connection - WARNING - MCP Host 0.0.0.0 detected, using 'localhost' for client connection.
+2025-04-14 13:25:58,355 - ydrpolicy.backend.agent.mcp_connection - INFO - Initializing MCP Server connection to: http://localhost:8001/sse
+2025-04-14 13:25:58,356 - ydrpolicy.backend.agent.mcp_connection - INFO - MCPServerSse instance created.
+2025-04-14 13:25:58,357 - ydrpolicy.backend.agent.policy_agent - INFO - MCP server configured for the agent.
+2025-04-14 13:25:58,357 - ydrpolicy.backend.agent.policy_agent - INFO - SUCCESS: Policy Agent instance created successfully.
+2025-04-14 13:25:58,358 - ydrpolicy.backend.services.chat_service - INFO - Policy Agent initialized successfully in ChatService.
+2025-04-14 13:25:58,394 - ydrpolicy.backend.services.chat_service - INFO - API Mode: MCP connection established via async context.
+2025-04-14 13:25:58,394 - ydrpolicy.backend.database.repository.chats - INFO - Creating new chat for user ID 1 with title 'Who are you'.
+2025-04-14 13:25:58,402 - ydrpolicy.backend.database.repository.chats - INFO - SUCCESS: Successfully created chat ID 5 for user ID 1.
+2025-04-14 13:25:58,402 - ydrpolicy.backend.services.chat_service - INFO - Created new chat ID 5 for user 1.
+2025-04-14 13:25:58,417 - ydrpolicy.backend.services.chat_service - INFO - Agent updated to: YDR Policy Assistant in chat 5
+2025-04-14 13:26:04,884 - ydrpolicy.backend.services.chat_service - INFO - Agent stream completed successfully for chat 5.
+2025-04-14 13:26:04,894 - ydrpolicy.backend.services.chat_service - INFO - Sending final status 'complete' for chat 5
+2025-04-14 13:26:04,906 - ydrpolicy.backend.routers.chat - INFO - API: Finished streaming response for user 1, chat new.
+2025-04-14 13:26:51,728 - ydrpolicy.backend.api_main - INFO - ================================================================================
+2025-04-14 13:26:51,729 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Initiated...
+2025-04-14 13:26:51,730 - ydrpolicy.backend.agent.mcp_connection - INFO - Closing MCP server connection...
+2025-04-14 13:26:51,731 - ydrpolicy.backend.agent.mcp_connection - INFO - MCP server connection closed.
+2025-04-14 13:26:51,731 - ydrpolicy.backend.database.engine - INFO - Closing database connection pool
+2025-04-14 13:26:51,736 - ydrpolicy.backend.database.engine - INFO - Database connection pool closed
+2025-04-14 13:26:51,737 - ydrpolicy.backend.api_main - INFO - FastAPI Application Shutdown Complete.
+2025-04-14 13:26:51,738 - ydrpolicy.backend.api_main - INFO - ================================================================================

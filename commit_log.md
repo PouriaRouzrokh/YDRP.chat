@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 24 (4/14/2025 - 13:27)
+
+Added get apis for chats and messages.
+
 ## commit 23 (4/14/2025 - 03:09)
 
 Ensured the agent is working fine in api mode.
