@@ -1,5 +1,6 @@
 import { Chat, ChatMessage, ChatSummary, MessageSummary } from "@/types";
 import { authService } from "./auth";
+import { siteConfig } from "@/config/site";
 
 // Mock chat data
 const MOCK_CHATS: ChatSummary[] = [
@@ -73,6 +74,9 @@ const MOCK_MESSAGES: Record<number, MessageSummary[]> = {
   ],
 };
 
+// Export for use in other services
+export { MOCK_CHATS };
+
 // Helper function to simulate network delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -84,8 +88,11 @@ export const chatService = {
    * Get chat history for the current user
    */
   async getChats(skip = 0, limit = 10): Promise<ChatSummary[]> {
-    // Check authentication
-    if (!authService.isAuthenticated()) {
+    // Check if admin mode is enabled
+    const isAdminMode = siteConfig.settings.adminMode;
+
+    // Skip authentication check if admin mode is enabled
+    if (!isAdminMode && !authService.isAuthenticated()) {
       throw new Error("User not authenticated");
     }
 
@@ -104,8 +111,11 @@ export const chatService = {
     skip = 0,
     limit = 100
   ): Promise<MessageSummary[]> {
-    // Check authentication
-    if (!authService.isAuthenticated()) {
+    // Check if admin mode is enabled
+    const isAdminMode = siteConfig.settings.adminMode;
+
+    // Skip authentication check if admin mode is enabled
+    if (!isAdminMode && !authService.isAuthenticated()) {
       throw new Error("User not authenticated");
     }
 

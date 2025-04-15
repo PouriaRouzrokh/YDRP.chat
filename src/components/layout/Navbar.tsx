@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -16,17 +16,31 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Moon, Sun, Menu, X } from "lucide-react";
+import { Moon, Sun, Menu, X, LogIn } from "lucide-react";
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isAdminMode, user } = useAuth();
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Debug navbar auth state
+  useEffect(() => {
+    console.log("Navbar - Auth state:", { isAuthenticated, isAdminMode, user });
+  }, [isAuthenticated, isAdminMode, user]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  // Only show certain menu items when authenticated
+  const filteredNavigation = siteConfig.navigation.filter((item) => {
+    // Always show About
+    if (item.href === "/about") return true;
+
+    // Only show authenticated routes when logged in
+    return isAuthenticated || isAdminMode;
+  });
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -44,7 +58,7 @@ export function Navbar() {
           </Link>
           <NavigationMenu className="hidden md:flex">
             <NavigationMenuList>
-              {siteConfig.navigation.map((item) => (
+              {filteredNavigation.map((item) => (
                 <NavigationMenuItem key={item.href}>
                   <NavigationMenuLink asChild>
                     <Link
@@ -83,10 +97,18 @@ export function Navbar() {
             />
           </div>
 
-          {isAuthenticated && (
+          {/* Show user menu when authenticated, login button when not */}
+          {isAuthenticated || isAdminMode ? (
             <div className="ml-4">
               <UserMenu />
             </div>
+          ) : (
+            <Button variant="outline" size="sm" className="ml-4" asChild>
+              <Link href="/login">
+                <LogIn className="h-4 w-4 mr-2" />
+                <span>Login</span>
+              </Link>
+            </Button>
           )}
 
           {/* Mobile menu button */}
@@ -110,7 +132,7 @@ export function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden bg-background border-b shadow-lg">
           <nav className="flex flex-col p-4 space-y-3">
-            {siteConfig.navigation.map((item) => (
+            {filteredNavigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -124,6 +146,19 @@ export function Navbar() {
                 {item.name}
               </Link>
             ))}
+            {/* Always show login in mobile menu when not authenticated */}
+            {!isAuthenticated && !isAdminMode && (
+              <Link
+                href="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-2 text-sm font-medium rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/50"
+              >
+                <span className="flex items-center">
+                  <LogIn className="h-4 w-4 mr-2" />
+                  Login
+                </span>
+              </Link>
+            )}
           </nav>
         </div>
       )}

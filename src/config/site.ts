@@ -26,6 +26,7 @@ export const siteConfig = {
     { name: "Chat", href: "/chat" },
     { name: "History", href: "/history" },
     { name: "About", href: "/about" },
+    { name: "Profile", href: "/profile" },
   ],
 
   // Support info

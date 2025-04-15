@@ -1,39 +1,58 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { siteConfig } from "./config/site";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+// List of paths that require authentication
+const PROTECTED_PATHS = ["/chat", "/history", "/profile"];
+
+// Check if the path is protected
+function isProtectedPath(path: string): boolean {
+  return PROTECTED_PATHS.some((protectedPath) =>
+    path.startsWith(protectedPath)
+  );
+}
 
 export function middleware(request: NextRequest) {
-  // Get the pathname of the request
-  const path = request.nextUrl.pathname;
+  const { pathname } = request.nextUrl;
 
-  // Define public paths that don't require authentication
-  const isPublicPath = path === "/login";
+  // Check for authentication
+  const token = request.cookies.get("ydrp_auth")?.value;
 
-  // Check if user is authenticated or admin mode is enabled
-  // Look for any cookie that starts with 'ydrp_auth' since we'll be setting
-  // our auth cookie client-side with js-cookie
-  const hasAuthCookie = request.cookies
-    .getAll()
-    .some((cookie) => cookie.name === "ydrp_auth");
-  const isAuthenticated = hasAuthCookie || siteConfig.settings.adminMode;
+  // Check for admin mode
+  const adminMode = process.env.NEXT_PUBLIC_ADMIN_MODE === "true";
 
-  // If the path is public and user is authenticated, redirect to home
-  if (isPublicPath && isAuthenticated) {
-    return NextResponse.redirect(new URL("/", request.url));
+  // Log debug info
+  console.log("Middleware: ", {
+    pathname,
+    token: !!token,
+    adminMode,
+    isProtected: isProtectedPath(pathname),
+  });
+
+  // If admin mode is enabled, allow all access
+  if (adminMode) {
+    return NextResponse.next();
   }
 
-  // If the path is protected and user is not authenticated, redirect to login
-  if (!isPublicPath && !isAuthenticated) {
+  // If trying to access a protected path without being authenticated
+  if (isProtectedPath(pathname) && !token) {
+    console.log("Redirecting to login page");
+    // Use absolute URL without parentheses
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Otherwise, continue
+  // Allow all other requests
   return NextResponse.next();
 }
 
-// Configure the middleware to run on specific paths
 export const config = {
   matcher: [
-    // Match all paths except for static files, api routes, and _next
-    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+    /*
+     * Match all request paths except for:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.png$).*)",
   ],
 };

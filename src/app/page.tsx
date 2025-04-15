@@ -1,7 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function HomePage() {
+  const { isAuthenticated, isAdminMode } = useAuth();
+  const isAuthorized = isAuthenticated || isAdminMode;
+
   return (
     <div className="w-full flex flex-col items-center justify-center py-16 text-center">
       <h1 className="text-4xl font-bold mb-1">Yale Department of Radiology</h1>
@@ -12,9 +18,15 @@ export default function HomePage() {
         through a simple chat interface.
       </p>
       <div className="flex gap-4">
-        <Button asChild>
-          <Link href="/chat">Start Chatting</Link>
-        </Button>
+        {isAuthorized ? (
+          <Button asChild>
+            <Link href="/chat">Start Chatting</Link>
+          </Button>
+        ) : (
+          <Button asChild>
+            <Link href="/login">Sign In</Link>
+          </Button>
+        )}
         <Button variant="outline" asChild>
           <Link href="/about">Learn More</Link>
         </Button>

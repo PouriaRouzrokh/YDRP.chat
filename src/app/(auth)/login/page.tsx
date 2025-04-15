@@ -29,8 +29,8 @@ import { useForm } from "react-hook-form";
 
 // Define form validation schema
 const formSchema = z.object({
-  username: z.string().min(3, {
-    message: "Username must be at least 3 characters.",
+  email: z.string().email({
+    message: "Please enter a valid email address.",
   }),
   password: z.string().min(6, {
     message: "Password must be at least 6 characters.",
@@ -45,22 +45,21 @@ export default function LoginPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
-      password: "",
+      email: "user@example.com", // Pre-filled for demo
+      password: "password123", // Pre-filled for demo
     },
   });
 
   // Handle form submission
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      await login(values.username, values.password);
+      await login(values.email, values.password);
       toast.success("Login successful", {
         description: "Welcome to YDR Policy Chatbot",
       });
 
       // Force redirect after successful login
-      router.push("/");
-      router.refresh();
+      router.push("/chat");
     } catch {
       // Error is handled by the auth context and displayed below
     }
@@ -69,7 +68,7 @@ export default function LoginPage() {
   // Redirect if already authenticated or in admin mode
   useEffect(() => {
     if (isAuthenticated || isAdminMode) {
-      router.push("/");
+      router.push("/chat");
     }
   }, [isAuthenticated, isAdminMode, router]);
 
@@ -100,12 +99,16 @@ export default function LoginPage() {
             >
               <FormField
                 control={form.control}
-                name="username"
+                name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter your username" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="Enter your email"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -150,6 +153,9 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-2 items-start">
           <div className="text-sm text-muted-foreground">
+            <span>Demo credentials pre-filled for you.</span>
+          </div>
+          <div className="text-sm text-muted-foreground">
             <span>For assistance, please contact </span>
             <a
               href="mailto:it-support@yale-rad.edu"
@@ -157,9 +163,6 @@ export default function LoginPage() {
             >
               IT Support
             </a>
-          </div>
-          <div className="text-sm text-muted-foreground">
-            <span>This system is for authorized users only.</span>
           </div>
         </CardFooter>
       </Card>

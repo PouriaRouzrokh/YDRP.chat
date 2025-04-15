@@ -2,27 +2,20 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { siteConfig } from "@/config/site";
-import Cookies from "js-cookie";
-
-type User = {
-  username: string;
-  role: "user" | "admin";
-};
+import { User } from "@/types";
+import { authService } from "@/services/auth";
 
 type AuthContextType = {
   user: User | null;
   isLoading: boolean;
   error: string | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   isAdminMode: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// Set cookie for 7 days
-const COOKIE_EXPIRY = 7;
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -39,80 +32,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         // Skip auth check if admin mode is enabled
         if (isAdminMode) {
-          setUser({ username: "admin", role: "admin" });
+          console.log("Admin mode enabled, setting mock user");
+          // Create mock admin user that matches User type
+          setUser({
+            id: 0,
+            email: "admin@example.com",
+            full_name: "Admin User",
+            is_admin: true,
+          });
           setIsAuthenticated(true);
           return;
         }
 
-        // Try to get auth from cookies first
-        const cookieAuth = Cookies.get("ydrp_auth");
-        if (cookieAuth) {
-          try {
-            const parsedAuth = JSON.parse(cookieAuth);
-            setUser(parsedAuth.user);
+        // Check if user is authenticated with authService
+        if (authService.isAuthenticated()) {
+          console.log("User authenticated via authService");
+          const currentUser = authService.getCurrentUser();
+          console.log("Current user:", currentUser);
+          if (currentUser) {
+            setUser(currentUser);
             setIsAuthenticated(true);
-            return;
-          } catch (e) {
-            console.error("Error parsing auth cookie:", e);
-            // If cookie parse fails, try localStorage as fallback
           }
-        }
-
-        // Fallback to localStorage
-        const savedAuth = localStorage.getItem("ydrp_auth");
-        if (savedAuth) {
-          const parsedAuth = JSON.parse(savedAuth);
-          setUser(parsedAuth.user);
-          setIsAuthenticated(true);
-
-          // Sync cookie with localStorage if cookie wasn't found
-          if (!cookieAuth) {
-            Cookies.set("ydrp_auth", savedAuth, { expires: COOKIE_EXPIRY });
-          }
+        } else {
+          console.log("No authenticated user found");
         }
       } catch (err) {
         console.error("Error restoring auth state:", err);
-        // Clear all auth data
-        localStorage.removeItem("ydrp_auth");
-        Cookies.remove("ydrp_auth");
       }
     };
 
     checkAuth();
   }, [isAdminMode]);
 
-  // Mock login function
-  const login = async (username: string, password: string) => {
+  // Login function using authService
+  const login = async (email: string, password: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // In a real app, this would validate against a backend
-      if (password.length < 6) {
-        throw new Error("Invalid credentials. Please try again.");
+      await authService.login(email, password);
+      const currentUser = authService.getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
+        setIsAuthenticated(true);
       }
-
-      // Mock successful login
-      const userData: User = {
-        username,
-        role: username === "admin" ? "admin" : "user",
-      };
-
-      // Create auth data object
-      const authData = JSON.stringify({
-        user: userData,
-        token: "mock-jwt-token",
-      });
-
-      // Save to both localStorage and cookies
-      localStorage.setItem("ydrp_auth", authData);
-      Cookies.set("ydrp_auth", authData, { expires: COOKIE_EXPIRY });
-
-      setUser(userData);
-      setIsAuthenticated(true);
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -124,10 +87,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Logout function
+  // Logout function using authService
   const logout = () => {
-    localStorage.removeItem("ydrp_auth");
-    Cookies.remove("ydrp_auth");
+    authService.logout();
     setUser(null);
     setIsAuthenticated(false);
   };
