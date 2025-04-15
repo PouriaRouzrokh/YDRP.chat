@@ -49,7 +49,7 @@ export function ChatInput({
   };
 
   return (
-    <div className={cn("flex items-end gap-2", className)}>
+    <div className={cn("flex items-center gap-2 pb-6 md:pb-0", className)}>
       <Textarea
         ref={textareaRef}
         value={input}
@@ -57,16 +57,16 @@ export function ChatInput({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={isDisabled}
-        className="resize-none min-h-[60px] max-h-[200px] flex-1 pt-[18px] pb-[18px] leading-relaxed"
+        className="resize-none min-h-[45px] md:min-h-[60px] max-h-[200px] flex-1 py-3 md:py-4 leading-relaxed"
         rows={1}
       />
       <Button
         onClick={handleSubmit}
         disabled={isDisabled || !input.trim()}
         size="icon"
-        className="h-[60px] w-[60px]"
+        className="h-[45px] w-[45px] md:h-[60px] md:w-[60px] shrink-0"
       >
-        <SendIcon className="h-5 w-5" />
+        <SendIcon className="h-4 w-4 md:h-5 md:w-5" />
       </Button>
     </div>
   );

@@ -25,10 +25,10 @@ export default function RootLayout({
           <AuthProvider>
             <div className="flex min-h-screen flex-col">
               <Navbar />
-              <main className="flex-1 w-full px-4 md:px-8 lg:px-12">
+              <main className="flex-1 w-full px-4 md:px-8 lg:px-12 mb-16">
                 {children}
               </main>
-              <footer className="py-3 px-4 md:px-8 lg:px-12 border-t text-center text-sm text-muted-foreground">
+              <footer className="fixed bottom-0 left-0 right-0 py-3 px-4 md:px-8 lg:px-12 border-t text-center text-sm text-muted-foreground bg-background z-10">
                 Yale Department of Radiology. All rights reserved. ©{" "}
                 {new Date().getFullYear()}
               </footer>

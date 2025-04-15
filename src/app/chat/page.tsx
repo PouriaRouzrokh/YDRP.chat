@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { PanelLeftOpen } from "lucide-react";
 import { ChatSidebar, ChatSession } from "@/components/chat/chat-sidebar";
 import { ChatInput } from "@/components/chat/chat-input";
+import { ChatFooterSpacer } from "@/components/chat/chat-footer-spacer";
 import {
   ChatMessage,
   Message,
@@ -225,14 +226,18 @@ export default function ChatPage() {
             </ScrollArea>
           </div>
 
-          {/* Input area with fixed height */}
-          <div className="py-4">
+          {/* Input area with fixed height - Adjusted for better mobile display */}
+          <div className="pb-2 pt-2">
             <ChatInput
               onSubmit={handleSendMessage}
               isDisabled={isTyping}
               placeholder="Type your message..."
+              className="pb-0"
             />
           </div>
+
+          {/* Spacer to prevent overlap with fixed footer */}
+          <ChatFooterSpacer />
         </div>
       </div>
     </div>

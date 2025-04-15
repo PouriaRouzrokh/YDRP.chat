@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { IconSpinner } from "@/components/ui/icons";
