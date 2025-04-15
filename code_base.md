@@ -5503,7 +5503,7 @@ async def read_users_me(current_user: Annotated[User, Depends(get_current_active
 ```py
 # ydrpolicy/backend/routers/chat.py
 """
-API Router for chat interactions with the YDR Policy Agent, including history.
+API Router for chat interactions with the YDR Policy Agent, including history and management.
 """
 import asyncio
 import json  # Needed for tool call input parsing
@@ -5525,6 +5525,13 @@ from ydrpolicy.backend.schemas.chat import (
     # Specific data schemas for StreamChunk payload (Optional but good for clarity)
     ErrorData,
     StreamChunkData,
+    ChatInfoData,
+    TextDeltaData,
+    ToolCallData,
+    ToolOutputData,
+    StatusData,
+    ChatRenameRequest, # Added
+    ActionResponse, # Added
 )
 from ydrpolicy.backend.services.chat_service import ChatService
 
@@ -5544,10 +5551,6 @@ from ydrpolicy.backend.database.models import User
 logger = logging.getLogger(__name__)
 
 
-# --- Placeholder Dependency for Authenticated User ID ---
-# REMOVED - We now use the real dependency: get_current_active_user
-
-
 # --- Dependency for ChatService ---
 def get_chat_service() -> ChatService:
     """FastAPI dependency to get the ChatService instance."""
@@ -5562,7 +5565,7 @@ router = APIRouter(
 )
 
 
-# --- Streaming Endpoint - NOW PROTECTED ---
+# --- Streaming Endpoint ---
 @router.post(
     "/stream",
     # No response_model for StreamingResponse
@@ -5585,14 +5588,12 @@ router = APIRouter(
 async def stream_chat(
     request: ChatRequest = Body(...),
     chat_service: ChatService = Depends(get_chat_service),
-    # *** ADD Authentication Dependency ***
     current_user: User = Depends(get_current_active_user),
 ):
     """
     Handles streaming chat requests with history persistence.
     Requires authentication. User ID in request body must match authenticated user.
     """
-    # *** ADD User ID Validation ***
     if request.user_id != current_user.id:
         logger.warning(f"User ID mismatch: Token user ID {current_user.id} != Request body user ID {request.user_id}")
         raise HTTPException(
@@ -5603,18 +5604,15 @@ async def stream_chat(
         f"API: Received chat stream request for user {current_user.id} (authenticated), chat {request.chat_id}: {request.message[:100]}..."
     )
 
-    # This internal helper relies on the ChatService correctly yielding StreamChunk objects
     async def event_generator() -> AsyncGenerator[str, None]:
         try:
-            # Pass user_id from the *authenticated* user
             async for chunk in chat_service.process_user_message_stream(
-                user_id=current_user.id, message=request.message, chat_id=request.chat_id  # Use authenticated user ID
+                user_id=current_user.id, message=request.message, chat_id=request.chat_id
             ):
-                # Ensure chunk has necessary fields before dumping
                 if hasattr(chunk, "type") and hasattr(chunk, "data"):
                     json_chunk = chunk.model_dump_json(exclude_unset=True)
-                    yield f"data: {json_chunk}\n\n"  # SSE format
-                    await asyncio.sleep(0.01)  # Yield control briefly
+                    yield f"data: {json_chunk}\n\n"
+                    await asyncio.sleep(0.01)
                 else:
                     logger.error(f"Invalid chunk received from service: {chunk!r}")
 
@@ -5627,13 +5625,11 @@ async def stream_chat(
                 f"Error during stream event generation for user {current_user.id}, chat {request.chat_id}: {e}",
                 exc_info=True,
             )
-            # Use the helper function from ChatService to create error chunk
             try:
                 error_payload = ErrorData(message=f"Streaming generation failed: {str(e)}")
-                # Access helper method if available, otherwise recreate manually
                 if hasattr(chat_service, "_create_stream_chunk"):
                     error_chunk = chat_service._create_stream_chunk("error", error_payload)
-                else:  # Manual fallback if helper is not accessible/refactored
+                else:
                     error_chunk = StreamChunk(type="error", data=StreamChunkData(**error_payload.model_dump()))
                 yield f"data: {error_chunk.model_dump_json()}\n\n"
             except Exception as yield_err:
@@ -5642,43 +5638,44 @@ async def stream_chat(
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
-# --- List User Chats Endpoint - NOW PROTECTED ---
+# --- List User Chats Endpoint ---
 @router.get(
-    "",  # GET request to the base /chat prefix
+    "",
     response_model=List[ChatSummary],
     summary="List chat sessions for the current user",
-    description="Retrieves a list of chat sessions belonging to the authenticated user, ordered by the most recently updated.",
+    description=(
+        "Retrieves a list of chat sessions belonging to the authenticated user, "
+        "ordered by the most recently updated. By default, only active (non-archived) chats are returned."
+    ),
     response_description="A list of chat session summaries.",
     responses={401: {"description": "Authentication required"}, 500: {"description": "Internal Server Error"}},
 )
 async def list_user_chats(
+    archived: bool = Query(False, description="Set to true to list archived chats instead of active ones."), # Added parameter
     skip: int = Query(0, ge=0, description="Number of chat sessions to skip (for pagination)."),
     limit: int = Query(100, ge=1, le=200, description="Maximum number of chat sessions to return."),
-    # *** Use real auth dependency ***
     current_user: User = Depends(get_current_active_user),
-    # *** Use get_session which yields the session ***
     session: AsyncSession = Depends(get_session),
 ):
     """
-    Fetches a paginated list of chat summaries for the authenticated user.
+    Fetches a paginated list of chat summaries for the authenticated user,
+    filtered by archived status.
     """
+    status_str = "archived" if archived else "active"
     logger.info(
-        f"API: Received request to list chats for user {current_user.id} (authenticated) (skip={skip}, limit={limit})."
+        f"API: Received request to list {status_str} chats for user {current_user.id} (authenticated) (skip={skip}, limit={limit})."
     )
     try:
-        # Instantiate the repository INSIDE the endpoint, passing the actual session
         chat_repo = ChatRepository(session)
-        # Use current_user.id from the dependency
-        chats = await chat_repo.get_chats_by_user(user_id=current_user.id, skip=skip, limit=limit)
-        # Pydantic automatically converts Chat models to ChatSummary based on response_model
+        # Pass the archived status to the repository method
+        chats = await chat_repo.get_chats_by_user(user_id=current_user.id, skip=skip, limit=limit, archived=archived)
         return chats
     except Exception as e:
-        logger.error(f"Error fetching chats for user {current_user.id}: {e}", exc_info=True)
-        # Rollback is handled by the generator context manager in get_session
+        logger.error(f"Error fetching {status_str} chats for user {current_user.id}: {e}", exc_info=True)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve chat list.")
 
 
-# --- Get Messages for a Chat Endpoint - NOW PROTECTED ---
+# --- Get Messages for a Chat Endpoint ---
 @router.get(
     "/{chat_id}/messages",
     response_model=List[MessageSummary],
@@ -5687,7 +5684,7 @@ async def list_user_chats(
     response_description="A list of messages within the chat session.",
     responses={
         401: {"description": "Authentication required"},
-        403: {"description": "User not authorized to access this chat"},  # Handled by ownership check
+        403: {"description": "User not authorized to access this chat"},
         404: {"description": "Chat session not found"},
         500: {"description": "Internal Server Error"},
     },
@@ -5696,9 +5693,7 @@ async def get_chat_messages(
     chat_id: int,
     skip: int = Query(0, ge=0, description="Number of messages to skip (for pagination)."),
     limit: int = Query(100, ge=1, le=500, description="Maximum number of messages to return."),
-    # *** Use real auth dependency ***
     current_user: User = Depends(get_current_active_user),
-    # *** Use get_session which yields the session ***
     session: AsyncSession = Depends(get_session),
 ):
     """
@@ -5709,28 +5704,177 @@ async def get_chat_messages(
         f"API: Received request for messages in chat {chat_id} for user {current_user.id} (authenticated) (skip={skip}, limit={limit})."
     )
     try:
-        # Instantiate repositories INSIDE the endpoint with the actual session
         chat_repo = ChatRepository(session)
         msg_repo = MessageRepository(session)
 
-        # First, verify the chat exists and belongs to the user
         chat = await chat_repo.get_by_user_and_id(chat_id=chat_id, user_id=current_user.id)
         if not chat:
             logger.warning(f"Chat {chat_id} not found or not owned by user {current_user.id}.")
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found.")
 
-        # If ownership is confirmed, fetch the messages
-        messages = await msg_repo.get_by_chat_id_ordered(chat_id=chat_id, limit=None)  # Get all first
-        paginated_messages = messages[skip : skip + limit]  # Slice for pagination
-        # Pydantic converts Message models to MessageSummary based on response_model
+        messages = await msg_repo.get_by_chat_id_ordered(chat_id=chat_id, limit=None)
+        paginated_messages = messages[skip : skip + limit]
         return paginated_messages
     except Exception as e:
         logger.error(f"Error fetching messages for chat {chat_id}, user {current_user.id}: {e}", exc_info=True)
-        # Rollback handled by generator context manager
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve chat messages."
         )
 
+
+# --- NEW: Rename Chat Endpoint ---
+@router.patch(
+    "/{chat_id}/rename",
+    response_model=ChatSummary,
+    summary="Rename a chat session",
+    description="Updates the title of a specific chat session owned by the authenticated user.",
+    responses={
+        401: {"description": "Authentication required"},
+        403: {"description": "User not authorized to modify this chat"},
+        404: {"description": "Chat session not found"},
+        422: {"description": "Validation Error (e.g., empty title)"},
+        500: {"description": "Internal Server Error"},
+    },
+)
+async def rename_chat_session(
+    chat_id: int,
+    request: ChatRenameRequest,
+    current_user: User = Depends(get_current_active_user),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    Renames a specific chat session belonging to the authenticated user.
+    """
+    logger.info(f"API: User {current_user.id} attempting to rename chat {chat_id} to '{request.new_title}'.")
+    try:
+        chat_repo = ChatRepository(session)
+        updated_chat = await chat_repo.update_chat_title(
+            chat_id=chat_id, user_id=current_user.id, new_title=request.new_title
+        )
+
+        if not updated_chat:
+            # get_by_user_and_id check is done within update_chat_title
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user.")
+
+        # Commit the session changes implicitly by exiting the 'with' block in get_session
+        return updated_chat # Pydantic will convert to ChatSummary
+
+    except Exception as e:
+        logger.error(f"Error renaming chat {chat_id} for user {current_user.id}: {e}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to rename chat session.")
+
+
+# --- NEW: Archive Chat Endpoint ---
+@router.patch(
+    "/{chat_id}/archive",
+    response_model=ChatSummary,
+    summary="Archive a chat session",
+    description="Marks a specific chat session owned by the authenticated user as archived.",
+    responses={
+        200: {"description": "Chat successfully archived"},
+        401: {"description": "Authentication required"},
+        403: {"description": "User not authorized to modify this chat"},
+        404: {"description": "Chat session not found"},
+        500: {"description": "Internal Server Error"},
+    },
+)
+async def archive_chat_session(
+    chat_id: int,
+    current_user: User = Depends(get_current_active_user),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    Archives a specific chat session belonging to the authenticated user.
+    """
+    logger.info(f"API: User {current_user.id} attempting to archive chat {chat_id}.")
+    try:
+        chat_repo = ChatRepository(session)
+        updated_chat = await chat_repo.archive_chat(
+            chat_id=chat_id, user_id=current_user.id, archive=True # Set archive flag to True
+        )
+
+        if not updated_chat:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user.")
+
+        return updated_chat
+
+    except Exception as e:
+        logger.error(f"Error archiving chat {chat_id} for user {current_user.id}: {e}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to archive chat session.")
+
+
+# --- NEW: Unarchive Chat Endpoint ---
+@router.patch(
+    "/{chat_id}/unarchive",
+    response_model=ChatSummary,
+    summary="Unarchive a chat session",
+    description="Marks a specific chat session owned by the authenticated user as active (not archived).",
+    responses={
+        200: {"description": "Chat successfully unarchived"},
+        401: {"description": "Authentication required"},
+        403: {"description": "User not authorized to modify this chat"},
+        404: {"description": "Chat session not found"},
+        500: {"description": "Internal Server Error"},
+    },
+)
+async def unarchive_chat_session(
+    chat_id: int,
+    current_user: User = Depends(get_current_active_user),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    Unarchives a specific chat session belonging to the authenticated user.
+    """
+    logger.info(f"API: User {current_user.id} attempting to unarchive chat {chat_id}.")
+    try:
+        chat_repo = ChatRepository(session)
+        updated_chat = await chat_repo.archive_chat(
+            chat_id=chat_id, user_id=current_user.id, archive=False # Set archive flag to False
+        )
+
+        if not updated_chat:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user.")
+
+        return updated_chat
+
+    except Exception as e:
+        logger.error(f"Error unarchiving chat {chat_id} for user {current_user.id}: {e}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to unarchive chat session.")
+
+
+# --- NEW: Archive All Chats Endpoint ---
+@router.post(
+    "/archive-all",
+    response_model=ActionResponse,
+    summary="Archive all active chat sessions for the current user",
+    description="Marks all active (non-archived) chat sessions for the authenticated user as archived.",
+    responses={
+        200: {"description": "All active chats successfully archived"},
+        401: {"description": "Authentication required"},
+        500: {"description": "Internal Server Error"},
+    },
+)
+async def archive_all_user_chats(
+    current_user: User = Depends(get_current_active_user),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    Archives all active chat sessions for the authenticated user.
+    """
+    logger.warning(f"API: User {current_user.id} attempting to archive ALL active chats.")
+    try:
+        chat_repo = ChatRepository(session)
+        archived_count = await chat_repo.archive_all_chats(user_id=current_user.id)
+
+        # Commit the changes
+        # await session.commit() # Handled by get_session context manager
+
+        return ActionResponse(message=f"Successfully archived {archived_count} active chat session(s).", count=archived_count)
+
+    except Exception as e:
+        logger.error(f"Error archiving all chats for user {current_user.id}: {e}", exc_info=True)
+        # await session.rollback() # Handled by get_session context manager
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to archive all chat sessions.")
 ```
 
 ## ydrpolicy/backend/database/models.py
@@ -5970,6 +6114,8 @@ class Chat(Base):
         default=func.now(),  # Use func.now() for database default
         onupdate=func.now(),  # Use func.now() for database onupdate
     )
+    # --- ADDED ---
+    is_archived: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="chats")
@@ -5977,8 +6123,14 @@ class Chat(Base):
         "Message", back_populates="chat", cascade="all, delete-orphan"  # Delete messages when chat is deleted
     )
 
+    # --- ADDED ---
+    # Index for efficiently filtering chats by user and archived status
+    __table_args__ = (Index("idx_chat_user_archived", "user_id", "is_archived"),)
+
     def __repr__(self):
-        return f"<Chat id={self.id} user_id={self.user_id}>"
+        # --- MODIFIED ---
+        archived_status = " (Archived)" if self.is_archived else ""
+        return f"<Chat id={self.id} user_id={self.user_id}{archived_status}>"
 
 
 class Message(Base):
@@ -6128,7 +6280,6 @@ def create_search_vector_trigger():
         FOR EACH ROW EXECUTE FUNCTION policy_chunks_search_vector_update();
         """,
     ]
-
 ```
 
 ## ydrpolicy/backend/database/engine.py
@@ -7047,6 +7198,33 @@ async def close_mcp_connection():
 
 ```
 
+## ydrpolicy/backend/agent/system_prompt.py
+
+```py
+SYSTEM_PROMPT = """
+You are a helpful and specialized AI assistant knowledgeable about the policies and procedures
+of the Yale Department of Diagnostic Radiology. Your purpose is to accurately answer
+questions based *only* on the official policy documents provided to you through your tools.
+
+Available Tools:
+- `find_similar_chunks`: Use this tool first to search for relevant policy sections based on the user's query. Provide the user's query and the desired number of results (e.g., k=5).
+- `get_policy_from_ID`: Use this tool *after* `find_similar_chunks` has identified relevant policy IDs. Provide the specific `policy_id` from the search results to retrieve the full text of that policy.
+
+Interaction Flow:
+1. When the user asks a question, first use `find_similar_chunks` to locate potentially relevant policy text snippets (chunks) via the RAG technique.
+2. When writing queries to `find_similar_chunks`, think of the exact words the user used but also think of words with close meaning or related meaning to include in the query.
+3. Analyze the results from `find_similar_chunks`. If relevant chunks are found, identify the corresponding `policy_id`(s).
+4. If a specific policy seems relevant, use `get_policy_from_ID` with the `policy_id` to retrieve the full policy document. 
+5. When assessing the relevancy of a chunk, be generous. If there is any chance that the chunk might contain relevant information, retrieve the full policy and look for the information there.
+6. Synthesize the information from the retrieved chunks and/or full policies to answer the user's question accurately.
+7. ALWAYS cite the Policy URL when referring to or providing information extracted from a policy. Don't mention the ID or Title of the policy.
+8. When returning the URLs of the policies, ensure that they match the URLs in the policy documents but with any trailing slash ("/") removed. Also, ensure that the URLs follow a standard format.
+9. If the tools do not provide relevant information, state that you cannot find the specific policy information within the available documents and advise the user to consult official departmental resources or personnel.
+10. Do not answer questions outside the scope of Yale Diagnostic Radiology policies.
+11. Do not invent information or policies. Stick strictly to the content provided by the tools.
+"""
+```
+
 ## ydrpolicy/backend/agent/policy_agent.py
 
 ```py
@@ -7062,32 +7240,10 @@ from agents.mcp import MCPServer
 
 from ydrpolicy.backend.config import config
 from ydrpolicy.backend.agent.mcp_connection import get_mcp_server
+from ydrpolicy.backend.agent.system_prompt import SYSTEM_PROMPT
 
 # Initialize logger
 logger = logging.getLogger(__name__)
-
-# Define the system prompt for the agent
-SYSTEM_PROMPT = """
-You are a specialized AI assistant knowledgeable about the policies and procedures
-of the Yale Department of Diagnostic Radiology. Your purpose is to accurately answer
-questions based *only* on the official policy documents provided to you through your tools.
-
-Available Tools:
-- `find_similar_chunks`: Use this tool first to search for relevant policy sections based on the user's query. Provide the user's query and the desired number of results (e.g., k=5).
-- `get_policy_from_ID`: Use this tool *after* `find_similar_chunks` has identified relevant policy IDs. Provide the specific `policy_id` from the search results to retrieve the full text of that policy.
-
-Interaction Flow:
-1. When the user asks a question, first use `find_similar_chunks` to locate potentially relevant policy text snippets (chunks).
-2. Analyze the results from `find_similar_chunks`. If relevant chunks are found, identify the corresponding `policy_id`(s).
-3. If a specific policy seems relevant, use `get_policy_from_ID` with the `policy_id` to retrieve the full policy document. 
-4. When assessing the relevancy of a chunk, be generous. If there is any chance that the chunk might contain relevant information, retrieve the full policy and look for the information there.
-5. Synthesize the information from the retrieved chunks and/or full policies to answer the user's question accurately.
-6. ALWAYS cite the Policy URL when referring to or providing information extracted from a policy. Don't mention the ID or Title of the policy.
-7. If the tools do not provide relevant information, state that you cannot find the specific policy information within the available documents and advise the user to consult official departmental resources or personnel.
-8. Do not answer questions outside the scope of Yale Diagnostic Radiology policies.
-9. Do not invent information or policies. Stick strictly to the content provided by the tools.
-"""
-
 
 async def create_policy_agent(use_mcp: bool = True) -> Agent:
     """
@@ -7498,8 +7654,7 @@ class StatusData(BaseModel):
     chat_id: Optional[int] = Field(None, description="The ID of the chat session, included on final status.")
 
 
-# --- NEW Schemas for History Endpoints ---
-
+# --- Schemas for Chat Management ---
 
 class ChatSummary(BaseModel):
     """Summary information for a chat session, used in listings."""
@@ -7508,6 +7663,7 @@ class ChatSummary(BaseModel):
     title: Optional[str] = Field(None, description="Title of the chat session.")
     created_at: datetime = Field(..., description="Timestamp when the chat was created.")
     updated_at: datetime = Field(..., description="Timestamp when the chat was last updated (last message).")
+    is_archived: bool = Field(..., description="Indicates if the chat session is archived.") # Added
 
     # Enable ORM mode to allow creating instances from SQLAlchemy models
     model_config = ConfigDict(from_attributes=True)
@@ -7526,6 +7682,16 @@ class MessageSummary(BaseModel):
     # Enable ORM mode
     model_config = ConfigDict(from_attributes=True)
 
+
+class ChatRenameRequest(BaseModel):
+    """Request model for renaming a chat session."""
+    new_title: str = Field(..., min_length=1, max_length=255, description="The new title for the chat session.")
+
+
+class ActionResponse(BaseModel):
+    """Generic response model for actions returning a message and count."""
+    message: str = Field(..., description="A confirmation message about the action performed.")
+    count: Optional[int] = Field(None, description="Optional count related to the action (e.g., number of items affected).")
 ```
 
 ## ydrpolicy/backend/scripts/remove_policy.py
@@ -8908,7 +9074,8 @@ Repository for database operations related to Chat models.
 import logging
 from typing import Optional, List
 
-from sqlalchemy import select
+# *** ADD func import ***
+from sqlalchemy import select, update, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -8953,22 +9120,27 @@ class ChatRepository(BaseRepository[Chat]):
             logger.warning(f"Chat ID {chat_id} not found or does not belong to user ID {user_id}.")
         return chat
 
-    async def get_chats_by_user(self, user_id: int, skip: int = 0, limit: int = 100) -> List[Chat]:
+    async def get_chats_by_user(
+        self, user_id: int, skip: int = 0, limit: int = 100, archived: bool = False
+    ) -> List[Chat]:
         """
         Retrieves a list of chats belonging to a specific user, ordered by update time.
+        Can optionally filter for archived chats.
 
         Args:
             user_id: The ID of the user whose chats to retrieve.
             skip: Number of chats to skip for pagination.
             limit: Maximum number of chats to return.
+            archived: If True, retrieves archived chats; otherwise retrieves active chats (default).
 
         Returns:
             A list of Chat objects.
         """
-        logger.debug(f"Retrieving chats for user ID {user_id} (limit={limit}, skip={skip}).")
+        status = "archived" if archived else "active"
+        logger.debug(f"Retrieving {status} chats for user ID {user_id} (limit={limit}, skip={skip}).")
         stmt = (
             select(Chat)
-            .where(Chat.user_id == user_id)
+            .where(Chat.user_id == user_id, Chat.is_archived == archived)  # Filter by archived status
             .order_by(Chat.updated_at.desc())
             .offset(skip)
             .limit(limit)
@@ -8977,7 +9149,7 @@ class ChatRepository(BaseRepository[Chat]):
         )
         result = await self.session.execute(stmt)
         chats = list(result.scalars().all())
-        logger.debug(f"Found {len(chats)} chats for user ID {user_id}.")
+        logger.debug(f"Found {len(chats)} {status} chats for user ID {user_id}.")
         return chats
 
     async def create_chat(self, user_id: int, title: Optional[str] = None) -> Chat:
@@ -9025,11 +9197,75 @@ class ChatRepository(BaseRepository[Chat]):
             return None
 
         chat.title = new_title
-        # updated_at is handled automatically by the model definition
+        # updated_at is handled automatically by the model definition's onupdate,
+        # but we need to ensure the session knows the object changed.
+        # *** ADD THIS LINE ***
+        self.session.add(chat) # Explicitly mark the object as potentially dirty
         await self.session.flush()
+        await self.session.commit()  # Explicitly commit the transaction
         await self.session.refresh(chat)
         logger.info(f"SUCCESS: Successfully updated title for chat ID {chat_id}.")
         return chat
+
+    async def archive_chat(self, chat_id: int, user_id: int, archive: bool = True) -> Optional[Chat]:
+        """
+        Archives or unarchives a specific chat, verifying ownership.
+
+        Args:
+            chat_id: The ID of the chat to update.
+            user_id: The ID of the user attempting the update.
+            archive: True to archive, False to unarchive.
+
+        Returns:
+            The updated Chat object if successful, None otherwise.
+        """
+        action = "archive" if archive else "unarchive"
+        logger.info(f"Attempting to {action} chat ID {chat_id} (user ID {user_id}).")
+        chat = await self.get_by_user_and_id(chat_id=chat_id, user_id=user_id)
+        if not chat:
+            logger.warning(f"Cannot {action}: Chat ID {chat_id} not found for user ID {user_id}.")
+            return None
+
+        if chat.is_archived == archive:
+            status = "already archived" if archive else "already active"
+            logger.info(f"Chat ID {chat_id} is {status}. No change needed.")
+            return chat # Return the chat as is
+
+        chat.is_archived = archive
+        # updated_at is handled automatically by the model definition's onupdate,
+        # but we need to ensure the session knows the object changed.
+        # *** ADD THIS LINE ***
+        self.session.add(chat) # Explicitly mark the object as potentially dirty
+        await self.session.flush()
+        await self.session.commit()  # Explicitly commit the transaction
+        await self.session.refresh(chat)
+        logger.info(f"SUCCESS: Successfully {action}d chat ID {chat_id}.")
+        return chat
+
+    async def archive_all_chats(self, user_id: int) -> int:
+        """
+        Archives all active chats for a specific user.
+
+        Args:
+            user_id: The ID of the user whose chats to archive.
+
+        Returns:
+            The number of chats that were archived.
+        """
+        logger.warning(f"Attempting to archive ALL active chats for user ID {user_id}.")
+        stmt = (
+            update(Chat)
+            .where(Chat.user_id == user_id, Chat.is_archived == False) # Only archive active chats
+            .values(is_archived=True, updated_at=func.now()) # Explicitly set updated_at for bulk update
+        )
+        result = await self.session.execute(stmt)
+        archived_count = result.rowcount
+        # *** Flush is needed here for bulk update ***
+        await self.session.flush() # Ensure changes are flushed before commit
+        await self.session.commit()  # Explicitly commit the transaction
+        logger.info(f"SUCCESS: Archived {archived_count} chats for user ID {user_id}.")
+        return archived_count
+
 
     async def delete_chat(self, chat_id: int, user_id: int) -> bool:
         """
@@ -9052,13 +9288,13 @@ class ChatRepository(BaseRepository[Chat]):
         try:
             await self.session.delete(chat)
             await self.session.flush()
+            await self.session.commit()  # Explicitly commit the transaction
             logger.info(f"SUCCESS: Successfully deleted chat ID {chat_id} and its messages.")
             return True
         except Exception as e:
             logger.error(f"Error deleting chat ID {chat_id}: {e}", exc_info=True)
             # Rollback should be handled by the session context manager
             return False
-
 ```
 
 ## ydrpolicy/backend/database/repository/policies.py
