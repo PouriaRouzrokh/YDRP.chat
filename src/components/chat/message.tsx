@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 import { Bot, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeInUp } from "@/lib/animation-variants";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export interface PolicyReference {
   id: string;
@@ -73,7 +75,29 @@ export function ChatMessage({ message }: MessageProps) {
           >
             <CardContent className="py-2 px-3 flex items-center">
               <div className="prose dark:prose-invert break-words">
-                {message.content}
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    a: ({ ...props }) => (
+                      <a
+                        {...props}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 dark:text-blue-400 hover:underline"
+                      />
+                    ),
+                    ul: ({ ...props }) => (
+                      <ul {...props} className="list-disc pl-5 mb-2" />
+                    ),
+                    ol: ({ ...props }) => (
+                      <ol {...props} className="list-decimal pl-5 mb-2" />
+                    ),
+                    li: ({ ...props }) => <li {...props} className="mb-1" />,
+                    p: ({ ...props }) => <p {...props} className="mb-2" />,
+                  }}
+                >
+                  {message.content}
+                </ReactMarkdown>
               </div>
             </CardContent>
           </Card>

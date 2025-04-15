@@ -4,6 +4,8 @@ import { IconSpinner } from "../ui/icons";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { motion } from "framer-motion";
 import { staggerContainer } from "@/lib/animation-variants";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export type MessageRole = "user" | "assistant";
 
@@ -69,7 +71,29 @@ export function ChatMessage({
           </div>
         ) : (
           <div className="prose prose-sm md:prose-base break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0">
-            {content}
+            <ReactMarkdown
+              remarkPlugins={[remarkGfm]}
+              components={{
+                a: ({ ...props }) => (
+                  <a
+                    {...props}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 dark:text-blue-400 hover:underline"
+                  />
+                ),
+                ul: ({ ...props }) => (
+                  <ul {...props} className="list-disc pl-5 mb-2" />
+                ),
+                ol: ({ ...props }) => (
+                  <ol {...props} className="list-decimal pl-5 mb-2" />
+                ),
+                li: ({ ...props }) => <li {...props} className="mb-1" />,
+                p: ({ ...props }) => <p {...props} className="mb-2" />,
+              }}
+            >
+              {content}
+            </ReactMarkdown>
           </div>
         )}
       </motion.div>
