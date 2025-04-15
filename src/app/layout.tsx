@@ -28,6 +28,10 @@ export default function RootLayout({
               <main className="flex-1 w-full px-4 md:px-8 lg:px-12">
                 {children}
               </main>
+              <footer className="py-3 px-4 md:px-8 lg:px-12 border-t text-center text-sm text-muted-foreground">
+                Yale Department of Radiology. All rights reserved. ©{" "}
+                {new Date().getFullYear()}
+              </footer>
             </div>
             <Toaster />
           </AuthProvider>
