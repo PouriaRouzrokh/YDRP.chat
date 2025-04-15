@@ -12,6 +12,13 @@ import {
   Message,
   TypingIndicator,
 } from "@/components/chat/message";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  fadeInUp,
+  slideInLeft,
+  slideInRight,
+  staggerContainer,
+} from "@/lib/animation-variants";
 
 // Mock data for demonstration purposes
 const MOCK_CHAT_SESSIONS: ChatSession[] = [
@@ -152,22 +159,47 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex h-[calc(100vh-7rem)]">
+    <motion.div
+      className="flex h-[calc(100vh-7rem)]"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Sidebar - only visible on medium screens and up */}
-      <div className="hidden md:block h-full">
-        <ChatSidebar
-          sessions={chatSessions}
-          activeSessionId={activeSessionId}
-          onSessionSelect={handleSelectChat}
-          onNewChat={handleNewChat}
-          isCollapsed={!isSidebarOpen}
-        />
-      </div>
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div
+            className="hidden md:block h-full"
+            variants={slideInLeft}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+          >
+            <ChatSidebar
+              sessions={chatSessions}
+              activeSessionId={activeSessionId}
+              onSessionSelect={handleSelectChat}
+              onNewChat={handleNewChat}
+              isCollapsed={!isSidebarOpen}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main chat area */}
-      <div className="flex flex-col flex-1 h-full px-4">
+      <motion.div
+        className="flex flex-col flex-1 h-full px-4"
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Chat header */}
-        <div className="flex items-center justify-between p-4 border-b">
+        <motion.div
+          className="flex items-center justify-between p-4 border-b"
+          variants={slideInRight}
+          initial="hidden"
+          animate="visible"
+        >
           <div className="flex items-center">
             <Button
               variant="ghost"
@@ -193,53 +225,77 @@ export default function ChatPage() {
           >
             New Chat
           </Button>
-        </div>
+        </motion.div>
 
         {/* Fixed height container for messages and input */}
         <div className="flex flex-col h-[calc(100%-4rem)]">
           {/* Messages area with flex-1 to fill available space */}
           <div className="flex-1 overflow-hidden">
             <ScrollArea className="h-full p-4">
-              <div className="flex flex-col pb-2">
-                {messages.length === 0 ? (
-                  <div className="flex items-center justify-center h-full p-8 text-center text-muted-foreground">
-                    <div>
-                      <h3 className="text-lg font-medium mb-2">
-                        Welcome to Yale Department of Radiology Policy Chatbot
-                      </h3>
-                      <p className="max-w-md">
-                        Ask questions about department policies, safety
-                        protocols, or procedural guidelines.
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  messages.map((message) => (
-                    <ChatMessage key={message.id} message={message} />
-                  ))
-                )}
+              <motion.div
+                className="flex flex-col pb-2"
+                variants={fadeInUp}
+                initial="hidden"
+                animate="visible"
+              >
+                <AnimatePresence mode="wait">
+                  {messages.length === 0 ? (
+                    <motion.div
+                      className="flex items-center justify-center h-full p-8 text-center text-muted-foreground"
+                      variants={fadeInUp}
+                      key="empty-state"
+                    >
+                      <div>
+                        <h3 className="text-lg font-medium mb-2">
+                          Welcome to Yale Department of Radiology Policy Chatbot
+                        </h3>
+                        <p className="max-w-md">
+                          Ask questions about department policies, safety
+                          protocols, or procedural guidelines.
+                        </p>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="message-list"
+                      variants={staggerContainer}
+                      initial="hidden"
+                      animate="visible"
+                    >
+                      {messages.map((message) => (
+                        <ChatMessage key={message.id} message={message} />
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 {isTyping && <TypingIndicator />}
 
                 <div ref={messagesEndRef} />
-              </div>
+              </motion.div>
             </ScrollArea>
           </div>
 
-          {/* Input area with fixed height - Adjusted for better mobile display */}
-          <div className="pb-2 pt-2">
+          {/* Input area with fixed height */}
+          <motion.div
+            className="pb-2 pt-2"
+            variants={fadeInUp}
+            initial="hidden"
+            animate="visible"
+            transition={{ delay: 0.2 }}
+          >
             <ChatInput
               onSubmit={handleSendMessage}
               isDisabled={isTyping}
               placeholder="Type your message..."
               className="pb-0"
             />
-          </div>
+          </motion.div>
 
           {/* Spacer to prevent overlap with fixed footer */}
           <ChatFooterSpacer />
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

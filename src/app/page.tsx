@@ -3,34 +3,46 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { motion } from "framer-motion";
+import { fadeInUp, staggerContainer } from "@/lib/animation-variants";
 
 export default function HomePage() {
   const { isAuthenticated, isAdminMode } = useAuth();
-  const isAuthorized = isAuthenticated || isAdminMode;
 
   return (
-    <div className="w-full flex flex-col items-center justify-center py-16 text-center">
-      <h1 className="text-4xl font-bold mb-1">Yale Department of Radiology</h1>
-      <h1 className="text-4xl font-bold mb-4">Policy Chatbot</h1>
-      <p className="text-lg text-muted-foreground max-w-2xl mb-8">
-        Welcome to the Yale Department of Radiology Policy Chatbot. This
-        application helps you find and understand radiology department policies
-        through a simple chat interface.
-      </p>
-      <div className="flex gap-4">
-        {isAuthorized ? (
-          <Button asChild>
-            <Link href="/chat">Start Chatting</Link>
+    <motion.div
+      className="flex flex-col items-center justify-center min-h-[80vh] text-center p-4"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div className="max-w-3xl mx-auto" variants={fadeInUp}>
+        <h1 className="text-4xl font-bold tracking-tight mb-6">
+          Yale Department of Radiology Policy Chatbot
+        </h1>
+        <p className="text-xl text-muted-foreground mb-8">
+          Access and search the Yale Department of Radiology Policies with
+          natural language queries
+        </p>
+      </motion.div>
+
+      <motion.div
+        className="flex gap-4 flex-wrap justify-center"
+        variants={fadeInUp}
+      >
+        {isAuthenticated || isAdminMode ? (
+          <Button asChild size="lg">
+            <Link href="/chat">Start a Chat</Link>
           </Button>
         ) : (
-          <Button asChild>
+          <Button asChild size="lg">
             <Link href="/login">Sign In</Link>
           </Button>
         )}
-        <Button variant="outline" asChild>
+        <Button asChild variant="outline" size="lg">
           <Link href="/about">Learn More</Link>
         </Button>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

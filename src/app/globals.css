@@ -76,6 +76,7 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --theme-transition-duration: 350ms;
 }
 
 .dark {
@@ -119,4 +120,38 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Theme transition styles */
+:root {
+  --theme-transition-duration: 350ms;
+}
+
+/* Add smooth transitions for theme switching */
+html,
+body {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke;
+  transition-duration: var(--theme-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* Smooth transitions for common elements */
+.card,
+.btn,
+.input,
+.badge,
+.dropdown,
+.navbar,
+.sidebar {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
+    backdrop-filter;
+  transition-duration: var(--theme-transition-duration);
+  transition-timing-function: ease;
+}
+
+/* Prevent transitions on page load */
+.no-transition {
+  transition: none !important;
 }

@@ -13,6 +13,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     // Check if theme is stored in localStorage
@@ -24,6 +25,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
       setTheme(isDark ? "dark" : "light");
     }
+    setMounted(true);
   }, []);
 
   useEffect(() => {
@@ -36,6 +38,21 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // Save to localStorage
     localStorage.setItem("theme", theme);
   }, [theme]);
+
+  // Prevent flash during theme switching and initial load
+  useEffect(() => {
+    // Add no-transition class initially to prevent transitions on page load
+    if (!mounted) {
+      document.documentElement.classList.add("no-transition");
+    }
+
+    // Remove the no-transition class after the initial render
+    const timer = setTimeout(() => {
+      document.documentElement.classList.remove("no-transition");
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [mounted]);
 
   const toggleTheme = () => {
     setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));

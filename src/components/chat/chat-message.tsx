@@ -1,9 +1,11 @@
-import * as React from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import React from "react";
 import { cn } from "@/lib/utils";
-import { IconSpinner } from "@/components/ui/icons";
+import { IconSpinner } from "../ui/icons";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { motion } from "framer-motion";
+import { staggerContainer } from "@/lib/animation-variants";
 
-export type MessageRole = "user" | "assistant" | "system";
+export type MessageRole = "user" | "assistant";
 
 export interface ChatMessageProps {
   role: MessageRole;
@@ -19,62 +21,93 @@ export function ChatMessage({
   className,
 }: ChatMessageProps) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
       className={cn(
-        "flex gap-3 px-3 py-2",
-        role === "user" ? "bg-background" : "bg-muted/50",
+        "group relative mb-4 flex items-start md:mb-6",
+        role === "user" ? "justify-end" : "justify-start",
         className
       )}
+      role="listitem"
+      aria-label={`${role} message`}
     >
-      <Avatar className="h-8 w-8">
-        {role === "user" ? (
-          <>
-            <AvatarImage src="/user-avatar.png" alt="User" />
-            <AvatarFallback>U</AvatarFallback>
-          </>
-        ) : (
-          <>
-            <AvatarImage src="/bot-avatar.png" alt="Assistant" />
-            <AvatarFallback>A</AvatarFallback>
-          </>
+      {role === "assistant" && (
+        <div
+          className="mr-3 flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border bg-background shadow-sm"
+          aria-hidden="true"
+        >
+          <Avatar className="h-6 w-6">
+            <AvatarImage src="/logo.png" alt="Assistant" />
+            <AvatarFallback>AI</AvatarFallback>
+          </Avatar>
+        </div>
+      )}
+      <motion.div
+        className={cn(
+          "max-w-[80%] md:max-w-[65%] rounded-xl px-4 py-3 ring-1 ring-inset",
+          role === "user"
+            ? "bg-primary text-primary-foreground ring-primary"
+            : "bg-muted ring-border",
+          "transition-all duration-200 ease-in-out"
         )}
-      </Avatar>
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="font-semibold text-sm">
-          {role === "user" ? "You" : "Assistant"}
+        tabIndex={0}
+        aria-live={role === "assistant" ? "polite" : "off"}
+        initial={{ scale: 0.95 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.2, delay: 0.1 }}
+      >
+        {isLoading ? (
+          <div
+            aria-label="Loading response"
+            role="status"
+            className="flex items-center justify-center h-6"
+          >
+            <IconSpinner className="h-4 w-4 animate-spin" />
+            <span className="sr-only">Loading message...</span>
+          </div>
+        ) : (
+          <div className="prose prose-sm md:prose-base break-words dark:prose-invert prose-p:leading-relaxed prose-pre:p-0">
+            {content}
+          </div>
+        )}
+      </motion.div>
+      {role === "user" && (
+        <div
+          className="ml-3 flex h-8 w-8 shrink-0 select-none items-center justify-center rounded-md border bg-background shadow-sm"
+          aria-hidden="true"
+        >
+          <Avatar className="h-6 w-6">
+            <AvatarFallback>U</AvatarFallback>
+          </Avatar>
         </div>
-        <div className="prose prose-sm max-w-none">
-          {isLoading ? (
-            <div className="flex items-center">
-              <IconSpinner className="mr-2" />
-              <span>Thinking...</span>
-            </div>
-          ) : (
-            content
-          )}
-        </div>
-      </div>
-    </div>
+      )}
+    </motion.div>
   );
 }
 
-export function ChatMessages({
-  messages,
-  isLoading,
-  className,
-}: {
-  messages: Omit<ChatMessageProps, "className">[];
+export interface ChatMessagesProps {
+  messages: ChatMessageProps[];
   isLoading?: boolean;
-  className?: string;
-}) {
+}
+
+export function ChatMessages({ messages, isLoading }: ChatMessagesProps) {
   return (
-    <div className={cn("flex flex-col gap-3", className)}>
+    <motion.div
+      className="flex flex-col space-y-5 py-4 px-4 md:px-6"
+      role="list"
+      aria-label="Chat messages"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
       {messages.map((message, index) => (
         <ChatMessage key={index} {...message} />
       ))}
       {isLoading && (
         <ChatMessage role="assistant" content="" isLoading={true} />
       )}
-    </div>
+    </motion.div>
   );
 }
