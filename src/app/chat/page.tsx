@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PanelLeftOpen } from "lucide-react";
@@ -20,167 +20,262 @@ import {
   slideInRight,
   staggerContainer,
 } from "@/lib/animation-variants";
-
-// Mock data for demonstration purposes
-const MOCK_CHAT_SESSIONS: ChatSession[] = [
-  {
-    id: "1",
-    title: "Radiation Safety Policies",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60), // 1 hour ago
-    lastMessageTime: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-    messageCount: 8,
-  },
-  {
-    id: "2",
-    title: "Patient Privacy Guidelines",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5), // 5 hours ago
-    lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
-    messageCount: 5,
-  },
-  {
-    id: "3",
-    title: "Equipment Maintenance",
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
-    lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
-    messageCount: 12,
-  },
-];
-
-const MOCK_MESSAGES: Message[] = [
-  {
-    id: "1",
-    content:
-      "Hello, I'd like to know about radiation safety policies for pregnant staff.",
-    role: "user",
-    timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-  },
-  {
-    id: "2",
-    content:
-      "According to Yale Radiology policies, pregnant staff should follow these guidelines:\n\n1. Report pregnancy to Radiation Safety Officer\n2. Wear dosimeter at waist level under lead apron\n3. Limit fluoroscopy procedures when possible\n4. Maintain distance from radiation sources when not directly involved",
-    role: "assistant",
-    timestamp: new Date(Date.now() - 1000 * 60 * 29), // 29 minutes ago
-    references: [
-      {
-        id: "ref1",
-        title: "Radiation Safety for Pregnant Personnel",
-        excerpt:
-          "Section 3.4: Pregnant staff members are entitled to additional protective measures while maintaining their regular job duties with appropriate accommodations.",
-        url: "#radiation-safety-policy",
-      },
-    ],
-  },
-  {
-    id: "3",
-    content: "What is the dose limit for pregnant staff?",
-    role: "user",
-    timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-  },
-];
+import { chatService } from "@/services/chat";
+import { streamService } from "@/services/stream";
+import { toast } from "sonner";
+import {
+  ChatInfoChunk,
+  ChatMessageRequest,
+  ErrorChunk,
+  StatusChunk,
+  StreamChunk,
+  TextDeltaChunk,
+} from "@/types";
 
 export default function ChatPage() {
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get("message");
+  const chatId = searchParams.get("id");
+  const router = useRouter();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [chatSessions, setChatSessions] =
-    useState<ChatSession[]>(MOCK_CHAT_SESSIONS);
-  // Only use mock messages if there's no initial message
-  const [messages, setMessages] = useState<Message[]>(
-    initialMessage ? [] : MOCK_MESSAGES
-  );
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [activeSessionId, setActiveSessionId] = useState<string>(
-    initialMessage ? "" : "1"
-  );
+  const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
+  const [initialMessageSent, setInitialMessageSent] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch available chat sessions from the server
+  const fetchSessions = useCallback(async () => {
+    try {
+      setLoading(true);
+      const chats = await chatService.getChats();
+      const formattedChats = chatService.formatChatsForUI(chats);
+      const formattedSessions: ChatSession[] = formattedChats.map((chat) => ({
+        id: String(chat.id),
+        title: chat.title,
+        createdAt: new Date(),
+        lastMessageTime: chat.lastMessageTime,
+        messageCount: chat.messageCount,
+      }));
+      setChatSessions(formattedSessions);
+
+      // If chat ID was specified in URL, select it explicitly.
+      // We no longer automatically select the first session on load.
+      if (chatId && !activeSessionId) {
+        setActiveSessionId(chatId);
+      }
+    } catch (error) {
+      console.error("Error fetching chat sessions:", error);
+      toast.error("Failed to load chat history");
+    } finally {
+      setLoading(false);
+    }
+  }, [chatId, activeSessionId]);
+
+  // Fetch sessions on mount and when dependencies change
+  useEffect(() => {
+    fetchSessions();
+  }, [fetchSessions]);
+
+  // This effect now ONLY handles clearing messages when no session is active.
+  // Fetching messages is now triggered ONLY by handleSelectChat.
+  useEffect(() => {
+    if (!activeSessionId) {
+      setMessages([]);
+    }
+  }, [activeSessionId]);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
-  // Create a new chat if there's an initial message (run only once on mount)
-  const hasInitialEffectRun = useRef(false);
+  // Handle streaming chunks with useCallback
+  const handleStreamChunk = useCallback(
+    (chunk: StreamChunk) => {
+      if (chunk.type === "chat_info") {
+        const infoChunk = chunk as ChatInfoChunk;
+        // Update active session ID ONLY if it was previously null (i.e., for a new chat)
+        if (!activeSessionId) {
+          const newChatId = String(infoChunk.data.chat_id);
+          setActiveSessionId(newChatId);
+
+          // Create new session in the sidebar
+          const newSession: ChatSession = {
+            id: newChatId,
+            title: infoChunk.data.title || "New Chat",
+            createdAt: new Date(),
+            lastMessageTime: new Date(),
+            messageCount: 1, // Initial user message counts as 1
+          };
+          setChatSessions((prev) => [newSession, ...prev]);
+        }
+      } else if (chunk.type === "text_delta") {
+        const textChunk = chunk as TextDeltaChunk;
+        setIsTyping(true);
+        setMessages((prevMessages) => {
+          const lastMessage = prevMessages[prevMessages.length - 1];
+
+          // If the last message exists and is from the assistant, append the delta
+          if (lastMessage && lastMessage.role === "assistant") {
+            return [
+              ...prevMessages.slice(0, -1),
+              {
+                ...lastMessage,
+                content: lastMessage.content + textChunk.data.delta,
+              },
+            ];
+          } else {
+            // Otherwise, add a new assistant message
+            return [
+              ...prevMessages,
+              {
+                id: `assistant-${Date.now()}`,
+                content: textChunk.data.delta,
+                role: "assistant",
+                timestamp: new Date(),
+              },
+            ];
+          }
+        });
+      } else if (chunk.type === "status") {
+        const statusChunk = chunk as StatusChunk;
+        if (statusChunk.data.status === "complete") {
+          // No need to finalize message separately, it's already in the messages array.
+          setIsTyping(false);
+          // Update session metadata if needed (e.g., last message time)
+          if (activeSessionId) {
+            const chatIdStr = String(statusChunk.data.chat_id);
+            setChatSessions((prev) =>
+              prev.map((session) =>
+                session.id === chatIdStr
+                  ? {
+                      ...session,
+                      lastMessageTime: new Date(),
+                      // Optionally update message count if necessary, though it might be complex here
+                    }
+                  : session
+              )
+            );
+          }
+        }
+      } else if (chunk.type === "error") {
+        const errorChunk = chunk as ErrorChunk;
+        toast.error(errorChunk.data.message);
+        setIsTyping(false);
+      }
+      // Handle other chunk types if needed (tool_call, tool_output)
+    },
+    [activeSessionId, messages]
+  );
+
+  // The initialMessage will be handled by the ChatInput component's autoSubmit
+  // Keeping this commented out for reference in case we need to revert
+  /*
   useEffect(() => {
-    if (initialMessage && !hasInitialEffectRun.current) {
-      hasInitialEffectRun.current = true;
-      // Create a new chat right away
-      const newChatId = `new-${Date.now()}`;
-      const newSession: ChatSession = {
-        id: newChatId,
-        title: "New Conversation",
-        createdAt: new Date(),
-        lastMessageTime: new Date(),
-        messageCount: 0,
+    if (initialMessage && !initialMessageSent && !loading) {
+      // Create a message request for the initial message
+      const request: ChatMessageRequest = {
+        message: initialMessage,
       };
 
-      setChatSessions((prev) => [newSession, ...prev]);
-      setActiveSessionId(newChatId);
-    }
-  }, [initialMessage]); // Add initialMessage to dependency array
+      // Create user message and update UI first
+      const userMessage: Message = {
+        id: Date.now().toString(),
+        content: initialMessage,
+        role: "user",
+        timestamp: new Date(),
+      };
+      setMessages([userMessage]);
+      setIsTyping(true);
 
+      // Send it to the streaming service
+      streamService
+        .streamChatResponse(request, handleStreamChunk)
+        .then(() => {
+          setInitialMessageSent(true);
+        })
+        .catch((error) => {
+          console.error("Error sending initial message:", error);
+          setIsTyping(false);
+          toast.error("Failed to get response");
+        });
+    }
+  }, [initialMessage, initialMessageSent, loading, handleStreamChunk]);
+  */
+
+  // Fetch messages for a specific session
+  const fetchMessagesForSession = async (sessionId: number) => {
+    try {
+      setLoading(true);
+      const messageData = await chatService.getChatMessages(sessionId);
+      const formattedMessages = chatService.formatMessagesForUI(messageData);
+      // Convert to Message type (should be compatible)
+      const msgArray: Message[] = formattedMessages.map((msg) => ({
+        id: String(msg.id),
+        content: msg.content,
+        role: msg.role,
+        timestamp: msg.timestamp,
+      }));
+      setMessages(msgArray);
+      setLoading(false);
+    } catch (error) {
+      console.error(`Error fetching messages for session ${sessionId}:`, error);
+      toast.error("Failed to load messages");
+      setLoading(false);
+    }
+  };
+
+  const handleNewChat = () => {
+    setActiveSessionId(null);
+    // Make sure URL params are updated without adding to history
+    router.replace("/chat", { scroll: false });
+  };
+
+  // Update initialMessageSent when a message is sent
   const handleSendMessage = (content: string) => {
-    // Add user message
-    const newUserMessage: Message = {
-      id: `user-${Date.now()}`,
+    if (!content.trim()) return;
+
+    // Mark initialMessage as sent if this message matches it
+    if (initialMessage && content === initialMessage) {
+      setInitialMessageSent(true);
+    }
+
+    // Create user message
+    const userMessage: Message = {
+      id: Date.now().toString(),
       content,
       role: "user",
       timestamp: new Date(),
     };
-    setMessages((prev) => [...prev, newUserMessage]);
 
-    // Simulate typing indicator
+    setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
 
-    // Simulate assistant response after delay
-    setTimeout(() => {
-      setIsTyping(false);
-
-      const newAssistantMessage: Message = {
-        id: `assistant-${Date.now()}`,
-        content:
-          "This is a simulated response for the chat interface layout. In the actual implementation, this would be a proper response from the backend API.",
-        role: "assistant",
-        timestamp: new Date(),
-      };
-
-      setMessages((prev) => [...prev, newAssistantMessage]);
-    }, 2000);
-  };
-
-  const handleNewChat = () => {
-    // Create a new chat session
-    const newChatId = `new-${Date.now()}`;
-
-    // Create new chat session
-    const newSession: ChatSession = {
-      id: newChatId,
-      title: "New Conversation",
-      createdAt: new Date(),
-      lastMessageTime: new Date(),
-      messageCount: 0,
+    // Create request object - for new chats, chat_id should be undefined
+    // The server will create a new chat and return its ID in the chat_info chunk
+    const request: ChatMessageRequest = {
+      message: content,
+      chat_id: activeSessionId ? Number(activeSessionId) : undefined,
     };
 
-    // Update sessions and set active id
-    setChatSessions((prev) => [newSession, ...prev]);
-    setActiveSessionId(newChatId);
-
-    // Clear messages
-    setMessages([]);
+    // Stream response from backend
+    streamService
+      .streamChatResponse(request, handleStreamChunk)
+      .catch((error) => {
+        console.error("Stream error:", error);
+        setIsTyping(false);
+        toast.error("Failed to get response from server");
+      });
   };
 
   const handleSelectChat = (chatId: string) => {
-    // Update active chat
     setActiveSessionId(chatId);
-
-    // In a real app, we would load this chat's messages
-    // For now, we'll just use our mock messages if the first chat is selected
-    if (chatId === "1") {
-      setMessages(MOCK_MESSAGES);
-    } else {
-      setMessages([]);
-    }
+    // Fetch messages for the selected chat ID
+    fetchMessagesForSession(Number(chatId));
   };
 
   const toggleSidebar = () => {
@@ -268,7 +363,15 @@ export default function ChatPage() {
                 animate="visible"
               >
                 <AnimatePresence mode="wait">
-                  {messages.length === 0 ? (
+                  {loading ? (
+                    <motion.div
+                      className="flex items-center justify-center h-full p-8 text-center text-muted-foreground"
+                      variants={fadeInUp}
+                      key="loading-state"
+                    >
+                      <div>Loading...</div>
+                    </motion.div>
+                  ) : messages.length === 0 ? (
                     <motion.div
                       className="flex items-center justify-center h-full p-8 text-center text-muted-foreground"
                       variants={fadeInUp}
@@ -298,7 +401,10 @@ export default function ChatPage() {
                   )}
                 </AnimatePresence>
 
-                {isTyping && <TypingIndicator />}
+                {isTyping &&
+                  messages[messages.length - 1]?.role !== "assistant" && (
+                    <TypingIndicator />
+                  )}
 
                 <div ref={messagesEndRef} />
               </motion.div>
@@ -318,8 +424,10 @@ export default function ChatPage() {
               isDisabled={isTyping}
               placeholder="Type your message..."
               className="pb-0"
-              initialValue={initialMessage || ""}
-              autoSubmit={false}
+              initialValue={
+                initialMessage && !initialMessageSent ? initialMessage : ""
+              }
+              autoSubmit={true}
             />
           </motion.div>
 

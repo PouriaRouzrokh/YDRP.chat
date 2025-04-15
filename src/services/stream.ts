@@ -1,115 +1,19 @@
 import {
-  ChatInfoChunk,
   ChatMessageRequest,
   ErrorChunk,
   StatusChunk,
   StreamChunk,
-  TextDeltaChunk,
-  ToolCallChunk,
-  ToolOutputChunk,
 } from "@/types";
-
-// Helper function to simulate delay
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-/**
- * Generate an assistive answer one character at a time
- */
-function* generateTextDeltas(text: string): Generator<string> {
-  const words = text.split(" ");
-  let currentWord = "";
-
-  for (const word of words) {
-    // Add space between words except for the first word
-    if (currentWord.length > 0) {
-      yield " ";
-    }
-
-    // Generate each character of the word
-    for (const char of word) {
-      yield char;
-    }
-
-    currentWord = word;
-  }
-}
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+import { authService } from "./auth";
+import { siteConfig } from "@/config/site";
 
 /**
- * Mock policy search for tool calls
- */
-const policySearch = async (query: string) => {
-  await delay(1000); // Simulate policy search time
-
-  const policies = [
-    {
-      id: "RAD-SAF-001",
-      title: "Radiation Safety Protocol",
-      excerpt:
-        "Guidelines for radiation safety in the department, including exposure limits for staff.",
-    },
-    {
-      id: "RAD-PRV-002",
-      title: "Patient Data Privacy Policy",
-      excerpt:
-        "Procedures for handling patient information and imaging data privacy requirements.",
-    },
-    {
-      id: "RAD-EQP-003",
-      title: "Equipment Maintenance Guidelines",
-      excerpt:
-        "Required maintenance schedules for radiology equipment including MRI, CT, and X-ray machines.",
-    },
-  ];
-
-  // Simple mock search logic
-  const found = policies.filter((policy) =>
-    query
-      .toLowerCase()
-      .includes(
-        policy.title
-          .toLowerCase()
-          .replace(" Policy", "")
-          .replace(" Protocol", "")
-          .replace(" Guidelines", "")
-      )
-  );
-
-  return found.length > 0
-    ? found
-    : [policies[Math.floor(Math.random() * policies.length)]];
-};
-
-/**
- * Generate a mock response based on the query
- */
-const generateResponse = (query: string): string => {
-  // Simple logic to determine response
-  if (
-    query.toLowerCase().includes("radiation") ||
-    query.toLowerCase().includes("safety")
-  ) {
-    return "According to the Department of Radiology Policy on Radiation Safety (Policy ID: RAD-SAF-001), staff members should follow these guidelines:\n\n1. Always wear appropriate dosimeter badges\n2. Use lead shielding when within 6 feet of active radiation sources\n3. Maintain ALARA (As Low As Reasonably Achievable) principles\n4. Report any concerns to the Radiation Safety Officer immediately\n\nMonthly exposure limits are set at 4.2 mSv for most staff and 0.5 mSv for pregnant staff.";
-  } else if (
-    query.toLowerCase().includes("privacy") ||
-    query.toLowerCase().includes("patient data")
-  ) {
-    return "According to the Department of Radiology Patient Data Privacy Policy (Policy ID: RAD-PRV-002), the following procedures must be followed:\n\n1. All patient data must be accessed only on a need-to-know basis\n2. Imaging studies cannot be shared outside the institution without proper authorization\n3. Workstations must be locked when unattended\n4. PHI should never be discussed in public areas\n\nViolations of this policy may result in disciplinary action up to and including termination.";
-  } else if (
-    query.toLowerCase().includes("maintenance") ||
-    query.toLowerCase().includes("equipment")
-  ) {
-    return "According to the Department of Radiology Equipment Maintenance Guidelines (Policy ID: RAD-EQP-003), all equipment must undergo:\n\n1. Daily quality assurance checks\n2. Weekly performance monitoring\n3. Monthly calibration verification\n4. Quarterly preventative maintenance by certified engineers\n\nAny equipment malfunction must be reported immediately through the online incident reporting system and the equipment taken out of service.";
-  } else {
-    return "I've searched the Department of Radiology policies and couldn't find specific information that directly addresses your question. Would you like to rephrase your question or ask about a different policy area? I can provide information on radiation safety protocols, patient data privacy, or equipment maintenance guidelines.";
-  }
-};
-
-/**
- * Mock streaming service to simulate SSE endpoint
+ * Stream service for interacting with the backend SSE streaming endpoint
  */
 export const streamService = {
   /**
-   * Simulate streaming a chat message response
+   * Stream a chat message response from the backend
    */
   async streamChatResponse(
     request: ChatMessageRequest,
@@ -127,86 +31,144 @@ export const streamService = {
       return;
     }
 
+    // Check authentication
+    if (!authService.isAuthenticated() && !siteConfig.settings.adminMode) {
+      const errorChunk: ErrorChunk = {
+        type: "error",
+        data: {
+          message: "User not authenticated",
+        },
+      };
+      onChunk(errorChunk);
+      return;
+    }
+
+    const token = authService.getToken();
+    const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chatStream}`;
+
+    // Get user ID from auth context or default to 0 in admin mode
+    const user = authService.getCurrentUser();
+    const userId = user?.id || 0;
+
     try {
-      // First chunk: chat info
-      const chatId = request.chat_id || Date.now();
-      const chatInfoChunk: ChatInfoChunk = {
-        type: "chat_info",
-        data: {
-          chat_id: chatId,
-          title: request.chat_id
-            ? null
-            : request.message.length > 30
-            ? `${request.message.substring(0, 30)}...`
-            : request.message,
-        },
+      // Prepare the request body
+      const requestBody = {
+        user_id: userId,
+        message: request.message,
+        chat_id: request.chat_id || null,
       };
-      onChunk(chatInfoChunk);
 
-      // Wait a bit
-      await delay(300);
+      let controller: AbortController | null = new AbortController();
 
-      // Tool call: search for relevant policies
-      const toolCallId = `tool_${Date.now()}`;
-      const toolCallChunk: ToolCallChunk = {
-        type: "tool_call",
-        data: {
-          id: toolCallId,
-          name: "find_similar_chunks",
-          input: {
-            query: request.message,
-            limit: 3,
-          },
+      await fetchEventSource(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      };
-      onChunk(toolCallChunk);
+        body: JSON.stringify(requestBody),
+        signal: controller.signal,
 
-      // Wait a bit longer to simulate search
-      await delay(1200);
-
-      // Tool output: policy search results
-      const policies = await policySearch(request.message);
-      const toolOutputChunk: ToolOutputChunk = {
-        type: "tool_output",
-        data: {
-          tool_call_id: toolCallId,
-          output: policies,
+        async onopen(response) {
+          if (response.ok) {
+            return; // Connection established successfully
+          } else if (
+            response.status >= 400 &&
+            response.status < 500 &&
+            response.status !== 429
+          ) {
+            // Client-side error
+            const errorData = await response.json();
+            const errorChunk: ErrorChunk = {
+              type: "error",
+              data: {
+                message:
+                  errorData.detail ||
+                  `Error ${response.status}: ${response.statusText}`,
+              },
+            };
+            onChunk(errorChunk);
+            controller?.abort();
+          } else {
+            // Server-side error or rate limiting
+            const errorChunk: ErrorChunk = {
+              type: "error",
+              data: {
+                message: `Error ${response.status}: ${response.statusText}`,
+              },
+            };
+            onChunk(errorChunk);
+            controller?.abort();
+          }
         },
-      };
-      onChunk(toolOutputChunk);
 
-      // Wait a bit
-      await delay(500);
+        onmessage(event) {
+          try {
+            // Parse the event data as JSON
+            const chunk = JSON.parse(event.data) as StreamChunk;
 
-      // Generate assistant response
-      const response = generateResponse(request.message);
+            // Process different chunk types
+            onChunk(chunk);
 
-      // Stream text deltas
-      for (const delta of generateTextDeltas(response)) {
-        // Simulate typing speed (randomized)
-        await delay(Math.random() * 30 + 20);
-
-        const textDeltaChunk: TextDeltaChunk = {
-          type: "text_delta",
-          data: {
-            delta,
-          },
-        };
-        onChunk(textDeltaChunk);
-      }
-
-      // Final status chunk
-      await delay(300);
-      const statusChunk: StatusChunk = {
-        type: "status",
-        data: {
-          status: "complete",
-          chat_id: chatId,
+            // If this is a status chunk with "complete", close the connection
+            if (
+              chunk.type === "status" &&
+              (chunk as StatusChunk).data.status === "complete"
+            ) {
+              controller?.abort();
+              controller = null;
+            }
+          } catch (error) {
+            console.error("Error parsing event data:", error);
+            const errorChunk: ErrorChunk = {
+              type: "error",
+              data: {
+                message: "Error processing server response",
+              },
+            };
+            onChunk(errorChunk);
+          }
         },
-      };
-      onChunk(statusChunk);
+
+        onclose() {
+          // Connection closed by the server
+          if (controller) {
+            // Only send if we didn't already complete
+            const statusChunk: StatusChunk = {
+              type: "status",
+              data: {
+                status: "complete",
+                chat_id: request.chat_id || 0,
+              },
+            };
+            onChunk(statusChunk);
+            controller = null;
+          }
+        },
+
+        onerror(error) {
+          // Connection error
+          console.error("SSE connection error:", error);
+          const errorChunk: ErrorChunk = {
+            type: "error",
+            data: {
+              message:
+                error instanceof Error ? error.message : "Connection error",
+            },
+          };
+          onChunk(errorChunk);
+
+          // Abort the connection on error
+          controller?.abort();
+          controller = null;
+
+          // Return undefined to not retry on error
+          return undefined;
+        },
+      });
     } catch (error) {
       // Handle any errors
+      console.error("Stream error:", error);
       const errorChunk: ErrorChunk = {
         type: "error",
         data: {

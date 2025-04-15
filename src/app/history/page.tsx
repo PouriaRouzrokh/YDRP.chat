@@ -1,60 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
-
-// Mock data for chat history
-const MOCK_CHAT_HISTORY = [
-  {
-    id: "1",
-    title: "Radiation Safety Protocols",
-    lastMessageTime: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-    messageCount: 8,
-  },
-  {
-    id: "2",
-    title: "Patient Privacy Guidelines",
-    lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
-    messageCount: 5,
-  },
-  {
-    id: "3",
-    title: "Equipment Maintenance Procedures",
-    lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-    messageCount: 12,
-  },
-  {
-    id: "4",
-    title: "MRI Safety Requirements",
-    lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2), // 2 days ago
-    messageCount: 7,
-  },
-  {
-    id: "5",
-    title: "COVID-19 Department Policies",
-    lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago
-    messageCount: 15,
-  },
-  {
-    id: "6",
-    title: "Training Requirements for Residents",
-    lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5), // 5 days ago
-    messageCount: 9,
-  },
-];
+import { chatService } from "@/services/chat";
+import { Chat } from "@/types";
+import { toast } from "sonner";
+import { motion } from "framer-motion";
+import { fadeInUp, staggerContainer } from "@/lib/animation-variants";
 
 export default function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"date" | "title">("date");
   const [currentPage, setCurrentPage] = useState(1);
+  const [chatHistory, setChatHistory] = useState<Chat[]>([]);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 5;
 
+  // Fetch chat history on component mount
+  useEffect(() => {
+    const fetchChatHistory = async () => {
+      try {
+        setLoading(true);
+        const chats = await chatService.getChats();
+        const formattedChats = chatService.formatChatsForUI(chats);
+        setChatHistory(formattedChats);
+      } catch (error) {
+        console.error("Error fetching chat history:", error);
+        toast.error("Failed to load chat history");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChatHistory();
+  }, []);
+
   // Filter chats based on search term
-  const filteredChats = MOCK_CHAT_HISTORY.filter((chat) =>
+  const filteredChats = chatHistory.filter((chat) =>
     chat.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -87,11 +73,29 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">Chat History</h1>
+    <motion.div
+      className="container mx-auto py-8 max-w-4xl"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <motion.h1
+        className="text-3xl font-bold mb-6"
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+      >
+        Chat History
+      </motion.h1>
 
       {/* Search and filters */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <motion.div
+        className="flex flex-col md:flex-row gap-4 mb-6"
+        variants={fadeInUp}
+        initial="hidden"
+        animate="visible"
+        transition={{ delay: 0.1 }}
+      >
         <Input
           placeholder="Search conversations..."
           value={searchTerm}
@@ -114,51 +118,83 @@ export default function HistoryPage() {
             Sort by Title
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Chat list */}
-      <div className="space-y-4">
-        {paginatedChats.length > 0 ? (
+      <motion.div
+        className="space-y-4"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
+        {loading ? (
+          // Loading state
+          <motion.div
+            className="text-center p-8 bg-muted/30 rounded-lg"
+            variants={fadeInUp}
+          >
+            <div className="flex justify-center py-4">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+            </div>
+            <p className="text-muted-foreground">Loading chat history...</p>
+          </motion.div>
+        ) : paginatedChats.length > 0 ? (
           paginatedChats.map((chat) => (
-            <Card key={chat.id} className="hover:bg-muted/50 transition-colors">
-              <CardHeader className="p-4">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-lg font-medium">
-                    {chat.title}
-                  </CardTitle>
-                  <div className="text-sm text-muted-foreground">
-                    {format(chat.lastMessageTime, "MMM d, yyyy 'at' h:mm a")}
+            <motion.div key={chat.id} variants={fadeInUp}>
+              <Card className="hover:bg-muted/50 transition-colors">
+                <CardHeader className="p-4">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg font-medium">
+                      {chat.title}
+                    </CardTitle>
+                    <div className="text-sm text-muted-foreground">
+                      {format(chat.lastMessageTime, "MMM d, yyyy 'at' h:mm a")}
+                    </div>
                   </div>
-                </div>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-muted-foreground">
-                    {chat.messageCount} message{chat.messageCount !== 1 && "s"}
-                  </span>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link href={`/chat?id=${chat.id}`}>View Conversation</Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+                </CardHeader>
+                <CardContent className="p-4 pt-0">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">
+                      {chat.messageCount} message
+                      {chat.messageCount !== 1 && "s"}
+                    </span>
+                    <Button variant="outline" size="sm" asChild>
+                      <Link href={`/chat?id=${chat.id}`}>
+                        View Conversation
+                      </Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))
         ) : (
-          <div className="text-center p-8 bg-muted/30 rounded-lg">
+          <motion.div
+            className="text-center p-8 bg-muted/30 rounded-lg"
+            variants={fadeInUp}
+          >
             <h3 className="text-lg font-medium mb-2">No conversations found</h3>
             <p className="text-muted-foreground mb-4">
-              Try adjusting your search or start a new chat
+              {searchTerm
+                ? "Try adjusting your search"
+                : "Start a new chat to begin"}
             </p>
             <Button asChild>
               <Link href="/chat">Start New Chat</Link>
             </Button>
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-between items-center mt-6">
+        <motion.div
+          className="flex justify-between items-center mt-6"
+          variants={fadeInUp}
+          initial="hidden"
+          animate="visible"
+          transition={{ delay: 0.2 }}
+        >
           <Button
             variant="outline"
             onClick={handlePreviousPage}
@@ -176,8 +212,8 @@ export default function HistoryPage() {
           >
             Next
           </Button>
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }

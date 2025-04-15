@@ -1,80 +1,95 @@
 import { AuthResponse, ErrorResponse, User } from "@/types";
-
-// Mock user data
-const MOCK_USERS = [
-  {
-    id: 1,
-    email: "admin@example.com",
-    password: "password123",
-    full_name: "Admin User",
-    is_admin: true,
-  },
-  {
-    id: 2,
-    email: "user@example.com",
-    password: "password123",
-    full_name: "Regular User",
-    is_admin: false,
-  },
-];
+import { siteConfig } from "@/config/site";
 
 // Token storage key
 const TOKEN_KEY = "ydrp_auth_token";
 const USER_KEY = "ydrp_user";
 
-// Helper function to simulate network delay
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 /**
- * Mock authentication service
+ * Authentication service for interacting with the backend auth API
  */
 export const authService = {
   /**
    * Login user with email and password
    */
   async login(email: string, password: string): Promise<AuthResponse> {
-    // Simulate network delay
-    await delay(800);
+    const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.auth}/token`;
 
-    // Find user
-    const user = MOCK_USERS.find(
-      (u) => u.email === email && u.password === password
-    );
+    // Create form data for OAuth2 password flow
+    const formData = new URLSearchParams();
+    formData.append("username", email); // Backend expects email in the username field
+    formData.append("password", password);
 
-    if (!user) {
-      const error: ErrorResponse = {
-        detail: "Incorrect email or password",
-      };
-      throw new Error(JSON.stringify(error));
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData: ErrorResponse = await response.json();
+        throw new Error(errorData.detail || "Authentication failed");
+      }
+
+      const data: AuthResponse = await response.json();
+
+      // Store the token
+      localStorage.setItem(TOKEN_KEY, data.access_token);
+
+      // Fetch user info after successful login
+      await this.fetchUserInfo();
+
+      return data;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
+  },
+
+  /**
+   * Fetch current user information
+   */
+  async fetchUserInfo(): Promise<User> {
+    const token = this.getToken();
+
+    if (!token) {
+      throw new Error("Not authenticated");
     }
 
-    // Create a mock token (in a real app, this would be a JWT)
-    const token = `mock_token_${user.id}_${Date.now()}`;
+    const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.auth}/users/me`;
 
-    // Store user data and token
-    localStorage.setItem(
-      USER_KEY,
-      JSON.stringify({
-        id: user.id,
-        email: user.email,
-        full_name: user.full_name,
-        is_admin: user.is_admin,
-      })
-    );
-    localStorage.setItem(TOKEN_KEY, token);
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-    // Return mock auth response
-    return {
-      access_token: token,
-      token_type: "bearer",
-    };
+      if (!response.ok) {
+        throw new Error("Failed to fetch user info");
+      }
+
+      const userData: User = await response.json();
+
+      // Save user data to localStorage
+      localStorage.setItem(USER_KEY, JSON.stringify(userData));
+
+      return userData;
+    } catch (error) {
+      console.error("Error fetching user info:", error);
+      throw error;
+    }
   },
 
   /**
    * Check if user is authenticated
    */
   isAuthenticated(): boolean {
-    return !!localStorage.getItem(TOKEN_KEY);
+    return !!this.getToken();
   },
 
   /**
@@ -83,7 +98,12 @@ export const authService = {
   getCurrentUser(): User | null {
     const userData = localStorage.getItem(USER_KEY);
     if (!userData) return null;
-    return JSON.parse(userData) as User;
+    try {
+      return JSON.parse(userData) as User;
+    } catch (e) {
+      console.error("Error parsing user data:", e);
+      return null;
+    }
   },
 
   /**
