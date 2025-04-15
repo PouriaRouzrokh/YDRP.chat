@@ -50,6 +50,7 @@ export function ChatContainer({
           createdAt: new Date(),
           lastMessageTime: chat.lastMessageTime,
           messageCount: chat.messageCount,
+          isArchived: chat.isArchived,
         }));
         setSessions(formattedSessions);
 
@@ -115,6 +116,7 @@ export function ChatContainer({
           createdAt: new Date(),
           lastMessageTime: new Date(),
           messageCount: 0, // Start with 0, will be updated when message is complete
+          isArchived: false, // New chats are not archived by default
         };
         setSessions((prev) => [newSession, ...prev]);
       }

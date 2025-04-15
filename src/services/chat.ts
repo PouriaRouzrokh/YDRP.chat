@@ -9,7 +9,11 @@ export const chatService = {
   /**
    * Get chat history for the current user
    */
-  async getChats(skip = 0, limit = 100): Promise<ChatSummary[]> {
+  async getChats(
+    skip = 0,
+    limit = 100,
+    archived = false
+  ): Promise<ChatSummary[]> {
     // Check if admin mode is enabled
     const isAdminMode = siteConfig.settings.adminMode;
 
@@ -19,7 +23,9 @@ export const chatService = {
     }
 
     const token = authService.getToken();
-    const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}?skip=${skip}&limit=${limit}`;
+    const url = `${siteConfig.api.baseUrl}${
+      siteConfig.api.endpoints.chat
+    }?skip=${skip}&limit=${limit}${archived ? "&archived=true" : ""}`;
 
     try {
       const response = await fetch(url, {
@@ -88,16 +94,21 @@ export const chatService = {
       lastMessageTime: new Date(chat.updated_at),
       // We will get the actual message count with a separate API call
       messageCount: 0,
+      isArchived: chat.is_archived,
     }));
   },
 
   /**
    * Get chat history with message counts for the current user
    */
-  async getChatsWithMessageCounts(skip = 0, limit = 100): Promise<Chat[]> {
+  async getChatsWithMessageCounts(
+    skip = 0,
+    limit = 100,
+    archived = false
+  ): Promise<Chat[]> {
     try {
       // First get all chats
-      const chats = await this.getChats(skip, limit);
+      const chats = await this.getChats(skip, limit, archived);
       const formattedChats = this.formatChatsForUI(chats);
 
       // For each chat, get the message count

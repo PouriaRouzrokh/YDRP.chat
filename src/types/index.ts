@@ -14,6 +14,7 @@ export interface ChatSummary {
   title: string | null;
   created_at: string;
   updated_at: string;
+  is_archived: boolean;
 }
 
 export interface MessageSummary {
@@ -116,6 +117,7 @@ export interface Chat {
   title: string;
   lastMessageTime: Date;
   messageCount: number;
+  isArchived?: boolean;
 }
 
 // Tool-related Types

@@ -9,6 +9,7 @@ export interface ChatSession {
   createdAt: Date;
   lastMessageTime?: Date;
   messageCount?: number;
+  isArchived?: boolean;
 }
 
 export interface ChatSidebarProps {
