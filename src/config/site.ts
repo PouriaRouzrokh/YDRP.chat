@@ -15,6 +15,8 @@ export const siteConfig = {
 
   // Application settings
   settings: {
+    // Control admin mode via environment variable: NEXT_PUBLIC_ADMIN_MODE="true"
+    // When enabled, login will be bypassed entirely
     adminMode: process.env.NEXT_PUBLIC_ADMIN_MODE === "true",
     defaultTheme: "light",
   },
@@ -25,4 +27,10 @@ export const siteConfig = {
     { name: "History", href: "/history" },
     { name: "About", href: "/about" },
   ],
+
+  // Support info
+  support: {
+    email: "it-support@yale-rad.edu",
+    phone: "+1 (203) 555-1234",
+  },
 };

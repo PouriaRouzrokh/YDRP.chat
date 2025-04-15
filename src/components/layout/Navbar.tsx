@@ -5,6 +5,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { UserMenu } from "@/components/auth/user-menu";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -17,6 +19,7 @@ import { Moon, Sun } from "lucide-react";
 
 export function Navbar() {
   const { theme, toggleTheme } = useTheme();
+  const { isAuthenticated } = useAuth();
   const pathname = usePathname();
 
   return (
@@ -73,6 +76,12 @@ export function Navbar() {
               }`}
             />
           </div>
+
+          {isAuthenticated && (
+            <div className="ml-4">
+              <UserMenu />
+            </div>
+          )}
 
           {/* Mobile menu button (to be implemented in Phase 4) */}
           <Button variant="outline" size="icon" className="md:hidden ml-2">
