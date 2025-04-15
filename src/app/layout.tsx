@@ -9,8 +9,8 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Yale Radiology Policies Chatbot",
-  description: "A chatbot for Yale Radiology policies",
+  title: "Yale Department of Radiology Policy Chatbot",
+  description: "A chatbot for Yale Department of Radiology policies",
 };
 
 export default function RootLayout({

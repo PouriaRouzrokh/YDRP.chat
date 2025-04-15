@@ -152,8 +152,8 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-[calc(100vh-7rem)]">
-      {/* Sidebar - hidden on mobile when collapsed */}
-      <div className={`h-full ${isSidebarOpen ? "block" : "hidden"} md:block`}>
+      {/* Sidebar - only visible on medium screens and up */}
+      <div className="hidden md:block h-full">
         <ChatSidebar
           sessions={chatSessions}
           activeSessionId={activeSessionId}
@@ -172,7 +172,7 @@ export default function ChatPage() {
               variant="ghost"
               size="icon"
               onClick={toggleSidebar}
-              className="md:hidden mr-2"
+              className="hidden md:flex mr-2"
             >
               <PanelLeftOpen className="h-5 w-5" />
               <span className="sr-only">Toggle sidebar</span>
@@ -182,6 +182,16 @@ export default function ChatPage() {
                 ?.title || "New Conversation"}
             </h2>
           </div>
+
+          {/* Mobile-only New Chat button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleNewChat}
+            className="md:hidden"
+          >
+            New Chat
+          </Button>
         </div>
 
         {/* Fixed height container for messages and input */}
@@ -194,7 +204,7 @@ export default function ChatPage() {
                   <div className="flex items-center justify-center h-full p-8 text-center text-muted-foreground">
                     <div>
                       <h3 className="text-lg font-medium mb-2">
-                        Welcome to Yale Radiology Policies Chatbot
+                        Welcome to Yale Department of Radiology Policy Chatbot
                       </h3>
                       <p className="max-w-md">
                         Ask questions about department policies, safety

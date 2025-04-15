@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "YDR Policy Chatbot",
-  description: "A chatbot for Yale Radiology policies",
+  description: "A chatbot for Yale Department of Radiology policies",
 
   // API URLs (placeholder values)
   api: {
