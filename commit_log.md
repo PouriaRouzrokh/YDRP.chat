@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 31 (4/15/2025 - 17:59)
+
+Applied black to all files.
+
 ## commit 30 (4/15/2025 - 17:59)
 
 Updated collected_scripts.md

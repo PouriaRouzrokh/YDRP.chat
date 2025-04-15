@@ -131,7 +131,7 @@ class ChatRepository(BaseRepository[Chat]):
         # updated_at is handled automatically by the model definition's onupdate,
         # but we need to ensure the session knows the object changed.
         # *** ADD THIS LINE ***
-        self.session.add(chat) # Explicitly mark the object as potentially dirty
+        self.session.add(chat)  # Explicitly mark the object as potentially dirty
         await self.session.flush()
         await self.session.commit()  # Explicitly commit the transaction
         await self.session.refresh(chat)
@@ -160,13 +160,13 @@ class ChatRepository(BaseRepository[Chat]):
         if chat.is_archived == archive:
             status = "already archived" if archive else "already active"
             logger.info(f"Chat ID {chat_id} is {status}. No change needed.")
-            return chat # Return the chat as is
+            return chat  # Return the chat as is
 
         chat.is_archived = archive
         # updated_at is handled automatically by the model definition's onupdate,
         # but we need to ensure the session knows the object changed.
         # *** ADD THIS LINE ***
-        self.session.add(chat) # Explicitly mark the object as potentially dirty
+        self.session.add(chat)  # Explicitly mark the object as potentially dirty
         await self.session.flush()
         await self.session.commit()  # Explicitly commit the transaction
         await self.session.refresh(chat)
@@ -186,17 +186,16 @@ class ChatRepository(BaseRepository[Chat]):
         logger.warning(f"Attempting to archive ALL active chats for user ID {user_id}.")
         stmt = (
             update(Chat)
-            .where(Chat.user_id == user_id, Chat.is_archived == False) # Only archive active chats
-            .values(is_archived=True, updated_at=func.now()) # Explicitly set updated_at for bulk update
+            .where(Chat.user_id == user_id, Chat.is_archived == False)  # Only archive active chats
+            .values(is_archived=True, updated_at=func.now())  # Explicitly set updated_at for bulk update
         )
         result = await self.session.execute(stmt)
         archived_count = result.rowcount
         # *** Flush is needed here for bulk update ***
-        await self.session.flush() # Ensure changes are flushed before commit
+        await self.session.flush()  # Ensure changes are flushed before commit
         await self.session.commit()  # Explicitly commit the transaction
         logger.info(f"SUCCESS: Archived {archived_count} chats for user ID {user_id}.")
         return archived_count
-
 
     async def delete_chat(self, chat_id: int, user_id: int) -> bool:
         """

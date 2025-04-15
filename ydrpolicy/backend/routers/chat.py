@@ -27,8 +27,8 @@ from ydrpolicy.backend.schemas.chat import (
     ToolCallData,
     ToolOutputData,
     StatusData,
-    ChatRenameRequest, # Added
-    ActionResponse, # Added
+    ChatRenameRequest,  # Added
+    ActionResponse,  # Added
 )
 from ydrpolicy.backend.services.chat_service import ChatService
 
@@ -148,7 +148,9 @@ async def stream_chat(
     responses={401: {"description": "Authentication required"}, 500: {"description": "Internal Server Error"}},
 )
 async def list_user_chats(
-    archived: bool = Query(False, description="Set to true to list archived chats instead of active ones."), # Added parameter
+    archived: bool = Query(
+        False, description="Set to true to list archived chats instead of active ones."
+    ),  # Added parameter
     skip: int = Query(0, ge=0, description="Number of chat sessions to skip (for pagination)."),
     limit: int = Query(100, ge=1, le=200, description="Maximum number of chat sessions to return."),
     current_user: User = Depends(get_current_active_user),
@@ -251,10 +253,12 @@ async def rename_chat_session(
 
         if not updated_chat:
             # get_by_user_and_id check is done within update_chat_title
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user.")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user."
+            )
 
         # Commit the session changes implicitly by exiting the 'with' block in get_session
-        return updated_chat # Pydantic will convert to ChatSummary
+        return updated_chat  # Pydantic will convert to ChatSummary
 
     except Exception as e:
         logger.error(f"Error renaming chat {chat_id} for user {current_user.id}: {e}", exc_info=True)
@@ -287,11 +291,13 @@ async def archive_chat_session(
     try:
         chat_repo = ChatRepository(session)
         updated_chat = await chat_repo.archive_chat(
-            chat_id=chat_id, user_id=current_user.id, archive=True # Set archive flag to True
+            chat_id=chat_id, user_id=current_user.id, archive=True  # Set archive flag to True
         )
 
         if not updated_chat:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user.")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user."
+            )
 
         return updated_chat
 
@@ -326,17 +332,21 @@ async def unarchive_chat_session(
     try:
         chat_repo = ChatRepository(session)
         updated_chat = await chat_repo.archive_chat(
-            chat_id=chat_id, user_id=current_user.id, archive=False # Set archive flag to False
+            chat_id=chat_id, user_id=current_user.id, archive=False  # Set archive flag to False
         )
 
         if not updated_chat:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user.")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user."
+            )
 
         return updated_chat
 
     except Exception as e:
         logger.error(f"Error unarchiving chat {chat_id} for user {current_user.id}: {e}", exc_info=True)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to unarchive chat session.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to unarchive chat session."
+        )
 
 
 # --- NEW: Archive All Chats Endpoint ---
@@ -366,9 +376,13 @@ async def archive_all_user_chats(
         # Commit the changes
         # await session.commit() # Handled by get_session context manager
 
-        return ActionResponse(message=f"Successfully archived {archived_count} active chat session(s).", count=archived_count)
+        return ActionResponse(
+            message=f"Successfully archived {archived_count} active chat session(s).", count=archived_count
+        )
 
     except Exception as e:
         logger.error(f"Error archiving all chats for user {current_user.id}: {e}", exc_info=True)
         # await session.rollback() # Handled by get_session context manager
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to archive all chat sessions.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to archive all chat sessions."
+        )

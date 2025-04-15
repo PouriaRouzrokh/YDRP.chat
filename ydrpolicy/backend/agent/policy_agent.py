@@ -15,6 +15,7 @@ from ydrpolicy.backend.agent.system_prompt import SYSTEM_PROMPT
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+
 async def create_policy_agent(use_mcp: bool = True) -> Agent:
     """
     Factory function to create the Yale Radiology Policy Agent instance.

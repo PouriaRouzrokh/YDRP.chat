@@ -70,6 +70,7 @@ class StatusData(BaseModel):
 
 # --- Schemas for Chat Management ---
 
+
 class ChatSummary(BaseModel):
     """Summary information for a chat session, used in listings."""
 
@@ -77,7 +78,7 @@ class ChatSummary(BaseModel):
     title: Optional[str] = Field(None, description="Title of the chat session.")
     created_at: datetime = Field(..., description="Timestamp when the chat was created.")
     updated_at: datetime = Field(..., description="Timestamp when the chat was last updated (last message).")
-    is_archived: bool = Field(..., description="Indicates if the chat session is archived.") # Added
+    is_archived: bool = Field(..., description="Indicates if the chat session is archived.")  # Added
 
     # Enable ORM mode to allow creating instances from SQLAlchemy models
     model_config = ConfigDict(from_attributes=True)
@@ -99,10 +100,14 @@ class MessageSummary(BaseModel):
 
 class ChatRenameRequest(BaseModel):
     """Request model for renaming a chat session."""
+
     new_title: str = Field(..., min_length=1, max_length=255, description="The new title for the chat session.")
 
 
 class ActionResponse(BaseModel):
     """Generic response model for actions returning a message and count."""
+
     message: str = Field(..., description="A confirmation message about the action performed.")
-    count: Optional[int] = Field(None, description="Optional count related to the action (e.g., number of items affected).")
+    count: Optional[int] = Field(
+        None, description="Optional count related to the action (e.g., number of items affected)."
+    )
