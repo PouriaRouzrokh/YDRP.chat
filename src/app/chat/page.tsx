@@ -51,8 +51,7 @@ export default function ChatPage() {
   const fetchSessions = useCallback(async () => {
     try {
       setLoading(true);
-      const chats = await chatService.getChats();
-      const formattedChats = chatService.formatChatsForUI(chats);
+      const formattedChats = await chatService.getChatsWithMessageCounts();
       const formattedSessions: ChatSession[] = formattedChats.map((chat) => ({
         id: String(chat.id),
         title: chat.title,
@@ -88,10 +87,60 @@ export default function ChatPage() {
     }
   }, [activeSessionId]);
 
+  // Add a new effect to load messages when a chat ID is provided in URL
+  useEffect(() => {
+    if (chatId && activeSessionId === chatId) {
+      // Call directly without adding to dependency array
+      (async () => {
+        try {
+          setLoading(true);
+          const messageData = await chatService.getChatMessages(Number(chatId));
+          const formattedMessages =
+            chatService.formatMessagesForUI(messageData);
+          // Convert to Message type (should be compatible)
+          const msgArray: Message[] = formattedMessages.map((msg) => ({
+            id: String(msg.id),
+            content: msg.content,
+            role: msg.role,
+            timestamp: msg.timestamp,
+          }));
+          setMessages(msgArray);
+        } catch (error) {
+          console.error(`Error fetching messages for chat ${chatId}:`, error);
+          toast.error("Failed to load messages");
+        } finally {
+          setLoading(false);
+        }
+      })();
+    }
+  }, [chatId, activeSessionId]);
+
   // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
+
+  // Fetch messages for a specific session
+  const fetchMessagesForSession = async (sessionId: number) => {
+    try {
+      setLoading(true);
+      const messageData = await chatService.getChatMessages(sessionId);
+      const formattedMessages = chatService.formatMessagesForUI(messageData);
+      // Convert to Message type (should be compatible)
+      const msgArray: Message[] = formattedMessages.map((msg) => ({
+        id: String(msg.id),
+        content: msg.content,
+        role: msg.role,
+        timestamp: msg.timestamp,
+      }));
+      setMessages(msgArray);
+      setLoading(false);
+    } catch (error) {
+      console.error(`Error fetching messages for session ${sessionId}:`, error);
+      toast.error("Failed to load messages");
+      setLoading(false);
+    }
+  };
 
   // Handle streaming chunks with useCallback
   const handleStreamChunk = useCallback(
@@ -172,28 +221,6 @@ export default function ChatPage() {
     [activeSessionId]
   );
 
-  // Fetch messages for a specific session
-  const fetchMessagesForSession = async (sessionId: number) => {
-    try {
-      setLoading(true);
-      const messageData = await chatService.getChatMessages(sessionId);
-      const formattedMessages = chatService.formatMessagesForUI(messageData);
-      // Convert to Message type (should be compatible)
-      const msgArray: Message[] = formattedMessages.map((msg) => ({
-        id: String(msg.id),
-        content: msg.content,
-        role: msg.role,
-        timestamp: msg.timestamp,
-      }));
-      setMessages(msgArray);
-      setLoading(false);
-    } catch (error) {
-      console.error(`Error fetching messages for session ${sessionId}:`, error);
-      toast.error("Failed to load messages");
-      setLoading(false);
-    }
-  };
-
   const handleNewChat = () => {
     setActiveSessionId(null);
     // Make sure URL params are updated without adding to history
@@ -249,7 +276,7 @@ export default function ChatPage() {
 
   return (
     <motion.div
-      className="flex h-[calc(100vh-7rem)]"
+      className="flex h-[calc(100vh-7rem)] overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
@@ -258,7 +285,7 @@ export default function ChatPage() {
       <AnimatePresence>
         {isSidebarOpen && (
           <motion.div
-            className="hidden md:block h-full"
+            className="hidden md:block h-full overflow-hidden"
             variants={slideInLeft}
             initial="hidden"
             animate="visible"

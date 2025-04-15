@@ -86,9 +86,47 @@ export const chatService = {
       id: chat.id,
       title: chat.title ?? "Untitled Chat",
       lastMessageTime: new Date(chat.updated_at),
-      // We don't have message count in the API response, so we'll show empty
+      // We will get the actual message count with a separate API call
       messageCount: 0,
     }));
+  },
+
+  /**
+   * Get chat history with message counts for the current user
+   */
+  async getChatsWithMessageCounts(skip = 0, limit = 100): Promise<Chat[]> {
+    try {
+      // First get all chats
+      const chats = await this.getChats(skip, limit);
+      const formattedChats = this.formatChatsForUI(chats);
+
+      // For each chat, get the message count
+      const chatsWithCounts = await Promise.all(
+        formattedChats.map(async (chat) => {
+          try {
+            // Get messages for this chat
+            const messages = await this.getChatMessages(Number(chat.id));
+            // Update the message count
+            return {
+              ...chat,
+              messageCount: messages.length,
+            };
+          } catch (error) {
+            console.error(
+              `Error fetching messages for chat ${chat.id}:`,
+              error
+            );
+            // Return the chat with the default message count if there's an error
+            return chat;
+          }
+        })
+      );
+
+      return chatsWithCounts;
+    } catch (error) {
+      console.error("Error fetching chats with message counts:", error);
+      throw error;
+    }
   },
 
   /**

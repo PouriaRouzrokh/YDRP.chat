@@ -43,30 +43,32 @@ export function ChatSidebar({
   }
 
   return (
-    <div className="flex h-full w-[260px] flex-col border-r">
-      <div className="p-4">
+    <div className="flex h-full w-[260px] flex-col border-r overflow-hidden">
+      <div className="p-4 flex-shrink-0">
         <Button onClick={onNewChat} className="w-full justify-start gap-2">
           <PlusCircle className="h-4 w-4" />
           New Chat
         </Button>
       </div>
-      <ScrollArea className="flex-1 px-2">
-        <div className="space-y-1 pb-4">
-          {sessions?.map((session) => (
-            <Button
-              key={session.id}
-              variant={activeSessionId === session.id ? "secondary" : "ghost"}
-              className={cn(
-                "w-full justify-start truncate overflow-hidden text-sm",
-                activeSessionId === session.id ? "bg-secondary/50" : ""
-              )}
-              onClick={() => onSessionSelect(session.id)}
-            >
-              {session.title}
-            </Button>
-          ))}
-        </div>
-      </ScrollArea>
+      <div className="flex-1 overflow-auto">
+        <ScrollArea className="h-full px-2">
+          <div className="space-y-1 pb-4">
+            {sessions?.map((session) => (
+              <Button
+                key={session.id}
+                variant={activeSessionId === session.id ? "secondary" : "ghost"}
+                className={cn(
+                  "w-full justify-start truncate overflow-hidden text-sm",
+                  activeSessionId === session.id ? "bg-secondary/50" : ""
+                )}
+                onClick={() => onSessionSelect(session.id)}
+              >
+                {session.title}
+              </Button>
+            ))}
+          </div>
+        </ScrollArea>
+      </div>
     </div>
   );
 }

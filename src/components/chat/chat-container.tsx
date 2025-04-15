@@ -43,8 +43,7 @@ export function ChatContainer({
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const chats = await chatService.getChats();
-        const formattedChats = chatService.formatChatsForUI(chats);
+        const formattedChats = await chatService.getChatsWithMessageCounts();
         const formattedSessions: ChatSession[] = formattedChats.map((chat) => ({
           id: String(chat.id),
           title: chat.title,
@@ -115,7 +114,7 @@ export function ChatContainer({
           title: infoChunk.data.title || "New Chat",
           createdAt: new Date(),
           lastMessageTime: new Date(),
-          messageCount: 1,
+          messageCount: 0, // Start with 0, will be updated when message is complete
         };
         setSessions((prev) => [newSession, ...prev]);
       }
@@ -162,7 +161,9 @@ export function ChatContainer({
                 ? {
                     ...session,
                     lastMessageTime: new Date(),
-                    messageCount: (session.messageCount ?? 0) + 1,
+                    messageCount: session.messageCount
+                      ? session.messageCount + 1
+                      : 1,
                   }
                 : session
             )
@@ -226,7 +227,7 @@ export function ChatContainer({
       {/* Sidebar */}
       <div
         className={cn(
-          "h-full border-r transition-all duration-300 ease-in-out",
+          "h-full border-r transition-all duration-300 ease-in-out overflow-hidden",
           sidebarOpen ? "w-80" : "w-0"
         )}
       >

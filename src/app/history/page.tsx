@@ -25,8 +25,7 @@ export default function HistoryPage() {
     const fetchChatHistory = async () => {
       try {
         setLoading(true);
-        const chats = await chatService.getChats();
-        const formattedChats = chatService.formatChatsForUI(chats);
+        const formattedChats = await chatService.getChatsWithMessageCounts();
         setChatHistory(formattedChats);
       } catch (error) {
         console.error("Error fetching chat history:", error);
