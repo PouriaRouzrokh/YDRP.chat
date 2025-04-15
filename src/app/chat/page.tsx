@@ -169,43 +169,8 @@ export default function ChatPage() {
       }
       // Handle other chunk types if needed (tool_call, tool_output)
     },
-    [activeSessionId, messages]
+    [activeSessionId]
   );
-
-  // The initialMessage will be handled by the ChatInput component's autoSubmit
-  // Keeping this commented out for reference in case we need to revert
-  /*
-  useEffect(() => {
-    if (initialMessage && !initialMessageSent && !loading) {
-      // Create a message request for the initial message
-      const request: ChatMessageRequest = {
-        message: initialMessage,
-      };
-
-      // Create user message and update UI first
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        content: initialMessage,
-        role: "user",
-        timestamp: new Date(),
-      };
-      setMessages([userMessage]);
-      setIsTyping(true);
-
-      // Send it to the streaming service
-      streamService
-        .streamChatResponse(request, handleStreamChunk)
-        .then(() => {
-          setInitialMessageSent(true);
-        })
-        .catch((error) => {
-          console.error("Error sending initial message:", error);
-          setIsTyping(false);
-          toast.error("Failed to get response");
-        });
-    }
-  }, [initialMessage, initialMessageSent, loading, handleStreamChunk]);
-  */
 
   // Fetch messages for a specific session
   const fetchMessagesForSession = async (sessionId: number) => {
