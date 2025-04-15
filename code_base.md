@@ -18,15 +18,17 @@ import os
 import sys
 from pathlib import Path
 from typing import List, Dict, Any, Optional
+
 # Import necessary components from agents library
 from agents import Agent, Runner, RunResult, RunResultStreaming
-from agents.exceptions import AgentsException, MaxTurnsExceeded, UserError # Import UserError
-from agents.mcp import MCPServerSse # Import MCPServerSse for type checking
+from agents.exceptions import AgentsException, MaxTurnsExceeded, UserError  # Import UserError
+from agents.mcp import MCPServerSse  # Import MCPServerSse for type checking
 from agents.tracing import set_tracing_disabled  # Import the function
 import typer
 import uvicorn
 import logging
 from openai.types.chat import ChatCompletionMessageParam
+
 # No ToolCallItem import needed
 
 # --- Add project root to sys.path ---
@@ -47,6 +49,7 @@ app = typer.Typer(
     add_completion=False,
     rich_markup_mode="markdown",
 )
+
 
 # --- Main App Callback ---
 @app.callback(invoke_without_command=True)
@@ -279,8 +282,8 @@ def mcp_command(
 
     if run_transport == "stdio" and not log_disabled:
         logger.warning(
-             "Running MCP in stdio mode with console logging potentially enabled (if --no-log not used). "
-             "Attempting to disable console handler dynamically."
+            "Running MCP in stdio mode with console logging potentially enabled (if --no-log not used). "
+            "Attempting to disable console handler dynamically."
         )
 
     logger.info(f"Attempting to start MCP server on {run_host}:{run_port} via {run_transport} transport...")
@@ -348,7 +351,11 @@ def agent_command(
                 print("-" * 60)
                 if use_mcp_flag and agent and agent.mcp_servers:
                     mcp_server_instance = agent.mcp_servers[0]
-                async with mcp_server_instance if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse) else null_async_context() as active_mcp_connection:
+                async with (
+                    mcp_server_instance
+                    if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse)
+                    else null_async_context()
+                ) as active_mcp_connection:
                     if use_mcp_flag:
                         if mcp_server_instance and active_mcp_connection is not None:
                             term_logger.info("Terminal Mode: MCP connection established via async context.")
@@ -359,47 +366,88 @@ def agent_command(
                         run_succeeded = False
                         try:
                             user_input = input("You: ")
-                            if user_input.lower() in ["quit", "exit"]: break
-                            if not user_input.strip(): continue
+                            if user_input.lower() in ["quit", "exit"]:
+                                break
+                            if not user_input.strip():
+                                continue
                             new_user_message: ChatCompletionMessageParam = {"role": "user", "content": user_input}
                             current_run_input_list = agent_input_list + [new_user_message]
                             print("Agent: ", end="", flush=True)
                             result_stream: Optional[RunResultStreaming] = None
                             try:
-                                if not agent: print("\n[Critical Error: Agent not initialized.]"); break
+                                if not agent:
+                                    print("\n[Critical Error: Agent not initialized.]")
+                                    break
                                 result_stream = Runner.run_streamed(starting_agent=agent, input=current_run_input_list)
                                 async for event in result_stream.stream_events():
-                                    if event.type == "raw_response_event" and hasattr(event.data, "delta") and event.data.delta:
+                                    if (
+                                        event.type == "raw_response_event"
+                                        and hasattr(event.data, "delta")
+                                        and event.data.delta
+                                    ):
                                         print(event.data.delta, end="", flush=True)
                                     elif event.type == "run_item_stream_event":
-                                        if hasattr(event, 'item') and hasattr(event.item, 'type'):
+                                        if hasattr(event, "item") and hasattr(event.item, "type"):
                                             item: Any = event.item
                                             if item.type == "tool_call_item":
-                                                if hasattr(item, 'raw_item') and hasattr(item.raw_item, 'name'):
+                                                if hasattr(item, "raw_item") and hasattr(item.raw_item, "name"):
                                                     tool_name = item.raw_item.name
                                                     print(f"\n[Calling tool: {tool_name}...]", end="", flush=True)
                                                 else:
-                                                    print(f"\n[Calling tool: (unknown name - item.raw_item.name not found)]", end="", flush=True)
-                                                    term_logger.warning("Could not find tool name via item.raw_item.name in tool_call_item.")
-                                            elif item.type == "tool_call_output_item": print(f"\n[Tool output received.]", end="", flush=True)
-                                        else: term_logger.warning(f"Received run_item_stream_event without a valid item: {event}")
+                                                    print(
+                                                        f"\n[Calling tool: (unknown name - item.raw_item.name not found)]",
+                                                        end="",
+                                                        flush=True,
+                                                    )
+                                                    term_logger.warning(
+                                                        "Could not find tool name via item.raw_item.name in tool_call_item."
+                                                    )
+                                            elif item.type == "tool_call_output_item":
+                                                print(f"\n[Tool output received.]", end="", flush=True)
+                                        else:
+                                            term_logger.warning(
+                                                f"Received run_item_stream_event without a valid item: {event}"
+                                            )
                                 run_succeeded = True
                                 term_logger.debug("Agent stream completed successfully.")
-                            except UserError as ue: print(f"\n[Agent UserError: {ue}]"); term_logger.error(f"Agent run UserError: {ue}", exc_info=True); print("[MCP Connection error detected. Check MCP server status.]")
-                            except (AgentsException, MaxTurnsExceeded) as agent_err: print(f"\n[Agent Error: {agent_err}]"); term_logger.error(f"Agent run error: {agent_err}", exc_info=True)
-                            except AttributeError as ae: print(f"\n[Error processing stream event: {ae}]"); term_logger.error(f"Stream processing AttributeError: {ae}", exc_info=True)
-                            except Exception as stream_err: print(f"\n[Error: {stream_err}]"); term_logger.error(f"Stream processing error: {stream_err}", exc_info=True)
+                            except UserError as ue:
+                                print(f"\n[Agent UserError: {ue}]")
+                                term_logger.error(f"Agent run UserError: {ue}", exc_info=True)
+                                print("[MCP Connection error detected. Check MCP server status.]")
+                            except (AgentsException, MaxTurnsExceeded) as agent_err:
+                                print(f"\n[Agent Error: {agent_err}]")
+                                term_logger.error(f"Agent run error: {agent_err}", exc_info=True)
+                            except AttributeError as ae:
+                                print(f"\n[Error processing stream event: {ae}]")
+                                term_logger.error(f"Stream processing AttributeError: {ae}", exc_info=True)
+                            except Exception as stream_err:
+                                print(f"\n[Error: {stream_err}]")
+                                term_logger.error(f"Stream processing error: {stream_err}", exc_info=True)
                             print()
                             if run_succeeded and result_stream is not None:
                                 agent_input_list = result_stream.to_input_list()
                                 term_logger.debug(f"Updated history list. Length: {len(agent_input_list)}")
-                                if len(agent_input_list) > MAX_HISTORY_TURNS_TERMINAL * 2: agent_input_list = agent_input_list[-(MAX_HISTORY_TURNS_TERMINAL * 2) :]; term_logger.debug(f"Truncated history list to {len(agent_input_list)}.")
-                            elif not run_succeeded: term_logger.warning("Keeping previous history list due to agent run failure.")
-                        except EOFError: term_logger.info("EOF received"); break
-                        except KeyboardInterrupt: term_logger.info("Interrupt received"); break
-                        except Exception as loop_err: term_logger.error(f"Terminal loop error: {loop_err}", exc_info=True); print(f"\n[Error: {loop_err}]")
-            except Exception as start_err: term_logger.critical(f"Terminal agent start failed: {start_err}", exc_info=True); print(f"\n[Critical Setup Error: {start_err}]")
-            finally: term_logger.info("Terminal chat session ended."); print("\nExiting terminal mode.")
+                                if len(agent_input_list) > MAX_HISTORY_TURNS_TERMINAL * 2:
+                                    agent_input_list = agent_input_list[-(MAX_HISTORY_TURNS_TERMINAL * 2) :]
+                                    term_logger.debug(f"Truncated history list to {len(agent_input_list)}.")
+                            elif not run_succeeded:
+                                term_logger.warning("Keeping previous history list due to agent run failure.")
+                        except EOFError:
+                            term_logger.info("EOF received")
+                            break
+                        except KeyboardInterrupt:
+                            term_logger.info("Interrupt received")
+                            break
+                        except Exception as loop_err:
+                            term_logger.error(f"Terminal loop error: {loop_err}", exc_info=True)
+                            print(f"\n[Error: {loop_err}]")
+            except Exception as start_err:
+                term_logger.critical(f"Terminal agent start failed: {start_err}", exc_info=True)
+                print(f"\n[Critical Setup Error: {start_err}]")
+            finally:
+                term_logger.info("Terminal chat session ended.")
+                print("\nExiting terminal mode.")
+
         asyncio.run(terminal_chat())
         logger.info("Terminal agent process finished.")
 
@@ -419,7 +467,7 @@ def agent_command(
         try:
             effective_log_level_name = logging.getLevelName(logging.getLogger().getEffectiveLevel())
             uvicorn.run(
-                "ydrpolicy.backend.api_main:app", # Ensure this points to your FastAPI app instance
+                "ydrpolicy.backend.api_main:app",  # Ensure this points to your FastAPI app instance
                 host=run_api_host,
                 port=run_api_port,
                 workers=api_workers,
@@ -431,12 +479,14 @@ def agent_command(
             logger.critical(f"Failed to start FastAPI server: {e}", exc_info=True)
             raise typer.Exit(code=1)
 
+
 # --- Main Execution Guard ---
 # (Keep existing main execution guard)
 if __name__ == "__main__":
     print(f"\n{'='*80}\nYDR Policy RAG Engine CLI - Starting\n{'='*80}")
     app()
     print(f"\n{'='*80}\nYDR Policy RAG Engine CLI - Finished\n{'='*80}")
+
 ```
 
 ## utils/commit.py
@@ -449,140 +499,152 @@ import subprocess
 from datetime import datetime
 import sys
 
+
 def get_repo_root():
     """Get the root directory of the git repository."""
     try:
-        root = subprocess.check_output(['git', 'rev-parse', '--show-toplevel'], 
-                                      stderr=subprocess.STDOUT).decode('utf-8').strip()
+        root = (
+            subprocess.check_output(["git", "rev-parse", "--show-toplevel"], stderr=subprocess.STDOUT)
+            .decode("utf-8")
+            .strip()
+        )
         return root
     except subprocess.CalledProcessError:
         print("Error: Not a git repository or git command not found.")
         sys.exit(1)
 
+
 def check_git_status():
     """Check if there are changes to commit."""
-    status = subprocess.check_output(['git', 'status', '--porcelain']).decode('utf-8').strip()
+    status = subprocess.check_output(["git", "status", "--porcelain"]).decode("utf-8").strip()
     return bool(status)
+
 
 def get_commit_number():
     """Extract the latest commit number from commit_log.md."""
     repo_root = get_repo_root()
-    commit_log_path = os.path.join(repo_root, 'commit_log.md')
-    
+    commit_log_path = os.path.join(repo_root, "commit_log.md")
+
     if not os.path.exists(commit_log_path):
         return 0
-    
-    with open(commit_log_path, 'r') as f:
+
+    with open(commit_log_path, "r") as f:
         content = f.read()
-    
+
     # Find the latest commit number using regex
-    commit_pattern = r'## commit (\d+)'
+    commit_pattern = r"## commit (\d+)"
     matches = re.findall(commit_pattern, content)
-    
+
     if not matches:
         return 0
-    
+
     return int(matches[0]) + 1
+
 
 def get_commit_message():
     """Get commit message from user input with proper formatting."""
     print("Enter your commit message (press Enter twice to finish):")
     lines = []
-    
+
     while True:
         line = input()
         if not line and lines and not lines[-1]:  # Two consecutive empty lines
             lines.pop()  # Remove the last empty line
             break
         lines.append(line)
-    
+
     # Process lines to handle different levels of dashes
     processed_lines = []
     for line in lines:
         # Match dashes at the beginning of the line
-        match = re.match(r'^(-+)(\s+)?(.*)$', line)
+        match = re.match(r"^(-+)(\s+)?(.*)$", line)
         if match:
             dash_count = len(match.group(1))
             content = match.group(3)
             processed_lines.append(f"{'  ' * (dash_count - 1)}- {content}")
         else:
             processed_lines.append(line)
-    
+
     return processed_lines
+
 
 def update_commit_log(commit_number, commit_message):
     """Update the commit_log.md file with the new commit."""
     repo_root = get_repo_root()
-    commit_log_path = os.path.join(repo_root, 'commit_log.md')
-    
+    commit_log_path = os.path.join(repo_root, "commit_log.md")
+
     # Get current date and time
     now = datetime.now()
     date_time = now.strftime("%-m/%-d/%Y - %H:%M")
-    
+
     # Create new commit entry
     new_commit = f"## commit {commit_number} ({date_time})\n\n"
     for line in commit_message:
         new_commit += f"{line}\n"
-    
+
     # Add an extra newline for spacing
     new_commit += "\n"
-    
+
     # Read existing content
     if os.path.exists(commit_log_path):
-        with open(commit_log_path, 'r') as f:
+        with open(commit_log_path, "r") as f:
             content = f.read()
-            
+
         # Split content to insert new commit after the header
-        if '# Commit History' in content:
-            header, rest = content.split('# Commit History', 1)
-            new_content = header + '# Commit History' + '\n\n' + new_commit + rest.lstrip()
+        if "# Commit History" in content:
+            header, rest = content.split("# Commit History", 1)
+            new_content = header + "# Commit History" + "\n\n" + new_commit + rest.lstrip()
         else:
-            new_content = '# Commit History\n\n' + new_commit + content
+            new_content = "# Commit History\n\n" + new_commit + content
     else:
-        new_content = '# Commit History\n\n' + new_commit
-    
+        new_content = "# Commit History\n\n" + new_commit
+
     # Write updated content back
-    with open(commit_log_path, 'w') as f:
+    with open(commit_log_path, "w") as f:
         f.write(new_content)
+
 
 def perform_git_operations(commit_number):
     """Perform git add, commit, and push operations."""
     try:
         # Git add
-        subprocess.run(['git', 'add', '.'], check=True)
-        
+        subprocess.run(["git", "add", "."], check=True)
+
         # Git commit
         commit_message = f"commit {commit_number}"
-        subprocess.run(['git', 'commit', '-m', commit_message], check=True)
-        
+        subprocess.run(["git", "commit", "-m", commit_message], check=True)
+
         # Git push
-        subprocess.run(['git', 'push'], check=True)
-        
+        subprocess.run(["git", "push"], check=True)
+
         print(f"Successfully committed and pushed: commit {commit_number}")
     except subprocess.CalledProcessError as e:
         print(f"Error during git operations: {e}")
         sys.exit(1)
+
 
 def main():
     # Check if there are changes to commit
     if not check_git_status():
         print("No changes to commit.")
         return
-    
+
     # Get the next commit number
     commit_number = get_commit_number()
-    
+
     # Get commit message from user
     commit_message = get_commit_message()
-    
+
     # Update commit_log.md
     update_commit_log(commit_number, commit_message)
-    
+
     # Perform git operations
     perform_git_operations(commit_number)
 
+
 if __name__ == "__main__":
     main()
+
 ```
 
 ## utils/collect_scripts.py
@@ -833,17 +895,16 @@ def setup_logging(
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))   
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from ydrpolicy.data_collection.scrape import scrape_main
 from ydrpolicy.data_collection.config import config
 
+
 def test_scraper():
     config.PATHS.DATA_DIR = os.path.join(
-        os.path.dirname(
-            os.path.dirname(
-                os.path.dirname(
-                os.path.abspath(__file__)))), "test_data")
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "test_data"
+    )
     config.PATHS.RAW_DATA_DIR = os.path.join(config.PATHS.DATA_DIR, "raw")
     config.PATHS.DOCUMENT_DIR = os.path.join(config.PATHS.RAW_DATA_DIR, "documents")
     config.PATHS.MARKDOWN_DIR = os.path.join(config.PATHS.RAW_DATA_DIR, "markdown_files")
@@ -855,8 +916,10 @@ def test_scraper():
 
     scrape_main(config=config)
 
+
 if __name__ == "__main__":
     test_scraper()
+
 ```
 
 ## tests/data_collection/test_collect_one.py
@@ -868,16 +931,17 @@ import sys
 import os
 import logging
 import time
-import re # Import re for timestamp matching
+import re  # Import re for timestamp matching
 from dotenv import load_dotenv
 
 project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.append(project_root)
-dotenv_path = os.path.join(project_root, '.env')
+dotenv_path = os.path.join(project_root, ".env")
 load_dotenv(dotenv_path=dotenv_path)
 
 from ydrpolicy.data_collection.collect_policies import collect_one
 from ydrpolicy.data_collection.config import config
+
 
 def test_collect_one():
     """
@@ -903,8 +967,10 @@ def test_collect_one():
     # --- Ensure API keys ---
     config.LLM.OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
     config.LLM.MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY")
-    if not config.LLM.OPENAI_API_KEY: print("WARNING: OPENAI_API_KEY missing.")
-    if not config.LLM.MISTRAL_API_KEY: print("WARNING: MISTRAL_API_KEY missing.")
+    if not config.LLM.OPENAI_API_KEY:
+        print("WARNING: OPENAI_API_KEY missing.")
+    if not config.LLM.MISTRAL_API_KEY:
+        print("WARNING: MISTRAL_API_KEY missing.")
 
     # --- Define Test URL ---
     test_url = "https://medicine.yale.edu/diagnosticradiology/patientcare/policies/intraosseousneedlecontrastinjection/"
@@ -929,16 +995,21 @@ def test_collect_one():
         print("--- Running Assertions ---")
         raw_markdown_files_found = []
         if os.path.exists(config.PATHS.MARKDOWN_DIR):
-            raw_markdown_files_found = [f for f in os.listdir(config.PATHS.MARKDOWN_DIR) if f.endswith('.md') and re.match(r"\d{20}\.md", f)]
+            raw_markdown_files_found = [
+                f for f in os.listdir(config.PATHS.MARKDOWN_DIR) if f.endswith(".md") and re.match(r"\d{20}\.md", f)
+            ]
         print(f"Raw Timestamped Markdown files found ({len(raw_markdown_files_found)}): {raw_markdown_files_found}")
         assert len(raw_markdown_files_found) > 0, "No raw timestamped markdown file was created."
 
         # Find the policy directory created within scraped_policies (expecting <title>_<timestamp> format)
         policy_dirs_found = []
-        expected_dir_pattern = re.compile(r".+_\d{20}$") # Ends with _<20-digit-timestamp>
+        expected_dir_pattern = re.compile(r".+_\d{20}$")  # Ends with _<20-digit-timestamp>
         if os.path.exists(config.PATHS.SCRAPED_POLICIES_DIR):
-             policy_dirs_found = [d for d in os.listdir(config.PATHS.SCRAPED_POLICIES_DIR)
-                                  if os.path.isdir(os.path.join(config.PATHS.SCRAPED_POLICIES_DIR, d)) and expected_dir_pattern.match(d)]
+            policy_dirs_found = [
+                d
+                for d in os.listdir(config.PATHS.SCRAPED_POLICIES_DIR)
+                if os.path.isdir(os.path.join(config.PATHS.SCRAPED_POLICIES_DIR, d)) and expected_dir_pattern.match(d)
+            ]
 
         print(f"Processed Policy output directories found ({len(policy_dirs_found)}): {policy_dirs_found}")
         assert len(policy_dirs_found) > 0, "No processed policy output directory (<title>_<timestamp>) was created."
@@ -965,7 +1036,9 @@ def test_collect_one():
         # assert txt_size < md_size, "content.txt filtering did not reduce size"
 
         # Check for images directly in the policy dir
-        images_in_policy_dir = [f for f in os.listdir(policy_output_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+        images_in_policy_dir = [
+            f for f in os.listdir(policy_output_dir) if f.lower().endswith((".png", ".jpg", ".jpeg", ".gif"))
+        ]
         print(f"Images found in policy dir ({len(images_in_policy_dir)}): {images_in_policy_dir}")
         # assert len(images_in_policy_dir) > 0, "Expected images but none found."
 
@@ -976,10 +1049,12 @@ def test_collect_one():
         print(f"ERROR during test_collect_one: {e}")
         raise
 
+
 if __name__ == "__main__":
     print("Running test_collect_one directly...")
     test_collect_one()
     print("Test finished. Check 'test_data' directory for output.")
+
 ```
 
 ## tests/data_collection/test_collect_all.py
@@ -990,8 +1065,8 @@ if __name__ == "__main__":
 import sys
 import os
 import logging
-import re # Import re for assertions
-import time # Import time for potential delays
+import re  # Import re for assertions
+import time  # Import time for potential delays
 from dotenv import load_dotenv
 
 # Ensure the project root is in the Python path
@@ -999,13 +1074,15 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.append(project_root)
 
 # Load environment variables from .env file at the project root
-dotenv_path = os.path.join(project_root, '.env')
+dotenv_path = os.path.join(project_root, ".env")
 load_dotenv(dotenv_path=dotenv_path)
 
 # Import the main function to test
 from ydrpolicy.data_collection.collect_policies import collect_all
+
 # Import config and logger
 from ydrpolicy.data_collection.config import config
+
 
 def test_collect_all():
     """
@@ -1020,7 +1097,7 @@ def test_collect_all():
     print("Ensure the 'test_data' directory is clean before running for accurate assertions.")
 
     # --- Override config paths to use test_data ---
-    original_data_dir = config.PATHS.DATA_DIR # Keep original if needed later
+    original_data_dir = config.PATHS.DATA_DIR  # Keep original if needed later
     config.PATHS.DATA_DIR = test_data_dir
     config.PATHS.RAW_DATA_DIR = os.path.join(config.PATHS.DATA_DIR, "raw")
     config.PATHS.DOCUMENT_DIR = os.path.join(config.PATHS.RAW_DATA_DIR, "documents")
@@ -1035,19 +1112,19 @@ def test_collect_all():
     # Use a single log file for the combined collect_all test run
     test_log_file = os.path.join(test_log_dir, "collect_all_test.log")
     # Assign path to both potential log config attributes if they exist
-    if hasattr(config.LOGGING, 'CRAWLER_LOG_FILE'):
+    if hasattr(config.LOGGING, "CRAWLER_LOG_FILE"):
         config.LOGGING.CRAWLER_LOG_FILE = test_log_file
-    if hasattr(config.LOGGING, 'SCRAPER_LOG_FILE'):
+    if hasattr(config.LOGGING, "SCRAPER_LOG_FILE"):
         config.LOGGING.SCRAPER_LOG_FILE = test_log_file
-    if hasattr(config.LOGGING, 'COLLECT_POLICIES_LOG_FILE'): # If collect_policies has its own
+    if hasattr(config.LOGGING, "COLLECT_POLICIES_LOG_FILE"):  # If collect_policies has its own
         config.LOGGING.COLLECT_POLICIES_LOG_FILE = test_log_file
 
     # --- Override specific crawler/scraper settings for testing ---
     print("Overriding CRAWLER settings for test:")
-    config.CRAWLER.MAX_DEPTH = 2 # Crawl start URL + 1 level deep
+    config.CRAWLER.MAX_DEPTH = 2  # Crawl start URL + 1 level deep
     print(f"  - MAX_DEPTH set to: {config.CRAWLER.MAX_DEPTH}")
     config.CRAWLER.RESUME_CRAWL = False
-    config.CRAWLER.RESET_CRAWL = True # Clears state and CSV on start
+    config.CRAWLER.RESET_CRAWL = True  # Clears state and CSV on start
     print(f"  - RESUME_CRAWL set to: {config.CRAWLER.RESUME_CRAWL}")
     print(f"  - RESET_CRAWL set to: {config.CRAWLER.RESET_CRAWL}")
     print(f"  - MAIN_URL using default: {config.CRAWLER.MAIN_URL}")
@@ -1055,8 +1132,10 @@ def test_collect_all():
     # Ensure API keys are loaded into config
     config.LLM.OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
     config.LLM.MISTRAL_API_KEY = os.environ.get("MISTRAL_API_KEY")
-    if not config.LLM.OPENAI_API_KEY: print("WARNING: OPENAI_API_KEY missing. Scraper LLM calls will fail.")
-    if not config.LLM.MISTRAL_API_KEY: print("WARNING: MISTRAL_API_KEY missing. OCR may fail.")
+    if not config.LLM.OPENAI_API_KEY:
+        print("WARNING: OPENAI_API_KEY missing. Scraper LLM calls will fail.")
+    if not config.LLM.MISTRAL_API_KEY:
+        print("WARNING: MISTRAL_API_KEY missing. OCR may fail.")
 
     # --- Create Logger for the Test ---
     test_logger = logging.getLogger(__name__)
@@ -1073,7 +1152,7 @@ def test_collect_all():
         # Ensure output directories exist before calling
         os.makedirs(config.PATHS.MARKDOWN_DIR, exist_ok=True)
         os.makedirs(config.PATHS.SCRAPED_POLICIES_DIR, exist_ok=True)
-        os.makedirs(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), exist_ok=True) # State dir
+        os.makedirs(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), exist_ok=True)  # State dir
 
         collect_all(config=config)
 
@@ -1086,7 +1165,9 @@ def test_collect_all():
         # 1. Check if raw markdown files exist (timestamp named)
         raw_md_files = []
         if os.path.exists(config.PATHS.MARKDOWN_DIR):
-            raw_md_files = [f for f in os.listdir(config.PATHS.MARKDOWN_DIR) if f.endswith('.md') and re.match(r"\d{20}\.md", f)]
+            raw_md_files = [
+                f for f in os.listdir(config.PATHS.MARKDOWN_DIR) if f.endswith(".md") and re.match(r"\d{20}\.md", f)
+            ]
         print(f"Raw Timestamped Markdown files found ({len(raw_md_files)}): {raw_md_files}")
         assert len(raw_md_files) > 0, "No raw timestamped markdown files found in markdown_files directory."
 
@@ -1095,16 +1176,30 @@ def test_collect_all():
         assert os.path.exists(csv_path), "crawled_policies_data.csv was not created."
         # ** MODIFIED ASSERTION FOR CSV SIZE **
         # Define expected columns locally for the check
-        expected_csv_columns = ['url', 'file_path', 'include', 'found_links_count', 'definite_links', 'probable_links', 'timestamp']
-        assert os.path.getsize(csv_path) > len(','.join(expected_csv_columns)) + 1, "crawled_policies_data.csv seems empty (size <= header)."
+        expected_csv_columns = [
+            "url",
+            "file_path",
+            "include",
+            "found_links_count",
+            "definite_links",
+            "probable_links",
+            "timestamp",
+        ]
+        assert (
+            os.path.getsize(csv_path) > len(",".join(expected_csv_columns)) + 1
+        ), "crawled_policies_data.csv seems empty (size <= header)."
         # ** END MODIFICATION **
         print(f"Found crawl log CSV: {csv_path}")
 
         # 3. Check if processed policies directory contains expected folders
         processed_policy_dirs = []
-        expected_dir_pattern = re.compile(r".+_\d{20}$") # <title>_<timestamp>
+        expected_dir_pattern = re.compile(r".+_\d{20}$")  # <title>_<timestamp>
         if os.path.exists(config.PATHS.SCRAPED_POLICIES_DIR):
-            processed_policy_dirs = [d for d in os.listdir(config.PATHS.SCRAPED_POLICIES_DIR) if os.path.isdir(os.path.join(config.PATHS.SCRAPED_POLICIES_DIR, d)) and expected_dir_pattern.match(d)]
+            processed_policy_dirs = [
+                d
+                for d in os.listdir(config.PATHS.SCRAPED_POLICIES_DIR)
+                if os.path.isdir(os.path.join(config.PATHS.SCRAPED_POLICIES_DIR, d)) and expected_dir_pattern.match(d)
+            ]
         print(f"Processed policy directories found ({len(processed_policy_dirs)}): {processed_policy_dirs}")
         # This might be 0 if no files were classified as policies, which is possible.
         # Modify assertion to be less strict or check logs if failure is unexpected.
@@ -1146,6 +1241,7 @@ if __name__ == "__main__":
     print("\nTest finished.")
     print(f"Check the '{os.path.join(project_root, 'test_data')}' directory for output files.")
     print(f"Check the log file: '{os.path.join(project_root, 'test_data/logs/collect_all_test.log')}'")
+
 ```
 
 ## tests/data_collection/test_crawler.py
@@ -1154,17 +1250,16 @@ if __name__ == "__main__":
 import sys
 import os
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))   
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from ydrpolicy.data_collection.crawl import crawl_main
 from ydrpolicy.data_collection.config import config
 
+
 def test_crawler():
     config.PATHS.DATA_DIR = os.path.join(
-        os.path.dirname(
-            os.path.dirname(
-                os.path.dirname(
-                os.path.abspath(__file__)))), "test_data")
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "test_data"
+    )
     config.PATHS.RAW_DATA_DIR = os.path.join(config.PATHS.DATA_DIR, "raw")
     config.PATHS.DOCUMENT_DIR = os.path.join(config.PATHS.RAW_DATA_DIR, "documents")
     config.PATHS.MARKDOWN_DIR = os.path.join(config.PATHS.RAW_DATA_DIR, "markdown_files")
@@ -1175,8 +1270,10 @@ def test_crawler():
 
     crawl_main(config=config)
 
-if __name__ == "__main__":  
+
+if __name__ == "__main__":
     test_crawler()
+
 ```
 
 ## tests/backend/database/test_db.py
@@ -1199,9 +1296,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy import text, inspect
 
 # Import models
-from ydrpolicy.backend.database.models import (
-    User, Policy, PolicyChunk, Image, Chat, Message, ToolUsage
-)
+from ydrpolicy.backend.database.models import User, Policy, PolicyChunk, Image, Chat, Message, ToolUsage
 
 # Import repositories
 from ydrpolicy.backend.database.repository.users import UserRepository
@@ -1223,25 +1318,24 @@ DB_NAME = "ydrpolicy_test"
 
 # Connection URL for PostgreSQL admin database
 ADMIN_DB_URL = f"postgresql+asyncpg://{DB_USER}:@{DB_HOST}:{DB_PORT}/postgres"
-# Test database URL 
+# Test database URL
 TEST_DB_URL = f"postgresql+asyncpg://{DB_USER}:@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 
 async def create_test_database():
     """Create the test database if it doesn't exist."""
     test_logger.info(f"Connecting to admin database to create {DB_NAME}")
-    
+
     # Connect to postgres database to create our test database
     admin_engine = create_async_engine(ADMIN_DB_URL)
-    
+
     try:
         # Check if database exists
         async with admin_engine.connect() as conn:
             # We need to run this as raw SQL since we can't use CREATE DATABASE in a transaction
-            result = await conn.execute(
-                text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'")
-            )
+            result = await conn.execute(text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'"))
             exists = result.scalar() is not None
-            
+
             if not exists:
                 # Commit any open transaction
                 await conn.execute(text("COMMIT"))
@@ -1253,37 +1347,38 @@ async def create_test_database():
     finally:
         await admin_engine.dispose()
 
+
 async def drop_test_database():
     """Drop the test database if it exists."""
     test_logger.info(f"Connecting to admin database to drop {DB_NAME}")
-    
+
     # Connect to postgres database to drop our test database
     admin_engine = create_async_engine(ADMIN_DB_URL)
-    
+
     try:
         # Check if database exists
         async with admin_engine.connect() as conn:
             # We need to run this as raw SQL since we can't use DROP DATABASE in a transaction
-            result = await conn.execute(
-                text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'")
-            )
+            result = await conn.execute(text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'"))
             exists = result.scalar() is not None
-            
+
             if exists:
                 # Force-close all connections to the database
                 await conn.execute(text("COMMIT"))
                 test_logger.info(f"Terminating all connections to {DB_NAME}")
                 await conn.execute(
-                    text(f"""
+                    text(
+                        f"""
                     SELECT pg_terminate_backend(pg_stat_activity.pid)
                     FROM pg_stat_activity
                     WHERE pg_stat_activity.datname = '{DB_NAME}'
                     AND pid <> pg_backend_pid()
-                    """)
+                    """
+                    )
                 )
                 # Add a small delay to ensure connections are fully terminated
                 await asyncio.sleep(0.5)
-                
+
                 # Drop database with IF EXISTS to avoid errors
                 test_logger.info(f"Dropping database {DB_NAME}")
                 await conn.execute(text(f"DROP DATABASE IF EXISTS {DB_NAME}"))
@@ -1296,32 +1391,33 @@ async def drop_test_database():
     finally:
         await admin_engine.dispose()
 
+
 async def setup_database():
     """Initialize the test database with tables and triggers."""
     test_logger.info(f"Setting up database at {TEST_DB_URL}")
-    
+
     # Create engine
     engine = create_async_engine(TEST_DB_URL, echo=True)
-    
+
     try:
         # Create connection and run simple query
         async with engine.connect() as conn:
             result = await conn.execute(text("SELECT 1"))
             value = result.scalar_one()
             test_logger.info(f"Connection test result: {value}")
-            
+
             # Create extension for vector support
             await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
             test_logger.info("Vector extension created or exists")
-            
+
             # Commit any pending transaction
             await conn.commit()
-    
+
         # Create tables
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
         test_logger.info("Tables created")
-        
+
         # Create triggers for search vectors
         async with engine.connect() as conn:
             # Apply search vector triggers
@@ -1329,100 +1425,106 @@ async def setup_database():
                 await conn.execute(text(statement))
             await conn.commit()
         test_logger.info("Search vector triggers created")
-            
+
     except Exception as e:
         test_logger.error(f"Error setting up database: {e}")
         raise
     finally:
         await engine.dispose()
 
+
 async def verify_database_tables():
     """Verify that all expected tables exist in the database."""
     test_logger.info("Verifying database tables")
-    
+
     engine = create_async_engine(TEST_DB_URL)
-    
+
     try:
         async with engine.connect() as conn:
+
             def inspect_tables(conn_sync):
                 inspector = inspect(conn_sync)
                 tables = inspector.get_table_names()
                 test_logger.info(f"Found tables: {tables}")
-                
+
                 expected_tables = {
-                    "users", "policies", "policy_chunks", "images",
-                    "chats", "messages", "tool_usage", "policy_updates"
+                    "users",
+                    "policies",
+                    "policy_chunks",
+                    "images",
+                    "chats",
+                    "messages",
+                    "tool_usage",
+                    "policy_updates",
                 }
-                
+
                 missing_tables = expected_tables - set(tables)
                 unexpected_tables = set(tables) - expected_tables
-                
+
                 if missing_tables:
                     test_logger.error(f"Missing tables: {missing_tables}")
                     return False
-                
+
                 test_logger.info("All expected tables found")
                 return True
-            
+
             result = await conn.run_sync(inspect_tables)
             return result
     finally:
         await engine.dispose()
 
+
 # Test User Repository Functions
 async def test_user_repository():
     """Test user repository operations."""
     test_logger.info("Testing User Repository operations")
-    
+
     engine = create_async_engine(TEST_DB_URL)
     async_session = async_sessionmaker(engine, expire_on_commit=False)
-    
+
     try:
         async with async_session() as session:
             # Create user repository
             user_repo = UserRepository(session)
-            
+
             # Create test user
             test_user = User(
-                email="test@example.com",
-                password_hash="hashed_password",
-                full_name="Test User",
-                is_admin=False
+                email="test@example.com", password_hash="hashed_password", full_name="Test User", is_admin=False
             )
-            
+
             # Create user
             created_user = await user_repo.create(test_user)
             test_logger.info(f"Created user: {created_user.id} - {created_user.email}")
-            
+
             # Get user by ID
             fetched_user = await user_repo.get_by_id(created_user.id)
             assert fetched_user is not None, "Failed to fetch user by ID"
             test_logger.info(f"Successfully fetched user by ID: {fetched_user.email}")
-            
+
             # Get user by email
             email_user = await user_repo.get_by_email("test@example.com")
             assert email_user is not None, "Failed to fetch user by email"
             test_logger.info(f"Successfully fetched user by email: {email_user.email}")
-            
+
             # Update user
             update_data = {"full_name": "Updated User", "is_admin": True}
             updated_user = await user_repo.update(created_user.id, update_data)
             assert updated_user.full_name == "Updated User", "User update failed"
             assert updated_user.is_admin is True, "User update failed"
             test_logger.info(f"Successfully updated user: {updated_user.full_name}")
-            
+
             # Delete user
             delete_result = await user_repo.delete(created_user.id)
             assert delete_result is True, "User deletion failed"
             test_logger.info("Successfully deleted user")
-            
+
             # Verify user is deleted
             deleted_user = await user_repo.get_by_id(created_user.id)
             assert deleted_user is None, "User still exists after deletion"
-            
+
             # Commit changes
             await session.commit()
-            
+
             test_logger.info("User Repository tests passed!")
             return True
     except Exception as e:
@@ -1431,112 +1533,102 @@ async def test_user_repository():
     finally:
         await engine.dispose()
 
+
 # Test Policy Repository Functions
 async def test_policy_repository():
     """Test policy repository operations."""
     test_logger.info("Testing Policy Repository operations")
-    
+
     engine = create_async_engine(TEST_DB_URL)
     async_session = async_sessionmaker(engine, expire_on_commit=False)
-    
+
     try:
         async with async_session() as session:
             # Create policy repository
             policy_repo = PolicyRepository(session)
-            
+
             # Create test policy
             test_policy = Policy(
                 title="Test Policy",
                 description="This is a test policy",
                 source_url="http://example.com/policy",
                 markdown_content="# Test Policy\nThis is a markdown content.",
-                text_content="Test Policy. This is a text content."
+                text_content="Test Policy. This is a text content.",
             )
-            
+
             # Create policy
             created_policy = await policy_repo.create(test_policy)
             test_logger.info(f"Created policy: {created_policy.id} - {created_policy.title}")
-            
+
             # Verify search vector was created by trigger
             assert created_policy.search_vector is not None, "Search vector was not created"
             test_logger.info("Search vector trigger worked correctly")
-            
+
             # Get policy by ID
             fetched_policy = await policy_repo.get_by_id(created_policy.id)
             assert fetched_policy is not None, "Failed to fetch policy by ID"
             test_logger.info(f"Successfully fetched policy by ID: {fetched_policy.title}")
-            
+
             # Get policy by title
             title_policy = await policy_repo.get_by_title("Test Policy")
             assert title_policy is not None, "Failed to fetch policy by title"
             test_logger.info(f"Successfully fetched policy by title: {title_policy.title}")
-            
+
             # Get policy by URL
             url_policy = await policy_repo.get_by_url("http://example.com/policy")
             assert url_policy is not None, "Failed to fetch policy by URL"
             test_logger.info(f"Successfully fetched policy by URL: {url_policy.title}")
-            
+
             # Create a policy chunk
             test_chunk = PolicyChunk(
-                policy_id=created_policy.id,
-                chunk_index=0,
-                content="This is a test chunk content."
+                policy_id=created_policy.id, chunk_index=0, content="This is a test chunk content."
             )
-            
+
             # Create chunk
             created_chunk = await policy_repo.create_chunk(test_chunk)
             test_logger.info(f"Created policy chunk: {created_chunk.id}")
-            
+
             # Test full text search
             search_results = await policy_repo.full_text_search("test")
             assert len(search_results) > 0, "Full text search returned no results"
             test_logger.info(f"Full text search successful: {len(search_results)} results")
-            
+
             # Update policy
-            update_data = {
-                "title": "Updated Policy Title",
-                "description": "This is an updated description"
-            }
+            update_data = {"title": "Updated Policy Title", "description": "This is an updated description"}
             updated_policy = await policy_repo.update(created_policy.id, update_data)
             assert updated_policy.title == "Updated Policy Title", "Policy update failed"
             test_logger.info(f"Successfully updated policy: {updated_policy.title}")
-            
+
             # Log policy update
             # Create admin user for logging
             admin_user = User(
-                email="admin@example.com",
-                password_hash="admin_hash",
-                full_name="Admin User",
-                is_admin=True
+                email="admin@example.com", password_hash="admin_hash", full_name="Admin User", is_admin=True
             )
             user_repo = UserRepository(session)
             created_admin = await user_repo.create(admin_user)
-            
+
             policy_update = await policy_repo.log_policy_update(
-                updated_policy.id, 
-                created_admin.id,
-                "update",
-                {"modified_fields": ["title", "description"]}
+                updated_policy.id, created_admin.id, "update", {"modified_fields": ["title", "description"]}
             )
             test_logger.info(f"Logged policy update: {policy_update.id}")
-            
+
             # Get policy update history
             update_history = await policy_repo.get_policy_update_history(updated_policy.id)
             assert len(update_history) > 0, "Policy update history is empty"
             test_logger.info(f"Policy update history retrieved: {len(update_history)} entries")
-            
+
             # Delete policy
             delete_result = await policy_repo.delete_by_id(created_policy.id)
             assert delete_result is True, "Policy deletion failed"
             test_logger.info("Successfully deleted policy")
-            
+
             # Verify policy is deleted
             deleted_policy = await policy_repo.get_by_id(created_policy.id)
             assert deleted_policy is None, "Policy still exists after deletion"
-            
+
             # Commit changes
             await session.commit()
-            
+
             test_logger.info("Policy Repository tests passed!")
             return True
     except Exception as e:
@@ -1545,92 +1637,82 @@ async def test_policy_repository():
     finally:
         await engine.dispose()
 
+
 # Test Additional Tables
 async def test_additional_tables():
     """Test additional tables: images, chats, messages, and tool usage."""
     test_logger.info("Testing additional tables (images, chats, messages, tool usage)")
-    
+
     engine = create_async_engine(TEST_DB_URL)
     async_session = async_sessionmaker(engine, expire_on_commit=False)
-    
+
     try:
         async with async_session() as session:
             # Create repositories
             user_repo = UserRepository(session)
             policy_repo = PolicyRepository(session)
-            
+
             # Create a user for chat relationship
             user = User(
                 email="chat_user@example.com",
                 password_hash="hashed_password",
                 full_name="Chat Test User",
-                is_admin=False
+                is_admin=False,
             )
             created_user = await user_repo.create(user)
             test_logger.info(f"Created user for chat test: {created_user.id}")
-            
+
             # Create a policy for image relationship
             policy = Policy(
                 title="Image Test Policy",
                 description="Policy for testing images",
                 source_url="http://example.com/image-policy",
                 markdown_content="# Image Test\nThis is a markdown content with image.",
-                text_content="Image Test. This is a text content with image reference."
+                text_content="Image Test. This is a text content with image reference.",
             )
             created_policy = await policy_repo.create(policy)
             test_logger.info(f"Created policy for image test: {created_policy.id}")
-            
+
             # Create an image associated with the policy
             image = Image(
                 policy_id=created_policy.id,
                 filename="test-image.png",
                 relative_path="test-image.png",
-                image_metadata={"width": 800, "height": 600, "format": "png"}
+                image_metadata={"width": 800, "height": 600, "format": "png"},
             )
             session.add(image)
             await session.flush()
             test_logger.info(f"Created image: {image.id} for policy {image.policy_id}")
-            
+
             # Create a chat for the user
-            chat = Chat(
-                user_id=created_user.id,
-                title="Test Chat Session"
-            )
+            chat = Chat(user_id=created_user.id, title="Test Chat Session")
             session.add(chat)
             await session.flush()
             test_logger.info(f"Created chat: {chat.id} for user {chat.user_id}")
-            
+
             # Create messages in the chat
-            user_message = Message(
-                chat_id=chat.id,
-                role="user",
-                content="This is a test user message"
-            )
+            user_message = Message(chat_id=chat.id, role="user", content="This is a test user message")
             session.add(user_message)
             await session.flush()
             test_logger.info(f"Created user message: {user_message.id}")
-            
-            assistant_message = Message(
-                chat_id=chat.id,
-                role="assistant",
-                content="This is a test assistant response"
-            )
+
+            assistant_message = Message(chat_id=chat.id, role="assistant", content="This is a test assistant response")
             session.add(assistant_message)
             await session.flush()
             test_logger.info(f"Created assistant message: {assistant_message.id}")
-            
+
             # Create tool usage for the assistant message
             tool_usage = ToolUsage(
                 message_id=assistant_message.id,
                 tool_name="policy_search",
                 input={"query": "test policy"},
                 output={"results": [{"id": created_policy.id, "title": created_policy.title}]},
-                execution_time=0.125
+                execution_time=0.125,
             )
             session.add(tool_usage)
             await session.flush()
             test_logger.info(f"Created tool usage: {tool_usage.id}")
-            
+
             # Commit all changes
             await session.commit()
             test_logger.info("Additional tables test complete - all test data committed")
@@ -1641,28 +1723,29 @@ async def test_additional_tables():
     finally:
         await engine.dispose()
 
+
 async def test_chunking_and_embedding():
     """Test policy chunking and embedding functionality."""
     test_logger.info("Testing policy chunking and embedding functionality")
-    
+
     engine = create_async_engine(TEST_DB_URL)
     async_session = async_sessionmaker(engine, expire_on_commit=False)
-    
+
     try:
         async with async_session() as session:
             policy_repo = PolicyRepository(session)
-            
+
             # Create test policy
             policy = Policy(
                 title="Chunking Test Policy",
                 description="Policy for testing chunking and embedding",
                 source_url="http://example.com/chunking-policy",
                 markdown_content="# Chunking Test\nThis is content for testing chunks.",
-                text_content="Chunking Test. This is a longer text content that would typically be chunked into multiple pieces. We're simulating that process here by creating multiple chunks manually."
+                text_content="Chunking Test. This is a longer text content that would typically be chunked into multiple pieces. We're simulating that process here by creating multiple chunks manually.",
             )
             created_policy = await policy_repo.create(policy)
             test_logger.info(f"Created policy for chunking test: {created_policy.id}")
-            
+
             # Create multiple chunks with embeddings
             chunks = []
             for i in range(3):
@@ -1672,40 +1755,50 @@ async def test_chunking_and_embedding():
                     content=f"This is chunk {i} of the policy. It contains specific content.",
                     chunk_metadata={"position": i, "length": 50},
                     # Dummy embedding vector (would normally come from an embedding model)
-                    embedding=[0.1 * j for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)] if i == 0 else [0.2 * j for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)]
+                    embedding=(
+                        [0.1 * j for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)]
+                        if i == 0
+                        else [0.2 * j for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)]
+                    ),
                 )
                 created_chunk = await policy_repo.create_chunk(chunk)
                 chunks.append(created_chunk)
                 test_logger.info(f"Created chunk {i}: {created_chunk.id} with embedding")
-            
+
             # Verify chunks were created
             policy_chunks = await policy_repo.get_chunks_by_policy_id(created_policy.id)
             assert len(policy_chunks) == 3, f"Expected 3 chunks, got {len(policy_chunks)}"
             test_logger.info(f"Successfully retrieved {len(policy_chunks)} chunks for policy")
-            
+
             # Test getting neighbors of a chunk
             if len(chunks) > 1:
                 try:
                     # Check that chunks are proper objects with id attributes
-                    if hasattr(chunks[1], 'id'):
+                    if hasattr(chunks[1], "id"):
                         middle_chunk_id = chunks[1].id
                         neighbors = await policy_repo.get_chunk_neighbors(middle_chunk_id, window=1)
                         if "previous" in neighbors and neighbors["previous"] is not None:
                             if isinstance(neighbors["previous"], list) and len(neighbors["previous"]) > 0:
-                                test_logger.info(f"Found previous chunk(s): {', '.join(str(c.id) for c in neighbors['previous'])}")
+                                test_logger.info(
+                                    f"Found previous chunk(s): {', '.join(str(c.id) for c in neighbors['previous'])}"
+                                )
                             else:
                                 test_logger.info(f"Found previous chunk: {neighbors['previous']}")
                         if "next" in neighbors and neighbors["next"] is not None:
                             if isinstance(neighbors["next"], list) and len(neighbors["next"]) > 0:
-                                test_logger.info(f"Found next chunk(s): {', '.join(str(c.id) for c in neighbors['next'])}")
+                                test_logger.info(
+                                    f"Found next chunk(s): {', '.join(str(c.id) for c in neighbors['next'])}"
+                                )
                             else:
                                 test_logger.info(f"Found next chunk: {neighbors['next']}")
                         test_logger.info("Successfully retrieved chunk neighbors")
                     else:
-                        test_logger.warning(f"Chunk neighbors test skipped: chunks[1] does not have id attribute. Type: {type(chunks[1])}")
+                        test_logger.warning(
+                            f"Chunk neighbors test skipped: chunks[1] does not have id attribute. Type: {type(chunks[1])}"
+                        )
                 except Exception as e:
                     test_logger.warning(f"Chunk neighbors test skipped: {e}")
-            
+
             # Test search by embedding if supported
             try:
                 # Mock embedding vector for search
@@ -1714,11 +1807,11 @@ async def test_chunking_and_embedding():
                 test_logger.info(f"Vector search returned {len(embedding_results)} results")
             except Exception as e:
                 test_logger.warning(f"Vector search not fully tested: {e}")
-            
+
             # Keep the chunks in the database by not deleting the policy
             test_logger.info("Keeping policy chunks in database for inspection")
             await session.commit()
-            
+
             # Return policy id for reference
             return created_policy.id
     except Exception as e:
@@ -1727,55 +1820,56 @@ async def test_chunking_and_embedding():
     finally:
         await engine.dispose()
 
+
 # Run all tests
 async def run_all_tests(keep_db=False):
     """Run all database tests.
-    
+
     Args:
         keep_db: If True, don't drop the database after tests finish.
     """
     try:
         # Drop any existing test database
         await drop_test_database()
-        
+
         # Create fresh test database
         await create_test_database()
-        
+
         # Set up database with tables and triggers
         await setup_database()
-        
+
         # Verify database tables
         tables_ok = await verify_database_tables()
         if not tables_ok:
             test_logger.error("Database table verification failed")
             return
-        
+
         # Test user repository
         user_test_ok = await test_user_repository()
         if not user_test_ok:
             test_logger.error("User repository tests failed")
             return
-            
+
         # Test policy repository
         policy_test_ok = await test_policy_repository()
         if not policy_test_ok:
             test_logger.error("Policy repository tests failed")
             return
-            
+
         # Test additional tables
         additional_tables_ok = await test_additional_tables()
         if not additional_tables_ok:
             test_logger.error("Additional tables tests failed")
             return
-            
+
         # Test chunking and embedding
         chunking_and_embedding_ok = await test_chunking_and_embedding()
         if chunking_and_embedding_ok is None:
             test_logger.error("Chunking and embedding test failed")
             return
-            
+
         test_logger.info("All database tests passed successfully!")
-        
+
         if keep_db:
             test_logger.info(f"Keeping test database '{DB_NAME}' for inspection (--keep-db flag is set)")
         else:
@@ -1787,15 +1881,18 @@ async def run_all_tests(keep_db=False):
         if not keep_db:
             await drop_test_database()
 
+
 def parse_args():
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description="Test database functionality")
     parser.add_argument("--keep-db", action="store_true", help="Keep the test database after tests finish")
     return parser.parse_args()
 
+
 if __name__ == "__main__":
     args = parse_args()
-    asyncio.run(run_all_tests(keep_db=args.keep_db)) 
+    asyncio.run(run_all_tests(keep_db=args.keep_db))
+
 ```
 
 ## tests/backend/database/test_policy_chunks.py
@@ -1818,9 +1915,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy import text
 
 # Import models
-from ydrpolicy.backend.database.models import (
-    User, Policy, PolicyChunk, Image, PolicyUpdate
-)
+from ydrpolicy.backend.database.models import User, Policy, PolicyChunk, Image, PolicyUpdate
 
 # Import repositories and services
 from ydrpolicy.backend.database.repository.policies import PolicyRepository
@@ -1843,35 +1938,36 @@ DB_NAME = "ydrpolicy_test"
 
 # Connection URL for PostgreSQL admin database
 ADMIN_DB_URL = f"postgresql+asyncpg://{DB_USER}:@{DB_HOST}:{DB_PORT}/postgres"
-# Test database URL 
+# Test database URL
 TEST_DB_URL = f"postgresql+asyncpg://{DB_USER}:@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
 
 async def setup_database():
     """Initialize the test database with tables and triggers."""
     test_logger.info(f"Setting up database at {TEST_DB_URL}")
-    
+
     # Create engine
     engine = create_async_engine(TEST_DB_URL)
-    
+
     try:
         # Create connection and run simple query
         async with engine.connect() as conn:
             result = await conn.execute(text("SELECT 1"))
             value = result.scalar_one()
             test_logger.info(f"Connection test result: {value}")
-            
+
             # Create extension for vector support
             await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
             test_logger.info("Vector extension created or exists")
-            
+
             # Commit any pending transaction
             await conn.commit()
-    
+
         # Create tables
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
         test_logger.info("Tables created")
-        
+
         # Create triggers for search vectors
         async with engine.connect() as conn:
             # Apply search vector triggers
@@ -1879,29 +1975,28 @@ async def setup_database():
                 await conn.execute(text(statement))
             await conn.commit()
         test_logger.info("Search vector triggers created")
-            
+
     except Exception as e:
         test_logger.error(f"Error setting up database: {e}")
         raise
     finally:
         await engine.dispose()
 
+
 async def create_test_database():
     """Create the test database if it doesn't exist."""
     test_logger.info(f"Connecting to admin database to create {DB_NAME}")
-    
+
     # Connect to postgres database to create our test database
     admin_engine = create_async_engine(ADMIN_DB_URL)
-    
+
     try:
         # Check if database exists
         async with admin_engine.connect() as conn:
             # We need to run this as raw SQL since we can't use CREATE DATABASE in a transaction
-            result = await conn.execute(
-                text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'")
-            )
+            result = await conn.execute(text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'"))
             exists = result.scalar() is not None
-            
+
             if not exists:
                 # Commit any open transaction
                 await conn.execute(text("COMMIT"))
@@ -1913,37 +2008,38 @@ async def create_test_database():
     finally:
         await admin_engine.dispose()
 
+
 async def drop_test_database():
     """Drop the test database if it exists."""
     test_logger.info(f"Connecting to admin database to drop {DB_NAME}")
-    
+
     # Connect to postgres database to drop our test database
     admin_engine = create_async_engine(ADMIN_DB_URL)
-    
+
     try:
         # Check if database exists
         async with admin_engine.connect() as conn:
             # We need to run this as raw SQL since we can't use DROP DATABASE in a transaction
-            result = await conn.execute(
-                text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'")
-            )
+            result = await conn.execute(text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'"))
             exists = result.scalar() is not None
-            
+
             if exists:
                 # Force-close all connections to the database
                 await conn.execute(text("COMMIT"))
                 test_logger.info(f"Terminating all connections to {DB_NAME}")
                 await conn.execute(
-                    text(f"""
+                    text(
+                        f"""
                     SELECT pg_terminate_backend(pg_stat_activity.pid)
                     FROM pg_stat_activity
                     WHERE pg_stat_activity.datname = '{DB_NAME}'
                     AND pid <> pg_backend_pid()
-                    """)
+                    """
+                    )
                 )
                 # Add a small delay to ensure connections are fully terminated
                 await asyncio.sleep(0.5)
-                
+
                 # Drop database with IF EXISTS to avoid errors
                 test_logger.info(f"Dropping database {DB_NAME}")
                 await conn.execute(text(f"DROP DATABASE IF EXISTS {DB_NAME}"))
@@ -1956,10 +2052,11 @@ async def drop_test_database():
     finally:
         await admin_engine.dispose()
 
+
 async def test_chunking_functionality():
     """Test the chunking functionality directly."""
     test_logger.info("Testing chunking functionality...")
-    
+
     # Test text chunking
     sample_text = """This is a test paragraph.
     
@@ -1969,16 +2066,16 @@ async def test_chunking_functionality():
     
     A third paragraph begins here and continues with additional content.
     This paragraph also has multiple sentences for testing chunking behavior."""
-    
+
     # Test with different chunk sizes
     chunk_sizes = [50, 100, 200]
-    
+
     for size in chunk_sizes:
         chunks = chunk_text(sample_text, chunk_size=size, chunk_overlap=10)
         test_logger.info(f"Chunked text with size={size}: {len(chunks)} chunks produced")
         for i, chunk in enumerate(chunks):
             test_logger.info(f"  Chunk {i}: {len(chunk)} chars: {chunk[:30]}...")
-    
+
     # Test markdown chunking
     markdown_sample = """# Heading 1
     
@@ -1995,54 +2092,56 @@ async def test_chunking_functionality():
     ## Heading 2.1
     
     This is content under heading 2.1."""
-    
+
     markdown_chunks = chunk_markdown(markdown_sample, chunk_size=100, chunk_overlap=10)
     test_logger.info(f"Chunked markdown: {len(markdown_chunks)} chunks produced")
     for i, chunk in enumerate(markdown_chunks):
         test_logger.info(f"  MD Chunk {i}: {len(chunk)} chars: {chunk[:30]}...")
 
+
 async def test_embedding_functionality():
     """Test the embedding functionality directly."""
     test_logger.info("Testing embedding functionality...")
-    
+
     try:
         # Test single text embedding
         sample_text = "This is a test sentence for embedding."
         embedding = await embed_text(sample_text)
         test_logger.info(f"Generated embedding for single text: {len(embedding)} dimensions")
-        
+
         # Test batch embedding
         sample_texts = [
             "This is the first test sentence.",
             "This is the second test sentence.",
-            "This is the third test sentence."
+            "This is the third test sentence.",
         ]
-        
+
         embeddings = await embed_texts(sample_texts)
         test_logger.info(f"Generated {len(embeddings)} embeddings in batch mode")
         for i, emb in enumerate(embeddings):
             test_logger.info(f"  Embedding {i}: {len(emb)} dimensions")
-            
+
         return True
     except Exception as e:
         test_logger.error(f"Error testing embedding functionality: {e}")
         return False
 
+
 async def test_policy_chunking_and_embedding():
     """Test policy chunking and embedding integration with the database."""
     test_logger.info("Testing policy chunking and embedding DB integration")
-    
+
     # Fix: Explicitly import chunking and embedding functions in this scope to avoid potential errors
     from ydrpolicy.backend.services.chunking import chunk_text
     from ydrpolicy.backend.services.embeddings import embed_texts
-    
+
     engine = create_async_engine(TEST_DB_URL)
     async_session = async_sessionmaker(engine, expire_on_commit=False)
-    
+
     try:
         async with async_session() as session:
             policy_repo = PolicyRepository(session)
-            
+
             # Create test policy with realistic content
             policy_content = """# Test Policy Document
             
@@ -2073,42 +2172,37 @@ async def test_policy_chunking_and_embedding():
             
             This concludes the test policy document. It should be chunked into multiple
             pieces based on its structure and content."""
-            
+
             # Create the policy
             policy = Policy(
                 title="Comprehensive Test Policy",
                 description="Policy for testing comprehensive chunking and embedding",
                 source_url="http://example.com/test-policy",
                 markdown_content=policy_content,
-                text_content=policy_content  # Using same content for simplicity
+                text_content=policy_content,  # Using same content for simplicity
             )
-            
+
             created_policy = await policy_repo.create(policy)
             test_logger.info(f"Created test policy with ID: {created_policy.id}")
-            
+
             # Chunk the policy text content
             chunks_text = chunk_text(policy_content)
             test_logger.info(f"Split policy into {len(chunks_text)} chunks")
-            
+
             # Generate embeddings for the chunks
             chunk_embeddings = await embed_texts(chunks_text)
             test_logger.info(f"Generated {len(chunk_embeddings)} embeddings")
-            
+
             # Create PolicyChunk objects
             for i, (chunk_text, embedding) in enumerate(zip(chunks_text, chunk_embeddings)):
-                chunk = PolicyChunk(
-                    policy_id=created_policy.id,
-                    chunk_index=i,
-                    content=chunk_text,
-                    embedding=embedding
-                )
+                chunk = PolicyChunk(policy_id=created_policy.id, chunk_index=i, content=chunk_text, embedding=embedding)
                 created_chunk = await policy_repo.create_chunk(chunk)
                 test_logger.info(f"Created chunk {i}: ID={created_chunk.id}, {len(chunk_text)} chars")
-            
+
             # Test retrieving chunks
             policy_chunks = await policy_repo.get_chunks_by_policy_id(created_policy.id)
             test_logger.info(f"Retrieved {len(policy_chunks)} chunks for policy")
-            
+
             # Test text search on chunks
             if len(policy_chunks) > 0:
                 # Test with different search terms
@@ -2118,8 +2212,10 @@ async def test_policy_chunking_and_embedding():
                     test_logger.info(f"Text search for '{term}' returned {len(results)} results")
                     if results:
                         for i, result in enumerate(results[:2]):  # Show first 2 results
-                            test_logger.info(f"  Result {i}: score={result['text_score']:.4f}, content={result['content'][:50]}...")
-            
+                            test_logger.info(
+                                f"  Result {i}: score={result['text_score']:.4f}, content={result['content'][:50]}..."
+                            )
+
             # Test embedding search
             if len(policy_chunks) > 0 and len(chunk_embeddings) > 0:
                 # Use the first chunk's embedding as query
@@ -2128,65 +2224,78 @@ async def test_policy_chunking_and_embedding():
                 test_logger.info(f"Embedding search returned {len(embedding_results)} results")
                 if embedding_results:
                     for i, result in enumerate(embedding_results[:2]):  # Show first 2 results
-                        test_logger.info(f"  Result {i}: similarity={result['similarity']:.4f}, content={result['content'][:50]}...")
-                
+                        test_logger.info(
+                            f"  Result {i}: similarity={result['similarity']:.4f}, content={result['content'][:50]}..."
+                        )
+
                 # Test that results are ordered by similarity (highest first)
                 if len(embedding_results) >= 2:
-                    assert embedding_results[0]['similarity'] >= embedding_results[1]['similarity'], \
-                        "Embedding search results not properly ordered by similarity"
+                    assert (
+                        embedding_results[0]["similarity"] >= embedding_results[1]["similarity"]
+                    ), "Embedding search results not properly ordered by similarity"
                     test_logger.info("Confirmed embedding search results are ordered by similarity")
-                
+
                 # Test with a slightly modified embedding to verify different similarity scores
                 if len(chunk_embeddings) > 0:
                     # Create a modified embedding by adding noise to the original
                     import random
+
                     # Add less noise to ensure similarity stays above default threshold
                     modified_embedding = [e + random.uniform(-0.05, 0.05) for e in query_embedding]
-                    
+
                     # Search with modified embedding using a lower threshold to ensure results
                     modified_results = await policy_repo.search_chunks_by_embedding(
-                        modified_embedding,
-                        similarity_threshold=0.5  # Lower threshold to ensure we get results
+                        modified_embedding, similarity_threshold=0.5  # Lower threshold to ensure we get results
                     )
                     test_logger.info(f"Modified embedding search returned {len(modified_results)} results")
-                    
+
                     # Verify that exact match embedding has better similarity than modified one
-                    if embedding_results and modified_results and embedding_results[0]['id'] == modified_results[0]['id']:
-                        test_logger.info(f"Original similarity: {embedding_results[0]['similarity']:.4f}, Modified similarity: {modified_results[0]['similarity']:.4f}")
-                        assert embedding_results[0]['similarity'] > modified_results[0]['similarity'], \
-                            "Exact match embedding should have higher similarity than modified embedding"
+                    if (
+                        embedding_results
+                        and modified_results
+                        and embedding_results[0]["id"] == modified_results[0]["id"]
+                    ):
+                        test_logger.info(
+                            f"Original similarity: {embedding_results[0]['similarity']:.4f}, Modified similarity: {modified_results[0]['similarity']:.4f}"
+                        )
+                        assert (
+                            embedding_results[0]["similarity"] > modified_results[0]["similarity"]
+                        ), "Exact match embedding should have higher similarity than modified embedding"
                         test_logger.info("Confirmed exact match has higher similarity than modified embedding")
-                
+
                 # Test similarity threshold filtering
                 if len(chunk_embeddings) > 0:
                     # Get baseline count with default threshold
                     baseline_results = await policy_repo.search_chunks_by_embedding(query_embedding)
                     baseline_count = len(baseline_results)
-                    
+
                     if baseline_count > 0:
                         # Get minimum similarity from baseline results
-                        min_similarity = min(result['similarity'] for result in baseline_results)
-                        
+                        min_similarity = min(result["similarity"] for result in baseline_results)
+
                         # Test with higher threshold (should return fewer results)
                         higher_threshold = min(min_similarity + 0.1, 0.95)  # Add 0.1 but cap at 0.95
                         higher_threshold_results = await policy_repo.search_chunks_by_embedding(
-                            query_embedding, 
-                            similarity_threshold=higher_threshold
+                            query_embedding, similarity_threshold=higher_threshold
                         )
-                        
-                        test_logger.info(f"Baseline results: {baseline_count}, Higher threshold ({higher_threshold:.4f}) results: {len(higher_threshold_results)}")
-                        
+
+                        test_logger.info(
+                            f"Baseline results: {baseline_count}, Higher threshold ({higher_threshold:.4f}) results: {len(higher_threshold_results)}"
+                        )
+
                         # Should have fewer results with higher threshold
-                        assert len(higher_threshold_results) <= baseline_count, \
-                            f"Higher threshold ({higher_threshold}) should return fewer results than baseline"
-                        
+                        assert (
+                            len(higher_threshold_results) <= baseline_count
+                        ), f"Higher threshold ({higher_threshold}) should return fewer results than baseline"
+
                         # All results should satisfy the higher threshold
                         for result in higher_threshold_results:
-                            assert result['similarity'] >= higher_threshold, \
-                                f"Result with similarity {result['similarity']} below threshold {higher_threshold}"
-                        
+                            assert (
+                                result["similarity"] >= higher_threshold
+                            ), f"Result with similarity {result['similarity']} below threshold {higher_threshold}"
+
                         test_logger.info("Confirmed similarity threshold filtering works correctly")
-            
+
             # Test hybrid search
             if len(policy_chunks) > 0 and len(chunk_embeddings) > 0:
                 # Search for "guideline" with the first chunk's embedding
@@ -2196,74 +2305,71 @@ async def test_policy_chunking_and_embedding():
                 test_logger.info(f"Hybrid search returned {len(hybrid_results)} results")
                 if hybrid_results:
                     for i, result in enumerate(hybrid_results[:2]):  # Show first 2 results
-                        test_logger.info(f"  Result {i}: combined={result['combined_score']:.4f}, text={result['text_score']:.4f}, vector={result['vector_score']:.4f}")
-            
+                        test_logger.info(
+                            f"  Result {i}: combined={result['combined_score']:.4f}, text={result['text_score']:.4f}, vector={result['vector_score']:.4f}"
+                        )
+
             # Test get_chunk_neighbors
             if len(policy_chunks) > 1:
                 middle_index = len(policy_chunks) // 2
                 middle_chunk = policy_chunks[middle_index]
                 neighbors = await policy_repo.get_chunk_neighbors(middle_chunk.id)
                 test_logger.info(f"Retrieved neighbors for chunk {middle_chunk.id} (index {middle_chunk.chunk_index})")
-                
+
                 if neighbors["previous"]:
                     if isinstance(neighbors["previous"], list):
                         prev_ids = [c.id for c in neighbors["previous"]]
                         test_logger.info(f"  Previous chunks: {prev_ids}")
                     else:
                         test_logger.info(f"  Previous chunk: {neighbors['previous'].id}")
-                
+
                 if neighbors["next"]:
                     if isinstance(neighbors["next"], list):
                         next_ids = [c.id for c in neighbors["next"]]
                         test_logger.info(f"  Next chunks: {next_ids}")
                     else:
                         test_logger.info(f"  Next chunk: {neighbors['next'].id}")
-            
+
             # Test getting policies from chunks
             if hybrid_results and len(hybrid_results) > 0:
                 policies = await policy_repo.get_policies_from_chunks(hybrid_results)
                 test_logger.info(f"Retrieved {len(policies)} unique policies from chunk results")
-            
+
             # Commit all changes
             await session.commit()
             test_logger.info("Test successful: committed all changes")
-            
+
             # Return the policy ID for reference
             return created_policy.id
-            
+
     except Exception as e:
         test_logger.error(f"Error in policy chunking and embedding test: {e}", exc_info=True)
         return None
     finally:
         await engine.dispose()
 
+
 async def test_comprehensive_repository_functions():
     """Test all repository functions for both Policy and User repositories."""
     test_logger.info("Testing comprehensive repository functions...")
-    
+
     engine = create_async_engine(TEST_DB_URL)
     async_session = async_sessionmaker(engine, expire_on_commit=False)
-    
+
     try:
         async with async_session() as session:
             # Test all User Repository functions
             user_repo = UserRepository(session)
-            
+
             # Create test users
             admin_user = User(
-                email="admin@example.com",
-                password_hash="admin_password_hash",
-                full_name="Admin User",
-                is_admin=True
+                email="admin@example.com", password_hash="admin_password_hash", full_name="Admin User", is_admin=True
             )
-            
+
             regular_user = User(
-                email="user@example.com",
-                password_hash="user_password_hash",
-                full_name="Regular User",
-                is_admin=False
+                email="user@example.com", password_hash="user_password_hash", full_name="Regular User", is_admin=False
             )
-            
+
             # Modified to handle potentially missing is_active field
             try:
                 inactive_user = User(
@@ -2271,7 +2377,7 @@ async def test_comprehensive_repository_functions():
                     password_hash="inactive_password_hash",
                     full_name="Inactive User",
                     is_admin=False,
-                    is_active=False
+                    is_active=False,
                 )
             except TypeError:
                 # If is_active isn't a valid field
@@ -2279,45 +2385,49 @@ async def test_comprehensive_repository_functions():
                     email="inactive@example.com",
                     password_hash="inactive_password_hash",
                     full_name="Inactive User",
-                    is_admin=False
+                    is_admin=False,
                 )
                 test_logger.warning("is_active field not present in User model, continuing without it")
-            
+
             # Test create function
             created_admin = await user_repo.create(admin_user)
             created_regular = await user_repo.create(regular_user)
             created_inactive = await user_repo.create(inactive_user)
-            
-            test_logger.info(f"Created users: admin={created_admin.id}, regular={created_regular.id}, inactive={created_inactive.id}")
-            
+
+            test_logger.info(
+                f"Created users: admin={created_admin.id}, regular={created_regular.id}, inactive={created_inactive.id}"
+            )
+
             # Test get_by_id
             fetched_admin = await user_repo.get_by_id(created_admin.id)
             assert fetched_admin is not None, "Failed to fetch admin by ID"
-            
+
             # Test get_by_email
             fetched_by_email = await user_repo.get_by_email("user@example.com")
             assert fetched_by_email is not None, "Failed to fetch user by email"
             assert fetched_by_email.id == created_regular.id, "User fetched by email has incorrect ID"
-            
+
             # Test get_by_username if applicable - SKIPPING as User model doesn't have username
             # The model uses email instead of username for authentication
             test_logger.info("Skipping username tests as User model uses email for identification")
-            
+
             # Test get_admin_users
             admin_users = await user_repo.get_admin_users()
             assert len(admin_users) > 0, "No admin users found"
             assert any(u.id == created_admin.id for u in admin_users), "Admin user not found in admin users list"
-            
+
             # Test get_active_users if implemented
-            if hasattr(User, 'is_active') and hasattr(user_repo, 'get_active_users'):
+            if hasattr(User, "is_active") and hasattr(user_repo, "get_active_users"):
                 active_users = await user_repo.get_active_users()
                 test_logger.info(f"Found {len(active_users)} active users")
-            
+
             # Test authenticate if implemented - MODIFIED to use email instead of username
-            if hasattr(user_repo, 'authenticate'):
+            if hasattr(user_repo, "authenticate"):
                 try:
                     # Try to use email instead of username if the method supports it
-                    auth_result = await user_repo.authenticate(email="user@example.com", hashed_password="user_password_hash")
+                    auth_result = await user_repo.authenticate(
+                        email="user@example.com", hashed_password="user_password_hash"
+                    )
                     test_logger.info(f"Authentication result: {auth_result.id if auth_result else 'Failed'}")
                 except TypeError:
                     # If method signature doesn't match, skip this test
@@ -2325,14 +2435,14 @@ async def test_comprehensive_repository_functions():
                 except AttributeError as e:
                     # If there's an attribute error (like no username field), skip this test
                     test_logger.warning(f"Authentication test skipped: {e}")
-            
+
             # Test update
             update_result = await user_repo.update(created_regular.id, {"full_name": "Updated User Name"})
             assert update_result.full_name == "Updated User Name", "User update failed"
-            
+
             # Now test Policy Repository functions not covered in the previous test
             policy_repo = PolicyRepository(session)
-            
+
             # Create multiple test policies
             policies = []
             for i in range(3):
@@ -2341,122 +2451,120 @@ async def test_comprehensive_repository_functions():
                     description=f"Description for Test Policy {i}",
                     source_url=f"http://example.com/policy-{i}",
                     markdown_content=f"# Test Policy {i}\nThis is content for policy {i}.",
-                    text_content=f"Test Policy {i}. This is content for policy {i}."
+                    text_content=f"Test Policy {i}. This is content for policy {i}.",
                 )
                 created_policy = await policy_repo.create(policy)
                 policies.append(created_policy)
                 test_logger.info(f"Created policy {i}: ID={created_policy.id}")
-            
+
             # Test get_by_title
             title_policy = await policy_repo.get_by_title("Test Policy 1")
             assert title_policy is not None, "Failed to get policy by title"
             assert title_policy.id == policies[1].id, "Policy fetched by title has incorrect ID"
-            
+
             # Test get_by_url
             url_policy = await policy_repo.get_by_url("http://example.com/policy-2")
             assert url_policy is not None, "Failed to get policy by URL"
             assert url_policy.id == policies[2].id, "Policy fetched by URL has incorrect ID"
-            
+
             # Test search_by_title
             title_search = await policy_repo.search_by_title("Policy")
             assert len(title_search) >= 3, "Title search returned fewer results than expected"
-            
+
             # Test get_recent_policies
             recent_policies = await policy_repo.get_recent_policies()
             assert len(recent_policies) >= 3, "Recent policies returned fewer results than expected"
-            
+
             # Test get_recently_updated_policies
             updated_policies = await policy_repo.get_recently_updated_policies()
             assert len(updated_policies) >= 3, "Recently updated policies returned fewer results than expected"
-            
+
             # SKIP Test get_policy_details due to issues with selectinload.order_by
             test_logger.info("Skipping get_policy_details test due to issues with selectinload.order_by")
-            
+
             # Test full_text_search
             search_results = await policy_repo.full_text_search("Test")
             assert len(search_results) > 0, "Full text search returned no results"
             test_logger.info(f"Full text search found {len(search_results)} results")
-            
+
             # Log a policy update
             update_log = await policy_repo.log_policy_update(
-                policy_id=policies[0].id,
-                admin_id=created_admin.id,
-                action="test_update",
-                details={"test": "details"}
+                policy_id=policies[0].id, admin_id=created_admin.id, action="test_update", details={"test": "details"}
             )
             assert update_log is not None, "Failed to log policy update"
-            
+
             # Get policy update history
             update_history = await policy_repo.get_policy_update_history(policies[0].id)
             assert len(update_history) > 0, "Policy update history is empty"
             test_logger.info(f"Found {len(update_history)} update history records")
-            
+
             # Test delete by title
             delete_result = await policy_repo.delete_by_title("Test Policy 2")
             assert delete_result is True, "Failed to delete policy by title"
-            
+
             # Verify deletion
             deleted_policy = await policy_repo.get_by_title("Test Policy 2")
             assert deleted_policy is None, "Policy was not deleted"
-            
+
             # Test delete by ID for the last policy
             delete_id_result = await policy_repo.delete_by_id(policies[0].id)
             assert delete_id_result is True, "Failed to delete policy by ID"
-            
+
             # Verify deletion
             deleted_id_policy = await policy_repo.get_by_id(policies[0].id)
             assert deleted_id_policy is None, "Policy was not deleted by ID"
-            
+
             # Commit all changes
             await session.commit()
             test_logger.info("All repository function tests completed successfully")
             return True
-            
+
     except Exception as e:
         test_logger.error(f"Error in comprehensive repository test: {e}", exc_info=True)
         return False
     finally:
         await engine.dispose()
 
+
 async def run_all_tests(keep_db=False):
     """Run all tests for policy chunking and embedding.
-    
+
     Args:
         keep_db: If True, don't drop the database after tests finish.
     """
     try:
         # Drop any existing test database
         await drop_test_database()
-        
+
         # Create fresh test database
         await create_test_database()
-        
+
         # Set up database with tables and triggers
         await setup_database()
-        
+
         # Test chunking functionality
         await test_chunking_functionality()
-        
+
         # Test embedding functionality
         embedding_ok = await test_embedding_functionality()
         if not embedding_ok:
             test_logger.error("Embedding functionality tests failed")
             return
-        
+
         # Test policy chunking and embedding with database
         policy_id = await test_policy_chunking_and_embedding()
         if policy_id is None:
             test_logger.error("Policy chunking and embedding tests failed")
             return
-        
+
         # Test all repository functions
         repo_test_ok = await test_comprehensive_repository_functions()
         if not repo_test_ok:
             test_logger.error("Comprehensive repository tests failed")
             return
-        
+
         test_logger.info("All policy chunking and embedding tests passed successfully!")
-        
+
         if keep_db:
             test_logger.info(f"Keeping test database '{DB_NAME}' for inspection (--keep-db flag is set)")
         else:
@@ -2468,15 +2576,18 @@ async def run_all_tests(keep_db=False):
         if not keep_db:
             await drop_test_database()
 
+
 def parse_args():
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description="Test policy chunking and embedding functionality")
     parser.add_argument("--keep-db", action="store_true", help="Keep the test database after tests finish")
     return parser.parse_args()
 
+
 if __name__ == "__main__":
     args = parse_args()
-    asyncio.run(run_all_tests(keep_db=args.keep_db)) 
+    asyncio.run(run_all_tests(keep_db=args.keep_db))
+
 ```
 
 ## ydrpolicy/data_collection/config.py
@@ -3036,9 +3147,11 @@ _config_dict = {
         "DEBUG": False,
         "CORS_ORIGINS": ["http://localhost:3000"],
         # --- JWT Settings ---
-        "JWT_SECRET": os.environ.get("JWT_SECRET", "a_very_insecure_default_secret_key_please_change"), # CHANGE THIS IN .env!
+        "JWT_SECRET": os.environ.get(
+            "JWT_SECRET", "a_very_insecure_default_secret_key_please_change"
+        ),  # CHANGE THIS IN .env!
         "JWT_ALGORITHM": "HS256",
-        "JWT_EXPIRATION": 30, # Default: Access tokens expire in 30 minutes
+        "JWT_EXPIRATION": 30,  # Default: Access tokens expire in 30 minutes
     },
     # Logging settings
     "LOGGING": {
@@ -3106,7 +3219,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from ydrpolicy.backend.config import config
 from ydrpolicy.backend.routers import chat as chat_router  # Import the chat router
-from ydrpolicy.backend.routers import auth as auth_router # Import the auth router
+from ydrpolicy.backend.routers import auth as auth_router  # Import the auth router
 
 
 # Import other routers as needed
@@ -3201,7 +3314,7 @@ async def read_root():
 FastAPI dependencies for authentication and other common utilities.
 """
 import logging
-from typing import Annotated # Use Annotated
+from typing import Annotated  # Use Annotated
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -3211,7 +3324,7 @@ from ydrpolicy.backend.utils.auth_utils import decode_token
 from ydrpolicy.backend.database.engine import get_session
 from ydrpolicy.backend.database.models import User
 from ydrpolicy.backend.database.repository.users import UserRepository
-from ydrpolicy.backend.schemas.auth import TokenData # Import TokenData schema
+from ydrpolicy.backend.schemas.auth import TokenData  # Import TokenData schema
 
 logger = logging.getLogger(__name__)
 
@@ -3219,9 +3332,9 @@ logger = logging.getLogger(__name__)
 # This dependency extracts the token from the "Authorization: Bearer <token>" header
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
+
 async def get_current_user(
-    token: Annotated[str, Depends(oauth2_scheme)],
-    session: AsyncSession = Depends(get_session)
+    token: Annotated[str, Depends(oauth2_scheme)], session: AsyncSession = Depends(get_session)
 ) -> User:
     """
     Dependency to get the current user from the JWT token.
@@ -3246,9 +3359,9 @@ async def get_current_user(
     # Use TokenData Pydantic model for validation and clarity
     try:
         token_data = TokenData(**payload)
-    except Exception: # Catch Pydantic validation error or other issues
-         logger.warning("Token payload validation failed.")
-         raise credentials_exception
+    except Exception:  # Catch Pydantic validation error or other issues
+        logger.warning("Token payload validation failed.")
+        raise credentials_exception
 
     if token_data.email is None:
         logger.warning("Token payload missing 'sub' (email).")
@@ -3263,9 +3376,8 @@ async def get_current_user(
     logger.debug(f"Authenticated user via token: {user.email}")
     return user
 
-async def get_current_active_user(
-    current_user: Annotated[User, Depends(get_current_user)]
-) -> User:
+
+async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]) -> User:
     """
     Dependency that builds on get_current_user to ensure the user is active.
     (Currently, your User model doesn't have `is_active`, so this is placeholder).
@@ -3281,6 +3393,7 @@ async def get_current_active_user(
     #     logger.warning(f"Inactive user attempted access: {current_user.email}")
     #     raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
     return current_user
+
 ```
 
 ## ydrpolicy/data_collection/scrape/scraper.py
@@ -5316,10 +5429,10 @@ CONTENT:
 API Router for authentication related endpoints (login/token).
 """
 import logging
-from typing import Annotated # Use Annotated for Depends
+from typing import Annotated  # Use Annotated for Depends
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm # For login form data
+from fastapi.security import OAuth2PasswordRequestForm  # For login form data
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # Import utilities, models, schemas, and dependencies
@@ -5327,9 +5440,11 @@ from ydrpolicy.backend.utils.auth_utils import create_access_token, verify_passw
 from ydrpolicy.backend.database.engine import get_session
 from ydrpolicy.backend.database.models import User
 from ydrpolicy.backend.database.repository.users import UserRepository
-from ydrpolicy.backend.schemas.auth import Token # Define this schema next
+from ydrpolicy.backend.schemas.auth import Token  # Define this schema next
+
 # Import the dependency to get current user (we'll define it next)
 from ydrpolicy.backend.dependencies import get_current_active_user
+
 # Import User schema for response model
 from ydrpolicy.backend.schemas.user import UserRead
 
@@ -5340,10 +5455,10 @@ router = APIRouter(
     tags=["Authentication"],
 )
 
+
 @router.post("/token", response_model=Token)
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    session: AsyncSession = Depends(get_session)
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: AsyncSession = Depends(get_session)
 ):
     """
     Standard OAuth2 password flow - login with email and password to get a JWT.
@@ -5366,22 +5481,21 @@ async def login_for_access_token(
     # Create JWT
     # 'sub' (subject) is typically the username or user ID
     access_token = create_access_token(
-        data={"sub": user.email, "user_id": user.id} # Include user_id if needed elsewhere
+        data={"sub": user.email, "user_id": user.id}  # Include user_id if needed elsewhere
     )
     logger.info(f"Login successful, token created for user: {user.email}")
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.get("/users/me", response_model=UserRead)
-async def read_users_me(
-    current_user: Annotated[User, Depends(get_current_active_user)]
-):
+async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
     """
     Test endpoint to get current authenticated user's details.
     """
     logger.info(f"Fetching details for authenticated user: {current_user.email}")
     # UserRead schema will filter out the password hash
     return current_user
+
 ```
 
 ## ydrpolicy/backend/routers/chat.py
@@ -5392,15 +5506,16 @@ async def read_users_me(
 API Router for chat interactions with the YDR Policy Agent, including history.
 """
 import asyncio
-import json # Needed for tool call input parsing
+import json  # Needed for tool call input parsing
 import logging
-from typing import Any, AsyncGenerator, Dict, List, Optional, Annotated # Added types and Annotated
+from typing import Any, AsyncGenerator, Dict, List, Optional, Annotated  # Added types and Annotated
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query, status # Added status
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, status  # Added status
 from fastapi.responses import StreamingResponse
-from sqlalchemy.ext.asyncio import AsyncSession # Added AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession  # Added AsyncSession
 
 from ydrpolicy.backend.config import config
+
 # Import necessary schemas
 from ydrpolicy.backend.schemas.chat import (
     ChatRequest,
@@ -5409,14 +5524,17 @@ from ydrpolicy.backend.schemas.chat import (
     StreamChunk,
     # Specific data schemas for StreamChunk payload (Optional but good for clarity)
     ErrorData,
-    StreamChunkData
+    StreamChunkData,
 )
 from ydrpolicy.backend.services.chat_service import ChatService
+
 # Correctly import the dependency function that yields the session
 from ydrpolicy.backend.database.engine import get_session
+
 # Import Repositories needed for history
 from ydrpolicy.backend.database.repository.chats import ChatRepository
 from ydrpolicy.backend.database.repository.messages import MessageRepository
+
 # Import the authentication dependency and User model for typing
 from ydrpolicy.backend.dependencies import get_current_active_user
 from ydrpolicy.backend.database.models import User
@@ -5442,6 +5560,7 @@ router = APIRouter(
     prefix="/chat",
     tags=["Chat"],
 )
+
 
 # --- Streaming Endpoint - NOW PROTECTED ---
 @router.post(
@@ -5477,8 +5596,7 @@ async def stream_chat(
     if request.user_id != current_user.id:
         logger.warning(f"User ID mismatch: Token user ID {current_user.id} != Request body user ID {request.user_id}")
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="User ID in request does not match authenticated user."
+            status_code=status.HTTP_403_FORBIDDEN, detail="User ID in request does not match authenticated user."
         )
 
     logger.info(
@@ -5490,15 +5608,13 @@ async def stream_chat(
         try:
             # Pass user_id from the *authenticated* user
             async for chunk in chat_service.process_user_message_stream(
-                user_id=current_user.id, # Use authenticated user ID
-                message=request.message,
-                chat_id=request.chat_id
+                user_id=current_user.id, message=request.message, chat_id=request.chat_id  # Use authenticated user ID
             ):
                 # Ensure chunk has necessary fields before dumping
-                if hasattr(chunk, 'type') and hasattr(chunk, 'data'):
+                if hasattr(chunk, "type") and hasattr(chunk, "data"):
                     json_chunk = chunk.model_dump_json(exclude_unset=True)
                     yield f"data: {json_chunk}\n\n"  # SSE format
-                    await asyncio.sleep(0.01) # Yield control briefly
+                    await asyncio.sleep(0.01)  # Yield control briefly
                 else:
                     logger.error(f"Invalid chunk received from service: {chunk!r}")
 
@@ -5507,34 +5623,33 @@ async def stream_chat(
             )
 
         except Exception as e:
-            logger.error(f"Error during stream event generation for user {current_user.id}, chat {request.chat_id}: {e}", exc_info=True)
+            logger.error(
+                f"Error during stream event generation for user {current_user.id}, chat {request.chat_id}: {e}",
+                exc_info=True,
+            )
             # Use the helper function from ChatService to create error chunk
             try:
                 error_payload = ErrorData(message=f"Streaming generation failed: {str(e)}")
                 # Access helper method if available, otherwise recreate manually
-                if hasattr(chat_service, '_create_stream_chunk'):
-                     error_chunk = chat_service._create_stream_chunk("error", error_payload)
-                else: # Manual fallback if helper is not accessible/refactored
-                     error_chunk = StreamChunk(type="error", data=StreamChunkData(**error_payload.model_dump()))
+                if hasattr(chat_service, "_create_stream_chunk"):
+                    error_chunk = chat_service._create_stream_chunk("error", error_payload)
+                else:  # Manual fallback if helper is not accessible/refactored
+                    error_chunk = StreamChunk(type="error", data=StreamChunkData(**error_payload.model_dump()))
                 yield f"data: {error_chunk.model_dump_json()}\n\n"
             except Exception as yield_err:
                 logger.error(f"Failed even to yield error chunk: {yield_err}")
-
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
 # --- List User Chats Endpoint - NOW PROTECTED ---
 @router.get(
-    "", # GET request to the base /chat prefix
+    "",  # GET request to the base /chat prefix
     response_model=List[ChatSummary],
     summary="List chat sessions for the current user",
     description="Retrieves a list of chat sessions belonging to the authenticated user, ordered by the most recently updated.",
     response_description="A list of chat session summaries.",
-    responses={
-        401: {"description": "Authentication required"},
-        500: {"description": "Internal Server Error"}
-    }
+    responses={401: {"description": "Authentication required"}, 500: {"description": "Internal Server Error"}},
 )
 async def list_user_chats(
     skip: int = Query(0, ge=0, description="Number of chat sessions to skip (for pagination)."),
@@ -5547,7 +5662,9 @@ async def list_user_chats(
     """
     Fetches a paginated list of chat summaries for the authenticated user.
     """
-    logger.info(f"API: Received request to list chats for user {current_user.id} (authenticated) (skip={skip}, limit={limit}).")
+    logger.info(
+        f"API: Received request to list chats for user {current_user.id} (authenticated) (skip={skip}, limit={limit})."
+    )
     try:
         # Instantiate the repository INSIDE the endpoint, passing the actual session
         chat_repo = ChatRepository(session)
@@ -5570,10 +5687,10 @@ async def list_user_chats(
     response_description="A list of messages within the chat session.",
     responses={
         401: {"description": "Authentication required"},
-        403: {"description": "User not authorized to access this chat"}, # Handled by ownership check
+        403: {"description": "User not authorized to access this chat"},  # Handled by ownership check
         404: {"description": "Chat session not found"},
         500: {"description": "Internal Server Error"},
-    }
+    },
 )
 async def get_chat_messages(
     chat_id: int,
@@ -5588,7 +5705,9 @@ async def get_chat_messages(
     Fetches a paginated list of messages for a specific chat session,
     ensuring the user owns the chat.
     """
-    logger.info(f"API: Received request for messages in chat {chat_id} for user {current_user.id} (authenticated) (skip={skip}, limit={limit}).")
+    logger.info(
+        f"API: Received request for messages in chat {chat_id} for user {current_user.id} (authenticated) (skip={skip}, limit={limit})."
+    )
     try:
         # Instantiate repositories INSIDE the endpoint with the actual session
         chat_repo = ChatRepository(session)
@@ -5601,14 +5720,17 @@ async def get_chat_messages(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found.")
 
         # If ownership is confirmed, fetch the messages
-        messages = await msg_repo.get_by_chat_id_ordered(chat_id=chat_id, limit=None) # Get all first
-        paginated_messages = messages[skip : skip + limit] # Slice for pagination
+        messages = await msg_repo.get_by_chat_id_ordered(chat_id=chat_id, limit=None)  # Get all first
+        paginated_messages = messages[skip : skip + limit]  # Slice for pagination
         # Pydantic converts Message models to MessageSummary based on response_model
         return paginated_messages
     except Exception as e:
         logger.error(f"Error fetching messages for chat {chat_id}, user {current_user.id}: {e}", exc_info=True)
         # Rollback handled by generator context manager
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve chat messages.")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve chat messages."
+        )
+
 ```
 
 ## ydrpolicy/backend/database/models.py
@@ -6152,13 +6274,13 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
-    async_sessionmaker, # Keep this import
-    create_async_engine
+    async_sessionmaker,  # Keep this import
+    create_async_engine,
 )
 
 # Local Application Imports
 from ydrpolicy.backend.config import config
-from ydrpolicy.backend.database.engine import get_async_session # Still used for seeding/populating
+from ydrpolicy.backend.database.engine import get_async_session  # Still used for seeding/populating
 from ydrpolicy.backend.database.models import (
     Base,
     Image,
@@ -6189,7 +6311,9 @@ async def create_database(db_url: str) -> bool:
     try:
         parsed = urlparse(db_url_parsed)
         db_name = parsed.path.lstrip("/")
-        if not db_name: logger.error("Database name could not be parsed from URL."); return False
+        if not db_name:
+            logger.error("Database name could not be parsed from URL.")
+            return False
         admin_url = f"{parsed.scheme}://{parsed.netloc}/postgres"
         logger.info(f"Checking if database '{db_name}' exists...")
         conn = None
@@ -6200,7 +6324,8 @@ async def create_database(db_url: str) -> bool:
                 logger.info(f"Creating database '{db_name}'...")
                 await conn.execute(f'CREATE DATABASE "{db_name}"')
                 logger.info(f"SUCCESS: Database '{db_name}' created.")
-            else: logger.info(f"Database '{db_name}' already exists.")
+            else:
+                logger.info(f"Database '{db_name}' already exists.")
             return True
         except asyncpg.exceptions.InvalidCatalogNameError:
             logger.debug(f"Database '{db_name}' does not exist (InvalidCatalogNameError). Will attempt creation.")
@@ -6212,18 +6337,27 @@ async def create_database(db_url: str) -> bool:
                     logger.info(f"SUCCESS: Database '{db_name}' created.")
                     await conn_admin.close()
                     return True
-                except Exception as create_err: logger.error(f"Failed to create '{db_name}' via admin: {create_err}"); return False
+                except Exception as create_err:
+                    logger.error(f"Failed to create '{db_name}' via admin: {create_err}")
+                    return False
             else:
                 try:
                     logger.info(f"Creating database '{db_name}' using existing admin connection...")
                     await conn.execute(f'CREATE DATABASE "{db_name}"')
                     logger.info(f"SUCCESS: Database '{db_name}' created.")
                     return True
-                except Exception as create_err: logger.error(f"Failed to create '{db_name}' using existing admin: {create_err}"); return False
-        except Exception as e: logger.error(f"Error checking/creating database '{db_name}': {e}"); return False
+                except Exception as create_err:
+                    logger.error(f"Failed to create '{db_name}' using existing admin: {create_err}")
+                    return False
+        except Exception as e:
+            logger.error(f"Error checking/creating database '{db_name}': {e}")
+            return False
         finally:
-            if conn: await conn.close()
-    except Exception as parse_err: logger.error(f"Error parsing database URL '{db_url}': {parse_err}"); return False
+            if conn:
+                await conn.close()
+    except Exception as parse_err:
+        logger.error(f"Error parsing database URL '{db_url}': {parse_err}")
+        return False
 
 
 # (Keep create_extension function - unchanged)
@@ -6234,7 +6368,8 @@ async def create_extension(engine: AsyncEngine, extension_name: str) -> None:
         async with engine.begin() as conn:
             await conn.execute(text(f"CREATE EXTENSION IF NOT EXISTS {extension_name} SCHEMA public"))
         logger.info(f"Extension '{extension_name}' checked/created.")
-    except Exception as e: logger.error(f"Error creating extension '{extension_name}': {e}. Continuing...");
+    except Exception as e:
+        logger.error(f"Error creating extension '{extension_name}': {e}. Continuing...")
 
 
 # (Keep seed_users_from_json function - unchanged)
@@ -6243,29 +6378,49 @@ async def seed_users_from_json(session: AsyncSession):
     # ... (existing code) ...
     seed_file_path = config.PATHS.USERS_SEED_FILE
     logger.info(f"Attempting to seed users from: {seed_file_path}")
-    if not os.path.exists(seed_file_path): logger.warning(f"User seed file not found at '{seed_file_path}'. Skipping."); return
+    if not os.path.exists(seed_file_path):
+        logger.warning(f"User seed file not found at '{seed_file_path}'. Skipping.")
+        return
     try:
-        with open(seed_file_path, 'r') as f: users_data = json.load(f)
-    except json.JSONDecodeError as e: logger.error(f"Error decoding JSON from '{seed_file_path}': {e}. Skipping."); return
-    except Exception as e: logger.error(f"Error reading user seed file '{seed_file_path}': {e}. Skipping."); return
-    if not isinstance(users_data, list): logger.error(f"User seed file '{seed_file_path}' should contain a JSON list. Skipping."); return
+        with open(seed_file_path, "r") as f:
+            users_data = json.load(f)
+    except json.JSONDecodeError as e:
+        logger.error(f"Error decoding JSON from '{seed_file_path}': {e}. Skipping.")
+        return
+    except Exception as e:
+        logger.error(f"Error reading user seed file '{seed_file_path}': {e}. Skipping.")
+        return
+    if not isinstance(users_data, list):
+        logger.error(f"User seed file '{seed_file_path}' should contain a JSON list. Skipping.")
+        return
 
     user_repo = UserRepository(session)
-    created_count = 0; skipped_count = 0
+    created_count = 0
+    skipped_count = 0
     for user_info in users_data:
-        if not isinstance(user_info, dict): logger.warning(f"Skipping invalid user entry (not a dict): {user_info}"); continue
-        email = user_info.get("email"); full_name = user_info.get("full_name"); plain_password = user_info.get("password")
+        if not isinstance(user_info, dict):
+            logger.warning(f"Skipping invalid user entry (not a dict): {user_info}")
+            continue
+        email = user_info.get("email")
+        full_name = user_info.get("full_name")
+        plain_password = user_info.get("password")
         is_admin = user_info.get("is_admin", False)
-        if not email or not full_name or not plain_password: logger.warning(f"Skipping user entry missing fields: {user_info}"); continue
+        if not email or not full_name or not plain_password:
+            logger.warning(f"Skipping user entry missing fields: {user_info}")
+            continue
         existing_user = await user_repo.get_by_email(email)
-        if existing_user: logger.debug(f"User '{email}' already exists. Skipping."); skipped_count += 1; continue
+        if existing_user:
+            logger.debug(f"User '{email}' already exists. Skipping.")
+            skipped_count += 1
+            continue
         try:
             hashed_pw = hash_password(plain_password)
             new_user = User(email=email, full_name=full_name, password_hash=hashed_pw, is_admin=is_admin)
             session.add(new_user)
             logger.info(f"Prepared new user for creation: {email} (Admin: {is_admin})")
             created_count += 1
-        except Exception as e: logger.error(f"Error preparing user '{email}' for creation: {e}")
+        except Exception as e:
+            logger.error(f"Error preparing user '{email}' for creation: {e}")
     logger.info(f"User seeding complete. Prepared: {created_count}, Skipped: {skipped_count}")
 
 
@@ -6283,50 +6438,94 @@ async def get_existing_policies_info(session: AsyncSession) -> Dict[str, Dict]:
 
 # (Keep process_new_policy_folder function - unchanged)
 async def process_new_policy_folder(
-    folder_path: str, policy_title: str, scrape_timestamp: str, session: AsyncSession,
-    policy_repo: PolicyRepository, extraction_reasoning: Optional[str] = None,
+    folder_path: str,
+    policy_title: str,
+    scrape_timestamp: str,
+    session: AsyncSession,
+    policy_repo: PolicyRepository,
+    extraction_reasoning: Optional[str] = None,
 ):
     """Processes a single new policy folder and adds its data to the DB."""
     # ... (existing code) ...
     logger.info(f"Processing new policy: '{policy_title}' from folder: {os.path.basename(folder_path)}")
-    md_path = os.path.join(folder_path, "content.md"); txt_path = os.path.join(folder_path, "content.txt")
-    if not os.path.exists(md_path): logger.error(f"  Markdown file not found: {md_path}. Skipping."); return
-    if not os.path.exists(txt_path): logger.error(f"  Text file not found: {txt_path}. Skipping."); return
+    md_path = os.path.join(folder_path, "content.md")
+    txt_path = os.path.join(folder_path, "content.txt")
+    if not os.path.exists(md_path):
+        logger.error(f"  Markdown file not found: {md_path}. Skipping.")
+        return
+    if not os.path.exists(txt_path):
+        logger.error(f"  Text file not found: {txt_path}. Skipping.")
+        return
     try:
-        with open(md_path, "r", encoding="utf-8") as f_md: markdown_content = f_md.read()
-        with open(txt_path, "r", encoding="utf-8") as f_txt: text_content = f_txt.read()
+        with open(md_path, "r", encoding="utf-8") as f_md:
+            markdown_content = f_md.read()
+        with open(txt_path, "r", encoding="utf-8") as f_txt:
+            text_content = f_txt.read()
         logger.debug(f"  Read content files.")
         source_url_match = re.search(r"^# Source URL: (.*)$", markdown_content, re.MULTILINE)
         source_url = source_url_match.group(1).strip() if source_url_match else None
         policy = Policy(
-            title=policy_title, source_url=source_url, markdown_content=markdown_content, text_content=text_content,
-            description=extraction_reasoning, policy_metadata={
-                "scrape_timestamp": scrape_timestamp, "source_folder": os.path.basename(folder_path),
-                "processed_at": datetime.utcnow().isoformat(),},)
-        session.add(policy); await session.flush(); await session.refresh(policy)
+            title=policy_title,
+            source_url=source_url,
+            markdown_content=markdown_content,
+            text_content=text_content,
+            description=extraction_reasoning,
+            policy_metadata={
+                "scrape_timestamp": scrape_timestamp,
+                "source_folder": os.path.basename(folder_path),
+                "processed_at": datetime.utcnow().isoformat(),
+            },
+        )
+        session.add(policy)
+        await session.flush()
+        await session.refresh(policy)
         logger.info(f"SUCCESS: Created Policy record ID: {policy.id}")
-        image_files = [f for f in os.listdir(folder_path) if f.lower().startswith("img-") and f.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".bmp"))]
+        image_files = [
+            f
+            for f in os.listdir(folder_path)
+            if f.lower().startswith("img-") and f.lower().endswith((".png", ".jpg", ".jpeg", ".gif", ".bmp"))
+        ]
         image_count = 0
         for img_filename in image_files:
-            try: session.add(Image(policy_id=policy.id, filename=img_filename, relative_path=img_filename)); image_count += 1
-            except Exception as img_err: logger.error(f"  Error creating Image object for '{img_filename}': {img_err}")
-        if image_count > 0: await session.flush(); logger.info(f"  Added {image_count} Image records.")
+            try:
+                session.add(Image(policy_id=policy.id, filename=img_filename, relative_path=img_filename))
+                image_count += 1
+            except Exception as img_err:
+                logger.error(f"  Error creating Image object for '{img_filename}': {img_err}")
+        if image_count > 0:
+            await session.flush()
+            logger.info(f"  Added {image_count} Image records.")
         chunks = chunk_text(text=text_content, chunk_size=config.RAG.CHUNK_SIZE, chunk_overlap=config.RAG.CHUNK_OVERLAP)
         logger.info(f"  Split text into {len(chunks)} chunks.")
-        if not chunks: logger.warning(f"  No chunks generated for '{policy_title}'."); return
+        if not chunks:
+            logger.warning(f"  No chunks generated for '{policy_title}'.")
+            return
         try:
             embeddings = await embed_texts(chunks)
-            if len(embeddings) != len(chunks): raise ValueError("Embeddings/chunks count mismatch.")
+            if len(embeddings) != len(chunks):
+                raise ValueError("Embeddings/chunks count mismatch.")
             logger.info(f"  Generated {len(embeddings)} embeddings.")
-        except Exception as emb_err: logger.error(f"  Embedding failed for '{policy_title}': {emb_err}."); return
+        except Exception as emb_err:
+            logger.error(f"  Embedding failed for '{policy_title}': {emb_err}.")
+            return
         chunk_count = 0
         for i, (chunk_content, embedding) in enumerate(zip(chunks, embeddings)):
-            try: session.add(PolicyChunk(policy_id=policy.id, chunk_index=i, content=chunk_content, embedding=embedding)); chunk_count += 1
-            except Exception as chunk_err: logger.error(f"  Error creating PolicyChunk index {i}: {chunk_err}")
-        if chunk_count > 0: await session.flush(); logger.info(f"  Added {chunk_count} PolicyChunk records.")
-    except FileNotFoundError as fnf_err: logger.error(f"  File not found processing '{policy_title}': {fnf_err}")
-    except IntegrityError as ie: logger.error(f"  DB integrity error (duplicate title?) for '{policy_title}': {ie}"); raise ie
-    except Exception as e: logger.error(f"  Unexpected error processing policy '{policy_title}': {e}", exc_info=True); raise e
+            try:
+                session.add(PolicyChunk(policy_id=policy.id, chunk_index=i, content=chunk_content, embedding=embedding))
+                chunk_count += 1
+            except Exception as chunk_err:
+                logger.error(f"  Error creating PolicyChunk index {i}: {chunk_err}")
+        if chunk_count > 0:
+            await session.flush()
+            logger.info(f"  Added {chunk_count} PolicyChunk records.")
+    except FileNotFoundError as fnf_err:
+        logger.error(f"  File not found processing '{policy_title}': {fnf_err}")
+    except IntegrityError as ie:
+        logger.error(f"  DB integrity error (duplicate title?) for '{policy_title}': {ie}")
+        raise ie
+    except Exception as e:
+        logger.error(f"  Unexpected error processing policy '{policy_title}': {e}", exc_info=True)
+        raise e
 
 
 # (Keep populate_database_from_scraped_policies function - unchanged, it uses the passed session)
@@ -6337,36 +6536,55 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
     """
     # ... (existing code using the passed 'session') ...
     scraped_policies_dir = config.PATHS.SCRAPED_POLICIES_DIR
-    if not os.path.isdir(scraped_policies_dir): logger.error(f"Scraped policies directory not found: {scraped_policies_dir}"); return
+    if not os.path.isdir(scraped_policies_dir):
+        logger.error(f"Scraped policies directory not found: {scraped_policies_dir}")
+        return
     logger.info(f"Scanning scraped policies directory: {scraped_policies_dir}")
-    timestamp_to_description = {}; url_to_description = {}
+    timestamp_to_description = {}
+    url_to_description = {}
     csv_path = os.path.join(config.PATHS.PROCESSED_DATA_DIR, "processed_policies_log.csv")
     if os.path.exists(csv_path):
         try:
-            policy_df = pd.read_csv(csv_path); logger.info(f"Reading policy descriptions from CSV: {csv_path}")
-            timestamp_mapping = "timestamp" in policy_df.columns; url_mapping = "url" in policy_df.columns
+            policy_df = pd.read_csv(csv_path)
+            logger.info(f"Reading policy descriptions from CSV: {csv_path}")
+            timestamp_mapping = "timestamp" in policy_df.columns
+            url_mapping = "url" in policy_df.columns
             if "extraction_reasoning" in policy_df.columns:
                 for _, row in policy_df.iterrows():
                     if pd.notna(row["extraction_reasoning"]):
                         reasoning = row["extraction_reasoning"]
-                        if timestamp_mapping and pd.notna(row["timestamp"]): timestamp_to_description[str(row["timestamp"])] = reasoning
-                        if url_mapping and pd.notna(row["url"]): url_to_description[row["url"]] = reasoning
-                logger.info(f"Loaded {len(timestamp_to_description)} timestamp mappings and {len(url_to_description)} URL mappings.")
-            else: logger.warning(f"CSV file missing extraction_reasoning column.")
-        except Exception as e: logger.error(f"Error reading policy descriptions from CSV: {e}")
-    else: logger.warning(f"Policy descriptions CSV file not found: {csv_path}")
+                        if timestamp_mapping and pd.notna(row["timestamp"]):
+                            timestamp_to_description[str(row["timestamp"])] = reasoning
+                        if url_mapping and pd.notna(row["url"]):
+                            url_to_description[row["url"]] = reasoning
+                logger.info(
+                    f"Loaded {len(timestamp_to_description)} timestamp mappings and {len(url_to_description)} URL mappings."
+                )
+            else:
+                logger.warning(f"CSV file missing extraction_reasoning column.")
+        except Exception as e:
+            logger.error(f"Error reading policy descriptions from CSV: {e}")
+    else:
+        logger.warning(f"Policy descriptions CSV file not found: {csv_path}")
 
     policy_repo = PolicyRepository(session)
     existing_policies = await get_existing_policies_info(session)
     folder_pattern = re.compile(r"^(.+)_(\d{20})$")
-    processed_count = 0; skipped_count = 0; deleted_count = 0
+    processed_count = 0
+    skipped_count = 0
+    deleted_count = 0
 
     for folder_name in os.listdir(scraped_policies_dir):
         folder_path = os.path.join(scraped_policies_dir, folder_name)
-        if not os.path.isdir(folder_path): continue
+        if not os.path.isdir(folder_path):
+            continue
         match = folder_pattern.match(folder_name)
-        if not match: logger.warning(f"Skipping folder with unexpected name format: {folder_name}"); skipped_count += 1; continue
-        policy_title = match.group(1); scrape_timestamp = match.group(2)
+        if not match:
+            logger.warning(f"Skipping folder with unexpected name format: {folder_name}")
+            skipped_count += 1
+            continue
+        policy_title = match.group(1)
+        scrape_timestamp = match.group(2)
         logger.debug(f"Checking folder: '{folder_name}' -> title='{policy_title}', timestamp={scrape_timestamp}")
         should_process = True
         if policy_title in existing_policies:
@@ -6375,24 +6593,51 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
             deleted = False
             if existing_metadata and "scrape_timestamp" in existing_metadata:
                 existing_timestamp = existing_metadata["scrape_timestamp"]
-                if existing_timestamp >= scrape_timestamp: logger.debug(f"Skipping older/same version: '{policy_title}'"); skipped_count += 1; should_process = False
-                else: logger.info(f"Newer version: '{policy_title}'. Deleting old ID {existing_id}"); deleted = await policy_repo.delete_by_id(existing_id); deleted_count += deleted
-            else: logger.info(f"Existing '{policy_title}' (ID: {existing_id}) lacks timestamp. Replacing."); deleted = await policy_repo.delete_by_id(existing_id); deleted_count += deleted
-            if not deleted and should_process and policy_title in existing_policies : logger.error(f"Failed to delete old version of '{policy_title}'. Skipping update."); skipped_count += 1; should_process = False
+                if existing_timestamp >= scrape_timestamp:
+                    logger.debug(f"Skipping older/same version: '{policy_title}'")
+                    skipped_count += 1
+                    should_process = False
+                else:
+                    logger.info(f"Newer version: '{policy_title}'. Deleting old ID {existing_id}")
+                    deleted = await policy_repo.delete_by_id(existing_id)
+                    deleted_count += deleted
+            else:
+                logger.info(f"Existing '{policy_title}' (ID: {existing_id}) lacks timestamp. Replacing.")
+                deleted = await policy_repo.delete_by_id(existing_id)
+                deleted_count += deleted
+            if not deleted and should_process and policy_title in existing_policies:
+                logger.error(f"Failed to delete old version of '{policy_title}'. Skipping update.")
+                skipped_count += 1
+                should_process = False
         if should_process:
             extraction_reasoning = timestamp_to_description.get(scrape_timestamp)
             if not extraction_reasoning and url_to_description:
-                 md_path = os.path.join(folder_path, "content.md")
-                 if os.path.exists(md_path):
-                     try:
-                         with open(md_path, "r", encoding="utf-8") as f_md: markdown_content = f_md.read()
-                         source_url_match = re.search(r"^# Source URL: (.*)$", markdown_content, re.MULTILINE)
-                         if source_url_match: source_url = source_url_match.group(1).strip(); extraction_reasoning = url_to_description.get(source_url)
-                     except Exception as file_err: logger.error(f"Error reading markdown for URL extraction: {file_err}")
-            logger.debug(f"Description for '{policy_title}': {extraction_reasoning[:50] if extraction_reasoning else 'None'}")
-            await process_new_policy_folder(folder_path=folder_path, policy_title=policy_title, scrape_timestamp=scrape_timestamp, session=session, policy_repo=policy_repo, extraction_reasoning=extraction_reasoning)
+                md_path = os.path.join(folder_path, "content.md")
+                if os.path.exists(md_path):
+                    try:
+                        with open(md_path, "r", encoding="utf-8") as f_md:
+                            markdown_content = f_md.read()
+                        source_url_match = re.search(r"^# Source URL: (.*)$", markdown_content, re.MULTILINE)
+                        if source_url_match:
+                            source_url = source_url_match.group(1).strip()
+                            extraction_reasoning = url_to_description.get(source_url)
+                    except Exception as file_err:
+                        logger.error(f"Error reading markdown for URL extraction: {file_err}")
+            logger.debug(
+                f"Description for '{policy_title}': {extraction_reasoning[:50] if extraction_reasoning else 'None'}"
+            )
+            await process_new_policy_folder(
+                folder_path=folder_path,
+                policy_title=policy_title,
+                scrape_timestamp=scrape_timestamp,
+                session=session,
+                policy_repo=policy_repo,
+                extraction_reasoning=extraction_reasoning,
+            )
             processed_count += 1
-    logger.info(f"Policy population finished. Processed/Updated: {processed_count}, Deleted old: {deleted_count}, Skipped: {skipped_count}")
+    logger.info(
+        f"Policy population finished. Processed/Updated: {processed_count}, Deleted old: {deleted_count}, Skipped: {skipped_count}"
+    )
 
 
 async def init_db(db_url: Optional[str] = None, populate: bool = True) -> None:
@@ -6419,15 +6664,15 @@ async def init_db(db_url: Optional[str] = None, populate: bool = True) -> None:
         # ******************** FIX IS HERE ********************
         # 4. Create Tables & Triggers using the engine directly (outside session transaction)
         logger.info("Creating database tables if they don't exist...")
-        async with engine.begin() as conn: # Use engine.begin() for create_all
+        async with engine.begin() as conn:  # Use engine.begin() for create_all
             await conn.run_sync(Base.metadata.create_all)
         logger.info("Tables checked/created.")
 
         logger.info("Applying search vector triggers...")
-        async with engine.connect() as conn: # Use engine.connect() for executing triggers
+        async with engine.connect() as conn:  # Use engine.connect() for executing triggers
             for statement in create_search_vector_trigger():
                 await conn.execute(text(statement))
-            await conn.commit() # Commit trigger creation
+            await conn.commit()  # Commit trigger creation
         logger.info("Search vector triggers applied.")
         # *****************************************************
 
@@ -6435,14 +6680,14 @@ async def init_db(db_url: Optional[str] = None, populate: bool = True) -> None:
         logger.info("Seeding users and potentially populating policies...")
         async_session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
         async with async_session_factory() as session:
-            async with session.begin(): # Start transaction for data operations
+            async with session.begin():  # Start transaction for data operations
                 # 5a. Seed Users from JSON
                 await seed_users_from_json(session)
 
                 # 5b. Optionally, populate policies
                 if populate:
                     logger.info("Starting policy data population from scraped_policies directory...")
-                    await populate_database_from_scraped_policies(session) # Pass the session
+                    await populate_database_from_scraped_policies(session)  # Pass the session
                 else:
                     logger.info("Skipping policy data population step.")
             # Transaction committed here
@@ -6456,50 +6701,72 @@ async def init_db(db_url: Optional[str] = None, populate: bool = True) -> None:
     finally:
         # Always dispose the engine created specifically for this function
         if engine:
-             await engine.dispose()
-             logger.info("Database engine disposed.")
+            await engine.dispose()
+            logger.info("Database engine disposed.")
 
 
 # (Keep drop_db function - unchanged)
 async def drop_db(db_url: Optional[str] = None, force: bool = False) -> None:
     """Drops the database."""
     db_url = db_url or str(config.DATABASE.DATABASE_URL)
-    if db_url.startswith("postgresql+asyncpg://"): db_url_parsed = db_url.replace("postgresql+asyncpg://", "postgresql://")
-    else: db_url_parsed = db_url
+    if db_url.startswith("postgresql+asyncpg://"):
+        db_url_parsed = db_url.replace("postgresql+asyncpg://", "postgresql://")
+    else:
+        db_url_parsed = db_url
     try:
         parsed = urlparse(db_url_parsed)
         db_name = parsed.path.lstrip("/")
-        if not db_name: logger.error("Database name could not be parsed from URL for dropping."); return
+        if not db_name:
+            logger.error("Database name could not be parsed from URL for dropping.")
+            return
         admin_url = f"{parsed.scheme}://{parsed.netloc}/postgres"
         logger.warning(f"Attempting to drop database '{db_name}'... THIS WILL DELETE ALL DATA!")
         if not force:
             try:
                 confirm = input(f"Are you sure you want to drop database '{db_name}'? (yes/no): ")
-                if confirm.lower() != "yes": logger.info("Database drop cancelled."); return
-            except EOFError: logger.warning("EOF received during confirmation. Assuming cancellation."); return
+                if confirm.lower() != "yes":
+                    logger.info("Database drop cancelled.")
+                    return
+            except EOFError:
+                logger.warning("EOF received during confirmation. Assuming cancellation.")
+                return
         conn = None
         try:
             conn = await asyncpg.connect(admin_url)
             logger.info(f"Terminating active connections to '{db_name}'...")
-            await conn.execute(f"SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = $1 AND pid <> pg_backend_pid();", db_name,)
-            logger.info("Connections terminated."); await asyncio.sleep(0.5)
+            await conn.execute(
+                f"SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = $1 AND pid <> pg_backend_pid();",
+                db_name,
+            )
+            logger.info("Connections terminated.")
+            await asyncio.sleep(0.5)
             logger.info(f"Dropping database '{db_name}'...")
             await conn.execute(f'DROP DATABASE IF EXISTS "{db_name}";')
             logger.info(f"SUCCESS: Database '{db_name}' dropped successfully.")
-        except Exception as e: logger.error(f"Error dropping database '{db_name}': {e}")
+        except Exception as e:
+            logger.error(f"Error dropping database '{db_name}': {e}")
         finally:
-            if conn: await conn.close()
-    except Exception as parse_err: logger.error(f"Error parsing database URL '{db_url}' for dropping: {parse_err}")
+            if conn:
+                await conn.close()
+    except Exception as parse_err:
+        logger.error(f"Error parsing database URL '{db_url}' for dropping: {parse_err}")
 
 
 # (Keep main execution block - unchanged)
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description="Initialize or drop the YDR Policy RAG database.")
-    parser.add_argument("--populate", action="store_true", help="Populate the database with new policies found in the processed data directory.")
+    parser.add_argument(
+        "--populate",
+        action="store_true",
+        help="Populate the database with new policies found in the processed data directory.",
+    )
     parser.add_argument("--drop", action="store_true", help="Drop the database (USE WITH CAUTION!).")
     parser.add_argument("--db_url", help="Optional database URL to override config.")
-    parser.add_argument("--no-populate", action="store_true", help="Explicitly skip the population step during initialization.")
+    parser.add_argument(
+        "--no-populate", action="store_true", help="Explicitly skip the population step during initialization."
+    )
     parser.add_argument("--force", action="store_true", help="Force drop without confirmation (used with --drop).")
 
     args = parser.parse_args()
@@ -6508,6 +6775,7 @@ if __name__ == "__main__":
         asyncio.run(drop_db(db_url=args.db_url, force=args.force))
     else:
         asyncio.run(init_db(db_url=args.db_url, populate=should_populate))
+
 ```
 
 ## ydrpolicy/backend/utils/paths.py
@@ -6561,6 +6829,7 @@ logger = logging.getLogger(__name__)
 # bcrypt is a good default scheme
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """
     Verifies a plain password against a stored hash.
@@ -6578,6 +6847,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         logger.error(f"Error verifying password: {e}", exc_info=True)
         return False
 
+
 def hash_password(password: str) -> str:
     """
     Hashes a plain password using the configured context.
@@ -6590,11 +6860,13 @@ def hash_password(password: str) -> str:
     """
     return pwd_context.hash(password)
 
+
 # --- JWT Token Handling ---
 
 SECRET_KEY = config.API.JWT_SECRET
 ALGORITHM = config.API.JWT_ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = config.API.JWT_EXPIRATION
+
 
 def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
     """
@@ -6621,6 +6893,7 @@ def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta]
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     logger.debug(f"Created access token for sub: {data.get('sub')}, expires: {expire}")
     return encoded_jwt
+
 
 def decode_token(token: str) -> Optional[Dict[str, Any]]:
     """
@@ -6651,6 +6924,7 @@ def decode_token(token: str) -> Optional[Dict[str, Any]]:
     except Exception as e:
         logger.error(f"Unexpected error decoding token: {e}", exc_info=True)
         return None
+
 ```
 
 ## ydrpolicy/backend/agent/mcp_connection.py
@@ -6805,12 +7079,13 @@ Available Tools:
 Interaction Flow:
 1. When the user asks a question, first use `find_similar_chunks` to locate potentially relevant policy text snippets (chunks).
 2. Analyze the results from `find_similar_chunks`. If relevant chunks are found, identify the corresponding `policy_id`(s).
-3. If a specific policy seems highly relevant, use `get_policy_from_ID` with the `policy_id` to retrieve the full policy document.
-4. Synthesize the information from the retrieved chunks and/or full policies to answer the user's question accurately.
-5. ALWAYS cite the Policy ID and Title when providing information extracted from a policy.
-6. If the tools do not provide relevant information, state that you cannot find the specific policy information within the available documents and advise the user to consult official departmental resources or personnel.
-7. Do not answer questions outside the scope of Yale Diagnostic Radiology policies.
-8. Do not invent information or policies. Stick strictly to the content provided by the tools.
+3. If a specific policy seems relevant, use `get_policy_from_ID` with the `policy_id` to retrieve the full policy document. 
+4. When assessing the relevancy of a chunk, be generous. If there is any chance that the chunk might contain relevant information, retrieve the full policy and look for the information there.
+5. Synthesize the information from the retrieved chunks and/or full policies to answer the user's question accurately.
+6. ALWAYS cite the Policy URL when referring to or providing information extracted from a policy. Don't mention the ID or Title of the policy.
+7. If the tools do not provide relevant information, state that you cannot find the specific policy information within the available documents and advise the user to consult official departmental resources or personnel.
+8. Do not answer questions outside the scope of Yale Diagnostic Radiology policies.
+9. Do not invent information or policies. Stick strictly to the content provided by the tools.
 """
 
 
@@ -6894,11 +7169,13 @@ import logging
 from typing import Any, Dict, List, Optional
 
 import uvicorn
+
 # No longer need Starlette or Route directly if using mcp.sse_app()
 # from starlette.applications import Starlette
 # from starlette.routing import Route
 
 from mcp.server.fastmcp import FastMCP
+
 # No longer need SseServerTransport directly
 # from mcp.server.sse import SseServerTransport
 from rich.logging import RichHandler
@@ -7011,6 +7288,7 @@ async def get_policy_from_ID(policy_id: int) -> str:
 # --- REMOVED ASGI App Setup for HTTP/SSE ---
 # We will now use mcp.sse_app() directly
 
+
 # --- Server Startup Logic ---
 def start_mcp_server(host: str, port: int, transport: str):
     """
@@ -7045,14 +7323,14 @@ def start_mcp_server(host: str, port: int, transport: str):
     try:
         if transport == "stdio":
             logger.info("Running MCP server with stdio transport.")
-            mcp.run(transport=transport) # Stdio is handled by FastMCP directly
+            mcp.run(transport=transport)  # Stdio is handled by FastMCP directly
         elif transport == "http":
             logger.info(f"Running MCP server with http/sse transport via uvicorn on {host}:{port}.")
             # ******************** CHANGE IS HERE ********************
             # Get the ASGI app specifically designed for SSE from FastMCP
             sse_asgi_app = mcp.sse_app()
             uvicorn.run(
-                sse_asgi_app, # Run the app provided by FastMCP
+                sse_asgi_app,  # Run the app provided by FastMCP
                 host=host,
                 port=port,
                 log_level=config.LOGGING.LEVEL.lower(),
@@ -7066,6 +7344,7 @@ def start_mcp_server(host: str, port: int, transport: str):
     except Exception as e:
         logger.error(f"MCP server run failed: {e}", exc_info=True)
         raise
+
 
 # --- Main Execution Block ---
 if __name__ == "__main__":
@@ -7083,6 +7362,7 @@ if __name__ == "__main__":
         pass
 
     logger.info("MCP server process stopped.")
+
 ```
 
 ## ydrpolicy/backend/schemas/auth.py
@@ -7094,15 +7374,20 @@ Pydantic schemas for authentication request/response models.
 """
 from pydantic import BaseModel, Field
 
+
 class Token(BaseModel):
     """Response model for the /auth/token endpoint."""
+
     access_token: str = Field(..., description="The JWT access token.")
     token_type: str = Field(default="bearer", description="The type of token (always 'bearer').")
 
+
 class TokenData(BaseModel):
     """Data payload expected within the JWT token."""
-    email: str | None = Field(None, alias="sub") # Subject claim holds the email
-    user_id: int | None = None # Optional: include user_id if useful
+
+    email: str | None = Field(None, alias="sub")  # Subject claim holds the email
+    user_id: int | None = None  # Optional: include user_id if useful
+
 ```
 
 ## ydrpolicy/backend/schemas/user.py
@@ -7116,14 +7401,18 @@ from pydantic import BaseModel, Field, EmailStr, ConfigDict
 from datetime import datetime
 from typing import Optional
 
+
 class UserBase(BaseModel):
     """Base schema for user attributes."""
+
     email: EmailStr = Field(..., description="User's unique email address.")
     full_name: str = Field(..., min_length=1, description="User's full name.")
     is_admin: bool = Field(default=False, description="Flag indicating admin privileges.")
 
+
 class UserRead(UserBase):
     """Schema for reading/returning user data (excludes password)."""
+
     id: int = Field(..., description="Unique identifier for the user.")
     created_at: datetime = Field(..., description="Timestamp when the user was created.")
     last_login: Optional[datetime] = Field(None, description="Timestamp of the last login.")
@@ -7131,7 +7420,9 @@ class UserRead(UserBase):
     # Enable ORM mode for creating from SQLAlchemy model
     model_config = ConfigDict(from_attributes=True)
 
+
 # Add UserCreate, UserUpdate schemas later if needed for user management endpoints
+
 ```
 
 ## ydrpolicy/backend/schemas/chat.py
@@ -7141,9 +7432,9 @@ class UserRead(UserBase):
 """
 Pydantic models for chat API requests and responses, including history handling.
 """
-from datetime import datetime # Import datetime
+from datetime import datetime  # Import datetime
 from typing import List, Optional, Dict, Any, Union
-from pydantic import BaseModel, Field, ConfigDict # Import ConfigDict
+from pydantic import BaseModel, Field, ConfigDict  # Import ConfigDict
 
 
 class ChatRequest(BaseModel):
@@ -7159,6 +7450,7 @@ class ChatRequest(BaseModel):
 # --- StreamChunk definition ---
 class StreamChunkData(BaseModel):
     """Flexible data payload for StreamChunk."""
+
     # Allow any field, specific validation done by consumer based on type
     class Config:
         extra = "allow"
@@ -7169,7 +7461,10 @@ class StreamChunk(BaseModel):
     Model for a single chunk streamed back to the client via SSE.
     The 'data' field's structure depends on the 'type'.
     """
-    type: str = Field(..., description="Type of the chunk (e.g., 'text_delta', 'tool_call', 'chat_info', 'error', 'status').")
+
+    type: str = Field(
+        ..., description="Type of the chunk (e.g., 'text_delta', 'tool_call', 'chat_info', 'error', 'status')."
+    )
     data: StreamChunkData = Field(..., description="The actual data payload for the chunk.")
 
 
@@ -7178,20 +7473,25 @@ class ChatInfoData(BaseModel):
     chat_id: int = Field(..., description="The ID of the chat session (new or existing).")
     title: Optional[str] = Field(None, description="The title of the chat session.")
 
+
 class TextDeltaData(BaseModel):
     delta: str = Field(..., description="The text delta.")
+
 
 class ToolCallData(BaseModel):
     id: str = Field(..., description="The unique ID for this tool call.")
     name: str = Field(..., description="The name of the tool being called.")
     input: Dict[str, Any] = Field(..., description="The arguments passed to the tool.")
 
+
 class ToolOutputData(BaseModel):
     tool_call_id: str = Field(..., description="The ID of the corresponding tool call.")
     output: Any = Field(..., description="The result returned by the tool.")
 
+
 class ErrorData(BaseModel):
     message: str = Field(..., description="Error message details.")
+
 
 class StatusData(BaseModel):
     status: str = Field(..., description="The final status of the agent run (e.g., 'complete', 'error').")
@@ -7200,8 +7500,10 @@ class StatusData(BaseModel):
 
 # --- NEW Schemas for History Endpoints ---
 
+
 class ChatSummary(BaseModel):
     """Summary information for a chat session, used in listings."""
+
     id: int = Field(..., description="Unique identifier for the chat session.")
     title: Optional[str] = Field(None, description="Title of the chat session.")
     created_at: datetime = Field(..., description="Timestamp when the chat was created.")
@@ -7213,6 +7515,7 @@ class ChatSummary(BaseModel):
 
 class MessageSummary(BaseModel):
     """Represents a single message within a chat history."""
+
     id: int = Field(..., description="Unique identifier for the message.")
     role: str = Field(..., description="Role of the message sender ('user' or 'assistant').")
     content: str = Field(..., description="Text content of the message.")
@@ -7222,6 +7525,7 @@ class MessageSummary(BaseModel):
 
     # Enable ORM mode
     model_config = ConfigDict(from_attributes=True)
+
 ```
 
 ## ydrpolicy/backend/scripts/remove_policy.py
@@ -7679,9 +7983,9 @@ Handles errors via exceptions from the agent runner.
 Manages MCP connection lifecycle using async context manager.
 """
 import asyncio
-import contextlib # For null_async_context
+import contextlib  # For null_async_context
 import datetime
-import json # For safe parsing of tool arguments
+import json  # For safe parsing of tool arguments
 import logging  # Use standard logging
 from typing import Any, AsyncGenerator, Dict, List, Optional, Tuple
 
@@ -7694,15 +7998,18 @@ from agents.exceptions import (
     OutputGuardrailTripwireTriggered,
     UserError,
 )
-from agents.mcp import MCPServerSse # For type checking and context management
+from agents.mcp import MCPServerSse  # For type checking and context management
+
 # Import only the necessary event types from agents.stream_events
 from agents.stream_events import (
     RawResponsesStreamEvent,
     RunItemStreamEvent,
     StreamEvent,
 )
+
 # OpenAI types
 from openai.types.chat import ChatCompletionMessageParam
+
 # Only import the specific response types actually used
 from openai.types.responses import ResponseTextDeltaEvent
 
@@ -7712,13 +8019,14 @@ from ydrpolicy.backend.database.engine import get_async_session
 from ydrpolicy.backend.database.models import Message as DBMessage
 from ydrpolicy.backend.database.repository.chats import ChatRepository
 from ydrpolicy.backend.database.repository.messages import MessageRepository
+
 # Import all specific data schemas AND the wrapper StreamChunkData
 from ydrpolicy.backend.schemas.chat import (
     ChatInfoData,
     ErrorData,
     StatusData,
     StreamChunk,
-    StreamChunkData, # The wrapper
+    StreamChunkData,  # The wrapper
     TextDeltaData,
     ToolCallData,
     ToolOutputData,
@@ -7727,13 +8035,15 @@ from ydrpolicy.backend.schemas.chat import (
 logger = logging.getLogger(__name__)
 
 # Constants
-MAX_HISTORY_MESSAGES = 20 # Max user/assistant message pairs for history context
+MAX_HISTORY_MESSAGES = 20  # Max user/assistant message pairs for history context
+
 
 # Helper dummy async context manager (used when MCP is disabled)
 @contextlib.asynccontextmanager
 async def null_async_context(*args, **kwargs):
     """A dummy async context manager that does nothing."""
     yield None
+
 
 class ChatService:
     """
@@ -7762,7 +8072,7 @@ class ChatService:
                 logger.info("Policy Agent initialized successfully in ChatService.")
             except Exception as e:
                 logger.error(f"Failed to initialize agent in ChatService: {e}", exc_info=True)
-                self._agent = None # Ensure agent is None on failure
+                self._agent = None  # Ensure agent is None on failure
 
     async def get_agent(self) -> Agent:
         """
@@ -7778,7 +8088,7 @@ class ChatService:
             if self._init_task is None or self._init_task.done():
                 # Start initialization task if not already running
                 self._init_task = asyncio.create_task(self._initialize_agent())
-            await self._init_task # Wait for initialization to complete
+            await self._init_task  # Wait for initialization to complete
         if self._agent is None:
             # Check again after waiting, raise if still None
             raise RuntimeError("Agent initialization failed. Cannot proceed.")
@@ -7819,14 +8129,13 @@ class ChatService:
             A correctly formatted StreamChunk object.
         """
         # Use model_dump() to get dict from Pydantic model, then pass kwargs to StreamChunkData
-        payload_dict = payload.model_dump(exclude_unset=True) if hasattr(payload, 'model_dump') else payload
+        payload_dict = payload.model_dump(exclude_unset=True) if hasattr(payload, "model_dump") else payload
         if not isinstance(payload_dict, dict):
-             # Fallback if payload wasn't a Pydantic model or dict
-             logger.warning(f"Payload for chunk type '{chunk_type}' was not a dict or Pydantic model, wrapping as is.")
-             payload_dict = {"value": payload_dict}
+            # Fallback if payload wasn't a Pydantic model or dict
+            logger.warning(f"Payload for chunk type '{chunk_type}' was not a dict or Pydantic model, wrapping as is.")
+            payload_dict = {"value": payload_dict}
 
         return StreamChunk(type=chunk_type, data=StreamChunkData(**payload_dict))
-
 
     async def process_user_message_stream(
         self, user_id: int, message: str, chat_id: Optional[int] = None
@@ -7855,25 +8164,31 @@ class ChatService:
         agent: Optional[Agent] = None
 
         try:
-            agent = await self.get_agent() # Get the agent instance
+            agent = await self.get_agent()  # Get the agent instance
 
             # Get the MCP server instance if configured
             mcp_server_instance = None
             if self.use_mcp and agent and agent.mcp_servers:
-                 mcp_server_instance = agent.mcp_servers[0]
+                mcp_server_instance = agent.mcp_servers[0]
 
             # Use 'async with' to manage the MCP connection lifecycle
-            async with mcp_server_instance if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse) else null_async_context() as active_mcp_connection:
+            async with (
+                mcp_server_instance
+                if mcp_server_instance and isinstance(mcp_server_instance, MCPServerSse)
+                else null_async_context()
+            ) as active_mcp_connection:
                 # Check for connection errors if MCP was expected
                 if self.use_mcp:
                     if mcp_server_instance and active_mcp_connection is None:
                         error_message = "MCP connection failed during context entry."
                         logger.error(error_message)
                         final_status_str = "error"
-                        yield self._create_stream_chunk("error", ErrorData(message="Could not connect to required tools server."))
-                        return # Stop processing
+                        yield self._create_stream_chunk(
+                            "error", ErrorData(message="Could not connect to required tools server.")
+                        )
+                        return  # Stop processing
                     elif mcp_server_instance:
-                         logger.info("API Mode: MCP connection established via async context.")
+                        logger.info("API Mode: MCP connection established via async context.")
 
                 # --- Proceed with DB operations and agent run INSIDE the context manager ---
                 async with get_async_session() as session:
@@ -7885,24 +8200,30 @@ class ChatService:
                     if processed_chat_id:
                         chat = await chat_repo.get_by_user_and_id(chat_id=processed_chat_id, user_id=user_id)
                         if not chat:
-                            error_message = f"Chat ID {processed_chat_id} not found or does not belong to user ID {user_id}."
+                            error_message = (
+                                f"Chat ID {processed_chat_id} not found or does not belong to user ID {user_id}."
+                            )
                             logger.error(error_message)
                             final_status_str = "error"
                             yield self._create_stream_chunk("error", ErrorData(message=error_message))
-                            return # Stop processing early
+                            return  # Stop processing early
                         history_messages = await msg_repo.get_by_chat_id_ordered(
                             chat_id=processed_chat_id, limit=MAX_HISTORY_MESSAGES * 2
                         )
                         chat_title = chat.title
                         logger.debug(f"Loaded {len(history_messages)} messages for chat ID {processed_chat_id}.")
-                        yield self._create_stream_chunk("chat_info", ChatInfoData(chat_id=processed_chat_id, title=chat_title))
+                        yield self._create_stream_chunk(
+                            "chat_info", ChatInfoData(chat_id=processed_chat_id, title=chat_title)
+                        )
                     else:
                         new_title = message[:80] + ("..." if len(message) > 80 else "")
                         new_chat = await chat_repo.create_chat(user_id=user_id, title=new_title)
                         processed_chat_id = new_chat.id
                         chat_title = new_chat.title
                         logger.info(f"Created new chat ID {processed_chat_id} for user {user_id}.")
-                        yield self._create_stream_chunk("chat_info", ChatInfoData(chat_id=processed_chat_id, title=chat_title))
+                        yield self._create_stream_chunk(
+                            "chat_info", ChatInfoData(chat_id=processed_chat_id, title=chat_title)
+                        )
 
                     # 2. Save User Message to DB
                     try:
@@ -7910,7 +8231,9 @@ class ChatService:
                         logger.debug(f"Saved user message to chat ID {processed_chat_id}.")
                     except Exception as db_err:
                         error_message = "Failed to save your message."
-                        logger.error(f"DB error saving user message for chat {processed_chat_id}: {db_err}", exc_info=True)
+                        logger.error(
+                            f"DB error saving user message for chat {processed_chat_id}: {db_err}", exc_info=True
+                        )
                         final_status_str = "error"
                         yield self._create_stream_chunk("error", ErrorData(message=error_message))
                         return
@@ -7943,25 +8266,30 @@ class ChatService:
                                     agent_response_content += delta_text
                                     yield self._create_stream_chunk("text_delta", TextDeltaData(delta=delta_text))
                             elif event.type == "run_item_stream_event":
-                                item = event.item # Type here could be ToolCallItem, ToolCallOutputItem etc.
+                                item = event.item  # Type here could be ToolCallItem, ToolCallOutputItem etc.
                                 if item.type == "tool_call_item":
-                                    current_tool_call_item = item # Store the item itself
+                                    current_tool_call_item = item  # Store the item itself
                                     # Access the actual tool call info via raw_item
                                     tool_call_info = item.raw_item
-                                    if hasattr(tool_call_info, 'name'):
+                                    if hasattr(tool_call_info, "name"):
                                         tool_name = tool_call_info.name
-                                        tool_input_raw = getattr(tool_call_info, 'arguments', "{}") # Arguments are json string
+                                        tool_input_raw = getattr(
+                                            tool_call_info, "arguments", "{}"
+                                        )  # Arguments are json string
                                         # Try parsing arguments safely
                                         try:
-                                             parsed_input = json.loads(tool_input_raw)
+                                            parsed_input = json.loads(tool_input_raw)
                                         except json.JSONDecodeError:
-                                             logger.warning(f"Could not parse tool input JSON: {tool_input_raw}")
-                                             parsed_input = {"raw_arguments": tool_input_raw} # Keep raw if not json
+                                            logger.warning(f"Could not parse tool input JSON: {tool_input_raw}")
+                                            parsed_input = {"raw_arguments": tool_input_raw}  # Keep raw if not json
 
                                         # Ensure tool_call_id exists on the item before yielding
-                                        tool_call_id = getattr(item, 'tool_call_id', 'unknown_call_id')
+                                        tool_call_id = getattr(item, "tool_call_id", "unknown_call_id")
 
-                                        yield self._create_stream_chunk("tool_call", ToolCallData(id=tool_call_id, name=tool_name, input=parsed_input))
+                                        yield self._create_stream_chunk(
+                                            "tool_call",
+                                            ToolCallData(id=tool_call_id, name=tool_name, input=parsed_input),
+                                        )
                                         logger.info(f"Agent calling tool: {tool_name} in chat {processed_chat_id}")
                                     else:
                                         logger.warning(f"ToolCallItem structure missing name: {item!r}")
@@ -7969,18 +8297,25 @@ class ChatService:
                                 elif item.type == "tool_call_output_item":
                                     if current_tool_call_item:
                                         # Ensure output_item has tool_call_id before pairing
-                                        output_tool_call_id = getattr(item, 'tool_call_id', None)
+                                        output_tool_call_id = getattr(item, "tool_call_id", None)
                                         if output_tool_call_id:
                                             tool_calls_data.append((current_tool_call_item, item))
                                         else:
-                                             logger.warning(f"ToolCallOutputItem missing tool_call_id for chat {processed_chat_id}")
-                                        current_tool_call_item = None # Reset after attempting pairing
+                                            logger.warning(
+                                                f"ToolCallOutputItem missing tool_call_id for chat {processed_chat_id}"
+                                            )
+                                        current_tool_call_item = None  # Reset after attempting pairing
                                     else:
-                                        logger.warning(f"Received tool output without matching tool call for chat {processed_chat_id}")
+                                        logger.warning(
+                                            f"Received tool output without matching tool call for chat {processed_chat_id}"
+                                        )
                                     tool_output = item.output
                                     # Ensure tool_call_id exists on the item before yielding
-                                    output_tool_call_id_yield = getattr(item, 'tool_call_id', 'unknown_call_id')
-                                    yield self._create_stream_chunk("tool_output", ToolOutputData(tool_call_id=output_tool_call_id_yield, output=tool_output))
+                                    output_tool_call_id_yield = getattr(item, "tool_call_id", "unknown_call_id")
+                                    yield self._create_stream_chunk(
+                                        "tool_output",
+                                        ToolOutputData(tool_call_id=output_tool_call_id_yield, output=tool_output),
+                                    )
                                     logger.info(f"Tool output received for chat {processed_chat_id}")
                             elif event.type == "agent_updated_stream_event":
                                 logger.info(f"Agent updated to: {event.new_agent.name} in chat {processed_chat_id}")
@@ -7995,7 +8330,9 @@ class ChatService:
                         error_message = f"Agent UserError: {str(ue)}"
                         logger.error(error_message, exc_info=True)
                         final_status_str = "error"
-                        yield self._create_stream_chunk("error", ErrorData(message="Agent configuration or connection error."))
+                        yield self._create_stream_chunk(
+                            "error", ErrorData(message="Agent configuration or connection error.")
+                        )
                     except (
                         MaxTurnsExceeded,
                         InputGuardrailTripwireTriggered,
@@ -8006,11 +8343,13 @@ class ChatService:
                         logger.error(error_message, exc_info=True)
                         final_status_str = "error"
                         yield self._create_stream_chunk("error", ErrorData(message=error_message))
-                    except Exception as stream_err: # Catch other errors during streaming
+                    except Exception as stream_err:  # Catch other errors during streaming
                         error_message = f"Error during agent stream: {str(stream_err)}"
                         logger.error(error_message, exc_info=True)
                         final_status_str = "error"
-                        yield self._create_stream_chunk("error", ErrorData(message="An error occurred during agent processing."))
+                        yield self._create_stream_chunk(
+                            "error", ErrorData(message="An error occurred during agent processing.")
+                        )
                     # --- End Try/Except around stream ---
 
                     # 5. Save Agent Response and Tool Usage to DB (only if run succeeded)
@@ -8020,14 +8359,21 @@ class ChatService:
                                 assistant_msg = await msg_repo.create_message(
                                     chat_id=processed_chat_id, role="assistant", content=agent_response_content.strip()
                                 )
-                                logger.debug(f"Saved assistant message ID {assistant_msg.id} to chat ID {processed_chat_id}.")
+                                logger.debug(
+                                    f"Saved assistant message ID {assistant_msg.id} to chat ID {processed_chat_id}."
+                                )
                                 # Save tool usage linked to the assistant message
                                 if tool_calls_data:
                                     for call_item, output_item in tool_calls_data:
                                         # Add extra safety checks here
-                                        if call_item and output_item and hasattr(call_item, 'raw_item') and hasattr(output_item, 'output'):
-                                            tool_call_info = call_item.raw_item # Get the raw tool call
-                                            tool_input_raw = getattr(tool_call_info, 'arguments', "{}")
+                                        if (
+                                            call_item
+                                            and output_item
+                                            and hasattr(call_item, "raw_item")
+                                            and hasattr(output_item, "output")
+                                        ):
+                                            tool_call_info = call_item.raw_item  # Get the raw tool call
+                                            tool_input_raw = getattr(tool_call_info, "arguments", "{}")
                                             try:
                                                 parsed_input = json.loads(tool_input_raw)
                                             except json.JSONDecodeError:
@@ -8035,22 +8381,31 @@ class ChatService:
 
                                             await msg_repo.create_tool_usage_for_message(
                                                 message_id=assistant_msg.id,
-                                                tool_name=getattr(tool_call_info, 'name', "unknown"),
+                                                tool_name=getattr(tool_call_info, "name", "unknown"),
                                                 tool_input=parsed_input,
                                                 tool_output=output_item.output,
                                             )
                                         else:
-                                            logger.warning(f"Skipping saving incomplete tool usage data for msg {assistant_msg.id}: call={call_item!r}, output={output_item!r}")
-                                    logger.debug(f"Saved {len(tool_calls_data)} tool usage records for message ID {assistant_msg.id}.")
+                                            logger.warning(
+                                                f"Skipping saving incomplete tool usage data for msg {assistant_msg.id}: call={call_item!r}, output={output_item!r}"
+                                            )
+                                    logger.debug(
+                                        f"Saved {len(tool_calls_data)} tool usage records for message ID {assistant_msg.id}."
+                                    )
                             except Exception as db_err:
                                 logger.error(
                                     f"Failed to save assistant response/tools to DB for chat {processed_chat_id}: {db_err}",
                                     exc_info=True,
                                 )
                                 # Yield error even if DB save fails after successful run
-                                yield self._create_stream_chunk("error", ErrorData(message="Failed to save assistant's response (run was complete)."))
+                                yield self._create_stream_chunk(
+                                    "error",
+                                    ErrorData(message="Failed to save assistant's response (run was complete)."),
+                                )
                         else:
-                            logger.warning(f"Agent finished run for chat {processed_chat_id} successfully but produced no text content.")
+                            logger.warning(
+                                f"Agent finished run for chat {processed_chat_id} successfully but produced no text content."
+                            )
                     elif final_status_str != "error":
                         logger.warning(
                             f"Agent run finished with unexpected status '{final_status_str}' for chat {processed_chat_id}. Assistant response not saved."
@@ -8066,7 +8421,7 @@ class ChatService:
             # Yield error chunk if possible
             try:
                 yield self._create_stream_chunk("error", ErrorData(message="An unexpected server error occurred."))
-            except Exception: # Ignore if yield fails during critical error
+            except Exception:  # Ignore if yield fails during critical error
                 pass
         finally:
             # --- No explicit MCP close needed here, 'async with' handles it ---
@@ -8074,14 +8429,15 @@ class ChatService:
             # --- Always yield final status ---
             if final_status_str == "unknown" and error_message:
                 final_status_str = "error"
-            elif final_status_str == "unknown": # If no error but not marked complete
-                final_status_str = "error" # Assume error if not explicitly completed
+            elif final_status_str == "unknown":  # If no error but not marked complete
+                final_status_str = "error"  # Assume error if not explicitly completed
                 logger.warning(f"Final status was 'unknown' for chat {processed_chat_id}, marking as 'error'.")
 
             logger.info(f"Sending final status '{final_status_str}' for chat {processed_chat_id}")
             # Use helper for final status chunk
             yield self._create_stream_chunk("status", StatusData(status=final_status_str, chat_id=processed_chat_id))
             # --- End final status ---
+
 ```
 
 ## ydrpolicy/backend/services/embeddings.py

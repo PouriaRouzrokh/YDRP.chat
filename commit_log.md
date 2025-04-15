@@ -1,5 +1,11 @@
 # Commit History
 
+## commit 29 (4/15/2025 - 17:58)
+
+Added rename and archive mechanisms.
+Updated readme and frontend guidelines.
+Copied the system_prompt to a separate file and improved it.
+
 ## commit 28 (4/14/2025 - 15:40)
 
 Added for for_frontend_dev.md

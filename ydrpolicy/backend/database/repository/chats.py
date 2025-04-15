@@ -5,7 +5,8 @@ Repository for database operations related to Chat models.
 import logging
 from typing import Optional, List
 
-from sqlalchemy import select
+# *** ADD func import ***
+from sqlalchemy import select, update, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -50,22 +51,27 @@ class ChatRepository(BaseRepository[Chat]):
             logger.warning(f"Chat ID {chat_id} not found or does not belong to user ID {user_id}.")
         return chat
 
-    async def get_chats_by_user(self, user_id: int, skip: int = 0, limit: int = 100) -> List[Chat]:
+    async def get_chats_by_user(
+        self, user_id: int, skip: int = 0, limit: int = 100, archived: bool = False
+    ) -> List[Chat]:
         """
         Retrieves a list of chats belonging to a specific user, ordered by update time.
+        Can optionally filter for archived chats.
 
         Args:
             user_id: The ID of the user whose chats to retrieve.
             skip: Number of chats to skip for pagination.
             limit: Maximum number of chats to return.
+            archived: If True, retrieves archived chats; otherwise retrieves active chats (default).
 
         Returns:
             A list of Chat objects.
         """
-        logger.debug(f"Retrieving chats for user ID {user_id} (limit={limit}, skip={skip}).")
+        status = "archived" if archived else "active"
+        logger.debug(f"Retrieving {status} chats for user ID {user_id} (limit={limit}, skip={skip}).")
         stmt = (
             select(Chat)
-            .where(Chat.user_id == user_id)
+            .where(Chat.user_id == user_id, Chat.is_archived == archived)  # Filter by archived status
             .order_by(Chat.updated_at.desc())
             .offset(skip)
             .limit(limit)
@@ -74,7 +80,7 @@ class ChatRepository(BaseRepository[Chat]):
         )
         result = await self.session.execute(stmt)
         chats = list(result.scalars().all())
-        logger.debug(f"Found {len(chats)} chats for user ID {user_id}.")
+        logger.debug(f"Found {len(chats)} {status} chats for user ID {user_id}.")
         return chats
 
     async def create_chat(self, user_id: int, title: Optional[str] = None) -> Chat:
@@ -122,11 +128,75 @@ class ChatRepository(BaseRepository[Chat]):
             return None
 
         chat.title = new_title
-        # updated_at is handled automatically by the model definition
+        # updated_at is handled automatically by the model definition's onupdate,
+        # but we need to ensure the session knows the object changed.
+        # *** ADD THIS LINE ***
+        self.session.add(chat) # Explicitly mark the object as potentially dirty
         await self.session.flush()
+        await self.session.commit()  # Explicitly commit the transaction
         await self.session.refresh(chat)
         logger.info(f"SUCCESS: Successfully updated title for chat ID {chat_id}.")
         return chat
+
+    async def archive_chat(self, chat_id: int, user_id: int, archive: bool = True) -> Optional[Chat]:
+        """
+        Archives or unarchives a specific chat, verifying ownership.
+
+        Args:
+            chat_id: The ID of the chat to update.
+            user_id: The ID of the user attempting the update.
+            archive: True to archive, False to unarchive.
+
+        Returns:
+            The updated Chat object if successful, None otherwise.
+        """
+        action = "archive" if archive else "unarchive"
+        logger.info(f"Attempting to {action} chat ID {chat_id} (user ID {user_id}).")
+        chat = await self.get_by_user_and_id(chat_id=chat_id, user_id=user_id)
+        if not chat:
+            logger.warning(f"Cannot {action}: Chat ID {chat_id} not found for user ID {user_id}.")
+            return None
+
+        if chat.is_archived == archive:
+            status = "already archived" if archive else "already active"
+            logger.info(f"Chat ID {chat_id} is {status}. No change needed.")
+            return chat # Return the chat as is
+
+        chat.is_archived = archive
+        # updated_at is handled automatically by the model definition's onupdate,
+        # but we need to ensure the session knows the object changed.
+        # *** ADD THIS LINE ***
+        self.session.add(chat) # Explicitly mark the object as potentially dirty
+        await self.session.flush()
+        await self.session.commit()  # Explicitly commit the transaction
+        await self.session.refresh(chat)
+        logger.info(f"SUCCESS: Successfully {action}d chat ID {chat_id}.")
+        return chat
+
+    async def archive_all_chats(self, user_id: int) -> int:
+        """
+        Archives all active chats for a specific user.
+
+        Args:
+            user_id: The ID of the user whose chats to archive.
+
+        Returns:
+            The number of chats that were archived.
+        """
+        logger.warning(f"Attempting to archive ALL active chats for user ID {user_id}.")
+        stmt = (
+            update(Chat)
+            .where(Chat.user_id == user_id, Chat.is_archived == False) # Only archive active chats
+            .values(is_archived=True, updated_at=func.now()) # Explicitly set updated_at for bulk update
+        )
+        result = await self.session.execute(stmt)
+        archived_count = result.rowcount
+        # *** Flush is needed here for bulk update ***
+        await self.session.flush() # Ensure changes are flushed before commit
+        await self.session.commit()  # Explicitly commit the transaction
+        logger.info(f"SUCCESS: Archived {archived_count} chats for user ID {user_id}.")
+        return archived_count
+
 
     async def delete_chat(self, chat_id: int, user_id: int) -> bool:
         """
@@ -149,6 +219,7 @@ class ChatRepository(BaseRepository[Chat]):
         try:
             await self.session.delete(chat)
             await self.session.flush()
+            await self.session.commit()  # Explicitly commit the transaction
             logger.info(f"SUCCESS: Successfully deleted chat ID {chat_id} and its messages.")
             return True
         except Exception as e:

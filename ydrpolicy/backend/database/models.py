@@ -232,6 +232,8 @@ class Chat(Base):
         default=func.now(),  # Use func.now() for database default
         onupdate=func.now(),  # Use func.now() for database onupdate
     )
+    # --- ADDED ---
+    is_archived: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
 
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="chats")
@@ -239,8 +241,14 @@ class Chat(Base):
         "Message", back_populates="chat", cascade="all, delete-orphan"  # Delete messages when chat is deleted
     )
 
+    # --- ADDED ---
+    # Index for efficiently filtering chats by user and archived status
+    __table_args__ = (Index("idx_chat_user_archived", "user_id", "is_archived"),)
+
     def __repr__(self):
-        return f"<Chat id={self.id} user_id={self.user_id}>"
+        # --- MODIFIED ---
+        archived_status = " (Archived)" if self.is_archived else ""
+        return f"<Chat id={self.id} user_id={self.user_id}{archived_status}>"
 
 
 class Message(Base):
