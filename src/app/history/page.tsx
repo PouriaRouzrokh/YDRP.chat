@@ -1,10 +1,11 @@
 export default function HistoryPage() {
   return (
-    <div className="container flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold">History Page</h1>
-        <p className="mt-2">Placeholder for chat history</p>
-      </div>
+    <div className="w-full py-8">
+      <h1 className="text-3xl font-bold mb-4">History</h1>
+      <p className="text-muted-foreground">
+        This is a placeholder for the History page. This will be implemented in
+        Phase 5.
+      </p>
     </div>
   );
 }

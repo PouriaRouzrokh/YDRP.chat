@@ -1,10 +1,11 @@
 export default function ChatPage() {
   return (
-    <div className="container flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold">Chat Page</h1>
-        <p className="mt-2">Placeholder for chat interface</p>
-      </div>
+    <div className="w-full py-8">
+      <h1 className="text-3xl font-bold mb-4">Chat</h1>
+      <p className="text-muted-foreground">
+        This is a placeholder for the Chat page. This will be implemented in
+        Phase 4.
+      </p>
     </div>
   );
 }
