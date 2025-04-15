@@ -1,4 +1,4 @@
-import { useState, useRef, KeyboardEvent } from "react";
+import { useState, useRef, KeyboardEvent, useEffect, useCallback } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { SendIcon } from "lucide-react";
@@ -9,6 +9,8 @@ interface ChatInputProps {
   isDisabled?: boolean;
   placeholder?: string;
   className?: string;
+  initialValue?: string;
+  autoSubmit?: boolean;
 }
 
 export function ChatInput({
@@ -16,11 +18,22 @@ export function ChatInput({
   isDisabled = false,
   placeholder = "Type your message...",
   className,
+  initialValue = "",
+  autoSubmit = false,
 }: ChatInputProps) {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(initialValue);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const isInitialMount = useRef(true);
 
-  const handleSubmit = () => {
+  // Auto-resize textarea when initialValue is provided
+  useEffect(() => {
+    if (initialValue && textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [initialValue]);
+
+  const handleSubmit = useCallback(() => {
     const message = input.trim();
     if (message && !isDisabled) {
       onSubmit(message);
@@ -29,7 +42,21 @@ export function ChatInput({
         textareaRef.current.style.height = "auto";
       }
     }
-  };
+  }, [input, isDisabled, onSubmit]);
+
+  // Auto-submit if enabled and initialValue is provided
+  useEffect(() => {
+    if (autoSubmit && initialValue && isInitialMount.current) {
+      isInitialMount.current = false;
+
+      // Use a short delay to ensure the UI is rendered first
+      const timer = setTimeout(() => {
+        handleSubmit();
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [autoSubmit, initialValue, handleSubmit]);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {

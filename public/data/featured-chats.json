@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "Radiation Safety Protocols",
+    "userMessage": "What are the safety protocols for pregnant staff working with radiation?",
+    "assistantMessage": "According to Yale Radiology policies, pregnant staff should follow these guidelines: 1. Report pregnancy to Radiation Safety Officer 2. Wear dosimeter at waist level under lead apron 3. Limit fluoroscopy procedures when possible",
+    "imageUrl": "https://images.unsplash.com/photo-1584362917137-56406a73241c?w=800&auto=format&fit=crop&q=80",
+    "category": "Safety Protocols",
+    "path": "/chat?topic=radiation-safety"
+  },
+  {
+    "id": 2,
+    "title": "Equipment Maintenance",
+    "userMessage": "How often should MRI machines be calibrated?",
+    "assistantMessage": "Yale Radiology policy requires MRI machines to be calibrated quarterly by certified technicians, with additional checks following any software updates or physical adjustments to the equipment.",
+    "imageUrl": "https://images.unsplash.com/photo-1583911860523-4b8fcf238486?w=800&auto=format&fit=crop&q=80",
+    "category": "Equipment",
+    "path": "/chat?topic=equipment-maintenance"
+  },
+  {
+    "id": 3,
+    "title": "Patient Privacy Policies",
+    "userMessage": "What are the policies regarding sharing patient images for research?",
+    "assistantMessage": "For research purposes, all patient images must be properly de-identified according to HIPAA guidelines. Written consent must be obtained specifically for research use, and the IRB approval is required before any images can be shared.",
+    "imageUrl": "https://images.unsplash.com/photo-1579154341098-e4e158cc7f55?w=800&auto=format&fit=crop&q=80",
+    "category": "Privacy & Compliance",
+    "path": "/chat?topic=privacy-policies"
+  }
+]

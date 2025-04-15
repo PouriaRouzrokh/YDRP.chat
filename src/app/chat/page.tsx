@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PanelLeftOpen } from "lucide-react";
@@ -78,18 +79,46 @@ const MOCK_MESSAGES: Message[] = [
 ];
 
 export default function ChatPage() {
+  const searchParams = useSearchParams();
+  const initialMessage = searchParams.get("message");
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [chatSessions, setChatSessions] =
     useState<ChatSession[]>(MOCK_CHAT_SESSIONS);
-  const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
+  // Only use mock messages if there's no initial message
+  const [messages, setMessages] = useState<Message[]>(
+    initialMessage ? [] : MOCK_MESSAGES
+  );
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [activeSessionId, setActiveSessionId] = useState<string>("1");
+  const [activeSessionId, setActiveSessionId] = useState<string>(
+    initialMessage ? "" : "1"
+  );
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
+
+  // Create a new chat if there's an initial message (run only once on mount)
+  const hasInitialEffectRun = useRef(false);
+  useEffect(() => {
+    if (initialMessage && !hasInitialEffectRun.current) {
+      hasInitialEffectRun.current = true;
+      // Create a new chat right away
+      const newChatId = `new-${Date.now()}`;
+      const newSession: ChatSession = {
+        id: newChatId,
+        title: "New Conversation",
+        createdAt: new Date(),
+        lastMessageTime: new Date(),
+        messageCount: 0,
+      };
+
+      setChatSessions((prev) => [newSession, ...prev]);
+      setActiveSessionId(newChatId);
+    }
+  }, [initialMessage]); // Add initialMessage to dependency array
 
   const handleSendMessage = (content: string) => {
     // Add user message
@@ -289,6 +318,8 @@ export default function ChatPage() {
               isDisabled={isTyping}
               placeholder="Type your message..."
               className="pb-0"
+              initialValue={initialMessage || ""}
+              autoSubmit={false}
             />
           </motion.div>
 
