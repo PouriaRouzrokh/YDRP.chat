@@ -274,6 +274,17 @@ export default function ChatPage() {
     setIsSidebarOpen((prev) => !prev);
   };
 
+  // Add this handler function
+  const handleChatRenamed = (chatId: string, newTitle: string) => {
+    setChatSessions((prevSessions) =>
+      prevSessions.map((session) =>
+        session.id === chatId ? { ...session, title: newTitle } : session
+      )
+    );
+    // No need to update header title separately, it derives from chatSessions
+    console.log(`ChatPage: Updated session ${chatId} title to "${newTitle}"`);
+  };
+
   return (
     <motion.div
       className="flex h-[calc(100vh-7rem)] overflow-hidden"
@@ -297,6 +308,7 @@ export default function ChatPage() {
               onSessionSelect={handleSelectChat}
               onNewChat={handleNewChat}
               isCollapsed={!isSidebarOpen}
+              onChatRenamed={handleChatRenamed}
             />
           </motion.div>
         )}

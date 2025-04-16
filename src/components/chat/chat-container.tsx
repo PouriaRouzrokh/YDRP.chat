@@ -34,10 +34,34 @@ export function ChatContainer({
   const [activeSessionId, setActiveSessionId] = useState<string | null>(
     initialSessions.length > 0 ? initialSessions[0].id : null
   );
+  // Direct state for active chat title
+  const [activeChatTitle, setActiveChatTitle] = useState<string>(
+    initialSessions.length > 0
+      ? initialSessions[0]?.title || "Chat"
+      : "New Chat"
+  );
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isTyping, setIsTyping] = useState(false);
   const [currentMessage, setCurrentMessage] = useState<Message | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Update active chat title whenever active session changes
+  useEffect(() => {
+    if (!activeSessionId) {
+      setActiveChatTitle("New Chat");
+      return;
+    }
+
+    const chat = sessions.find((s) => s.id === activeSessionId);
+    if (chat) {
+      setActiveChatTitle(chat.title);
+    } else {
+      // If the active chat isn't found (e.g., deleted/archived?), reset
+      setActiveChatTitle("Select Chat");
+      // Optionally, clear the active session ID
+      // setActiveSessionId(null);
+    }
+  }, [activeSessionId, sessions]);
 
   // Fetch chat sessions on mount
   useEffect(() => {
@@ -56,8 +80,10 @@ export function ChatContainer({
 
         // Set active session if we have any and none is currently selected
         if (formattedSessions.length > 0 && !activeSessionId) {
-          setActiveSessionId(formattedSessions[0].id);
-          fetchMessagesForSession(Number(formattedSessions[0].id));
+          const firstSession = formattedSessions[0];
+          setActiveSessionId(firstSession.id);
+          setActiveChatTitle(firstSession.title);
+          fetchMessagesForSession(Number(firstSession.id));
         }
       } catch (error) {
         console.error("Error fetching chat sessions:", error);
@@ -107,12 +133,16 @@ export function ChatContainer({
       const infoChunk = chunk as ChatInfoChunk;
       // Update active session ID if this is a new chat
       if (!activeSessionId) {
-        setActiveSessionId(String(infoChunk.data.chat_id));
+        const newChatId = String(infoChunk.data.chat_id);
+        const newChatTitle = infoChunk.data.title || "New Chat";
+
+        setActiveSessionId(newChatId);
+        setActiveChatTitle(newChatTitle);
 
         // Create new session in the sidebar
         const newSession: ChatSession = {
-          id: String(infoChunk.data.chat_id),
-          title: infoChunk.data.title || "New Chat",
+          id: newChatId,
+          title: newChatTitle,
           createdAt: new Date(),
           lastMessageTime: new Date(),
           messageCount: 0, // Start with 0, will be updated when message is complete
@@ -215,13 +245,35 @@ export function ChatContainer({
 
   const handleCreateNewChat = () => {
     setActiveSessionId(null);
+    setActiveChatTitle("New Chat");
     setMessages([]);
     setCurrentMessage(null);
   };
 
   const handleSelectSession = (sessionId: string) => {
     setActiveSessionId(sessionId);
+    // Update title immediately
+    const selectedChat = sessions.find((s) => s.id === sessionId);
+    if (selectedChat) {
+      setActiveChatTitle(selectedChat.title);
+    }
     // Messages will be fetched by the useEffect that watches activeSessionId
+  };
+
+  const handleChatRenamed = async (chatId: string, newTitle: string) => {
+    console.log(`Chat renamed: ${chatId} => \"${newTitle}\"`);
+
+    // Update the main sessions state directly
+    setSessions((prevSessions) =>
+      prevSessions.map((session) =>
+        session.id === chatId ? { ...session, title: newTitle } : session
+      )
+    );
+
+    // Immediately update the active chat title if this is the active chat
+    if (activeSessionId === chatId) {
+      setActiveChatTitle(newTitle);
+    }
   };
 
   return (
@@ -240,6 +292,7 @@ export function ChatContainer({
             onNewChat={handleCreateNewChat}
             onSessionSelect={handleSelectSession}
             isCollapsed={!sidebarOpen}
+            onChatRenamed={handleChatRenamed}
           />
         )}
       </div>
@@ -255,10 +308,11 @@ export function ChatContainer({
           >
             <MenuIcon className="h-5 w-5" />
           </Button>
-          <h2 className="text-lg font-medium">
-            {activeSessionId
-              ? sessions.find((s) => s.id === activeSessionId)?.title || "Chat"
-              : "New Chat"}
+          <h2
+            className="text-lg font-medium"
+            key={`header-title-${activeSessionId}-${activeChatTitle}`} // Force re-render on title changes
+          >
+            {activeChatTitle}
           </h2>
           <div className="w-10" />
         </div>

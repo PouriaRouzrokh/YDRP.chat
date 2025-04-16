@@ -85,6 +85,42 @@ export const chatService = {
   },
 
   /**
+   * Rename a specific chat
+   */
+  async renameChat(chatId: number, newTitle: string): Promise<ChatSummary> {
+    // Check if admin mode is enabled
+    const isAdminMode = siteConfig.settings.adminMode;
+
+    // Skip authentication check if admin mode is enabled
+    if (!isAdminMode && !authService.isAuthenticated()) {
+      throw new Error("User not authenticated");
+    }
+
+    const token = authService.getToken();
+    const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}/${chatId}/rename`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ new_title: newTitle }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to rename chat ${chatId}`);
+      }
+
+      return (await response.json()) as ChatSummary;
+    } catch (error) {
+      console.error(`Error renaming chat ${chatId}:`, error);
+      throw error;
+    }
+  },
+
+  /**
    * Convert API chat summaries to UI chat format
    */
   formatChatsForUI(chats: ChatSummary[]): Chat[] {
