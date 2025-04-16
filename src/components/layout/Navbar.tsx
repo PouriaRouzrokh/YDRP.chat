@@ -50,9 +50,11 @@ export function Navbar() {
             <Image
               src="/Yale_logo.png"
               alt="Yale Logo"
-              width={30}
-              height={30}
-              className="object-contain"
+              width={0}
+              height={0}
+              sizes="100vw"
+              priority
+              className="w-[30px] h-auto object-contain"
             />
             <span className="font-bold">{siteConfig.name}</span>
           </Link>

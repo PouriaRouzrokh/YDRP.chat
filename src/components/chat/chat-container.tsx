@@ -18,6 +18,7 @@ import {
   TextDeltaChunk,
 } from "@/types";
 import { ChatRenameDialog } from "./chat-rename-dialog";
+import { ChatArchiveDialog } from "./chat-archive-dialog";
 
 interface ChatContainerProps {
   initialSessions?: ChatSession[];
@@ -32,6 +33,7 @@ export function ChatContainer({
 }: ChatContainerProps) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sessions, setSessions] = useState<ChatSession[]>(initialSessions);
+  const [archivedSessions, setArchivedSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(
     initialSessions.length > 0 ? initialSessions[0].id : null
   );
@@ -49,6 +51,9 @@ export function ChatContainer({
   // State for rename dialog
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [chatToRename, setChatToRename] = useState<ChatSession | null>(null);
+
+  // State for archive dialog
+  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
 
   // Update active chat title whenever active session changes
   useEffect(() => {
@@ -70,34 +75,60 @@ export function ChatContainer({
 
   // Fetch chat sessions on mount
   useEffect(() => {
-    const fetchSessions = async () => {
-      try {
-        const formattedChats = await chatService.getChatsWithMessageCounts();
-        const formattedSessions: ChatSession[] = formattedChats.map((chat) => ({
+    fetchSessions();
+  }, []);
+
+  // Separate function to fetch both active and archived sessions
+  const fetchSessions = async () => {
+    try {
+      // Fetch active chats
+      const activeChats = await chatService.getChatsWithMessageCounts(
+        0,
+        100,
+        false
+      );
+      const formattedActiveSessions: ChatSession[] = activeChats.map(
+        (chat) => ({
           id: String(chat.id),
           title: chat.title,
           createdAt: new Date(),
           lastMessageTime: chat.lastMessageTime,
           messageCount: chat.messageCount,
-          isArchived: chat.isArchived,
-        }));
-        setSessions(formattedSessions);
+          isArchived: false,
+        })
+      );
+      setSessions(formattedActiveSessions);
 
-        // Set active session if we have any and none is currently selected
-        if (formattedSessions.length > 0 && !activeSessionId) {
-          const firstSession = formattedSessions[0];
-          setActiveSessionId(firstSession.id);
-          setActiveChatTitle(firstSession.title);
-          fetchMessagesForSession(Number(firstSession.id));
-        }
-      } catch (error) {
-        console.error("Error fetching chat sessions:", error);
-        toast.error("Failed to load chat history");
+      // Fetch archived chats
+      const archivedChats = await chatService.getChatsWithMessageCounts(
+        0,
+        100,
+        true
+      );
+      const formattedArchivedSessions: ChatSession[] = archivedChats.map(
+        (chat) => ({
+          id: String(chat.id),
+          title: chat.title,
+          createdAt: new Date(),
+          lastMessageTime: chat.lastMessageTime,
+          messageCount: chat.messageCount,
+          isArchived: true,
+        })
+      );
+      setArchivedSessions(formattedArchivedSessions);
+
+      // Set active session if we have any and none is currently selected
+      if (formattedActiveSessions.length > 0 && !activeSessionId) {
+        const firstSession = formattedActiveSessions[0];
+        setActiveSessionId(firstSession.id);
+        setActiveChatTitle(firstSession.title);
+        fetchMessagesForSession(Number(firstSession.id));
       }
-    };
-
-    fetchSessions();
-  }, [activeSessionId]);
+    } catch (error) {
+      console.error("Error fetching chat sessions:", error);
+      toast.error("Failed to load chat history");
+    }
+  };
 
   // Fetch messages when active session changes
   useEffect(() => {
@@ -281,6 +312,21 @@ export function ChatContainer({
     setChatToRename(null); // Clear the chat being renamed
   };
 
+  // Archive dialog handlers
+  const handleOpenArchiveDialog = () => {
+    console.log("Opening archive dialog", { current: isArchiveDialogOpen });
+    setIsArchiveDialogOpen(true);
+    // Force a re-render to ensure state is updated
+    setTimeout(() => {
+      console.log("Archive dialog should now be open:", isArchiveDialogOpen);
+    }, 0);
+  };
+
+  const handleCloseArchiveDialog = () => {
+    console.log("Closing archive dialog");
+    setIsArchiveDialogOpen(false);
+  };
+
   // Merged rename handler (API call + state update)
   const handleRenameChat = async (newTitle: string) => {
     if (!chatToRename) return;
@@ -337,6 +383,7 @@ export function ChatContainer({
             onSessionSelect={handleSelectSession}
             isCollapsed={!sidebarOpen}
             onOpenRenameDialog={handleOpenRenameDialog}
+            onOpenArchiveDialog={handleOpenArchiveDialog}
           />
         )}
       </div>
@@ -406,6 +453,15 @@ export function ChatContainer({
           currentTitle={chatToRename.title}
         />
       )}
+
+      {/* Render Archive Dialog */}
+      <ChatArchiveDialog
+        isOpen={isArchiveDialogOpen}
+        onClose={handleCloseArchiveDialog}
+        activeSessions={sessions}
+        archivedSessions={archivedSessions}
+        onSessionsUpdate={fetchSessions}
+      />
     </div>
   );
 }

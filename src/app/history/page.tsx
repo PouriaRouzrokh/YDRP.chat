@@ -11,6 +11,9 @@ import { Chat } from "@/types";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 import { fadeInUp, staggerContainer } from "@/lib/animation-variants";
+import { Archive } from "lucide-react";
+import { ChatSession } from "@/components/chat/chat-sidebar";
+import { ChatArchiveDialog } from "@/components/chat/chat-archive-dialog";
 
 export default function HistoryPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,29 +21,68 @@ export default function HistoryPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [chatHistory, setChatHistory] = useState<Chat[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
   const itemsPerPage = 5;
 
   // Fetch chat history on component mount
   useEffect(() => {
-    const fetchChatHistory = async () => {
-      try {
-        setLoading(true);
-        const formattedChats = await chatService.getChatsWithMessageCounts();
-        setChatHistory(formattedChats);
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
-        toast.error("Failed to load chat history");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchChatHistory();
   }, []);
 
-  // Filter chats based on search term
-  const filteredChats = chatHistory.filter((chat) =>
-    chat.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const fetchChatHistory = async () => {
+    try {
+      setLoading(true);
+
+      // Fetch both active and archived chats
+      const activeChats = await chatService.getChatsWithMessageCounts(
+        0,
+        100,
+        false
+      );
+      const archivedChats = await chatService.getChatsWithMessageCounts(
+        0,
+        100,
+        true
+      );
+
+      // Combine all chats
+      const allChats = [...activeChats, ...archivedChats];
+      setChatHistory(allChats);
+    } catch (error) {
+      console.error("Error fetching chat history:", error);
+      toast.error("Failed to load chat history");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handler for opening archive dialog
+  const handleOpenArchiveDialog = () => {
+    setIsArchiveDialogOpen(true);
+  };
+
+  // Handler for closing archive dialog
+  const handleCloseArchiveDialog = () => {
+    setIsArchiveDialogOpen(false);
+  };
+
+  // Convert Chat[] to ChatSession[] for the archive dialog
+  const toChatSessions = (chats: Chat[]): ChatSession[] => {
+    return chats.map((chat) => ({
+      id: String(chat.id),
+      title: chat.title,
+      createdAt: new Date(),
+      lastMessageTime: chat.lastMessageTime,
+      messageCount: chat.messageCount,
+      isArchived: chat.isArchived,
+    }));
+  };
+
+  // Filter chats based on search term and show only unarchived chats by default
+  const filteredChats = chatHistory.filter(
+    (chat) =>
+      !chat.isArchived &&
+      chat.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Sort chats
@@ -78,14 +120,25 @@ export default function HistoryPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <motion.h1
-        className="text-3xl font-bold mb-6"
+      <motion.div
+        className="flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between sm:items-center mb-6"
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
       >
-        Chat History
-      </motion.h1>
+        <h1 className="text-2xl sm:text-3xl font-bold leading-tight break-words">
+          Chat History
+        </h1>
+
+        <Button
+          variant="outline"
+          onClick={handleOpenArchiveDialog}
+          className="flex items-center gap-2 self-start sm:self-auto"
+        >
+          <Archive className="w-4 h-4" />
+          <span>Manage Archive</span>
+        </Button>
+      </motion.div>
 
       {/* Search and filters */}
       <motion.div
@@ -201,7 +254,7 @@ export default function HistoryPage() {
           >
             Previous
           </Button>
-          <div className="text-sm text-muted-foreground">
+          <div className="text-sm">
             Page {currentPage} of {totalPages}
           </div>
           <Button
@@ -213,6 +266,19 @@ export default function HistoryPage() {
           </Button>
         </motion.div>
       )}
+
+      {/* Archive Dialog */}
+      <ChatArchiveDialog
+        isOpen={isArchiveDialogOpen}
+        onClose={handleCloseArchiveDialog}
+        activeSessions={toChatSessions(
+          chatHistory.filter((chat) => !chat.isArchived)
+        )}
+        archivedSessions={toChatSessions(
+          chatHistory.filter((chat) => chat.isArchived)
+        )}
+        onSessionsUpdate={fetchChatHistory}
+      />
     </motion.div>
   );
 }

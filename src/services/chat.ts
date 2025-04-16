@@ -121,6 +121,102 @@ export const chatService = {
   },
 
   /**
+   * Archive a specific chat
+   */
+  async archiveChat(chatId: number): Promise<ChatSummary> {
+    const isAdminMode = siteConfig.settings.adminMode;
+
+    if (!isAdminMode && !authService.isAuthenticated()) {
+      throw new Error("User not authenticated");
+    }
+
+    const token = authService.getToken();
+    const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}/${chatId}/archive`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to archive chat ${chatId}`);
+      }
+
+      return (await response.json()) as ChatSummary;
+    } catch (error) {
+      console.error(`Error archiving chat ${chatId}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Unarchive a specific chat
+   */
+  async unarchiveChat(chatId: number): Promise<ChatSummary> {
+    const isAdminMode = siteConfig.settings.adminMode;
+
+    if (!isAdminMode && !authService.isAuthenticated()) {
+      throw new Error("User not authenticated");
+    }
+
+    const token = authService.getToken();
+    const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}/${chatId}/unarchive`;
+
+    try {
+      const response = await fetch(url, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to unarchive chat ${chatId}`);
+      }
+
+      return (await response.json()) as ChatSummary;
+    } catch (error) {
+      console.error(`Error unarchiving chat ${chatId}:`, error);
+      throw error;
+    }
+  },
+
+  /**
+   * Archive all active chats for the current user
+   */
+  async archiveAllChats(): Promise<{ message: string; count: number }> {
+    const isAdminMode = siteConfig.settings.adminMode;
+
+    if (!isAdminMode && !authService.isAuthenticated()) {
+      throw new Error("User not authenticated");
+    }
+
+    const token = authService.getToken();
+    const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}/archive-all`;
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to archive all chats");
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error archiving all chats:", error);
+      throw error;
+    }
+  },
+
+  /**
    * Convert API chat summaries to UI chat format
    */
   formatChatsForUI(chats: ChatSummary[]): Chat[] {

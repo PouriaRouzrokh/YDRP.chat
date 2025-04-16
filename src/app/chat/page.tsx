@@ -32,6 +32,7 @@ import {
   TextDeltaChunk,
 } from "@/types";
 import { ChatRenameDialog } from "@/components/chat/chat-rename-dialog";
+import { ChatArchiveDialog } from "@/components/chat/chat-archive-dialog";
 
 export default function ChatPage() {
   const searchParams = useSearchParams();
@@ -51,19 +52,38 @@ export default function ChatPage() {
   // State for rename dialog
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [chatToRename, setChatToRename] = useState<ChatSession | null>(null);
+  const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
 
   // Fetch available chat sessions from the server
   const fetchSessions = useCallback(async () => {
     try {
       setLoading(true);
-      const formattedChats = await chatService.getChatsWithMessageCounts();
-      const formattedSessions: ChatSession[] = formattedChats.map((chat) => ({
+
+      // Fetch active chats
+      const activeChats = await chatService.getChatsWithMessageCounts(
+        0,
+        100,
+        false
+      );
+
+      // Fetch archived chats
+      const archivedChats = await chatService.getChatsWithMessageCounts(
+        0,
+        100,
+        true
+      );
+
+      // Combine and format all chats
+      const allChats = [...activeChats, ...archivedChats];
+      const formattedSessions: ChatSession[] = allChats.map((chat) => ({
         id: String(chat.id),
         title: chat.title,
         createdAt: new Date(),
         lastMessageTime: chat.lastMessageTime,
         messageCount: chat.messageCount,
+        isArchived: chat.isArchived,
       }));
+
       setChatSessions(formattedSessions);
 
       // If chat ID was specified in URL, select it explicitly.
@@ -329,6 +349,14 @@ export default function ChatPage() {
     }
   };
 
+  const handleOpenArchiveDialog = () => {
+    setIsArchiveDialogOpen(true);
+  };
+
+  const handleCloseArchiveDialog = () => {
+    setIsArchiveDialogOpen(false);
+  };
+
   return (
     <motion.div
       className="flex h-[calc(100vh-7rem)] overflow-hidden"
@@ -347,12 +375,13 @@ export default function ChatPage() {
             exit="exit"
           >
             <ChatSidebar
-              sessions={chatSessions}
+              sessions={chatSessions.filter((session) => !session.isArchived)}
               activeSessionId={activeSessionId}
               onSessionSelect={handleSelectChat}
               onNewChat={handleNewChat}
               isCollapsed={!isSidebarOpen}
               onOpenRenameDialog={handleOpenRenameDialog}
+              onOpenArchiveDialog={handleOpenArchiveDialog}
             />
           </motion.div>
         )}
@@ -504,6 +533,15 @@ export default function ChatPage() {
           currentTitle={chatToRename.title}
         />
       )}
+
+      {/* Render Archive Dialog */}
+      <ChatArchiveDialog
+        isOpen={isArchiveDialogOpen}
+        onClose={handleCloseArchiveDialog}
+        activeSessions={chatSessions.filter((session) => !session.isArchived)}
+        archivedSessions={chatSessions.filter((session) => session.isArchived)}
+        onSessionsUpdate={fetchSessions}
+      />
     </motion.div>
   );
 }

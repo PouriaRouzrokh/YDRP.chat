@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, Archive } from "lucide-react";
 import { ChatContextMenu } from "./chat-context-menu";
 
 export interface ChatSession {
@@ -20,6 +20,7 @@ export interface ChatSidebarProps {
   onNewChat: () => void;
   isCollapsed: boolean;
   onOpenRenameDialog: (chatId: string) => void;
+  onOpenArchiveDialog: () => void;
 }
 
 export function ChatSidebar({
@@ -29,6 +30,7 @@ export function ChatSidebar({
   onNewChat,
   isCollapsed,
   onOpenRenameDialog,
+  onOpenArchiveDialog,
 }: ChatSidebarProps) {
   if (isCollapsed) {
     return (
@@ -49,10 +51,24 @@ export function ChatSidebar({
   return (
     <>
       <div className="flex h-full w-[260px] flex-col border-r overflow-hidden">
-        <div className="p-4 flex-shrink-0">
-          <Button onClick={onNewChat} className="w-full justify-start gap-2">
+        <div className="p-4 flex-shrink-0 flex items-center gap-2">
+          <Button onClick={onNewChat} className="flex-1 justify-start gap-2">
             <PlusCircle className="h-4 w-4" />
             New Chat
+          </Button>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              console.log("Archive button clicked");
+              onOpenArchiveDialog();
+            }}
+            aria-label="Manage Archive"
+            title="Manage Archive"
+            className="min-w-9 h-9"
+          >
+            <Archive className="h-4 w-4" />
           </Button>
         </div>
         <div className="flex-1 overflow-auto">
