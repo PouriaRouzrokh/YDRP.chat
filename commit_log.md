@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 32 (4/16/2025 - 01:35)
+
+Updated the readme file.
+
 ## commit 31 (4/15/2025 - 17:59)
 
 Applied black to all files.

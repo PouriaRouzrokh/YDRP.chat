@@ -12,7 +12,9 @@ It includes components for:
 4.  **Retrieval & Generation:** Providing tools (via MCP) for semantic search (RAG) over the policy data.
 5.  **Agent Interaction:** Exposing a chat agent (via API or terminal) that uses the retrieval tools to answer user questions based on the indexed policies, with support for persistent chat history, user authentication, and chat management (rename, archive).
 
-This repository contains the scripts for the core engine functionalities – everything apart from the user interface. The UI will be developed in a separate repository.
+This repository contains the scripts for the core engine functionalities – everything apart from the user interface. The UI will be developed in a separate repository:
+
+https://github.com/PouriaRouzrokh/YDRP_UI
 
 ## Technology Stack
 
