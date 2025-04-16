@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { fadeInUp } from "@/lib/animation-variants";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import remarkBreaks from "remark-breaks";
 
 export interface PolicyReference {
   id: string;
@@ -34,6 +35,15 @@ interface MessageProps {
 export function ChatMessage({ message }: MessageProps) {
   const isUser = message.role === "user";
 
+  // Helper function to make URLs more mobile-friendly by truncating if needed
+  const formatUrl = (url: string) => {
+    // For display purposes, we'll truncate very long URLs
+    if (url.length > 30) {
+      return `${url.substring(0, 15)}...${url.substring(url.length - 10)}`;
+    }
+    return url;
+  };
+
   return (
     <motion.div
       variants={fadeInUp}
@@ -47,7 +57,7 @@ export function ChatMessage({ message }: MessageProps) {
           "flex gap-3",
           isUser ? "flex-row-reverse" : "flex-row",
           isUser ? "ml-auto" : "mr-auto",
-          "w-[95%] sm:max-w-[85%] md:max-w-[80%]"
+          "w-full max-w-[95%] sm:max-w-[85%] md:max-w-[80%]"
         )}
       >
         <Avatar className={cn(isUser ? "bg-primary" : "bg-secondary")}>
@@ -70,30 +80,56 @@ export function ChatMessage({ message }: MessageProps) {
               isUser
                 ? "bg-green-100 dark:bg-emerald-700 text-gray-800 dark:text-gray-50 border-green-200 dark:border-emerald-600"
                 : "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700",
-              "w-full shadow-sm"
+              "w-full shadow-sm overflow-hidden break-words"
             )}
           >
-            <CardContent className="py-2 px-3 flex items-center">
-              <div className="prose dark:prose-invert break-words">
+            <CardContent className="py-2 px-2 sm:px-3 flex items-center overflow-hidden">
+              <div className="prose-sm sm:prose dark:prose-invert break-words w-full overflow-hidden">
                 <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
+                  remarkPlugins={[remarkGfm, remarkBreaks]}
                   components={{
-                    a: ({ ...props }) => (
+                    a: ({ href, children, ...props }) => (
                       <a
                         {...props}
+                        href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline"
-                      />
+                        className="text-blue-600 dark:text-blue-400 hover:underline break-all hyphens-auto overflow-wrap-anywhere text-xs sm:text-sm"
+                        title={href}
+                      >
+                        {typeof children === "string" && children === href
+                          ? formatUrl(href)
+                          : children}
+                      </a>
                     ),
                     ul: ({ ...props }) => (
-                      <ul {...props} className="list-disc pl-5 mb-2" />
+                      <ul {...props} className="list-disc pl-3 sm:pl-5 mb-2" />
                     ),
                     ol: ({ ...props }) => (
-                      <ol {...props} className="list-decimal pl-5 mb-2" />
+                      <ol
+                        {...props}
+                        className="list-decimal pl-3 sm:pl-5 mb-2"
+                      />
                     ),
                     li: ({ ...props }) => <li {...props} className="mb-1" />,
-                    p: ({ ...props }) => <p {...props} className="mb-2" />,
+                    p: ({ ...props }) => (
+                      <p
+                        {...props}
+                        className="mb-2 max-w-full text-sm sm:text-base break-words whitespace-pre-wrap overflow-wrap-anywhere hyphens-auto"
+                      />
+                    ),
+                    code: ({ ...props }) => (
+                      <code
+                        {...props}
+                        className="break-all text-xs sm:text-sm p-0.5 overflow-wrap-anywhere"
+                      />
+                    ),
+                    pre: ({ ...props }) => (
+                      <pre
+                        {...props}
+                        className="whitespace-pre-wrap break-all text-xs sm:text-sm overflow-x-auto max-w-full"
+                      />
+                    ),
                   }}
                 >
                   {message.content}

@@ -76,7 +76,9 @@ export function ChatInput({
   };
 
   return (
-    <div className={cn("flex items-center gap-2 pb-6 md:pb-0", className)}>
+    <div
+      className={cn("flex items-center gap-1 sm:gap-2 pb-2 md:pb-0", className)}
+    >
       <Textarea
         ref={textareaRef}
         value={input}
@@ -84,16 +86,16 @@ export function ChatInput({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={isDisabled}
-        className="resize-none min-h-[45px] md:min-h-[60px] max-h-[200px] flex-1 py-3 md:py-4 leading-relaxed"
+        className="resize-none min-h-[40px] md:min-h-[60px] max-h-[150px] sm:max-h-[200px] flex-1 py-2 px-2 sm:px-3 md:py-4 leading-relaxed text-sm sm:text-base"
         rows={1}
       />
       <Button
         onClick={handleSubmit}
         disabled={isDisabled || !input.trim()}
         size="icon"
-        className="h-[45px] w-[45px] md:h-[60px] md:w-[60px] shrink-0"
+        className="h-[40px] w-[40px] sm:h-[45px] sm:w-[45px] md:h-[60px] md:w-[60px] shrink-0"
       >
-        <SendIcon className="h-4 w-4 md:h-5 md:w-5" />
+        <SendIcon className="h-3 w-3 sm:h-4 sm:w-4 md:h-5 md:w-5" />
       </Button>
     </div>
   );

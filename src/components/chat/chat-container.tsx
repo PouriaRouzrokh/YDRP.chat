@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, Edit } from "lucide-react";
 import { ChatSidebar, ChatSession } from "./chat-sidebar";
 import { ChatInput } from "./chat-input";
 import { ChatMessage, Message, TypingIndicator } from "./message";
@@ -17,6 +17,7 @@ import {
   StreamChunk,
   TextDeltaChunk,
 } from "@/types";
+import { ChatRenameDialog } from "./chat-rename-dialog";
 
 interface ChatContainerProps {
   initialSessions?: ChatSession[];
@@ -44,6 +45,10 @@ export function ChatContainer({
   const [isTyping, setIsTyping] = useState(false);
   const [currentMessage, setCurrentMessage] = useState<Message | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // State for rename dialog
+  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+  const [chatToRename, setChatToRename] = useState<ChatSession | null>(null);
 
   // Update active chat title whenever active session changes
   useEffect(() => {
@@ -260,19 +265,58 @@ export function ChatContainer({
     // Messages will be fetched by the useEffect that watches activeSessionId
   };
 
-  const handleChatRenamed = async (chatId: string, newTitle: string) => {
-    console.log(`Chat renamed: ${chatId} => \"${newTitle}\"`);
+  const handleOpenRenameDialog = (chatId: string | null) => {
+    if (!chatId) return;
+    const chat = sessions.find((s) => s.id === chatId);
+    if (chat) {
+      setChatToRename(chat);
+      setIsRenameDialogOpen(true);
+    } else {
+      console.warn(`Chat with ID ${chatId} not found for renaming.`);
+    }
+  };
 
-    // Update the main sessions state directly
+  const handleCloseRenameDialog = () => {
+    setIsRenameDialogOpen(false);
+    setChatToRename(null); // Clear the chat being renamed
+  };
+
+  // Merged rename handler (API call + state update)
+  const handleRenameChat = async (newTitle: string) => {
+    if (!chatToRename) return;
+
+    const chatId = chatToRename.id;
+    const originalTitle = chatToRename.title; // Store original title for potential rollback
+
+    // Optimistic UI update
     setSessions((prevSessions) =>
       prevSessions.map((session) =>
         session.id === chatId ? { ...session, title: newTitle } : session
       )
     );
-
-    // Immediately update the active chat title if this is the active chat
+    // Update header title immediately if it's the active chat
     if (activeSessionId === chatId) {
       setActiveChatTitle(newTitle);
+    }
+
+    handleCloseRenameDialog(); // Close dialog immediately
+
+    try {
+      console.log(`ChatContainer: Renaming chat ${chatId} to "${newTitle}"`);
+      await chatService.renameChat(Number(chatId), newTitle);
+      toast.success("Chat renamed successfully");
+    } catch (error) {
+      console.error("Error renaming chat:", error);
+      toast.error("Failed to rename chat");
+      // Rollback optimistic update on error
+      setSessions((prevSessions) =>
+        prevSessions.map((session) =>
+          session.id === chatId ? { ...session, title: originalTitle } : session
+        )
+      );
+      if (activeSessionId === chatId) {
+        setActiveChatTitle(originalTitle);
+      }
     }
   };
 
@@ -292,7 +336,7 @@ export function ChatContainer({
             onNewChat={handleCreateNewChat}
             onSessionSelect={handleSelectSession}
             isCollapsed={!sidebarOpen}
-            onChatRenamed={handleChatRenamed}
+            onOpenRenameDialog={handleOpenRenameDialog}
           />
         )}
       </div>
@@ -300,7 +344,7 @@ export function ChatContainer({
       {/* Main Chat Area */}
       <div className="flex flex-col flex-1 h-full">
         {/* Chat Header */}
-        <div className="flex items-center justify-between border-b px-4 py-2">
+        <div className="flex items-center justify-between border-b px-2 sm:px-4 py-1 sm:py-2">
           <Button
             variant="ghost"
             size="icon"
@@ -309,16 +353,27 @@ export function ChatContainer({
             <MenuIcon className="h-5 w-5" />
           </Button>
           <h2
-            className="text-lg font-medium"
+            className="text-base sm:text-lg font-medium truncate max-w-[150px] sm:max-w-[200px] md:max-w-full"
             key={`header-title-${activeSessionId}-${activeChatTitle}`} // Force re-render on title changes
           >
             {activeChatTitle}
           </h2>
-          <div className="w-10" />
+          {activeSessionId && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="ml-1 sm:ml-2 h-5 w-5 sm:h-6 sm:w-6" // Smaller on mobile
+              onClick={() => handleOpenRenameDialog(activeSessionId)}
+              aria-label="Rename Chat"
+            >
+              <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+            </Button>
+          )}
+          <div className="w-6 sm:w-10" />
         </div>
 
         {/* Messages Area */}
-        <ScrollArea className="flex-1 p-4">
+        <ScrollArea className="flex-1 p-2 sm:p-4">
           <div className="flex flex-col gap-2 pb-10">
             {messages.map((message) => (
               <ChatMessage key={message.id} message={message} />
@@ -332,14 +387,25 @@ export function ChatContainer({
         </ScrollArea>
 
         {/* Input Area */}
-        <div className="p-4 border-t">
+        <div className="p-1 sm:p-4 border-t">
           <ChatInput
             onSubmit={handleSendMessage}
             isDisabled={isTyping}
             placeholder="Type your message..."
+            className="text-sm sm:text-base pb-0.5"
           />
         </div>
       </div>
+
+      {/* Render Rename Dialog */}
+      {chatToRename && (
+        <ChatRenameDialog
+          isOpen={isRenameDialogOpen}
+          onClose={handleCloseRenameDialog}
+          onRename={handleRenameChat} // Use the consolidated handler
+          currentTitle={chatToRename.title}
+        />
+      )}
     </div>
   );
 }

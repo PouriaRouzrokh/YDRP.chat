@@ -4,13 +4,13 @@ import { ChatSession } from "./chat-sidebar";
 
 interface ChatContextMenuProps {
   chat: ChatSession;
-  onRename: (chatId: number | string) => void;
+  onOpenRenameDialog: (chatId: string) => void;
   children: React.ReactNode;
 }
 
 export const ChatContextMenu: FC<ChatContextMenuProps> = ({
   chat,
-  onRename,
+  onOpenRenameDialog,
   children,
 }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -89,7 +89,7 @@ export const ChatContextMenu: FC<ChatContextMenuProps> = ({
           <button
             className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50"
             onClick={() => {
-              onRename(chat.id);
+              onOpenRenameDialog(chat.id);
               setShowMenu(false);
             }}
           >

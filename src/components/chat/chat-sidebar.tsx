@@ -1,12 +1,8 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { PlusCircle } from "lucide-react";
 import { ChatContextMenu } from "./chat-context-menu";
-import { ChatRenameDialog } from "./chat-rename-dialog";
-import { chatService } from "@/services/chat";
-import { toast } from "sonner";
 
 export interface ChatSession {
   id: string;
@@ -23,7 +19,7 @@ export interface ChatSidebarProps {
   onSessionSelect: (sessionId: string) => void;
   onNewChat: () => void;
   isCollapsed: boolean;
-  onChatRenamed?: (chatId: string, newTitle: string) => void;
+  onOpenRenameDialog: (chatId: string) => void;
 }
 
 export function ChatSidebar({
@@ -32,47 +28,8 @@ export function ChatSidebar({
   onSessionSelect,
   onNewChat,
   isCollapsed,
-  onChatRenamed,
+  onOpenRenameDialog,
 }: ChatSidebarProps) {
-  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
-  const [chatToRename, setChatToRename] = useState<ChatSession | null>(null);
-
-  const handleOpenRenameDialog = (chatId: string | number) => {
-    const chat = sessions.find((s) => s.id === String(chatId));
-    if (chat) {
-      setChatToRename(chat);
-      setIsRenameDialogOpen(true);
-    }
-  };
-
-  const handleCloseRenameDialog = () => {
-    setIsRenameDialogOpen(false);
-    setChatToRename(null);
-  };
-
-  const handleRenameChat = async (newTitle: string) => {
-    if (!chatToRename) return;
-
-    try {
-      const chatId = chatToRename.id;
-      handleCloseRenameDialog();
-
-      console.log(`Sidebar: Renaming chat ${chatId} to "${newTitle}"`);
-
-      await chatService.renameChat(Number(chatId), newTitle);
-
-      if (onChatRenamed) {
-        console.log("Sidebar: Calling onChatRenamed callback");
-        onChatRenamed(chatId, newTitle);
-      }
-
-      toast.success("Chat renamed successfully");
-    } catch (error) {
-      console.error("Error renaming chat:", error);
-      toast.error("Failed to rename chat");
-    }
-  };
-
   if (isCollapsed) {
     return (
       <div className="flex h-full w-[60px] flex-col items-center border-r p-2">
@@ -105,7 +62,7 @@ export function ChatSidebar({
                 <ChatContextMenu
                   key={session.id}
                   chat={session}
-                  onRename={handleOpenRenameDialog}
+                  onOpenRenameDialog={onOpenRenameDialog}
                 >
                   <Button
                     variant={
@@ -125,15 +82,6 @@ export function ChatSidebar({
           </ScrollArea>
         </div>
       </div>
-
-      {chatToRename && (
-        <ChatRenameDialog
-          isOpen={isRenameDialogOpen}
-          onClose={handleCloseRenameDialog}
-          onRename={handleRenameChat}
-          currentTitle={chatToRename.title}
-        />
-      )}
     </>
   );
 }

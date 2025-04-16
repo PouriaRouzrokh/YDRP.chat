@@ -173,3 +173,46 @@ body {
     linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
   background-size: 20px 20px;
 }
+
+/* Mobile-friendly word wrapping for long text and URLs */
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+}
+
+/* Custom styling to fix markdown content on mobile */
+.prose a {
+  word-break: break-all;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  display: inline-block;
+}
+
+/* Specifically target chat bubbles to ensure they fit on mobile */
+.prose p,
+.prose pre,
+.prose code,
+.prose ul,
+.prose ol {
+  max-width: 100% !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Ensure message cards don't overflow on mobile */
+@media (max-width: 640px) {
+  .prose {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .prose a,
+  .prose code {
+    font-size: 0.8rem;
+  }
+}

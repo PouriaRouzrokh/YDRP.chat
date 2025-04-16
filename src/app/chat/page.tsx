@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PanelLeftOpen } from "lucide-react";
+import { PanelLeftOpen, Edit } from "lucide-react";
 import { ChatSidebar, ChatSession } from "@/components/chat/chat-sidebar";
 import { ChatInput } from "@/components/chat/chat-input";
 import { ChatFooterSpacer } from "@/components/chat/chat-footer-spacer";
@@ -31,6 +31,7 @@ import {
   StreamChunk,
   TextDeltaChunk,
 } from "@/types";
+import { ChatRenameDialog } from "@/components/chat/chat-rename-dialog";
 
 export default function ChatPage() {
   const searchParams = useSearchParams();
@@ -46,6 +47,10 @@ export default function ChatPage() {
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [initialMessageSent, setInitialMessageSent] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // State for rename dialog
+  const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
+  const [chatToRename, setChatToRename] = useState<ChatSession | null>(null);
 
   // Fetch available chat sessions from the server
   const fetchSessions = useCallback(async () => {
@@ -275,14 +280,53 @@ export default function ChatPage() {
   };
 
   // Add this handler function
-  const handleChatRenamed = (chatId: string, newTitle: string) => {
+  const handleOpenRenameDialog = (chatId: string | null) => {
+    if (!chatId) return;
+    const chat = chatSessions.find((s) => s.id === chatId);
+    if (chat) {
+      setChatToRename(chat);
+      setIsRenameDialogOpen(true);
+    } else {
+      console.warn(`Chat with ID ${chatId} not found for renaming.`);
+    }
+  };
+
+  const handleCloseRenameDialog = () => {
+    setIsRenameDialogOpen(false);
+    setChatToRename(null); // Clear the chat being renamed
+  };
+
+  // Merged rename handler (API call + state update)
+  const handleRenameChat = async (newTitle: string) => {
+    if (!chatToRename) return;
+
+    const chatId = chatToRename.id;
+    const originalTitle = chatToRename.title; // Store original title for potential rollback
+
+    // Optimistic UI update (optional but good UX)
     setChatSessions((prevSessions) =>
       prevSessions.map((session) =>
         session.id === chatId ? { ...session, title: newTitle } : session
       )
     );
-    // No need to update header title separately, it derives from chatSessions
-    console.log(`ChatPage: Updated session ${chatId} title to "${newTitle}"`);
+
+    handleCloseRenameDialog(); // Close dialog immediately
+
+    try {
+      console.log(`ChatPage: Renaming chat ${chatId} to "${newTitle}"`);
+      await chatService.renameChat(Number(chatId), newTitle);
+      toast.success("Chat renamed successfully");
+      // State is already updated optimistically
+    } catch (error) {
+      console.error("Error renaming chat:", error);
+      toast.error("Failed to rename chat");
+      // Rollback optimistic update on error
+      setChatSessions((prevSessions) =>
+        prevSessions.map((session) =>
+          session.id === chatId ? { ...session, title: originalTitle } : session
+        )
+      );
+    }
   };
 
   return (
@@ -308,7 +352,7 @@ export default function ChatPage() {
               onSessionSelect={handleSelectChat}
               onNewChat={handleNewChat}
               isCollapsed={!isSidebarOpen}
-              onChatRenamed={handleChatRenamed}
+              onOpenRenameDialog={handleOpenRenameDialog}
             />
           </motion.div>
         )}
@@ -316,14 +360,14 @@ export default function ChatPage() {
 
       {/* Main chat area */}
       <motion.div
-        className="flex flex-col flex-1 h-full px-4"
+        className="flex flex-col flex-1 h-full px-2 sm:px-4"
         variants={fadeInUp}
         initial="hidden"
         animate="visible"
       >
         {/* Chat header */}
         <motion.div
-          className="flex items-center justify-between p-4 border-b"
+          className="flex items-center justify-between py-2 px-2 sm:p-4 border-b"
           variants={slideInRight}
           initial="hidden"
           animate="visible"
@@ -342,6 +386,17 @@ export default function ChatPage() {
               {chatSessions.find((chat) => chat.id === activeSessionId)
                 ?.title || "New Conversation"}
             </h2>
+            {activeSessionId && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="ml-1 sm:ml-2 h-6 w-6"
+                onClick={() => handleOpenRenameDialog(activeSessionId)}
+                aria-label="Rename Chat"
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            )}
           </div>
 
           {/* Mobile-only New Chat button */}
@@ -359,7 +414,7 @@ export default function ChatPage() {
         <div className="flex flex-col h-[calc(100%-4rem)]">
           {/* Messages area with flex-1 to fill available space */}
           <div className="flex-1 overflow-hidden">
-            <ScrollArea className="h-full p-4">
+            <ScrollArea className="h-full p-2 sm:p-4">
               <motion.div
                 className="flex flex-col pb-2"
                 variants={fadeInUp}
@@ -417,7 +472,7 @@ export default function ChatPage() {
 
           {/* Input area with fixed height */}
           <motion.div
-            className="pb-2 pt-2"
+            className="pb-0.5 pt-0.5 sm:pb-2 sm:pt-2"
             variants={fadeInUp}
             initial="hidden"
             animate="visible"
@@ -427,7 +482,7 @@ export default function ChatPage() {
               onSubmit={handleSendMessage}
               isDisabled={isTyping}
               placeholder="Type your message..."
-              className="pb-0"
+              className="pb-0 text-sm sm:text-base"
               initialValue={
                 initialMessage && !initialMessageSent ? initialMessage : ""
               }
@@ -439,6 +494,16 @@ export default function ChatPage() {
           <ChatFooterSpacer />
         </div>
       </motion.div>
+
+      {/* Render Rename Dialog */}
+      {chatToRename && (
+        <ChatRenameDialog
+          isOpen={isRenameDialogOpen}
+          onClose={handleCloseRenameDialog}
+          onRename={handleRenameChat}
+          currentTitle={chatToRename.title}
+        />
+      )}
     </motion.div>
   );
 }
