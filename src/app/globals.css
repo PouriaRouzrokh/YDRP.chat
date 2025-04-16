@@ -216,3 +216,25 @@ body {
     font-size: 0.8rem;
   }
 }
+
+/* Background image styles */
+.bg-background-image {
+  background-image: url("/background.png");
+  opacity: 0.14; /* Less faded in light mode (increased from 0.05) */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* Handle responsive center crop for mobile */
+@media (max-width: 768px) {
+  .bg-background-image {
+    background-position: center center;
+  }
+}
+
+/* Invert colors in dark mode */
+.dark .bg-background-image {
+  filter: invert(1);
+  opacity: 0.12; /* Less faded in dark mode (increased from 0.07) */
+}

@@ -19,26 +19,20 @@ export default function HomePage() {
       animate="visible"
     >
       {/* Hero Section - Full viewport height on desktop */}
-      <section className="w-full min-h-[calc(100vh-5rem)] flex flex-col justify-center items-center bg-gradient-to-b from-background to-background/95 py-8 md:py-12 px-4">
+      <section className="w-full min-h-[calc(100vh-5rem)] flex flex-col justify-center items-center py-8 md:py-12 px-4">
         <motion.div
           className="max-w-3xl mx-auto text-center flex-1 flex flex-col justify-center py-8 md:py-12"
           variants={fadeInUp}
         >
-          {/* Content area with subtle gradient background */}
+          {/* Content area with transparent background */}
           <div className="relative rounded-2xl overflow-hidden p-8 pb-4 md:p-10 md:pb-6 border border-primary/10 flex items-center justify-center mb-8">
-            {/* Gradient background */}
-            <div className="absolute inset-0 bg-gradient-radial from-primary/15 via-background/80 to-transparent opacity-100"></div>
-
-            {/* Optional subtle pattern overlay */}
-            <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-
-            {/* Content with relative positioning to appear above the background */}
+            {/* Content with relative positioning */}
             <div className="relative z-10 flex flex-col items-center justify-center w-full">
               <div className="text-center mb-8 md:mb-12">
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
                   Yale Department of Radiology
                 </h1>
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+                <h1 className="text-4xl md:text-3xl font-bold tracking-tight">
                   Policy Chatbot
                 </h1>
               </div>
@@ -132,8 +126,8 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Featured Chats Section with subtle background */}
-      <section className="w-full py-16 bg-muted/5">
+      {/* Featured Chats Section with transparent background */}
+      <section className="w-full py-16">
         <motion.div className="relative z-10" variants={fadeInUp}>
           <FeaturedChats />
         </motion.div>
