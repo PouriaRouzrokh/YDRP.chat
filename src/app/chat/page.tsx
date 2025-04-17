@@ -465,13 +465,17 @@ export default function ChatPage() {
                       variants={fadeInUp}
                       key="empty-state"
                     >
-                      <div>
+                      <div className="text-center">
                         <h3 className="text-lg font-medium mb-2">
                           Welcome to Yale Department of Radiology Policy Chatbot
                         </h3>
-                        <p className="max-w-md">
+                        <p className="max-w-md mx-auto">
                           Ask questions about department policies, safety
                           protocols, or procedural guidelines.
+                        </p>
+                        <p className="max-w-md mx-auto">
+                          Please note that this chat is not HIPPA safe, so
+                          please avoid entering sensitive information.
                         </p>
                       </div>
                     </motion.div>

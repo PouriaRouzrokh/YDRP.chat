@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MenuIcon, Edit } from "lucide-react";
@@ -55,31 +55,27 @@ export function ChatContainer({
   // State for archive dialog
   const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
 
-  // Update active chat title whenever active session changes
-  useEffect(() => {
-    if (!activeSessionId) {
-      setActiveChatTitle("New Chat");
-      return;
+  // Fetch messages for a specific session
+  const fetchMessagesForSession = useCallback(async (sessionId: number) => {
+    try {
+      const messageData = await chatService.getChatMessages(sessionId);
+      const formattedMessages = chatService.formatMessagesForUI(messageData);
+      // Convert to Message type (should be compatible)
+      const msgArray: Message[] = formattedMessages.map((msg) => ({
+        id: String(msg.id),
+        content: msg.content,
+        role: msg.role,
+        timestamp: msg.timestamp,
+      }));
+      setMessages(msgArray);
+    } catch (error) {
+      console.error(`Error fetching messages for session ${sessionId}:`, error);
+      toast.error("Failed to load messages");
     }
-
-    const chat = sessions.find((s) => s.id === activeSessionId);
-    if (chat) {
-      setActiveChatTitle(chat.title);
-    } else {
-      // If the active chat isn't found (e.g., deleted/archived?), reset
-      setActiveChatTitle("Select Chat");
-      // Optionally, clear the active session ID
-      // setActiveSessionId(null);
-    }
-  }, [activeSessionId, sessions]);
-
-  // Fetch chat sessions on mount
-  useEffect(() => {
-    fetchSessions();
   }, []);
 
   // Separate function to fetch both active and archived sessions
-  const fetchSessions = async () => {
+  const fetchSessions = useCallback(async () => {
     try {
       // Fetch active chats
       const activeChats = await chatService.getChatsWithMessageCounts(
@@ -128,7 +124,30 @@ export function ChatContainer({
       console.error("Error fetching chat sessions:", error);
       toast.error("Failed to load chat history");
     }
-  };
+  }, [activeSessionId, fetchMessagesForSession]);
+
+  // Update active chat title whenever active session changes
+  useEffect(() => {
+    if (!activeSessionId) {
+      setActiveChatTitle("New Chat");
+      return;
+    }
+
+    const chat = sessions.find((s) => s.id === activeSessionId);
+    if (chat) {
+      setActiveChatTitle(chat.title);
+    } else {
+      // If the active chat isn't found (e.g., deleted/archived?), reset
+      setActiveChatTitle("Select Chat");
+      // Optionally, clear the active session ID
+      // setActiveSessionId(null);
+    }
+  }, [activeSessionId, sessions]);
+
+  // Fetch chat sessions on mount
+  useEffect(() => {
+    fetchSessions();
+  }, [fetchSessions]);
 
   // Fetch messages when active session changes
   useEffect(() => {
@@ -137,31 +156,12 @@ export function ChatContainer({
     } else {
       setMessages([]);
     }
-  }, [activeSessionId]);
+  }, [activeSessionId, fetchMessagesForSession]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  // Fetch messages for a specific session
-  const fetchMessagesForSession = async (sessionId: number) => {
-    try {
-      const messageData = await chatService.getChatMessages(sessionId);
-      const formattedMessages = chatService.formatMessagesForUI(messageData);
-      // Convert to Message type (should be compatible)
-      const msgArray: Message[] = formattedMessages.map((msg) => ({
-        id: String(msg.id),
-        content: msg.content,
-        role: msg.role,
-        timestamp: msg.timestamp,
-      }));
-      setMessages(msgArray);
-    } catch (error) {
-      console.error(`Error fetching messages for session ${sessionId}:`, error);
-      toast.error("Failed to load messages");
-    }
-  };
 
   // Handle streaming chunks
   const handleStreamChunk = (chunk: StreamChunk) => {
