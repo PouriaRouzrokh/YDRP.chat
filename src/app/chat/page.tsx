@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -33,8 +33,10 @@ import {
 } from "@/types";
 import { ChatRenameDialog } from "@/components/chat/chat-rename-dialog";
 import { ChatArchiveDialog } from "@/components/chat/chat-archive-dialog";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
-export default function ChatPage() {
+// Client component that uses useSearchParams
+function ChatPageContent() {
   const searchParams = useSearchParams();
   const initialMessage = searchParams.get("message");
   const chatId = searchParams.get("id");
@@ -246,14 +248,14 @@ export default function ChatPage() {
     [activeSessionId]
   );
 
-  const handleNewChat = () => {
+  const handleNewChat = useCallback(() => {
     setActiveSessionId(null);
     // Make sure URL params are updated without adding to history
     router.replace("/chat", { scroll: false });
-  };
+  }, [router]);
 
-  // Update initialMessageSent when a message is sent
-  const handleSendMessage = (content: string) => {
+  // Handle sending a message
+  const handleSendMessage = useCallback((content: string) => {
     if (!content.trim()) return;
 
     // Mark initialMessage as sent if this message matches it
@@ -287,75 +289,78 @@ export default function ChatPage() {
         setIsTyping(false);
         toast.error("Failed to get response from server");
       });
-  };
+  }, [activeSessionId, initialMessage, handleStreamChunk]);
 
-  const handleSelectChat = (chatId: string) => {
+  // Handle initial message from URL if present
+  useEffect(() => {
+    if (initialMessage && !initialMessageSent && !activeSessionId) {
+      handleSendMessage(initialMessage);
+      setInitialMessageSent(true);
+    }
+  }, [initialMessage, initialMessageSent, activeSessionId, handleSendMessage]);
+
+  // Handle selecting a chat session
+  const handleSelectChat = useCallback((chatId: string) => {
     setActiveSessionId(chatId);
     // Fetch messages for the selected chat ID
     fetchMessagesForSession(Number(chatId));
-  };
+  }, []);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = useCallback(() => {
     setIsSidebarOpen((prev) => !prev);
-  };
+  }, []);
 
-  // Add this handler function
-  const handleOpenRenameDialog = (chatId: string | null) => {
+  // Handle opening the rename dialog for a chat
+  const handleOpenRenameDialog = useCallback((chatId: string | null) => {
     if (!chatId) return;
-    const chat = chatSessions.find((s) => s.id === chatId);
+    const chat = chatSessions.find((session) => session.id === chatId);
     if (chat) {
       setChatToRename(chat);
       setIsRenameDialogOpen(true);
-    } else {
-      console.warn(`Chat with ID ${chatId} not found for renaming.`);
     }
-  };
+  }, [chatSessions]);
 
-  const handleCloseRenameDialog = () => {
+  // Handle closing the rename dialog
+  const handleCloseRenameDialog = useCallback(() => {
     setIsRenameDialogOpen(false);
-    setChatToRename(null); // Clear the chat being renamed
-  };
+    setChatToRename(null);
+  }, []);
 
-  // Merged rename handler (API call + state update)
-  const handleRenameChat = async (newTitle: string) => {
+  // Handle renaming a chat
+  const handleRenameChat = useCallback(async (newTitle: string) => {
     if (!chatToRename) return;
 
-    const chatId = chatToRename.id;
-    const originalTitle = chatToRename.title; // Store original title for potential rollback
-
-    // Optimistic UI update (optional but good UX)
-    setChatSessions((prevSessions) =>
-      prevSessions.map((session) =>
-        session.id === chatId ? { ...session, title: newTitle } : session
-      )
-    );
-
-    handleCloseRenameDialog(); // Close dialog immediately
-
     try {
-      console.log(`ChatPage: Renaming chat ${chatId} to "${newTitle}"`);
-      await chatService.renameChat(Number(chatId), newTitle);
+      // Update in backend
+      await chatService.renameChat(Number(chatToRename.id), newTitle);
+
+      // Update in frontend
+      setChatSessions((prev) =>
+        prev.map((session) =>
+          session.id === chatToRename.id
+            ? { ...session, title: newTitle }
+            : session
+        )
+      );
+
       toast.success("Chat renamed successfully");
-      // State is already updated optimistically
     } catch (error) {
       console.error("Error renaming chat:", error);
       toast.error("Failed to rename chat");
-      // Rollback optimistic update on error
-      setChatSessions((prevSessions) =>
-        prevSessions.map((session) =>
-          session.id === chatId ? { ...session, title: originalTitle } : session
-        )
-      );
+    } finally {
+      handleCloseRenameDialog();
     }
-  };
+  }, [chatToRename, handleCloseRenameDialog]);
 
-  const handleOpenArchiveDialog = () => {
+  // Handle opening the archive dialog
+  const handleOpenArchiveDialog = useCallback(() => {
     setIsArchiveDialogOpen(true);
-  };
+  }, []);
 
-  const handleCloseArchiveDialog = () => {
+  // Handle closing the archive dialog
+  const handleCloseArchiveDialog = useCallback(() => {
     setIsArchiveDialogOpen(false);
-  };
+  }, []);
 
   return (
     <motion.div
@@ -475,8 +480,8 @@ export default function ChatPage() {
                         </p>
                         <br />
                         <p className="max-w-md mx-auto border-4">
-                          Note that this chat is not HIPPA safe, so please avoid
-                          entering sensitive information.
+                          Please note that this chat is not HIPPA safe, so
+                          please avoid entering sensitive information.
                         </p>
                       </div>
                     </motion.div>
@@ -490,15 +495,13 @@ export default function ChatPage() {
                       {messages.map((message) => (
                         <ChatMessage key={message.id} message={message} />
                       ))}
+                      {/* Show typing indicator separately - after messages */}
+                      {isTyping && <TypingIndicator />}
                     </motion.div>
                   )}
                 </AnimatePresence>
 
-                {isTyping &&
-                  messages[messages.length - 1]?.role !== "assistant" && (
-                    <TypingIndicator />
-                  )}
-
+                {/* Remove the old typing indicator position */}
                 <div ref={messagesEndRef} />
               </motion.div>
             </ScrollArea>
@@ -548,5 +551,14 @@ export default function ChatPage() {
         onSessionsUpdate={fetchSessions}
       />
     </motion.div>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function ChatPage() {
+  return (
+    <Suspense fallback={<div className="flex h-[calc(100vh-3.5rem)] items-center justify-center"><LoadingSpinner size="lg" /></div>}>
+      <ChatPageContent />
+    </Suspense>
   );
 }

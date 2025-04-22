@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -36,7 +36,8 @@ const formSchema = z.object({
   password: z.string(),
 });
 
-export default function LoginPage() {
+// Create a separate client component for the form to handle searchParams
+function LoginForm() {
   const { login, isLoading, error, isAdminMode, isAuthenticated } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -192,5 +193,14 @@ export default function LoginPage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+// Main page component with Suspense boundary
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="flex h-[calc(100vh-3.5rem)] items-center justify-center"><LoadingSpinner size="lg" /></div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
