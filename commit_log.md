@@ -1,5 +1,10 @@
 # Commit History
 
+## commit 33 (4/21/2025 - 20:54)
+
+Removed data and users from git.
+Debugged handling of duplicated errors during initalization of the database.
+
 ## commit 32 (4/16/2025 - 01:35)
 
 Updated the readme file.

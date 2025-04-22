@@ -1,0 +1,20 @@
+[
+  {
+    "email": "testuser1@example.com",
+    "full_name": "User1",
+    "password": "12345",
+    "is_admin": true
+  },
+  {
+    "email": "testuser2@example.com",
+    "full_name": "User2",
+    "password": "12345",
+    "is_admin": false
+  },
+  {
+    "email": "testuser3@example.com",
+    "full_name": "User3",
+    "password": "12345",
+    "is_admin": false
+  }
+]

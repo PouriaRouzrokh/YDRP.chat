@@ -13,6 +13,6 @@ wheels/
 .env
 
 # Data
-*/data/
-*/**/auth/users.json
+data/
+auth/users.json
 tests/data_collection/test_data
