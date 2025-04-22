@@ -6,7 +6,7 @@ The Yale Radiology Policies RAG Application is a comprehensive system designed t
 
 It includes components for:
 
-1.  **Data Collection:** Crawling Yale web sources, downloading documents, extracting text and images.
+1.  **Data Collection:** Crawling Yale web sources, downloading documents, extracting text and image files.
 2.  **Processing & Classification:** Converting content to Markdown/Text, using LLMs to identify actual policies and extract titles.
 3.  **Database Storage:** Storing policy metadata, text content, image references, user information, chat history (including archived status), and vector embeddings (using `pgvector`) in a PostgreSQL database.
 4.  **Retrieval & Generation:** Providing tools (via MCP) for semantic search (RAG) over the policy data.
