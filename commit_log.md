@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 36 (4/22/2025 - 05:26)
+
+changed the database settings to server side
+
 ## commit 35 (4/22/2025 - 04:09)
 
 Tested server git connection

@@ -22,7 +22,8 @@ _config_dict = {
     },
     # Database settings
     "DATABASE": {
-        "DATABASE_URL": os.environ.get("DATABASE_URL", "postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy"),
+        "DATABASE_URL": os.environ.get("DATABASE_URL", "postgresql+asyncpg://pr555:@localhost:5432/ydrpolicy"), 
+        # "DATABASE_URL": os.environ.get("DATABASE_URL", "postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy"),
         "POOL_SIZE": 5,
         "MAX_OVERFLOW": 10,
         "POOL_TIMEOUT": 30,
