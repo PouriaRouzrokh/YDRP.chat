@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import {
@@ -26,6 +26,7 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Define form validation schema
 const formSchema = z.object({
@@ -38,6 +39,8 @@ const formSchema = z.object({
 export default function LoginPage() {
   const { login, isLoading, error, isAdminMode, isAuthenticated } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const [sessionExpired, setSessionExpired] = useState(false);
 
   // Initialize form with validation
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,6 +51,19 @@ export default function LoginPage() {
     },
   });
 
+  // Check for expired session parameter
+  useEffect(() => {
+    // Check if redirected from expired session
+    const expired = searchParams.get("expired") === "true";
+
+    if (expired) {
+      setSessionExpired(true);
+      toast.error("Session expired", {
+        description: "Your session has expired. Please log in again.",
+      });
+    }
+  }, [searchParams]);
+
   // Handle form submission
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
@@ -55,6 +71,9 @@ export default function LoginPage() {
       toast.success("Login successful", {
         description: "Welcome to YDR Policy Chatbot",
       });
+
+      // Reset expired session state
+      setSessionExpired(false);
 
       // Force redirect after successful login
       router.push("/chat");
@@ -89,6 +108,14 @@ export default function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {sessionExpired && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertDescription>
+                Your session has expired. Please log in again to continue.
+              </AlertDescription>
+            </Alert>
+          )}
+
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}

@@ -1,6 +1,7 @@
 import { AuthResponse, ErrorResponse, User } from "@/types";
 import { siteConfig } from "@/config/site";
 import Cookies from "js-cookie";
+import { apiClient } from "./api-client";
 
 // Token storage key
 const TOKEN_KEY = "ydrp_auth_token";
@@ -60,27 +61,15 @@ export const authService = {
    * Fetch current user information
    */
   async fetchUserInfo(): Promise<User> {
-    const token = this.getToken();
-
-    if (!token) {
+    if (!this.isAuthenticated()) {
       throw new Error("Not authenticated");
     }
 
     const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.auth}/users/me`;
 
     try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch user info");
-      }
-
-      const userData: User = await response.json();
+      // Use apiClient to handle 401 errors automatically
+      const userData = await apiClient.fetch<User>(url);
 
       // Save user data to localStorage
       localStorage.setItem(USER_KEY, JSON.stringify(userData));

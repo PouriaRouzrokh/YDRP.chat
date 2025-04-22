@@ -1,6 +1,7 @@
 import { Chat, ChatMessage, ChatSummary, MessageSummary } from "@/types";
 import { authService } from "./auth";
 import { siteConfig } from "@/config/site";
+import { apiClient } from "./api-client";
 
 /**
  * Chat service for interacting with the backend chat API
@@ -22,24 +23,12 @@ export const chatService = {
       throw new Error("User not authenticated");
     }
 
-    const token = authService.getToken();
     const url = `${siteConfig.api.baseUrl}${
       siteConfig.api.endpoints.chat
     }?skip=${skip}&limit=${limit}${archived ? "&archived=true" : ""}`;
 
     try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch chat history");
-      }
-
-      return (await response.json()) as ChatSummary[];
+      return await apiClient.fetch<ChatSummary[]>(url);
     } catch (error) {
       console.error("Error fetching chat history:", error);
       throw error;
@@ -62,22 +51,10 @@ export const chatService = {
       throw new Error("User not authenticated");
     }
 
-    const token = authService.getToken();
     const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}/${chatId}/messages?skip=${skip}&limit=${limit}`;
 
     try {
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch messages for chat ${chatId}`);
-      }
-
-      return (await response.json()) as MessageSummary[];
+      return await apiClient.fetch<MessageSummary[]>(url);
     } catch (error) {
       console.error(`Error fetching messages for chat ${chatId}:`, error);
       throw error;
@@ -96,24 +73,16 @@ export const chatService = {
       throw new Error("User not authenticated");
     }
 
-    const token = authService.getToken();
     const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}/${chatId}/rename`;
 
     try {
-      const response = await fetch(url, {
+      return await apiClient.fetch<ChatSummary>(url, {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ new_title: newTitle }),
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to rename chat ${chatId}`);
-      }
-
-      return (await response.json()) as ChatSummary;
     } catch (error) {
       console.error(`Error renaming chat ${chatId}:`, error);
       throw error;
@@ -130,22 +99,12 @@ export const chatService = {
       throw new Error("User not authenticated");
     }
 
-    const token = authService.getToken();
     const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}/${chatId}/archive`;
 
     try {
-      const response = await fetch(url, {
+      return await apiClient.fetch<ChatSummary>(url, {
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to archive chat ${chatId}`);
-      }
-
-      return (await response.json()) as ChatSummary;
     } catch (error) {
       console.error(`Error archiving chat ${chatId}:`, error);
       throw error;
@@ -162,22 +121,12 @@ export const chatService = {
       throw new Error("User not authenticated");
     }
 
-    const token = authService.getToken();
     const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}/${chatId}/unarchive`;
 
     try {
-      const response = await fetch(url, {
+      return await apiClient.fetch<ChatSummary>(url, {
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
-
-      if (!response.ok) {
-        throw new Error(`Failed to unarchive chat ${chatId}`);
-      }
-
-      return (await response.json()) as ChatSummary;
     } catch (error) {
       console.error(`Error unarchiving chat ${chatId}:`, error);
       throw error;
@@ -194,22 +143,12 @@ export const chatService = {
       throw new Error("User not authenticated");
     }
 
-    const token = authService.getToken();
     const url = `${siteConfig.api.baseUrl}${siteConfig.api.endpoints.chat}/archive-all`;
 
     try {
-      const response = await fetch(url, {
+      return await apiClient.fetch<{ message: string; count: number }>(url, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to archive all chats");
-      }
-
-      return await response.json();
     } catch (error) {
       console.error("Error archiving all chats:", error);
       throw error;

@@ -4,7 +4,7 @@ import { chatService } from "./chat";
 import { siteConfig } from "@/config/site";
 
 /**
- * Mock profile service for user profile data
+ * Profile service for user profile data
  */
 export const profileService = {
   /**
@@ -52,21 +52,27 @@ export const profileService = {
       throw new Error("User not authenticated");
     }
 
-    // Get conversation stats using the chat service
-    const chats = await chatService.getChats(0, 100);
-    const totalConversations = chats.length;
+    try {
+      // Get conversation stats using the chat service
+      // This will handle 401 errors automatically through the apiClient
+      const chats = await chatService.getChats(0, 100);
+      const totalConversations = chats.length;
 
-    // Find the most recent conversation date
-    const dates = chats.map((chat: ChatSummary) => new Date(chat.updated_at));
-    const lastConversationDate =
-      dates.length > 0
-        ? new Date(Math.max(...dates.map((date: Date) => date.getTime())))
-        : null;
+      // Find the most recent conversation date
+      const dates = chats.map((chat: ChatSummary) => new Date(chat.updated_at));
+      const lastConversationDate =
+        dates.length > 0
+          ? new Date(Math.max(...dates.map((date: Date) => date.getTime())))
+          : null;
 
-    return {
-      user,
-      totalConversations,
-      lastConversationDate,
-    };
+      return {
+        user,
+        totalConversations,
+        lastConversationDate,
+      };
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      throw error;
+    }
   },
 };

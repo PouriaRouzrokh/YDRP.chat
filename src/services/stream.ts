@@ -72,6 +72,26 @@ export const streamService = {
         async onopen(response) {
           if (response.ok) {
             return; // Connection established successfully
+          } else if (response.status === 401) {
+            // Unauthorized - token expired
+            console.log("Token expired or invalid, redirecting to login");
+            // Clear authentication state
+            authService.logout();
+
+            // Send error to UI
+            const errorChunk: ErrorChunk = {
+              type: "error",
+              data: {
+                message: "Your session has expired. Please log in again.",
+              },
+            };
+            onChunk(errorChunk);
+
+            // Abort the current request
+            controller?.abort();
+
+            // Redirect to login page
+            window.location.href = "/login?expired=true";
           } else if (
             response.status >= 400 &&
             response.status < 500 &&
