@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight, User, Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import Image from "next/image";
 
 // Define the type for featured chat items
 interface FeaturedChat {
@@ -17,6 +18,26 @@ interface FeaturedChat {
   imageUrl: string;
   category: string;
   path: string;
+}
+
+// Helper function to optimize Cloudinary URLs
+function optimizeCloudinaryUrl(url: string, width = 800, height = 450): string {
+  // Check if it's a Cloudinary URL
+  if (url.includes("cloudinary.com")) {
+    // Parse the URL to separate the upload path and version
+    const uploadIndex = url.indexOf("/upload/");
+    if (uploadIndex === -1) return url;
+
+    const baseUrl = url.substring(0, uploadIndex + 8);
+    const versionAndPath = url.substring(uploadIndex + 8);
+
+    // Add transformation parameters for resizing and quality
+    // c_fill ensures the image fills the area, keeping the 16:9 aspect ratio
+    return `${baseUrl}c_fill,w_${width},h_${height},q_auto,f_auto/${versionAndPath}`;
+  }
+
+  // Return original URL if not a Cloudinary URL
+  return url;
 }
 
 export function FeaturedChats() {
@@ -94,7 +115,7 @@ export function FeaturedChats() {
   // Show loading state or empty state if no data
   if (isLoading) {
     return (
-      <div className="w-full max-w-5xl mx-auto px-4 py-8">
+      <div className="w-full max-w-[90%] lg:max-w-7xl xl:max-w-screen-xl 2xl:max-w-screen-2xl mx-auto px-4 py-8">
         <h2 className="text-2xl md:text-3xl font-medium text-center mb-8 text-muted-foreground">
           Featured Conversations
         </h2>
@@ -109,7 +130,7 @@ export function FeaturedChats() {
 
   if (featuredChats.length === 0) {
     return (
-      <div className="w-full max-w-5xl mx-auto px-4 py-8">
+      <div className="w-full max-w-[90%] lg:max-w-7xl xl:max-w-screen-xl 2xl:max-w-screen-2xl mx-auto px-4 py-8">
         <h2 className="text-2xl md:text-3xl font-medium text-center mb-8 text-muted-foreground">
           Featured Conversations
         </h2>
@@ -125,7 +146,7 @@ export function FeaturedChats() {
   const current = featuredChats[currentIndex];
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-8">
+    <div className="w-full max-w-[90%] lg:max-w-7xl xl:max-w-screen-xl 2xl:max-w-screen-2xl mx-auto px-4 py-8">
       <h2 className="text-2xl md:text-3xl font-medium text-center mb-8 text-muted-foreground">
         Featured Conversations
       </h2>
@@ -158,12 +179,12 @@ export function FeaturedChats() {
             className="w-full"
           >
             <div className="grid md:grid-cols-2 gap-0">
-              <div className="p-6 md:p-8 flex flex-col justify-between">
+              <div className="p-5 md:p-8 flex flex-col justify-between order-2 md:order-1">
                 <div>
                   <h3 className="text-xl md:text-2xl font-bold mb-4">
                     {current.title}
                   </h3>
-                  <div className="space-y-4">
+                  <div className="space-y-4 max-h-[350px] md:max-h-[400px] overflow-y-auto pr-2">
                     <Card className="bg-green-100 dark:bg-emerald-700 text-gray-800 dark:text-gray-50 border-green-200 dark:border-emerald-600 shadow-sm transition-all">
                       <CardContent className="p-3 md:p-4 text-sm md:text-base">
                         <div className="flex items-start">
@@ -203,13 +224,14 @@ export function FeaturedChats() {
                 </Button>
               </div>
 
-              <div className="aspect-video md:aspect-auto bg-muted relative h-[200px] md:h-full overflow-hidden">
-                <div
-                  className="absolute inset-0 bg-cover bg-center transition-transform duration-10000 hover:scale-110"
-                  style={{
-                    backgroundImage: `url(${current.imageUrl})`,
-                    backgroundSize: "cover",
-                  }}
+              <div className="relative order-1 md:order-2 aspect-video md:aspect-auto h-[200px] sm:h-[250px] md:h-full overflow-hidden">
+                <Image
+                  src={optimizeCloudinaryUrl(current.imageUrl)}
+                  alt={current.title}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                  className="object-cover transition-transform duration-10000 hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
               </div>

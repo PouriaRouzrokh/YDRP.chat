@@ -4,7 +4,7 @@
     "title": "Residency Shift Scheduling",
     "userMessage": "What is Yale Policy on residents shifts during high volume hours?",
     "assistantMessage": "To help residents manage excessive clinical volume, Yale requires that shifts overlap during high volume hours. This overlap is intended to allow residents to finish their shifts on time while ensuring a safe transition of patient care. On busy services, service requirements are adjusted so that more residents are scheduled concurrently to properly share the workload and mitigate fatigue...",
-    "imageUrl": "https://images.unsplash.com/photo-1584362917137-56406a73241c?w=800&auto=format&fit=crop&q=80",
+    "imageUrl": "https://res.cloudinary.com/dzqiwtbg6/image/upload/v1745286075/39fed4ad-39a9-4fd5-b595-14307229103d.png",
     "category": "Residency",
     "path": "/chat?topic=residency-shifts"
   },
@@ -13,7 +13,7 @@
     "title": "Equipment Purchase",
     "userMessage": "Can Yale Radiology faculties spend funding from their staff accounts on Amazon purchases?",
     "assistantMessage": "Faculty funds for staff accounts are designated to cover work-related activities and professional development expenses. The policy explicitly states that “No Amazon purchases are allowed unless pre-approved by the business office.",
-    "imageUrl": "https://images.unsplash.com/photo-1583911860523-4b8fcf238486?w=800&auto=format&fit=crop&q=80",
+    "imageUrl": "https://res.cloudinary.com/dzqiwtbg6/image/upload/v1745286450/93c412fa-4580-4806-83e4-242a2df7152d.png",
     "category": "Equipment",
     "path": "/chat?topic=equipment-maintenance"
   },
