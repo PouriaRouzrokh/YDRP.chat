@@ -19,11 +19,11 @@
   },
   {
     "id": 3,
-    "title": "Patient Privacy Policies",
-    "userMessage": "What are the policies regarding sharing patient images for research?",
-    "assistantMessage": "For research purposes, all patient images must be properly de-identified according to HIPAA guidelines. Written consent must be obtained specifically for research use, and the IRB approval is required before any images can be shared.",
-    "imageUrl": "https://images.unsplash.com/photo-1579154341098-e4e158cc7f55?w=800&auto=format&fit=crop&q=80",
-    "category": "Privacy & Compliance",
-    "path": "/chat?topic=privacy-policies"
+    "title": "Contrast Reaction Documentation",
+    "userMessage": "How should I document a contrast reaction event?",
+    "assistantMessage": "Below are the key documentation requirements for a contrast reaction event as outlined in the guidelines: • Document the event in the patient’s medical record (Epic) by including: The contrast agent used and the dose administered A clear description of the reaction signs and symptoms (e.g., type and severity) Details of patient management (for example, medications or interventions provided) Patient outcome and any relevant discharge instructions • The radiologist should also document the contrast administration details and the adverse event in the radiology report whenever possible. • In addition, the technologist must report the incident in the SAFER Event Reporting System.",
+    "imageUrl": "https://res.cloudinary.com/dzqiwtbg6/image/upload/v1745287466/fc2acc3f-69ad-40d3-bc00-3d37029d7987.png",
+    "category": "Contrast Reaction",
+    "path": "/chat?topic=contrast-reaction"
   }
 ]
