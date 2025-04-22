@@ -14,8 +14,8 @@ _BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 
 _config_dict = {
     "PATHS": {
-        # "DATA_DIR": os.path.join(_BASE_DIR, "data"),
-        "DATA_DIR": os.path.join(_BASE_DIR, "tests", "data_collection", "test_data"),
+        "DATA_DIR": os.path.join(_BASE_DIR, "data"),
+        # "DATA_DIR": os.path.join(_BASE_DIR, "tests", "data_collection", "test_data"),
     },
     "LLM": {
         "MISTRAL_API_KEY": os.environ.get("MISTRAL_API_KEY"),

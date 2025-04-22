@@ -16,8 +16,8 @@ _BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
 _config_dict = {
     # Data directory settings
     "PATHS": {
-        # "DATA_DIR": os.path.join(_BASE_DIR, "data"),
-        "DATA_DIR": os.path.join(_BASE_DIR, "tests", "data_collection", "test_data"),
+        "DATA_DIR": os.path.join(_BASE_DIR, "data"),
+        # "DATA_DIR": os.path.join(_BASE_DIR, "tests", "data_collection", "test_data"),
         "AUTH_DIR": os.path.join(_BASE_DIR, "auth"),
     },
     # Database settings
