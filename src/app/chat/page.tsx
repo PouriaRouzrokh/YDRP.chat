@@ -473,9 +473,10 @@ export default function ChatPage() {
                           Ask questions about department policies, safety
                           protocols, or procedural guidelines.
                         </p>
-                        <p className="max-w-md mx-auto">
-                          Please note that this chat is not HIPPA safe, so
-                          please avoid entering sensitive information.
+                        <br />
+                        <p className="max-w-md mx-auto border-4">
+                          Note that this chat is not HIPPA safe, so please avoid
+                          entering sensitive information.
                         </p>
                       </div>
                     </motion.div>
