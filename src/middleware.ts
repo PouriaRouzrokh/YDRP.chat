@@ -14,11 +14,13 @@ function isProtectedPath(path: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Check for authentication
-  const token = request.cookies.get("ydrp_auth")?.value;
-
   // Check for admin mode
   const adminMode = process.env.NEXT_PUBLIC_ADMIN_MODE === "true";
+
+  // Note: We can't access localStorage in middleware
+  // We need to use a different approach to check authentication
+  // Check for the authorization header or cookie that might be set during login
+  const token = request.cookies.get("ydrp_auth_token")?.value;
 
   // Log debug info
   console.log("Middleware: ", {

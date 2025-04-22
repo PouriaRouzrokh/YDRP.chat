@@ -1,5 +1,6 @@
 import { AuthResponse, ErrorResponse, User } from "@/types";
 import { siteConfig } from "@/config/site";
+import Cookies from "js-cookie";
 
 // Token storage key
 const TOKEN_KEY = "ydrp_auth_token";
@@ -36,8 +37,14 @@ export const authService = {
 
       const data: AuthResponse = await response.json();
 
-      // Store the token
+      // Store the token in localStorage
       localStorage.setItem(TOKEN_KEY, data.access_token);
+
+      // Also store token in a cookie for middleware auth check
+      Cookies.set(TOKEN_KEY, data.access_token, {
+        expires: 7, // 7 days
+        path: "/",
+      });
 
       // Fetch user info after successful login
       await this.fetchUserInfo();
@@ -112,6 +119,9 @@ export const authService = {
   logout(): void {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
+
+    // Also remove the cookie
+    Cookies.remove(TOKEN_KEY, { path: "/" });
   },
 
   /**

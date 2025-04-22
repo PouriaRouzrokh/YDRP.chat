@@ -1,18 +1,18 @@
 [
   {
     "id": 1,
-    "title": "Radiation Safety Protocols",
-    "userMessage": "What are the safety protocols for pregnant staff working with radiation?",
-    "assistantMessage": "According to Yale Radiology policies, pregnant staff should follow these guidelines: 1. Report pregnancy to Radiation Safety Officer 2. Wear dosimeter at waist level under lead apron 3. Limit fluoroscopy procedures when possible",
+    "title": "Residency Shift Scheduling",
+    "userMessage": "What is Yale Policy on residents shifts during high volume hours?",
+    "assistantMessage": "To help residents manage excessive clinical volume, Yale requires that shifts overlap during high volume hours. This overlap is intended to allow residents to finish their shifts on time while ensuring a safe transition of patient care. On busy services, service requirements are adjusted so that more residents are scheduled concurrently to properly share the workload and mitigate fatigue...",
     "imageUrl": "https://images.unsplash.com/photo-1584362917137-56406a73241c?w=800&auto=format&fit=crop&q=80",
-    "category": "Safety Protocols",
-    "path": "/chat?topic=radiation-safety"
+    "category": "Residency",
+    "path": "/chat?topic=residency-shifts"
   },
   {
     "id": 2,
-    "title": "Equipment Maintenance",
-    "userMessage": "How often should MRI machines be calibrated?",
-    "assistantMessage": "Yale Radiology policy requires MRI machines to be calibrated quarterly by certified technicians, with additional checks following any software updates or physical adjustments to the equipment.",
+    "title": "Equipment Purchase",
+    "userMessage": "Can Yale Radiology faculties spend funding from their staff accounts on Amazon purchases?",
+    "assistantMessage": "Faculty funds for staff accounts are designated to cover work-related activities and professional development expenses. The policy explicitly states that “No Amazon purchases are allowed unless pre-approved by the business office.",
     "imageUrl": "https://images.unsplash.com/photo-1583911860523-4b8fcf238486?w=800&auto=format&fit=crop&q=80",
     "category": "Equipment",
     "path": "/chat?topic=equipment-maintenance"

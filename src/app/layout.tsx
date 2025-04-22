@@ -11,6 +11,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Yale Department of Radiology Policy Chatbot",
   description: "A chatbot for Yale Department of Radiology policies",
+  icons: {
+    icon: "/Yale_logo.png",
+    apple: "/Yale_logo.png",
+    shortcut: "/Yale_logo.png",
+  },
 };
 
 export default function RootLayout({
