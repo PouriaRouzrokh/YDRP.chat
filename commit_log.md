@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 34 (4/21/2025 - 22:32)
+
+Updated system prompt
+
 ## commit 33 (4/21/2025 - 20:54)
 
 Removed data and users from git.
