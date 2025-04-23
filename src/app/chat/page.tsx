@@ -50,11 +50,34 @@ function ChatPageContent() {
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [initialMessageSent, setInitialMessageSent] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isNewChat, setIsNewChat] = useState(false);
 
   // State for rename dialog
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [chatToRename, setChatToRename] = useState<ChatSession | null>(null);
   const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
+
+  // Fetch messages for a specific session
+  const fetchMessagesForSession = async (sessionId: number) => {
+    try {
+      setLoading(true);
+      const messageData = await chatService.getChatMessages(sessionId);
+      const formattedMessages = chatService.formatMessagesForUI(messageData);
+      // Convert to Message type (should be compatible)
+      const msgArray: Message[] = formattedMessages.map((msg) => ({
+        id: String(msg.id),
+        content: msg.content,
+        role: msg.role,
+        timestamp: msg.timestamp,
+      }));
+      setMessages(msgArray);
+      setLoading(false);
+    } catch (error) {
+      console.error(`Error fetching messages for session ${sessionId}:`, error);
+      toast.error("Failed to load messages");
+      setLoading(false);
+    }
+  };
 
   // Fetch available chat sessions from the server
   const fetchSessions = useCallback(async () => {
@@ -89,9 +112,10 @@ function ChatPageContent() {
       setChatSessions(formattedSessions);
 
       // If chat ID was specified in URL, select it explicitly.
-      // We no longer automatically select the first session on load.
-      if (chatId && !activeSessionId) {
+      if (chatId) {
         setActiveSessionId(chatId);
+        // We don't need to call fetchMessagesForSession here since there's already a useEffect
+        // that will load messages when activeSessionId and chatId match
       }
     } catch (error) {
       console.error("Error fetching chat sessions:", error);
@@ -99,7 +123,7 @@ function ChatPageContent() {
     } finally {
       setLoading(false);
     }
-  }, [chatId, activeSessionId]);
+  }, [chatId]);
 
   // Fetch sessions on mount and when dependencies change
   useEffect(() => {
@@ -116,7 +140,8 @@ function ChatPageContent() {
 
   // Add a new effect to load messages when a chat ID is provided in URL
   useEffect(() => {
-    if (chatId && activeSessionId === chatId) {
+    // Don't fetch messages if this is a new chat being created
+    if (chatId && activeSessionId === chatId && !isNewChat) {
       // Call directly without adding to dependency array
       (async () => {
         try {
@@ -140,34 +165,12 @@ function ChatPageContent() {
         }
       })();
     }
-  }, [chatId, activeSessionId]);
+  }, [chatId, activeSessionId, isNewChat]);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
-
-  // Fetch messages for a specific session
-  const fetchMessagesForSession = async (sessionId: number) => {
-    try {
-      setLoading(true);
-      const messageData = await chatService.getChatMessages(sessionId);
-      const formattedMessages = chatService.formatMessagesForUI(messageData);
-      // Convert to Message type (should be compatible)
-      const msgArray: Message[] = formattedMessages.map((msg) => ({
-        id: String(msg.id),
-        content: msg.content,
-        role: msg.role,
-        timestamp: msg.timestamp,
-      }));
-      setMessages(msgArray);
-      setLoading(false);
-    } catch (error) {
-      console.error(`Error fetching messages for session ${sessionId}:`, error);
-      toast.error("Failed to load messages");
-      setLoading(false);
-    }
-  };
 
   // Handle streaming chunks with useCallback
   const handleStreamChunk = useCallback(
@@ -178,6 +181,12 @@ function ChatPageContent() {
         if (!activeSessionId) {
           const newChatId = String(infoChunk.data.chat_id);
           setActiveSessionId(newChatId);
+          
+          // Mark this as a new chat to prevent immediate fetching
+          setIsNewChat(true);
+          
+          // Update the URL with the new chat ID
+          router.replace(`/chat?id=${newChatId}`, { scroll: false });
 
           // Create new session in the sidebar
           const newSession: ChatSession = {
@@ -223,6 +232,8 @@ function ChatPageContent() {
         if (statusChunk.data.status === "complete") {
           // No need to finalize message separately, it's already in the messages array.
           setIsTyping(false);
+          // Reset the new chat flag once a response is complete
+          setIsNewChat(false);
           // Update session metadata if needed (e.g., last message time)
           if (activeSessionId) {
             const chatIdStr = String(statusChunk.data.chat_id);
@@ -246,11 +257,13 @@ function ChatPageContent() {
       }
       // Handle other chunk types if needed (tool_call, tool_output)
     },
-    [activeSessionId]
+    [activeSessionId, router]
   );
 
   const handleNewChat = useCallback(() => {
     setActiveSessionId(null);
+    // Reset the new chat flag since we're manually starting a new chat
+    setIsNewChat(false);
     // Make sure URL params are updated without adding to history
     router.replace("/chat", { scroll: false });
   }, [router]);
@@ -303,9 +316,13 @@ function ChatPageContent() {
   // Handle selecting a chat session
   const handleSelectChat = useCallback((chatId: string) => {
     setActiveSessionId(chatId);
+    // Ensure we're not in new chat mode when selecting an existing chat
+    setIsNewChat(false);
+    // Update the URL to include the chat ID, without causing a full page reload
+    router.replace(`/chat?id=${chatId}`, { scroll: false });
     // Fetch messages for the selected chat ID
     fetchMessagesForSession(Number(chatId));
-  }, []);
+  }, [router]);
 
   const toggleSidebar = useCallback(() => {
     setIsSidebarOpen((prev) => !prev);
