@@ -257,6 +257,7 @@ export function ChatContainer({
       timestamp: new Date(),
     };
 
+    // Add user message and immediately show typing indicator
     setMessages((prev) => [...prev, userMessage]);
     setIsTyping(true);
 

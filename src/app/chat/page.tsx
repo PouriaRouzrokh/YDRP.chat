@@ -191,7 +191,8 @@ function ChatPageContent() {
         }
       } else if (chunk.type === "text_delta") {
         const textChunk = chunk as TextDeltaChunk;
-        setIsTyping(true);
+        // Turn off the typing indicator when actual message starts streaming
+        setIsTyping(false);
         setMessages((prevMessages) => {
           const lastMessage = prevMessages[prevMessages.length - 1];
 
@@ -455,8 +456,8 @@ function ChatPageContent() {
                 initial="hidden"
                 animate="visible"
               >
-                <AnimatePresence mode="wait">
-                  {loading ? (
+                <AnimatePresence>
+                  {loading && messages.length === 0 ? (
                     <motion.div
                       className="flex items-center justify-center h-full p-8 text-center text-muted-foreground"
                       variants={fadeInUp}
