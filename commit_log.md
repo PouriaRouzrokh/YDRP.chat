@@ -1,5 +1,9 @@
 # Commit History
 
+## commit 37 (4/23/2025 - 05:30)
+
+deployed on claudflare
+
 ## commit 36 (4/22/2025 - 05:26)
 
 changed the database settings to server side

@@ -57,7 +57,10 @@ _config_dict = {
         "HOST": "0.0.0.0",
         "PORT": 8000,
         "DEBUG": False,
-        "CORS_ORIGINS": ["http://localhost:3000"],
+        "CORS_ORIGINS": [
+            "http://localhost:3000", 
+            "https://ydrp.chat"
+        ],
         # --- JWT Settings ---
         "JWT_SECRET": os.environ.get(
             "JWT_SECRET", "a_very_insecure_default_secret_key_please_change"
