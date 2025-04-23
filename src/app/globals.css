@@ -230,6 +230,7 @@ body {
 @media (max-width: 768px) {
   .bg-background-image {
     background-position: center center;
+    background-attachment: scroll; /* Change to scroll on mobile devices to prevent movement during scrolling */
   }
 }
 

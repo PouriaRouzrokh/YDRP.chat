@@ -118,7 +118,7 @@ export default function HomePage() {
       </section>
 
       {/* Compact separator with more emphasis */}
-      <div className="w-full max-w-[90%] lg:max-w-7xl xl:max-w-screen-xl 2xl:max-w-screen-2xl mx-auto px-4 py-4 bg-background">
+      <div className="w-full max-w-[90%] lg:max-w-7xl xl:max-w-screen-xl 2xl:max-w-screen-2xl mx-auto px-4 py-4">
         <div className="flex items-center justify-center space-x-3">
           <div className="w-2/5 h-[2px] bg-gradient-to-r from-transparent to-border/80"></div>
           <div className="w-3 h-3 rounded-full bg-border"></div>

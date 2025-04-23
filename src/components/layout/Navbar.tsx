@@ -56,7 +56,7 @@ export function Navbar() {
               priority
               className="w-[30px] h-auto object-contain"
             />
-            <span className="font-bold">{siteConfig.name}</span>
+            <span className="font-bold text-xs sm:text-sm md:text-base">{siteConfig.name}</span>
           </Link>
           <NavigationMenu className="hidden md:flex">
             <NavigationMenuList>

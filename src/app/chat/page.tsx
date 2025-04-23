@@ -480,7 +480,7 @@ function ChatPageContent() {
                           protocols, or procedural guidelines.
                         </p>
                         <br />
-                        <p className="max-w-md mx-auto border-4">
+                        <p className="max-w-md mx-auto border-4 ">
                           Please note that this chat is not HIPPA safe, so
                           please avoid entering sensitive information.
                         </p>
