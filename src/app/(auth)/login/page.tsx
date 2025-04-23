@@ -47,8 +47,8 @@ function LoginForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "user@example.com", // Pre-filled for demo
-      password: "password123", // Pre-filled for demo
+      email: "", 
+      password: "",
     },
   });
 
@@ -105,7 +105,7 @@ function LoginForm() {
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Sign in to access Yale Radiology Policies.
+            Sign in to access the YDR policy chatbot.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -132,7 +132,7 @@ function LoginForm() {
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder="user@yale.edu"
                         {...field}
                       />
                     </FormControl>
@@ -179,15 +179,15 @@ function LoginForm() {
         </CardContent>
         <CardFooter className="flex flex-col space-y-2 items-start">
           <div className="text-sm text-muted-foreground">
-            <span>Demo credentials pre-filled for you.</span>
+            <span>A registered account is required to access this chatbot.</span>
           </div>
           <div className="text-sm text-muted-foreground">
             <span>For assistance, please contact </span>
             <a
-              href="mailto:it-support@yale-rad.edu"
-              className="text-primary hover:underline"
+              href="mailto:pouria.rouzrokh@yale.edu"
+              className="text-sm text-muted-foreground hover:underline"
             >
-              IT Support
+              Pouria Rouzrokh, MD.
             </a>
           </div>
         </CardFooter>

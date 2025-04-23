@@ -32,7 +32,7 @@ export default function HomePage() {
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
                   Yale Department of Radiology
                 </h1>
-                <h1 className="text-4xl md:text-3xl font-bold tracking-tight">
+                <h1 className="text-3xl font-bold tracking-tight">
                   Policy Chatbot
                 </h1>
               </div>
