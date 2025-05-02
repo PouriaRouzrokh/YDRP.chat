@@ -103,16 +103,23 @@ async def stream_chat(
 
     async def event_generator() -> AsyncGenerator[str, None]:
         try:
+            # Start with initial heartbeat to confirm connection
+            yield f"data: {{\n\n"
+            
+            # Process the user message and stream responses
             async for chunk in chat_service.process_user_message_stream(
                 user_id=current_user.id, message=request.message, chat_id=request.chat_id
             ):
                 if hasattr(chunk, "type") and hasattr(chunk, "data"):
                     json_chunk = chunk.model_dump_json(exclude_unset=True)
                     yield f"data: {json_chunk}\n\n"
-                    await asyncio.sleep(0.01)
+                    # Reduce sleep time to avoid long pauses but maintain backpressure
+                    await asyncio.sleep(0.002)  
                 else:
                     logger.error(f"Invalid chunk received from service: {chunk!r}")
 
+            # Send a final heartbeat to ensure connection closes properly
+            yield f"data: {{\n\n"
             logger.info(
                 f"API: Finished streaming response for user {current_user.id}, chat {request.chat_id or 'new'}."
             )
@@ -129,10 +136,27 @@ async def stream_chat(
                 else:
                     error_chunk = StreamChunk(type="error", data=StreamChunkData(**error_payload.model_dump()))
                 yield f"data: {error_chunk.model_dump_json()}\n\n"
+                # Final heartbeat
+                yield f"data: {{\n\n"
             except Exception as yield_err:
                 logger.error(f"Failed even to yield error chunk: {yield_err}")
+                # Last resort heartbeat
+                yield f"data: {{\n\n"
+        finally:
+            # Ensure final heartbeat is sent to avoid ASGI errors
+            yield f"data: {{\n\n"
 
-    return StreamingResponse(event_generator(), media_type="text/event-stream")
+    # Return with appropriate headers to ensure proper SSE handling
+    response = StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",  # Prevent Nginx buffering
+        }
+    )
+    return response
 
 
 # --- List User Chats Endpoint ---

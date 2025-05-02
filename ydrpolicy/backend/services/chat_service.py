@@ -318,26 +318,38 @@ class ChatService:
                                         logger.warning(f"ToolCallItem structure missing name: {item!r}")
 
                                 elif item.type == "tool_call_output_item":
-                                    if current_tool_call_item:
-                                        # Ensure output_item has tool_call_id before pairing
-                                        output_tool_call_id = getattr(item, "tool_call_id", None)
-                                        if output_tool_call_id:
-                                            tool_calls_data.append((current_tool_call_item, item))
-                                        else:
-                                            logger.warning(
-                                                f"ToolCallOutputItem missing tool_call_id for chat {processed_chat_id}"
-                                            )
-                                        current_tool_call_item = None  # Reset after attempting pairing
-                                    else:
-                                        logger.warning(
-                                            f"Received tool output without matching tool call for chat {processed_chat_id}"
-                                        )
                                     tool_output = item.output
-                                    # Ensure tool_call_id exists on the item before yielding
-                                    output_tool_call_id_yield = getattr(item, "tool_call_id", "unknown_call_id")
+                                    output_tool_call_id = getattr(item, "tool_call_id", None)
+                                    
+                                    # Handle missing tool_call_id in output item
+                                    if not output_tool_call_id:
+                                        # First try to get it from the current_tool_call_item if available
+                                        if current_tool_call_item:
+                                            tool_call_item_id = getattr(current_tool_call_item, "tool_call_id", None)
+                                            if tool_call_item_id:
+                                                # Inject the ID from the current_tool_call_item
+                                                item.tool_call_id = tool_call_item_id
+                                                output_tool_call_id = tool_call_item_id
+                                                logger.info(f"Injected tool_call_id {tool_call_item_id} into output item for chat {processed_chat_id}")
+                                        
+                                        # If still no ID, generate one to avoid null values
+                                        if not output_tool_call_id:
+                                            fallback_id = f"auto-{len(tool_calls_data)}-{processed_chat_id}"
+                                            item.tool_call_id = fallback_id
+                                            output_tool_call_id = fallback_id
+                                            logger.info(f"Generated fallback tool_call_id {fallback_id} for chat {processed_chat_id}")
+                                    
+                                    # Store the tool call data for saving to DB later
+                                    if current_tool_call_item:
+                                        tool_calls_data.append((current_tool_call_item, item))
+                                        current_tool_call_item = None  # Reset after pairing
+                                    else:
+                                        logger.warning(f"Received tool output without matching tool call for chat {processed_chat_id}")
+
+                                    # Yield the tool output to the client - always using a valid ID
                                     yield self._create_stream_chunk(
                                         "tool_output",
-                                        ToolOutputData(tool_call_id=output_tool_call_id_yield, output=tool_output),
+                                        ToolOutputData(tool_call_id=output_tool_call_id, output=tool_output),
                                     )
                                     logger.info(f"Tool output received for chat {processed_chat_id}")
                             elif event.type == "agent_updated_stream_event":
