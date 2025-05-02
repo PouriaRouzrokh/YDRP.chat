@@ -68,6 +68,6 @@ if __name__ == "__main__":
     # extensions_to_look_for = {".md"}
     extensions_to_look_for = {".py"}
     exclude_files_list = {".env", "__init__.py", "init.py", "CHANGELOG.md", "code_base.md"}
-    exclude_folders_list = {".venv", "archived"}
+    exclude_folders_list = {".venv", "venv", "archived"}
 
     create_markdown(root_directory, extensions_to_look_for, exclude_files_list, exclude_folders_list)
