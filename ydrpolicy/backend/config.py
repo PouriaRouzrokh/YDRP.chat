@@ -22,7 +22,7 @@ _config_dict = {
     },
     # Database settings
     "DATABASE": {
-        "DATABASE_URL": os.environ.get("DATABASE_URL", "postgresql+asyncpg://pr555:@localhost:5432/ydrpolicy"), 
+        "DATABASE_URL": os.environ.get("DATABASE_URL", "postgresql+asyncpg://pr555:@localhost:5432/ydrpolicy"),
         # "DATABASE_URL": os.environ.get("DATABASE_URL", "postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy"),
         "POOL_SIZE": 5,
         "MAX_OVERFLOW": 10,
@@ -57,10 +57,7 @@ _config_dict = {
         "HOST": "0.0.0.0",
         "PORT": 8000,
         "DEBUG": False,
-        "CORS_ORIGINS": [
-            "http://localhost:3000", 
-            "https://ydrp.chat"
-        ],
+        "CORS_ORIGINS": ["http://localhost:3000", "https://ydrp.chat"],
         # --- JWT Settings ---
         "JWT_SECRET": os.environ.get(
             "JWT_SECRET", "a_very_insecure_default_secret_key_please_change"

@@ -103,7 +103,6 @@ https://github.com/PouriaRouzrokh/YDRP_UI
 
     - Python 3.10+
     - PostgreSQL server (version compatible with `pgvector`) with the `pgvector` extension enabled within the target database.
-    - `uv` (Python package manager): Recommended. Install via `pip install uv` or see official `uv` docs. (Or use `pip`).
 
 2.  **Clone Repository:**
 
@@ -115,25 +114,17 @@ https://github.com/PouriaRouzrokh/YDRP_UI
 3.  **Create Virtual Environment (Recommended):**
 
     ```bash
-    # Using uv
-    uv venv .venv
-    source .venv/bin/activate # Linux/macOS
-    # .venv\Scripts\activate # Windows
-
-    # Or using standard venv
-    # python -m venv .venv
-    # source .venv/bin/activate # Linux/macOS
-    # .venv\Scripts\activate # Windows
+    # Using standard venv
+    python -m venv venv
+    source venv/bin/activate # Linux/macOS
+    # venv\Scripts\activate # Windows
     ```
 
 4.  **Install Dependencies:**
 
     ```bash
-    # Using uv (reads pyproject.toml)
-    uv sync
-
-    # Or using pip (if you have requirements.txt)
-    # pip install -r requirements.txt
+    # Using pip with requirements.txt
+    pip install -r requirements.txt
     ```
 
     _Note: Ensure your dependency file includes `fastapi[all]`, `openai`, `agents-sdk`, `mcp[cli]`, `sqlalchemy[asyncpg]`, `psycopg` (or `psycopg2-binary`), `pgvector-sqlalchemy`, `typer`, `python-dotenv`, `pandas`, `selenium`, `markdownify`, `python-jose[cryptography]`, `passlib[bcrypt]`, `python-multipart`, `ruff`, `alembic` (if using migrations)._
@@ -182,21 +173,21 @@ https://github.com/PouriaRouzrokh/YDRP_UI
       - Run the database initialization command. This creates the DB (if needed), enables `pgvector`, creates tables based on current models, and **seeds users** from `users.json`.
       ```bash
       # Create schema and seed users, but don't populate policies yet
-      uv run main.py database --init --no-populate
+      python main.py database --init --no-populate
       ```
       - **Note:** If you later change models, `init_db` will _not_ automatically migrate the schema. You would need to `--drop` and `--init` again, losing data, or manually alter the tables, or switch to Alembic.
 
 ## CLI Commands Reference (`main.py`)
 
-Interact with the engine via `uv run main.py <command> [options]`.
+Interact with the engine via `python main.py <command> [options]`.
 
-_(Run `uv run main.py --help` for a full list)_
+_(Run `python main.py --help` for a full list)_
 
 ### 1. `database` Command
 
 Manages the database schema, user seeding, and policy data population.
 
-- **`uv run main.py database --init [--no-populate]`**
+- **`python main.py database --init [--no-populate]`**
 
   - **Purpose:** Initializes the database structure (creating DB, extensions, tables based on **current** models) and seeds users from `auth/users.json`. Optionally populates policies. **WARNING:** Does not perform schema migrations on existing databases. Use Alembic for managing schema changes on existing databases.
   - **Actions:**
@@ -207,7 +198,7 @@ Manages the database schema, user seeding, and policy data population.
     - If `--no-populate` is **NOT** used (or if `--populate` is explicitly used later), it proceeds to populate policies (see below).
   - **Use Case:** First-time setup, resetting the schema (requires `--drop` first if DB exists), adding predefined users.
 
-- **`uv run main.py database --populate`**
+- **`python main.py database --populate`**
 
   - **Purpose:** Populates the database with new or updated policy data found in the processed data directory (`data/processed/scraped_policies/`). Implicitly runs `--init` actions if needed but focuses on data loading.
   - **Actions:**
@@ -218,7 +209,7 @@ Manages the database schema, user seeding, and policy data population.
     - For new policies or newer versions: reads content, chunks text, generates embeddings (via OpenAI), and inserts `Policy`, `Image`, `PolicyChunk` records into the DB.
   - **Use Case:** Adding policies to the agent's knowledge base after they have been collected and processed by the `policy` command.
 
-- **`uv run main.py database --drop [--force]`**
+- **`python main.py database --drop [--force]`**
 
   - **Purpose:** **Permanently deletes** the entire application database.
   - **Actions:** Connects to PostgreSQL and executes `DROP DATABASE`.
@@ -233,30 +224,30 @@ Manages the database schema, user seeding, and policy data population.
 
 Manages the data collection/processing pipeline (filesystem operations) and database _removal_.
 
-- **`uv run main.py policy --collect-all`**
+- **`python main.py policy --collect-all`**
 
   - **Purpose:** Runs the full data finding, downloading, processing, and classification pipeline. Prepares policy data folders on the filesystem. **Does NOT populate DB.**
   - **Actions:** Crawls sources, downloads/converts content (saving raw versions), classifies using LLM, extracts titles, creates structured folders (`<title>_<timestamp>`) in `data/processed/scraped_policies/`.
   - **Use Case:** Refreshing policy data from source. Needs `database --populate` afterwards.
 
-- **`uv run main.py policy --collect-one --url <URL>`**
+- **`python main.py policy --collect-one --url <URL>`**
 
   - **Purpose:** Processes a single URL through the full pipeline. Prepares folder if identified as policy. **Does NOT populate DB.**
   - **Use Case:** Adding/testing a single known policy URL. Needs `database --populate` afterwards.
 
-- **`uv run main.py policy --crawl-all`**
+- **`python main.py policy --crawl-all`**
 
   - **Purpose:** Runs only the crawling stage (finding/downloading raw content).
   - **Actions:** Saves raw markdown/images, creates `crawled_policies_data.csv`. Does not classify or create processed folders.
   - **Use Case:** Refreshing raw data only.
 
-- **`uv run main.py policy --scrape-all`**
+- **`python main.py policy --scrape-all`**
 
   - **Purpose:** Runs only the classification/processing stage on existing raw data.
   - **Actions:** Reads CSV, analyzes raw files via LLM, creates structured processed folders. **Does NOT populate DB.**
   - **Use Case:** Classifying previously crawled data.
 
-- **`uv run main.py policy --remove-id <ID> [--force]`** or **`uv run main.py policy --remove-title <TITLE> [--force]`**
+- **`python main.py policy --remove-id <ID> [--force]`** or **`python main.py policy --remove-title <TITLE> [--force]`**
 
   - **Purpose:** Removes a policy and its associated data (chunks, images) **from the database ONLY**.
   - **Actions:** Finds policy by ID or title in DB and deletes it. Logs the action. **Does NOT delete filesystem folders.**
@@ -272,13 +263,13 @@ Manages the data collection/processing pipeline (filesystem operations) and data
 
 Manages the Model Context Protocol (MCP) server, which provides tools to the agent.
 
-- **`uv run main.py mcp [--transport http]`** (or default)
+- **`python main.py mcp [--transport http]`** (or default)
 
   - **Purpose:** Starts MCP server using HTTP/SSE transport.
   - **Actions:** Runs Uvicorn on default port 8001, serving the MCP tools (`find_similar_chunks`, `get_policy_from_ID`) over SSE on the `/sse` endpoint.
   - **Use Case:** **Required** when running the agent in API mode (`main.py agent`). Run in a separate terminal.
 
-- **`uv run main.py mcp --transport stdio [--no-log]`**
+- **`python main.py mcp --transport stdio [--no-log]`**
 
   - **Purpose:** Starts MCP server using standard input/output.
   - **Use Case:** Direct integration with stdio clients (less common).
@@ -292,13 +283,13 @@ Manages the Model Context Protocol (MCP) server, which provides tools to the age
 
 Runs the chat agent application.
 
-- **`uv run main.py agent`**
+- **`python main.py agent`**
 
   - **Purpose:** Starts the main FastAPI web server for the agent API.
   - **Actions:** Runs Uvicorn on default port 8000, serving the API endpoints (including `/auth/token`, `/chat`, `/chat/stream`). Connects to the MCP server (if not disabled) when handling requests.
   - **Use Case:** Standard mode for running the backend service for the frontend UI. Requires MCP server running separately if tools are needed.
 
-- **`uv run main.py agent --terminal`**
+- **`python main.py agent --terminal`**
 
   - **Purpose:** Runs an interactive chat session directly in the terminal. Uses temporary session history.
   - **Actions:** Initializes agent, connects to MCP server (if not disabled), and provides a command-line chat prompt.
@@ -317,11 +308,11 @@ Runs the chat agent application.
 1.  **(First time) Create `auth/users.json` with initial users/passwords.**
 2.  **(First time or after schema change) Init DB & Seed Users:**
     - Using Alembic: `alembic upgrade head` (assuming initialized and migrations generated)
-    - Using `init_db`: `uv run main.py database --init --no-populate`
-3.  **(Optional) Collect & Process Policy Data:** `uv run main.py policy --collect-all`
-4.  **(Optional) Populate Policies into DB:** `uv run main.py database --populate`
-5.  **Start MCP Server:** `uv run main.py mcp --transport http` (in Terminal 1)
-6.  **Start Agent API Server:** `uv run main.py agent` (in Terminal 2)
+    - Using `init_db`: `python main.py database --init --no-populate`
+3.  **(Optional) Collect & Process Policy Data:** `python main.py policy --collect-all`
+4.  **(Optional) Populate Policies into DB:** `python main.py database --populate`
+5.  **Start MCP Server:** `python main.py mcp --transport http` (in Terminal 1)
+6.  **Start Agent API Server:** `python main.py agent` (in Terminal 2)
 7.  **Interact:** Use the frontend UI (pointing to `http://localhost:8000`) or the API docs (`http://localhost:8000/docs`).
 
 ## API Endpoints Summary

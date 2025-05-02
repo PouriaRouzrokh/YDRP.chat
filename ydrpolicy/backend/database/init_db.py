@@ -10,9 +10,10 @@ from urllib.parse import urlparse
 
 import asyncpg
 import pandas as pd
+
 # Import delete statement helper
 from sqlalchemy import delete, select, text
-from sqlalchemy.exc import IntegrityError, NoResultFound # Added NoResultFound
+from sqlalchemy.exc import IntegrityError, NoResultFound  # Added NoResultFound
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -40,6 +41,7 @@ from ydrpolicy.backend.utils.paths import ensure_directories
 
 # Initialize logger
 logger = logging.getLogger(__name__)
+
 
 # --- create_database function remains unchanged ---
 async def create_database(db_url: str) -> bool:
@@ -99,6 +101,7 @@ async def create_database(db_url: str) -> bool:
         logger.error(f"Error parsing database URL '{db_url}': {parse_err}")
         return False
 
+
 # --- create_extension function remains unchanged ---
 async def create_extension(engine: AsyncEngine, extension_name: str) -> None:
     """Creates a PostgreSQL extension if it doesn't exist."""
@@ -109,6 +112,7 @@ async def create_extension(engine: AsyncEngine, extension_name: str) -> None:
         logger.info(f"Extension '{extension_name}' checked/created.")
     except Exception as e:
         logger.error(f"Error creating extension '{extension_name}': {e}. Continuing...")
+
 
 # --- seed_users_from_json function remains unchanged ---
 async def seed_users_from_json(session: AsyncSession):
@@ -153,11 +157,11 @@ async def seed_users_from_json(session: AsyncSession):
                 skipped_count += 1
                 continue
         except NoResultFound:
-             logger.debug(f"User '{email}' not found, proceeding with creation.")
+            logger.debug(f"User '{email}' not found, proceeding with creation.")
         except Exception as e:
-             logger.error(f"Error checking for existing user '{email}': {e}. Skipping.")
-             skipped_count += 1
-             continue
+            logger.error(f"Error checking for existing user '{email}': {e}. Skipping.")
+            skipped_count += 1
+            continue
 
         try:
             hashed_pw = hash_password(plain_password)
@@ -168,7 +172,7 @@ async def seed_users_from_json(session: AsyncSession):
             created_count += 1
         except Exception as e:
             logger.error(f"Error preparing user '{email}' for creation: {e}")
-            skipped_count += 1 # Also count as skipped if preparation fails
+            skipped_count += 1  # Also count as skipped if preparation fails
 
     logger.info(f"User seeding preparation complete. Prepared: {created_count}, Skipped: {skipped_count}")
 
@@ -200,10 +204,10 @@ async def create_new_policy(
 
     if not os.path.exists(md_path):
         logger.error(f"  Markdown file not found: {md_path}. Skipping creation.")
-        return None # Return None to indicate failure
+        return None  # Return None to indicate failure
     if not os.path.exists(txt_path):
         logger.error(f"  Text file not found: {txt_path}. Skipping creation.")
-        return None # Return None to indicate failure
+        return None  # Return None to indicate failure
 
     try:
         with open(md_path, "r", encoding="utf-8") as f_md:
@@ -235,37 +239,40 @@ async def create_new_policy(
         # --- Process images and chunks (common logic) ---
         await _process_policy_children(session, policy, folder_path, text_content)
 
-        return policy # Return the created policy object
+        return policy  # Return the created policy object
 
     except IntegrityError as ie:
         # This could happen in a race condition if another process created it just now
         logger.error(f"  DB integrity error (duplicate title?) creating '{policy_title}': {ie}")
-        raise ie # Reraise to ensure transaction rollback
+        raise ie  # Reraise to ensure transaction rollback
     except Exception as e:
         logger.error(f"  Unexpected error creating policy '{policy_title}': {e}", exc_info=True)
-        raise e # Reraise to ensure transaction rollback
+        raise e  # Reraise to ensure transaction rollback
+
 
 # --- New Function: update_existing_policy ---
 async def update_existing_policy(
-    existing_policy: Policy, # Pass the fetched Policy object
+    existing_policy: Policy,  # Pass the fetched Policy object
     folder_path: str,
     scrape_timestamp: str,
     session: AsyncSession,
     extraction_reasoning: Optional[str] = None,
 ):
     """Updates an existing policy record and its associated objects."""
-    policy_title = existing_policy.title # Get title from existing object
+    policy_title = existing_policy.title  # Get title from existing object
     policy_id = existing_policy.id
-    logger.info(f"Updating existing policy: '{policy_title}' (ID: {policy_id}) from folder: {os.path.basename(folder_path)}")
+    logger.info(
+        f"Updating existing policy: '{policy_title}' (ID: {policy_id}) from folder: {os.path.basename(folder_path)}"
+    )
     md_path = os.path.join(folder_path, "content.md")
     txt_path = os.path.join(folder_path, "content.txt")
 
     if not os.path.exists(md_path):
         logger.error(f"  Markdown file not found: {md_path}. Skipping update for policy ID {policy_id}.")
-        return False # Indicate failure
+        return False  # Indicate failure
     if not os.path.exists(txt_path):
         logger.error(f"  Text file not found: {txt_path}. Skipping update for policy ID {policy_id}.")
-        return False # Indicate failure
+        return False  # Indicate failure
 
     try:
         with open(md_path, "r", encoding="utf-8") as f_md:
@@ -308,12 +315,13 @@ async def update_existing_policy(
         await _process_policy_children(session, existing_policy, folder_path, text_content)
 
         logger.info(f"SUCCESS: Updated Policy record ID: {policy_id} for title '{policy_title}'")
-        return True # Indicate success
+        return True  # Indicate success
 
     except Exception as e:
         logger.error(f"  Unexpected error updating policy '{policy_title}' (ID: {policy_id}): {e}", exc_info=True)
         # Let the exception propagate to roll back the transaction
         raise e
+
 
 # --- Helper Function: _process_policy_children (Extracted common logic) ---
 async def _process_policy_children(session: AsyncSession, policy: Policy, folder_path: str, text_content: str):
@@ -333,7 +341,9 @@ async def _process_policy_children(session: AsyncSession, policy: Policy, folder
             session.add(Image(policy_id=policy_id, filename=img_filename, relative_path=img_filename))
             image_count += 1
         except Exception as img_err:
-            logger.error(f"  Error creating Image object for '{img_filename}' in policy '{policy_title}' (ID: {policy_id}): {img_err}")
+            logger.error(
+                f"  Error creating Image object for '{img_filename}' in policy '{policy_title}' (ID: {policy_id}): {img_err}"
+            )
     if image_count > 0:
         # Flush image additions before chunking? Not strictly necessary.
         # await session.flush()
@@ -345,24 +355,28 @@ async def _process_policy_children(session: AsyncSession, policy: Policy, folder
 
     if not chunks:
         logger.warning(f"  No chunks generated for '{policy_title}' (ID: {policy_id}).")
-        return # Nothing more to do if no chunks
+        return  # Nothing more to do if no chunks
 
     try:
         embeddings = await embed_texts(chunks)
         if len(embeddings) != len(chunks):
-            logger.error(f"  Embedding count ({len(embeddings)}) does not match chunk count ({len(chunks)}) for policy '{policy_title}' (ID: {policy_id}). Aborting chunk processing for this policy.")
-            return # Stop processing chunks for this policy if counts mismatch
+            logger.error(
+                f"  Embedding count ({len(embeddings)}) does not match chunk count ({len(chunks)}) for policy '{policy_title}' (ID: {policy_id}). Aborting chunk processing for this policy."
+            )
+            return  # Stop processing chunks for this policy if counts mismatch
         logger.info(f"  Generated {len(embeddings)} embeddings for policy ID {policy_id}.")
     except Exception as emb_err:
         logger.error(f"  Embedding failed for '{policy_title}' (ID: {policy_id}): {emb_err}.", exc_info=True)
-        return # Stop processing chunks for this policy if embedding fails
+        return  # Stop processing chunks for this policy if embedding fails
 
     # Add PolicyChunk objects
     chunk_count = 0
     for i, (chunk_content, embedding) in enumerate(zip(chunks, embeddings)):
         try:
-            embedding_list = embedding.tolist() if hasattr(embedding, 'tolist') else list(embedding)
-            session.add(PolicyChunk(policy_id=policy_id, chunk_index=i, content=chunk_content, embedding=embedding_list))
+            embedding_list = embedding.tolist() if hasattr(embedding, "tolist") else list(embedding)
+            session.add(
+                PolicyChunk(policy_id=policy_id, chunk_index=i, content=chunk_content, embedding=embedding_list)
+            )
             chunk_count += 1
         except Exception as chunk_err:
             logger.error(f"  Error creating PolicyChunk index {i} for policy ID {policy_id}: {chunk_err}")
@@ -414,8 +428,8 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
         logger.warning(f"Policy descriptions CSV file not found: {csv_path}")
 
     # --- Get existing policies and initialize counters ---
-    policy_repo = PolicyRepository(session) # Still useful for fetching by ID
-    existing_policies = await get_existing_policies_info(session) # {title: {'id': id, 'metadata': meta}}
+    policy_repo = PolicyRepository(session)  # Still useful for fetching by ID
+    existing_policies = await get_existing_policies_info(session)  # {title: {'id': id, 'metadata': meta}}
     folder_pattern = re.compile(r"^(.+)_(\d{20})$")
 
     processed_new_count = 0
@@ -443,13 +457,15 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
 
         # --- Check if already processed this title in this run ---
         if policy_title in processed_titles_in_run:
-            logger.warning(f"Policy title '{policy_title}' was already processed or updated in this run from another folder. Skipping redundant processing for folder '{folder_name}'.")
+            logger.warning(
+                f"Policy title '{policy_title}' was already processed or updated in this run from another folder. Skipping redundant processing for folder '{folder_name}'."
+            )
             skipped_count += 1
             continue
 
         existing_policy_info = existing_policies.get(policy_title)
         should_process = False
-        is_update = False # Flag to differentiate create vs update
+        is_update = False  # Flag to differentiate create vs update
 
         if existing_policy_info:
             # Policy title exists in DB
@@ -460,20 +476,28 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
                 existing_timestamp = existing_metadata["scrape_timestamp"]
                 try:
                     if scrape_timestamp > existing_timestamp:
-                        logger.info(f"Newer version found for '{policy_title}'. Scraped: {scrape_timestamp}, Existing DB: {existing_timestamp}. Will update existing ID {existing_id}.")
+                        logger.info(
+                            f"Newer version found for '{policy_title}'. Scraped: {scrape_timestamp}, Existing DB: {existing_timestamp}. Will update existing ID {existing_id}."
+                        )
                         should_process = True
                         is_update = True
                     else:
-                        logger.debug(f"Skipping older/same version for '{policy_title}': Folder timestamp '{scrape_timestamp}' <= DB timestamp '{existing_timestamp}'.")
+                        logger.debug(
+                            f"Skipping older/same version for '{policy_title}': Folder timestamp '{scrape_timestamp}' <= DB timestamp '{existing_timestamp}'."
+                        )
                         skipped_count += 1
                         # Add to processed set even if skipped to prevent other folders triggering updates mistakenly
                         processed_titles_in_run.add(policy_title)
                 except TypeError as te:
-                     logger.error(f"Timestamp comparison error for '{policy_title}' (Folder: {scrape_timestamp}, DB: {existing_timestamp}): {te}. Assuming update needed.")
-                     should_process = True
-                     is_update = True
+                    logger.error(
+                        f"Timestamp comparison error for '{policy_title}' (Folder: {scrape_timestamp}, DB: {existing_timestamp}): {te}. Assuming update needed."
+                    )
+                    should_process = True
+                    is_update = True
             else:
-                logger.info(f"Existing '{policy_title}' (ID: {existing_id}) lacks timestamp or metadata. Assuming update needed.")
+                logger.info(
+                    f"Existing '{policy_title}' (ID: {existing_id}) lacks timestamp or metadata. Assuming update needed."
+                )
                 should_process = True
                 is_update = True
         else:
@@ -499,8 +523,12 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
                             if extraction_reasoning:
                                 logger.debug(f"Found description for '{policy_title}' via URL match: {source_url_desc}")
                     except Exception as file_err:
-                        logger.error(f"Error reading markdown for URL-based description extraction for '{policy_title}': {file_err}")
-            logger.debug(f"Description for '{policy_title}' (timestamp: {scrape_timestamp}): '{extraction_reasoning[:50] if extraction_reasoning else 'None'}...'")
+                        logger.error(
+                            f"Error reading markdown for URL-based description extraction for '{policy_title}': {file_err}"
+                        )
+            logger.debug(
+                f"Description for '{policy_title}' (timestamp: {scrape_timestamp}): '{extraction_reasoning[:50] if extraction_reasoning else 'None'}...'"
+            )
 
             # --- Call appropriate function ---
             try:
@@ -509,32 +537,39 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
                     try:
                         policy_to_update = await policy_repo.get_by_id(existing_id)
                         if policy_to_update:
-                             update_success = await update_existing_policy(
-                                 existing_policy=policy_to_update,
-                                 folder_path=folder_path,
-                                 scrape_timestamp=scrape_timestamp,
-                                 session=session,
-                                 extraction_reasoning=extraction_reasoning,
-                             )
-                             if update_success:
-                                 processed_update_count += 1
-                                 processed_titles_in_run.add(policy_title)
-                             else:
-                                 error_count += 1
-                                 # Don't add to processed_titles_in_run if update failed internally
+                            update_success = await update_existing_policy(
+                                existing_policy=policy_to_update,
+                                folder_path=folder_path,
+                                scrape_timestamp=scrape_timestamp,
+                                session=session,
+                                extraction_reasoning=extraction_reasoning,
+                            )
+                            if update_success:
+                                processed_update_count += 1
+                                processed_titles_in_run.add(policy_title)
+                            else:
+                                error_count += 1
+                                # Don't add to processed_titles_in_run if update failed internally
                         else:
                             # Should not happen if existing_policy_info was found, but handle defensively
-                            logger.error(f"Could not find policy with ID {existing_id} for update, despite initial check finding title '{policy_title}'. Skipping update.")
+                            logger.error(
+                                f"Could not find policy with ID {existing_id} for update, despite initial check finding title '{policy_title}'. Skipping update."
+                            )
                             error_count += 1
 
                     except NoResultFound:
-                         logger.error(f"Policy with ID {existing_id} (title: '{policy_title}') not found during update attempt. Skipping.")
-                         error_count += 1
+                        logger.error(
+                            f"Policy with ID {existing_id} (title: '{policy_title}') not found during update attempt. Skipping."
+                        )
+                        error_count += 1
                     except Exception as fetch_err:
-                         logger.error(f"Error fetching policy ID {existing_id} for update: {fetch_err}. Skipping update.", exc_info=True)
-                         error_count += 1
+                        logger.error(
+                            f"Error fetching policy ID {existing_id} for update: {fetch_err}. Skipping update.",
+                            exc_info=True,
+                        )
+                        error_count += 1
 
-                else: # is_create
+                else:  # is_create
                     created_policy = await create_new_policy(
                         folder_path=folder_path,
                         policy_title=policy_title,
@@ -550,15 +585,21 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
                         # Don't add to processed_titles_in_run if create failed internally
 
             except IntegrityError as ie:
-                 # Catch potential integrity errors specifically during create/update calls
-                 logger.error(f"DATABASE INTEGRITY ERROR processing '{policy_title}' from '{folder_name}': {ie}. This policy might already exist due to a race condition or inconsistent state. Skipping.", exc_info=False)
-                 error_count += 1
-                 processed_titles_in_run.add(policy_title) # Mark as handled to prevent retries
+                # Catch potential integrity errors specifically during create/update calls
+                logger.error(
+                    f"DATABASE INTEGRITY ERROR processing '{policy_title}' from '{folder_name}': {ie}. This policy might already exist due to a race condition or inconsistent state. Skipping.",
+                    exc_info=False,
+                )
+                error_count += 1
+                processed_titles_in_run.add(policy_title)  # Mark as handled to prevent retries
             except Exception as proc_err:
-                 # Catch any other unexpected errors during create/update
-                 logger.error(f"UNEXPECTED ERROR processing '{policy_title}' from '{folder_name}': {proc_err}. Skipping.", exc_info=True)
-                 error_count += 1
-                 processed_titles_in_run.add(policy_title) # Mark as handled
+                # Catch any other unexpected errors during create/update
+                logger.error(
+                    f"UNEXPECTED ERROR processing '{policy_title}' from '{folder_name}': {proc_err}. Skipping.",
+                    exc_info=True,
+                )
+                error_count += 1
+                processed_titles_in_run.add(policy_title)  # Mark as handled
 
     # --- Final Log ---
     logger.info(
@@ -595,24 +636,24 @@ async def init_db(db_url: Optional[str] = None, populate: bool = True) -> None:
         async with engine.connect() as conn:
             trigger_statements = create_search_vector_trigger()
             if trigger_statements:
-                 for statement in trigger_statements:
-                     await conn.execute(text(statement))
-                 await conn.commit()
-                 logger.info("Search vector triggers applied.")
+                for statement in trigger_statements:
+                    await conn.execute(text(statement))
+                await conn.commit()
+                logger.info("Search vector triggers applied.")
             else:
-                 logger.info("No search vector triggers defined to apply.")
+                logger.info("No search vector triggers defined to apply.")
 
         logger.info("Beginning data seeding and population phase...")
         async_session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
 
         async with async_session_factory() as session:
-            async with session.begin(): # Start a single transaction for all data operations
+            async with session.begin():  # Start a single transaction for all data operations
                 logger.info("Transaction started for data operations.")
                 await seed_users_from_json(session)
 
                 if populate:
                     logger.info("Starting policy data population from scraped_policies directory...")
-                    await populate_database_from_scraped_policies(session) # Calls the updated function
+                    await populate_database_from_scraped_policies(session)  # Calls the updated function
                 else:
                     logger.info("Skipping policy data population step as per configuration.")
 
@@ -645,11 +686,15 @@ async def drop_db(db_url: Optional[str] = None, force: bool = False) -> None:
             logger.error("Database name could not be parsed from URL for dropping.")
             return
         admin_url = f"{parsed.scheme}://{parsed.netloc}/postgres"
-        logger.warning(f"Attempting to drop database '{db_name}' at host '{parsed.hostname}'... THIS WILL DELETE ALL DATA!")
+        logger.warning(
+            f"Attempting to drop database '{db_name}' at host '{parsed.hostname}'... THIS WILL DELETE ALL DATA!"
+        )
 
         if not force:
             try:
-                confirm = input(f"Are you ABSOLUTELY SURE you want to drop database '{db_name}'? This cannot be undone. (Type 'yes' to confirm): ")
+                confirm = input(
+                    f"Are you ABSOLUTELY SURE you want to drop database '{db_name}'? This cannot be undone. (Type 'yes' to confirm): "
+                )
                 if confirm.lower() != "yes":
                     logger.info("Database drop cancelled by user.")
                     return
@@ -686,7 +731,8 @@ async def drop_db(db_url: Optional[str] = None, force: bool = False) -> None:
 # --- Main execution block remains unchanged ---
 if __name__ == "__main__":
     import argparse
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     parser = argparse.ArgumentParser(description="Initialize or drop the YDR Policy RAG database.")
     parser.add_argument(
@@ -697,29 +743,23 @@ if __name__ == "__main__":
     parser.add_argument(
         "--no-populate",
         action="store_true",
-        help="Explicitly skip the policy population step during initialization (default is to populate unless --drop is specified)."
+        help="Explicitly skip the policy population step during initialization (default is to populate unless --drop is specified).",
     )
     parser.add_argument(
-        "--drop",
-        action="store_true",
-        help="Drop the database instead of initializing (USE WITH CAUTION!)."
+        "--drop", action="store_true", help="Drop the database instead of initializing (USE WITH CAUTION!)."
     )
     parser.add_argument(
         "--db_url",
         type=str,
         default=None,
-        help="Optional database URL (e.g., 'postgresql+asyncpg://user:pass@host:port/dbname') to override the one in config."
+        help="Optional database URL (e.g., 'postgresql+asyncpg://user:pass@host:port/dbname') to override the one in config.",
     )
     parser.add_argument(
         "--force",
         action="store_true",
-        help="Force drop without confirmation prompt (only applies if --drop is specified)."
+        help="Force drop without confirmation prompt (only applies if --drop is specified).",
     )
-    parser.add_argument(
-        "-v", "--verbose",
-        action="store_true",
-        help="Enable verbose (DEBUG) logging."
-    )
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose (DEBUG) logging.")
 
     args = parser.parse_args()
 
@@ -727,15 +767,14 @@ if __name__ == "__main__":
         # Set root logger level first
         logging.getLogger().setLevel(logging.DEBUG)
         # Then set specific loggers if needed (or let them inherit)
-        logging.getLogger('ydrpolicy').setLevel(logging.DEBUG)
-        logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO) # Or DEBUG for very verbose SQL
-        logger.setLevel(logging.DEBUG) # Ensure our own logger is DEBUG
+        logging.getLogger("ydrpolicy").setLevel(logging.DEBUG)
+        logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)  # Or DEBUG for very verbose SQL
+        logger.setLevel(logging.DEBUG)  # Ensure our own logger is DEBUG
         logger.info("Verbose logging enabled.")
-
 
     should_populate = args.populate or (not args.drop and not args.no_populate)
 
-    effective_db_url = args.db_url or str(config.DATABASE.DATABASE_URL) # Define once
+    effective_db_url = args.db_url or str(config.DATABASE.DATABASE_URL)  # Define once
 
     if args.drop:
         logger.info(f"Initiating database drop procedure for URL: {effective_db_url}")
