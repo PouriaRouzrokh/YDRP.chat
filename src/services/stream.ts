@@ -123,30 +123,20 @@ export const streamService = {
         },
 
         onmessage(event) {
+          // Process each message event from the stream
           try {
-            // Parse the event data as JSON
-            const chunk = JSON.parse(event.data) as StreamChunk;
-
-            // Process different chunk types
-            onChunk(chunk);
-
-            // If this is a status chunk with "complete", close the connection
-            if (
-              chunk.type === "status" &&
-              (chunk as StatusChunk).data.status === "complete"
-            ) {
-              controller?.abort();
-              controller = null;
+            // Skip empty data events (heartbeats)
+            if (!event.data || event.data === "{") {
+              return; // Just a heartbeat, ignore
             }
-          } catch (error) {
-            console.error("Error parsing event data:", error);
-            const errorChunk: ErrorChunk = {
-              type: "error",
-              data: {
-                message: "Error processing server response",
-              },
-            };
-            onChunk(errorChunk);
+
+            // Parse the data as a StreamChunk
+            const chunk = JSON.parse(event.data) as StreamChunk;
+            onChunk(chunk);
+          } catch (e) {
+            // Failed to parse JSON
+            console.warn("Invalid SSE message format:", e);
+            console.warn("Raw message:", event.data);
           }
         },
 
@@ -185,6 +175,9 @@ export const streamService = {
           // Return undefined to not retry on error
           return undefined;
         },
+        
+        // Set a reasonable behavior for the SSE connection
+        openWhenHidden: true,
       });
     } catch (error) {
       // Handle any errors

@@ -175,6 +175,12 @@ function ChatPageContent() {
   // Handle streaming chunks with useCallback
   const handleStreamChunk = useCallback(
     (chunk: StreamChunk) => {
+      // Skip processing for empty or malformed chunks
+      if (!chunk || !chunk.type) {
+        console.warn("Received empty or invalid chunk", chunk);
+        return;
+      }
+
       if (chunk.type === "chat_info") {
         const infoChunk = chunk as ChatInfoChunk;
         // Update active session ID ONLY if it was previously null (i.e., for a new chat)
@@ -195,6 +201,7 @@ function ChatPageContent() {
             createdAt: new Date(),
             lastMessageTime: new Date(),
             messageCount: 1, // Initial user message counts as 1
+            isArchived: false,
           };
           setChatSessions((prev) => [newSession, ...prev]);
         }
@@ -227,10 +234,19 @@ function ChatPageContent() {
             ];
           }
         });
+      } else if (chunk.type === "tool_call") {
+        // Show a tool call indicator - set to typing to indicate processing
+        setIsTyping(true);
+        console.log("Tool being called:", chunk);
+      } else if (chunk.type === "tool_output") {
+        // Tool output received - keep typing indicator until text starts flowing
+        console.log("Tool output received:", chunk);
+        // Keep typing indicator on to show activity until text_delta arrives
+        setIsTyping(true);
       } else if (chunk.type === "status") {
         const statusChunk = chunk as StatusChunk;
         if (statusChunk.data.status === "complete") {
-          // No need to finalize message separately, it's already in the messages array.
+          // Reset typing state
           setIsTyping(false);
           // Reset the new chat flag once a response is complete
           setIsNewChat(false);
@@ -249,13 +265,15 @@ function ChatPageContent() {
               )
             );
           }
+        } else if (statusChunk.data.status === "error") {
+          // Make sure typing indicator is turned off on error status
+          setIsTyping(false);
         }
       } else if (chunk.type === "error") {
         const errorChunk = chunk as ErrorChunk;
         toast.error(errorChunk.data.message);
         setIsTyping(false);
       }
-      // Handle other chunk types if needed (tool_call, tool_output)
     },
     [activeSessionId, router]
   );
