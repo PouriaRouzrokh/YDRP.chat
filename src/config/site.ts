@@ -19,6 +19,9 @@ export const siteConfig = {
     // When enabled, login will be bypassed entirely
     adminMode: process.env.NEXT_PUBLIC_ADMIN_MODE === "true",
     defaultTheme: "light",
+    // Delay in milliseconds before showing "Looking up policies" text
+    // Can be set with NEXT_PUBLIC_TYPING_INDICATOR_DELAY_MS env var
+    typingIndicatorDelayMs: parseInt(process.env.NEXT_PUBLIC_TYPING_INDICATOR_DELAY_MS || "3000", 10),
   },
 
   // Navigation links

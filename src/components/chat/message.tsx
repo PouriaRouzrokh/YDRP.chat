@@ -12,6 +12,8 @@ import { fadeInUp } from "@/lib/animation-variants";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
+import { useState, useEffect } from "react";
+import { siteConfig } from "@/config/site";
 
 export interface PolicyReference {
   id: string;
@@ -80,11 +82,11 @@ export function ChatMessage({ message }: MessageProps) {
               isUser
                 ? "bg-green-100 dark:bg-emerald-700 text-gray-800 dark:text-gray-50 border-green-200 dark:border-emerald-600"
                 : "bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700",
-              "w-full shadow-sm overflow-hidden break-words"
+              "w-full shadow-sm overflow-hidden break-words py-2"
             )}
           >
-            <CardContent className="py-2 px-2 sm:px-3 flex items-center overflow-hidden">
-              <div className="prose-sm sm:prose dark:prose-invert break-words w-full overflow-hidden">
+            <CardContent className="px-2 sm:px-3 py-0 flex items-center overflow-hidden">
+              <div className="prose-sm sm:prose dark:prose-invert break-words w-full overflow-hidden my-2">
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm, remarkBreaks]}
                   components={{
@@ -172,6 +174,36 @@ export function PolicyReference({ reference }: { reference: PolicyReference }) {
 }
 
 export function TypingIndicator() {
+  const [showText, setShowText] = useState(false);
+  const delayMs = siteConfig.settings.typingIndicatorDelayMs;
+  const [dotCount, setDotCount] = useState(1);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowText(true);
+    }, delayMs);
+
+    return () => clearTimeout(timer);
+  }, [delayMs]);
+
+  // Sequential dots animation
+  useEffect(() => {
+    const dotInterval = setInterval(() => {
+      setDotCount(prev => prev < 3 ? prev + 1 : 1);
+    }, 500); // Change dots every 500ms
+
+    return () => clearInterval(dotInterval);
+  }, []);
+
+  // Helper function to render the dots with fixed width
+  const renderDots = () => {
+    let dots = '';
+    for (let i = 0; i < 3; i++) {
+      dots += i < dotCount ? '.' : '\u00A0'; // Use non-breaking space for empty positions
+    }
+    return dots;
+  };
+
   return (
     <motion.div
       variants={fadeInUp}
@@ -192,17 +224,17 @@ export function TypingIndicator() {
           transition={{ duration: 0.2 }}
           className="w-full"
         >
-          <Card className="bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 w-[120px] shadow-sm">
-            <CardContent className="p-3 flex gap-2 items-center">
-              <div className="animate-bounce h-2 w-2 bg-muted-foreground rounded-full" />
-              <div
-                className="animate-bounce h-2 w-2 bg-muted-foreground rounded-full"
-                style={{ animationDelay: "0.2s" }}
-              />
-              <div
-                className="animate-bounce h-2 w-2 bg-muted-foreground rounded-full"
-                style={{ animationDelay: "0.4s" }}
-              />
+          <Card className={`bg-gray-100 dark:bg-gray-800 border-gray-200 dark:border-gray-700 ${showText ? "w-auto" : "w-[120px]"} shadow-sm py-0`}>
+            <CardContent className="px-3 py-1 flex items-center">
+              {showText ? (
+                <div className="text-sm sm:text-base text-muted-foreground whitespace-nowrap my-2">
+                  Looking up policies (please wait{renderDots()})
+                </div>
+              ) : (
+                <div className="text-sm sm:text-base text-muted-foreground my-2">
+                  {renderDots()}
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>
