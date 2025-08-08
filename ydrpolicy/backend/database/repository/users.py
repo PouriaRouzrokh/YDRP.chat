@@ -1,7 +1,7 @@
 from typing import List, Optional
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ydrpolicy.backend.database.models import User
@@ -38,7 +38,7 @@ class UserRepository(BaseRepository[User]):
         Returns:
             User if found, None otherwise
         """
-        stmt = select(User).where(User.email == email)
+        stmt = select(User).where(func.lower(User.email) == email.lower())
         result = await self.session.execute(stmt)
         return result.scalars().first()
 

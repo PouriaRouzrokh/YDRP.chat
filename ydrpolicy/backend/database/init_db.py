@@ -165,7 +165,10 @@ async def seed_users_from_json(session: AsyncSession):
         if not isinstance(user_info, dict):
             logger.warning(f"Skipping invalid user entry (not a dict): {user_info}")
             continue
+        # Normalize emails to lowercase to make lookups case-insensitive and ensure uniqueness
         email = user_info.get("email")
+        if isinstance(email, str):
+            email = email.strip().lower()
         full_name = user_info.get("full_name")
         plain_password = user_info.get("password")
         is_admin = user_info.get("is_admin", False)
