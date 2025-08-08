@@ -35,7 +35,9 @@ mcp = FastMCP("ydrpolicy_mcp")
 # --- Tool Definitions ---
 # (Keep your existing tool definitions @mcp.tool() here - unchanged)
 @mcp.tool()
-async def find_similar_chunks(query: str, k: int, threshold: Optional[float] = None) -> str:
+async def find_similar_chunks(
+    query: str, k: int, threshold: Optional[float] = None
+) -> str:
     """
     Finds policy chunks semantically similar to the query using vector embeddings.
 
@@ -47,8 +49,12 @@ async def find_similar_chunks(query: str, k: int, threshold: Optional[float] = N
     Returns:
         Formatted string of similar chunks or error message.
     """
-    logger.info(f"Received find_similar_chunks request: query='{query[:50]}...', k={k}, threshold={threshold}")
-    sim_threshold = threshold if threshold is not None else config.RAG.SIMILARITY_THRESHOLD
+    logger.info(
+        f"Received find_similar_chunks request: query='{query[:50]}...', k={k}, threshold={threshold}"
+    )
+    sim_threshold = (
+        threshold if threshold is not None else config.RAG.SIMILARITY_THRESHOLD
+    )
 
     try:
         logger.debug("Generating embedding for the query...")
@@ -57,7 +63,9 @@ async def find_similar_chunks(query: str, k: int, threshold: Optional[float] = N
 
         async with get_async_session() as session:
             policy_repo = PolicyRepository(session)
-            logger.debug(f"Searching for chunks with k={k}, threshold={sim_threshold}...")
+            logger.debug(
+                f"Searching for chunks with k={k}, threshold={sim_threshold}..."
+            )
             similar_chunks = await policy_repo.search_chunks_by_embedding(
                 embedding=query_embedding, limit=k, similarity_threshold=sim_threshold
             )
@@ -66,7 +74,9 @@ async def find_similar_chunks(query: str, k: int, threshold: Optional[float] = N
         if not similar_chunks:
             return f"No policy chunks found matching the query with similarity threshold {sim_threshold}."
 
-        output_lines = [f"Found {len(similar_chunks)} similar policy chunks (Top {k} requested):"]
+        output_lines = [
+            f"Found {len(similar_chunks)} similar policy chunks (Top {k} requested):"
+        ]
         for i, chunk_info in enumerate(similar_chunks):
             chunk_id = chunk_info.get("id", "N/A")
             similarity_score = chunk_info.get("similarity", 0.0)
@@ -121,7 +131,9 @@ async def get_policy_from_ID(policy_id: int) -> str:
         )
         return output
     except Exception as e:
-        logger.error(f"Error in get_policy_from_ID for policy_id {policy_id}: {e}", exc_info=True)
+        logger.error(
+            f"Error in get_policy_from_ID for policy_id {policy_id}: {e}", exc_info=True
+        )
         return f"An error occurred while retrieving policy details for Policy ID {policy_id}: {str(e)}"
 
 
@@ -165,7 +177,9 @@ def start_mcp_server(host: str, port: int, transport: str):
             logger.info("Running MCP server with stdio transport.")
             mcp.run(transport=transport)  # Stdio is handled by FastMCP directly
         elif transport == "http":
-            logger.info(f"Running MCP server with http/sse transport via uvicorn on {host}:{port}.")
+            logger.info(
+                f"Running MCP server with http/sse transport via uvicorn on {host}:{port}."
+            )
             # ******************** CHANGE IS HERE ********************
             # Get the ASGI app specifically designed for SSE from FastMCP
             sse_asgi_app = mcp.sse_app()
@@ -178,7 +192,9 @@ def start_mcp_server(host: str, port: int, transport: str):
             # ******************************************************
         else:
             logger.error(f"Unsupported transport type: {transport}")
-            raise ValueError(f"Unsupported transport type: {transport}. Choose 'http' or 'stdio'.")
+            raise ValueError(
+                f"Unsupported transport type: {transport}. Choose 'http' or 'stdio'."
+            )
 
         logger.info("MCP server process finished.")
     except Exception as e:

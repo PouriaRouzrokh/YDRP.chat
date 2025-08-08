@@ -82,7 +82,12 @@ class BaseRepository(Generic[ModelType]):
         Returns:
             The updated model instance if found, None otherwise
         """
-        stmt = update(self.model_class).where(self.model_class.id == id).values(**obj_in).returning(self.model_class)
+        stmt = (
+            update(self.model_class)
+            .where(self.model_class.id == id)
+            .values(**obj_in)
+            .returning(self.model_class)
+        )
         result = await self.session.execute(stmt)
         await self.session.flush()
         return result.scalars().first()

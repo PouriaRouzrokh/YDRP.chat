@@ -61,7 +61,9 @@ def main(config: SimpleNamespace = None):
     logger.info(f"  - Resume: {config.CRAWLER.RESUME_CRAWL}")
     logger.info(f"  - Reset: {config.CRAWLER.RESET_CRAWL}")
     logger.info(f"  - Raw Output Dir: {config.PATHS.MARKDOWN_DIR}")
-    logger.info(f"  - CSV Log: {os.path.join(config.PATHS.RAW_DATA_DIR, 'crawled_policies_data.csv')}")
+    logger.info(
+        f"  - CSV Log: {os.path.join(config.PATHS.RAW_DATA_DIR, 'crawled_policies_data.csv')}"
+    )
 
     # Initialize and start the crawler using the updated YaleCrawler class
     try:
@@ -69,22 +71,32 @@ def main(config: SimpleNamespace = None):
         os.makedirs(config.PATHS.RAW_DATA_DIR, exist_ok=True)
         os.makedirs(config.PATHS.MARKDOWN_DIR, exist_ok=True)
         os.makedirs(config.PATHS.DOCUMENT_DIR, exist_ok=True)
-        os.makedirs(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), exist_ok=True)  # State dir
+        os.makedirs(
+            os.path.join(config.PATHS.RAW_DATA_DIR, "state"), exist_ok=True
+        )  # State dir
 
         crawler = YaleCrawler(
             config=config,
         )
         crawler.start()  # This now includes the login pause and crawl loop
 
-        logger.info(f"Crawling finished. Raw data saved in {config.PATHS.MARKDOWN_DIR}. See CSV log.")
+        logger.info(
+            f"Crawling finished. Raw data saved in {config.PATHS.MARKDOWN_DIR}. See CSV log."
+        )
 
     except KeyboardInterrupt:
         # Signal handler in YaleCrawler should manage shutdown
-        logger.info("KeyboardInterrupt received in main. Crawler shutdown handled internally.")
+        logger.info(
+            "KeyboardInterrupt received in main. Crawler shutdown handled internally."
+        )
     except Exception as e:
         logger.error(f"Critical error during crawling: {str(e)}", exc_info=True)
         # Attempt to save state if crawler didn't handle it
-        if "crawler" in locals() and hasattr(crawler, "save_state") and not crawler.stopping:
+        if (
+            "crawler" in locals()
+            and hasattr(crawler, "save_state")
+            and not crawler.stopping
+        ):
             logger.warning("Attempting emergency state save...")
             crawler.save_state()
 
@@ -94,7 +106,9 @@ if __name__ == "__main__":
     print("Yale Medicine Policy Crawler")
     print("============================")
     print("This script crawls Yale Medicine pages, saving raw content.")
-    print(f"Raw markdown/images will be saved in '{default_config.PATHS.MARKDOWN_DIR}' using timestamp names.")
+    print(
+        f"Raw markdown/images will be saved in '{default_config.PATHS.MARKDOWN_DIR}' using timestamp names."
+    )
     print(
         f"A CSV log will be created at: '{os.path.join(default_config.PATHS.RAW_DATA_DIR, 'crawled_policies_data.csv')}'"
     )
@@ -103,12 +117,16 @@ if __name__ == "__main__":
 
     # Create default logger for direct execution
     log_file_path = getattr(
-        default_config.LOGGING, "CRAWLER_LOG_FILE", os.path.join(default_config.PATHS.DATA_DIR, "logs", "crawler.log")
+        default_config.LOGGING,
+        "CRAWLER_LOG_FILE",
+        os.path.join(default_config.PATHS.DATA_DIR, "logs", "crawler.log"),
     )
     try:
         os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
     except OSError as e:
-        print(f"Warning: Could not create log directory {os.path.dirname(log_file_path)}: {e}")
+        print(
+            f"Warning: Could not create log directory {os.path.dirname(log_file_path)}: {e}"
+        )
         log_file_path = None  # Disable file logging if dir creation fails
 
     main_logger = logging.getLogger(__name__)

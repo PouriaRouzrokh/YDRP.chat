@@ -45,7 +45,11 @@ logger = logging.getLogger(__name__)
 
 
 # --- Core Removal Logic ---
-async def run_remove(identifier: Union[int, str], db_url: Optional[str] = None, admin_id: Optional[int] = None) -> bool:
+async def run_remove(
+    identifier: Union[int, str],
+    db_url: Optional[str] = None,
+    admin_id: Optional[int] = None,
+) -> bool:
     """
     Removes a policy and its associated data by ID or title.
 
@@ -78,7 +82,9 @@ async def run_remove(identifier: Union[int, str], db_url: Optional[str] = None, 
 
             engine = get_async_engine()  # Use default engine
 
-        session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+        session_factory = async_sessionmaker(
+            engine, expire_on_commit=False, class_=AsyncSession
+        )
 
         async with session_factory() as session:
             policy_repo = PolicyRepository(session)
@@ -92,11 +98,16 @@ async def run_remove(identifier: Union[int, str], db_url: Optional[str] = None, 
                     if policy:
                         policy_title_for_log = policy.title
                         details["title"] = policy_title_for_log  # Add to log details
-                        logger.info(f"Attempting to delete policy ID {identifier} ('{policy_title_for_log}')...")
+                        logger.info(
+                            f"Attempting to delete policy ID {identifier} ('{policy_title_for_log}')..."
+                        )
 
                         # Log the deletion BEFORE actually deleting the policy
                         await policy_repo.log_policy_update(
-                            policy_id=policy_id_for_log, admin_id=admin_id, action="delete", details=details
+                            policy_id=policy_id_for_log,
+                            admin_id=admin_id,
+                            action="delete",
+                            details=details,
                         )
 
                         # Now perform the actual deletion
@@ -112,15 +123,22 @@ async def run_remove(identifier: Union[int, str], db_url: Optional[str] = None, 
                     policy = await policy_repo.get_by_title(identifier)
                     if policy:
                         policy_id_for_log = policy.id
-                        logger.info(f"Attempting to delete policy titled '{identifier}' (ID: {policy_id_for_log})...")
+                        logger.info(
+                            f"Attempting to delete policy titled '{identifier}' (ID: {policy_id_for_log})..."
+                        )
 
                         # Log the deletion BEFORE actually deleting the policy
                         await policy_repo.log_policy_update(
-                            policy_id=policy_id_for_log, admin_id=admin_id, action="delete", details=details
+                            policy_id=policy_id_for_log,
+                            admin_id=admin_id,
+                            action="delete",
+                            details=details,
                         )
 
                         # Now perform the actual deletion
-                        removed = await policy_repo.delete_by_title(identifier)  # Calls delete_by_id internally
+                        removed = await policy_repo.delete_by_title(
+                            identifier
+                        )  # Calls delete_by_id internally
                     else:
                         logger.error(f"Policy with title '{identifier}' not found.")
                         removed = False  # Ensure removed is False
@@ -138,14 +156,19 @@ async def run_remove(identifier: Union[int, str], db_url: Optional[str] = None, 
                 await session.commit()
 
             except Exception as e:
-                logger.error(f"An error occurred during database operation: {e}", exc_info=True)
+                logger.error(
+                    f"An error occurred during database operation: {e}", exc_info=True
+                )
                 await session.rollback()  # Rollback any partial changes
                 removed = False
                 # We won't try to log to policy_updates after a rollback as it might fail due to FK constraints
                 logger.warning(f"Policy removal failed: {e}")
 
     except Exception as outer_err:
-        logger.error(f"An error occurred setting up database connection or session: {outer_err}", exc_info=True)
+        logger.error(
+            f"An error occurred setting up database connection or session: {outer_err}",
+            exc_info=True,
+        )
         removed = False
     finally:
         # Dispose the engine only if we created it specifically for a custom db_url
@@ -172,7 +195,11 @@ async def main_cli():
     group.add_argument("--id", type=int, help="ID of the policy to remove.")
     group.add_argument("--title", type=str, help="Exact title of the policy to remove.")
     parser.add_argument("--db_url", help="Optional database URL to override config.")
-    parser.add_argument("--force", action="store_true", help="Force removal without confirmation (DANGEROUS).")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Force removal without confirmation (DANGEROUS).",
+    )
 
     args = parser.parse_args()
 
@@ -200,9 +227,13 @@ async def main_cli():
 
     # Report final status
     if success:
-        logger.info(f"SUCCESS: Successfully removed policy identified by {id_type}: '{identifier}'.")
+        logger.info(
+            f"SUCCESS: Successfully removed policy identified by {id_type}: '{identifier}'."
+        )
     else:
-        logger.error(f"Failed to remove policy identified by {id_type}: '{identifier}'. Check logs for details.")
+        logger.error(
+            f"Failed to remove policy identified by {id_type}: '{identifier}'. Check logs for details."
+        )
         sys.exit(1)  # Exit with error code
 
 

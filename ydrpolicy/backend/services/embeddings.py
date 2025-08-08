@@ -51,14 +51,18 @@ async def embed_text(text: str, model: Optional[str] = None) -> List[float]:
     try:
         logger.debug(f"Generating embedding for text: {text[:50]}...")
         response = await client.embeddings.create(model=model, input=text)
-        logger.debug(f"Successfully generated embedding with dimensions: {len(response.data[0].embedding)}")
+        logger.debug(
+            f"Successfully generated embedding with dimensions: {len(response.data[0].embedding)}"
+        )
         return response.data[0].embedding
     except Exception as e:
         logger.error(f"Error generating embedding: {str(e)}")
         raise
 
 
-async def embed_texts(texts: List[str], model: Optional[str] = None) -> List[List[float]]:
+async def embed_texts(
+    texts: List[str], model: Optional[str] = None
+) -> List[List[float]]:
     """
     Generate embeddings for multiple texts using OpenAI's API.
 

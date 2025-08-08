@@ -14,11 +14,11 @@ import markdownify
 import requests
 from docx import Document
 
-# Local imports
-from ydrpolicy.data_collection.crawl.processors.llm_processor import (
+# Local imports (updated path)
+from ydrpolicy.data_collection.processors.llm_processor import (
     process_document_with_ocr,
 )
-from ydrpolicy.data_collection.crawl.processors.pdf_processor import pdf_to_markdown
+from ydrpolicy.data_collection.processors.pdf_processor import pdf_url_to_markdown
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -76,7 +76,9 @@ def download_document(url: str, output_dir: str, config: SimpleNamespace) -> str
             "Cache-Control": "max-age=0",
         }
 
-        response = requests.get(url, stream=True, timeout=config.CRAWLER.REQUEST_TIMEOUT, headers=headers)
+        response = requests.get(
+            url, stream=True, timeout=config.CRAWLER.REQUEST_TIMEOUT, headers=headers
+        )
         response.raise_for_status()
 
         # Check content type to confirm it's a document
@@ -90,7 +92,9 @@ def download_document(url: str, output_dir: str, config: SimpleNamespace) -> str
         )
 
         if not is_document:
-            logger.warning(f"Content type '{content_type}' may not be a document for {url}")
+            logger.warning(
+                f"Content type '{content_type}' may not be a document for {url}"
+            )
             # Continue anyway - some servers don't set correct content types
 
         with open(file_path, "wb") as f:
@@ -149,19 +153,23 @@ def convert_pdf_to_markdown(file_path: str, url: str, config: SimpleNamespace) -
         logger.info(f"Processing PDF with Mistral OCR: {url}")
 
         # Create a specific output directory for this document
-        doc_output_dir = os.path.join(config.PATHS.DOCUMENT_DIR, f"doc_{hash(url) % 10000}")
+        doc_output_dir = os.path.join(
+            config.PATHS.DOCUMENT_DIR, f"doc_{hash(url) % 10000}"
+        )
         os.makedirs(doc_output_dir, exist_ok=True)
 
-        # Use the pdf_to_markdown function from pdf_processor
-        markdown_path = pdf_to_markdown(url, doc_output_dir)
+        # Use the pdf_url_to_markdown function from pdf_processor
+        markdown_path = pdf_url_to_markdown(url, doc_output_dir, config)
 
         if markdown_path and os.path.exists(markdown_path):
             with open(markdown_path, "r", encoding="utf-8") as f:
                 return f.read()
         else:
             # If OCR processing fails, fall back to direct document processing
-            logger.warning(f"Mistral OCR processing failed for {url}, trying direct API call")
-            markdown_text = process_document_with_ocr(url)
+            logger.warning(
+                f"Mistral OCR processing failed for {url}, trying direct API call"
+            )
+            markdown_text = process_document_with_ocr(url, config)
 
             if markdown_text:
                 return f"# {os.path.basename(file_path)}\n\nSource: {url}\n\n{markdown_text}"

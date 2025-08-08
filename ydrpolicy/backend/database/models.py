@@ -21,7 +21,13 @@ from sqlalchemy.dialects.postgresql import TSVECTOR
 from sqlalchemy.ext.asyncio import AsyncAttrs
 
 # Use declarative_base from sqlalchemy.orm
-from sqlalchemy.orm import declarative_base, relationship, mapped_column, Mapped, selectinload
+from sqlalchemy.orm import (
+    declarative_base,
+    relationship,
+    mapped_column,
+    Mapped,
+    selectinload,
+)
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -61,13 +67,18 @@ class User(Base):
     full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now()  # Use func.now() for database default
+        DateTime(timezone=True),
+        default=func.now(),  # Use func.now() for database default
     )
-    last_login: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    last_login: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
 
     # Relationships
     chats: Mapped[List["Chat"]] = relationship("Chat", back_populates="user")
-    policy_updates: Mapped[List["PolicyUpdate"]] = relationship("PolicyUpdate", back_populates="admin")
+    policy_updates: Mapped[List["PolicyUpdate"]] = relationship(
+        "PolicyUpdate", back_populates="admin"
+    )
 
     def __repr__(self):
         return f"<User {self.email}>"
@@ -95,7 +106,8 @@ class Policy(Base):
     # Metadata, e.g., scrape timestamp, source folder name
     policy_metadata: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now()  # Use func.now() for database default
+        DateTime(timezone=True),
+        default=func.now(),  # Use func.now() for database default
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -107,14 +119,20 @@ class Policy(Base):
     # Relationships
     # Chunks derived from this policy's text_content
     chunks: Mapped[List["PolicyChunk"]] = relationship(
-        "PolicyChunk", back_populates="policy", cascade="all, delete-orphan"  # Delete chunks when policy is deleted
+        "PolicyChunk",
+        back_populates="policy",
+        cascade="all, delete-orphan",  # Delete chunks when policy is deleted
     )
     # Images associated with this policy
     images: Mapped[List["Image"]] = relationship(
-        "Image", back_populates="policy", cascade="all, delete-orphan"  # Delete images when policy is deleted
+        "Image",
+        back_populates="policy",
+        cascade="all, delete-orphan",  # Delete images when policy is deleted
     )
     # History of updates to this policy
-    updates: Mapped[List["PolicyUpdate"]] = relationship("PolicyUpdate", back_populates="policy")
+    updates: Mapped[List["PolicyUpdate"]] = relationship(
+        "PolicyUpdate", back_populates="policy"
+    )
 
     # Indexes
     __table_args__ = (
@@ -152,7 +170,8 @@ class PolicyChunk(Base):
     embedding = mapped_column(Vector(config.RAG.EMBEDDING_DIMENSIONS), nullable=True)
     search_vector: Mapped[Optional[str]] = mapped_column(TSVECTOR, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now()  # Use func.now() for database default
+        DateTime(timezone=True),
+        default=func.now(),  # Use func.now() for database default
     )
 
     # Relationships
@@ -173,7 +192,11 @@ class PolicyChunk(Base):
     )
 
     def __repr__(self):
-        policy_repr = f"policy_id={self.policy_id}" if not self.policy else f"policy='{self.policy.title}'"
+        policy_repr = (
+            f"policy_id={self.policy_id}"
+            if not self.policy
+            else f"policy='{self.policy.title}'"
+        )
         return f"<PolicyChunk id={self.id} {policy_repr} index={self.chunk_index}>"
 
 
@@ -200,17 +223,24 @@ class Image(Base):
     # Optional metadata like dimensions, alt text if extracted
     image_metadata: Mapped[dict] = mapped_column(JSON, default=dict)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now()  # Use func.now() for database default
+        DateTime(timezone=True),
+        default=func.now(),  # Use func.now() for database default
     )
 
     # Relationships
     policy: Mapped["Policy"] = relationship("Policy", back_populates="images")
 
     # Constraints
-    __table_args__ = (UniqueConstraint("policy_id", "filename", name="uix_policy_image_filename"),)
+    __table_args__ = (
+        UniqueConstraint("policy_id", "filename", name="uix_policy_image_filename"),
+    )
 
     def __repr__(self):
-        policy_repr = f"policy_id={self.policy_id}" if not self.policy else f"policy='{self.policy.title}'"
+        policy_repr = (
+            f"policy_id={self.policy_id}"
+            if not self.policy
+            else f"policy='{self.policy.title}'"
+        )
         return f"<Image id={self.id} {policy_repr} filename='{self.filename}'>"
 
 
@@ -221,11 +251,15 @@ class Chat(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     user_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("users.id"), index=True, nullable=False  # Assuming ON DELETE RESTRICT/NO ACTION by default
+        Integer,
+        ForeignKey("users.id"),
+        index=True,
+        nullable=False,  # Assuming ON DELETE RESTRICT/NO ACTION by default
     )
     title: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now()  # Use func.now() for database default
+        DateTime(timezone=True),
+        default=func.now(),  # Use func.now() for database default
     )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
@@ -238,7 +272,9 @@ class Chat(Base):
     # Relationships
     user: Mapped["User"] = relationship("User", back_populates="chats")
     messages: Mapped[List["Message"]] = relationship(
-        "Message", back_populates="chat", cascade="all, delete-orphan"  # Delete messages when chat is deleted
+        "Message",
+        back_populates="chat",
+        cascade="all, delete-orphan",  # Delete messages when chat is deleted
     )
 
     # --- ADDED ---
@@ -268,17 +304,22 @@ class Message(Base):
     role: Mapped[str] = mapped_column(String(50), nullable=False)
     content: Mapped[str] = mapped_column(Text, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now()  # Use func.now() for database default
+        DateTime(timezone=True),
+        default=func.now(),  # Use func.now() for database default
     )
 
     # Relationships
     chat: Mapped["Chat"] = relationship("Chat", back_populates="messages")
     tool_usages: Mapped[List["ToolUsage"]] = relationship(
-        "ToolUsage", back_populates="message", cascade="all, delete-orphan"  # Delete tool usage when message is deleted
+        "ToolUsage",
+        back_populates="message",
+        cascade="all, delete-orphan",  # Delete tool usage when message is deleted
     )
 
     def __repr__(self):
-        chat_repr = f"chat_id={self.chat_id}" if not self.chat else f"chat_id={self.chat.id}"
+        chat_repr = (
+            f"chat_id={self.chat_id}" if not self.chat else f"chat_id={self.chat.id}"
+        )
         return f"<Message id={self.id} {chat_repr} role='{self.role}'>"
 
 
@@ -302,7 +343,8 @@ class ToolUsage(Base):
     # Tool output
     output: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now()  # Use func.now() for database default
+        DateTime(timezone=True),
+        default=func.now(),  # Use func.now() for database default
     )
     # Time taken in seconds
     execution_time: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
@@ -311,7 +353,11 @@ class ToolUsage(Base):
     message: Mapped["Message"] = relationship("Message", back_populates="tool_usages")
 
     def __repr__(self):
-        message_repr = f"message_id={self.message_id}" if not self.message else f"message_id={self.message.id}"
+        message_repr = (
+            f"message_id={self.message_id}"
+            if not self.message
+            else f"message_id={self.message.id}"
+        )
         return f"<ToolUsage id={self.id} {message_repr} tool='{self.tool_name}'>"
 
 
@@ -323,12 +369,17 @@ class PolicyUpdate(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     # Admin who performed the action (nullable if done by system/script)
     admin_id: Mapped[Optional[int]] = mapped_column(
-        Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True  # Keep log even if user deleted
+        Integer,
+        ForeignKey("users.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,  # Keep log even if user deleted
     )
     # Policy affected (nullable if policy is deleted later)
     policy_id: Mapped[Optional[int]] = mapped_column(
         Integer,
-        ForeignKey("policies.id", ondelete="SET NULL"),  # Keep log even if policy deleted
+        ForeignKey(
+            "policies.id", ondelete="SET NULL"
+        ),  # Keep log even if policy deleted
         nullable=True,
         index=True,
     )
@@ -337,15 +388,22 @@ class PolicyUpdate(Base):
     # Details of what was changed
     details: Mapped[dict] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), default=func.now()  # Use func.now() for database default
+        DateTime(timezone=True),
+        default=func.now(),  # Use func.now() for database default
     )
 
     # Relationships
-    admin: Mapped[Optional["User"]] = relationship("User", back_populates="policy_updates")
-    policy: Mapped[Optional["Policy"]] = relationship("Policy", back_populates="updates")
+    admin: Mapped[Optional["User"]] = relationship(
+        "User", back_populates="policy_updates"
+    )
+    policy: Mapped[Optional["Policy"]] = relationship(
+        "Policy", back_populates="updates"
+    )
 
     def __repr__(self):
-        policy_repr = f"policy_id={self.policy_id}" if self.policy_id else "policy_id=None"
+        policy_repr = (
+            f"policy_id={self.policy_id}" if self.policy_id else "policy_id=None"
+        )
         admin_repr = f"admin_id={self.admin_id}" if self.admin_id else "admin_id=None"
         return f"<PolicyUpdate id={self.id} {policy_repr} {admin_repr} action='{self.action}'>"
 

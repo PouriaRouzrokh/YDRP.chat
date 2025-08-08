@@ -23,7 +23,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
 async def get_current_user(
-    token: Annotated[str, Depends(oauth2_scheme)], session: AsyncSession = Depends(get_session)
+    token: Annotated[str, Depends(oauth2_scheme)],
+    session: AsyncSession = Depends(get_session),
 ) -> User:
     """
     Dependency to get the current user from the JWT token.
@@ -66,7 +67,9 @@ async def get_current_user(
     return user
 
 
-async def get_current_active_user(current_user: Annotated[User, Depends(get_current_user)]) -> User:
+async def get_current_active_user(
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> User:
     """
     Dependency that builds on get_current_user to ensure the user is active.
     (Currently, your User model doesn't have `is_active`, so this is placeholder).

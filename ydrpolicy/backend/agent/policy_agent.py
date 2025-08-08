@@ -38,12 +38,15 @@ async def create_policy_agent(use_mcp: bool = True) -> Agent:
             mcp_servers.append(mcp_server_instance)
             logger.info("MCP server configured for the agent.")
         except ConnectionError as e:
-            logger.error(f"Failed to get MCP server instance: {e}. Agent will run without MCP tools.")
+            logger.error(
+                f"Failed to get MCP server instance: {e}. Agent will run without MCP tools."
+            )
             # Optionally raise the error if MCP is critical
             # raise e
         except Exception as e:
             logger.error(
-                f"Unexpected error configuring MCP server: {e}. Agent will run without MCP tools.", exc_info=True
+                f"Unexpected error configuring MCP server: {e}. Agent will run without MCP tools.",
+                exc_info=True,
             )
 
     # Define agent settings
@@ -67,7 +70,8 @@ async def create_policy_agent(use_mcp: bool = True) -> Agent:
     if not use_mcp:
         del agent_settings["mcp_servers"]
         agent_settings["instructions"] = (
-            agent_settings["instructions"].split("Available Tools:")[0] + "\nNote: Tools are currently disabled."
+            agent_settings["instructions"].split("Available Tools:")[0]
+            + "\nNote: Tools are currently disabled."
         )
 
     try:

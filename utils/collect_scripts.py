@@ -5,7 +5,10 @@ from typing import List, Tuple, Set
 
 
 def gather_code_files(
-    root_dir: Path, extensions: Set[str], exclude_files: Set[str], exclude_folders: Set[str]
+    root_dir: Path,
+    extensions: Set[str],
+    exclude_files: Set[str],
+    exclude_folders: Set[str],
 ) -> Tuple[List[Path], List[Path]]:
     """Gather code files while respecting exclusion rules."""
     try:
@@ -29,7 +32,9 @@ def gather_code_files(
         raise RuntimeError(f"Error gathering code files: {str(e)}")
 
 
-def write_to_markdown(code_files: List[Path], excluded_files: List[Path], output_file: Path) -> None:
+def write_to_markdown(
+    code_files: List[Path], excluded_files: List[Path], output_file: Path
+) -> None:
     """Write collected files to a markdown document."""
     try:
         with output_file.open("w", encoding="utf-8") as md_file:
@@ -53,7 +58,9 @@ def create_markdown(
 ) -> None:
     """Create a markdown file containing all code files."""
     try:
-        code_files, excluded_files = gather_code_files(root_dir, extensions, exclude_files, exclude_folders)
+        code_files, excluded_files = gather_code_files(
+            root_dir, extensions, exclude_files, exclude_folders
+        )
         write_to_markdown(code_files, excluded_files, output_file)
         print(
             f"Markdown file '{output_file}' created with {len(code_files)} code files \
@@ -67,7 +74,15 @@ if __name__ == "__main__":
     root_directory = Path("/home1/pr555/Projects/YDRP-RAG/ydrp_engine")
     # extensions_to_look_for = {".md"}
     extensions_to_look_for = {".py"}
-    exclude_files_list = {".env", "__init__.py", "init.py", "CHANGELOG.md", "code_base.md"}
+    exclude_files_list = {
+        ".env",
+        "__init__.py",
+        "init.py",
+        "CHANGELOG.md",
+        "code_base.md",
+    }
     exclude_folders_list = {".venv", "venv", "archived"}
 
-    create_markdown(root_directory, extensions_to_look_for, exclude_files_list, exclude_folders_list)
+    create_markdown(
+        root_directory, extensions_to_look_for, exclude_files_list, exclude_folders_list
+    )

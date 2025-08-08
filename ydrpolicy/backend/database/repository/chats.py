@@ -48,7 +48,9 @@ class ChatRepository(BaseRepository[Chat]):
         if chat:
             logger.debug(f"Found chat ID {chat_id} belonging to user ID {user_id}.")
         else:
-            logger.warning(f"Chat ID {chat_id} not found or does not belong to user ID {user_id}.")
+            logger.warning(
+                f"Chat ID {chat_id} not found or does not belong to user ID {user_id}."
+            )
         return chat
 
     async def get_chats_by_user(
@@ -68,10 +70,14 @@ class ChatRepository(BaseRepository[Chat]):
             A list of Chat objects.
         """
         status = "archived" if archived else "active"
-        logger.debug(f"Retrieving {status} chats for user ID {user_id} (limit={limit}, skip={skip}).")
+        logger.debug(
+            f"Retrieving {status} chats for user ID {user_id} (limit={limit}, skip={skip})."
+        )
         stmt = (
             select(Chat)
-            .where(Chat.user_id == user_id, Chat.is_archived == archived)  # Filter by archived status
+            .where(
+                Chat.user_id == user_id, Chat.is_archived == archived
+            )  # Filter by archived status
             .order_by(Chat.updated_at.desc())
             .offset(skip)
             .limit(limit)
@@ -106,10 +112,14 @@ class ChatRepository(BaseRepository[Chat]):
 
         new_chat = Chat(user_id=user_id, title=title)
         chat = await self.create(new_chat)  # Uses BaseRepository.create
-        logger.info(f"SUCCESS: Successfully created chat ID {chat.id} for user ID {user_id}.")
+        logger.info(
+            f"SUCCESS: Successfully created chat ID {chat.id} for user ID {user_id}."
+        )
         return chat
 
-    async def update_chat_title(self, chat_id: int, user_id: int, new_title: str) -> Optional[Chat]:
+    async def update_chat_title(
+        self, chat_id: int, user_id: int, new_title: str
+    ) -> Optional[Chat]:
         """
         Updates the title of a specific chat, verifying ownership.
 
@@ -121,10 +131,14 @@ class ChatRepository(BaseRepository[Chat]):
         Returns:
             The updated Chat object if successful, None otherwise.
         """
-        logger.info(f"Attempting to update title for chat ID {chat_id} (user ID {user_id}) to '{new_title}'.")
+        logger.info(
+            f"Attempting to update title for chat ID {chat_id} (user ID {user_id}) to '{new_title}'."
+        )
         chat = await self.get_by_user_and_id(chat_id=chat_id, user_id=user_id)
         if not chat:
-            logger.warning(f"Cannot update title: Chat ID {chat_id} not found for user ID {user_id}.")
+            logger.warning(
+                f"Cannot update title: Chat ID {chat_id} not found for user ID {user_id}."
+            )
             return None
 
         chat.title = new_title
@@ -138,7 +152,9 @@ class ChatRepository(BaseRepository[Chat]):
         logger.info(f"SUCCESS: Successfully updated title for chat ID {chat_id}.")
         return chat
 
-    async def archive_chat(self, chat_id: int, user_id: int, archive: bool = True) -> Optional[Chat]:
+    async def archive_chat(
+        self, chat_id: int, user_id: int, archive: bool = True
+    ) -> Optional[Chat]:
         """
         Archives or unarchives a specific chat, verifying ownership.
 
@@ -154,7 +170,9 @@ class ChatRepository(BaseRepository[Chat]):
         logger.info(f"Attempting to {action} chat ID {chat_id} (user ID {user_id}).")
         chat = await self.get_by_user_and_id(chat_id=chat_id, user_id=user_id)
         if not chat:
-            logger.warning(f"Cannot {action}: Chat ID {chat_id} not found for user ID {user_id}.")
+            logger.warning(
+                f"Cannot {action}: Chat ID {chat_id} not found for user ID {user_id}."
+            )
             return None
 
         if chat.is_archived == archive:
@@ -186,8 +204,12 @@ class ChatRepository(BaseRepository[Chat]):
         logger.warning(f"Attempting to archive ALL active chats for user ID {user_id}.")
         stmt = (
             update(Chat)
-            .where(Chat.user_id == user_id, Chat.is_archived == False)  # Only archive active chats
-            .values(is_archived=True, updated_at=func.now())  # Explicitly set updated_at for bulk update
+            .where(
+                Chat.user_id == user_id, Chat.is_archived == False
+            )  # Only archive active chats
+            .values(
+                is_archived=True, updated_at=func.now()
+            )  # Explicitly set updated_at for bulk update
         )
         result = await self.session.execute(stmt)
         archived_count = result.rowcount
@@ -212,14 +234,18 @@ class ChatRepository(BaseRepository[Chat]):
         logger.warning(f"Attempting to delete chat ID {chat_id} for user ID {user_id}.")
         chat = await self.get_by_user_and_id(chat_id=chat_id, user_id=user_id)
         if not chat:
-            logger.error(f"Cannot delete: Chat ID {chat_id} not found for user ID {user_id}.")
+            logger.error(
+                f"Cannot delete: Chat ID {chat_id} not found for user ID {user_id}."
+            )
             return False
 
         try:
             await self.session.delete(chat)
             await self.session.flush()
             await self.session.commit()  # Explicitly commit the transaction
-            logger.info(f"SUCCESS: Successfully deleted chat ID {chat_id} and its messages.")
+            logger.info(
+                f"SUCCESS: Successfully deleted chat ID {chat_id} and its messages."
+            )
             return True
         except Exception as e:
             logger.error(f"Error deleting chat ID {chat_id}: {e}", exc_info=True)

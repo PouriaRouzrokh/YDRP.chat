@@ -83,7 +83,9 @@ class PolicyRepository(BaseRepository[Policy]):
             select(Policy)
             .where(Policy.id == policy_id)
             .options(
-                selectinload(Policy.chunks).order_by(PolicyChunk.chunk_index),  # Load chunks ordered by index
+                selectinload(Policy.chunks).order_by(
+                    PolicyChunk.chunk_index
+                ),  # Load chunks ordered by index
                 selectinload(Policy.images),  # Load images
             )
         )
@@ -101,7 +103,9 @@ class PolicyRepository(BaseRepository[Policy]):
         Returns:
             True if deletion occurred, False if policy not found.
         """
-        logger.warning(f"Attempting to delete policy with ID: {policy_id} and all associated data.")
+        logger.warning(
+            f"Attempting to delete policy with ID: {policy_id} and all associated data."
+        )
         # First, find the policy to ensure it exists
         policy_to_delete = await self.get_by_id(policy_id)
         if not policy_to_delete:
@@ -112,7 +116,9 @@ class PolicyRepository(BaseRepository[Policy]):
             # Delete the policy object. Cascades should handle chunks and images.
             await self.session.delete(policy_to_delete)
             await self.session.flush()  # Execute the delete operation
-            logger.info(f"SUCCESS: Successfully deleted policy ID {policy_id} and associated data.")
+            logger.info(
+                f"SUCCESS: Successfully deleted policy ID {policy_id} and associated data."
+            )
             return True
         except Exception as e:
             logger.error(f"Error deleting policy ID {policy_id}: {e}", exc_info=True)
@@ -137,7 +143,9 @@ class PolicyRepository(BaseRepository[Policy]):
         # Call delete_by_id using the found policy's ID
         return await self.delete_by_id(policy_to_delete.id)
 
-    async def full_text_search(self, query: str, limit: int = 10) -> List[Dict[str, Any]]:
+    async def full_text_search(
+        self, query: str, limit: int = 10
+    ) -> List[Dict[str, Any]]:
         """
         Perform a full-text search on entire policies (title, description, text_content).
 
@@ -169,12 +177,16 @@ class PolicyRepository(BaseRepository[Policy]):
         """
         )
 
-        result = await self.session.execute(stmt, {"query": search_query, "limit": limit})
+        result = await self.session.execute(
+            stmt, {"query": search_query, "limit": limit}
+        )
 
         # Fetch results as mappings (dict-like objects)
         return [dict(row) for row in result.mappings()]
 
-    async def text_search_chunks(self, query: str, limit: int = None) -> List[Dict[str, Any]]:
+    async def text_search_chunks(
+        self, query: str, limit: int = None
+    ) -> List[Dict[str, Any]]:
         """
         Perform a text-based search on policy chunks using full-text search.
 
@@ -186,7 +198,9 @@ class PolicyRepository(BaseRepository[Policy]):
             List of matching chunks with relevance scores
         """
         limit = limit if limit is not None else config.RAG.TOP_K
-        logger.info(f"Performing text-only search for query: '{query}' with limit={limit}")
+        logger.info(
+            f"Performing text-only search for query: '{query}' with limit={limit}"
+        )
 
         # Convert the query to use '&' for AND logic
         search_query = " & ".join(query.split())
@@ -213,7 +227,9 @@ class PolicyRepository(BaseRepository[Policy]):
         """
         )
 
-        result = await self.session.execute(stmt, {"query": search_query, "limit": limit})
+        result = await self.session.execute(
+            stmt, {"query": search_query, "limit": limit}
+        )
 
         # Fetch results as mappings
         return [dict(row) for row in result.mappings()]
@@ -271,7 +287,11 @@ class PolicyRepository(BaseRepository[Policy]):
         Returns:
             List of PolicyChunk objects
         """
-        stmt = select(PolicyChunk).where(PolicyChunk.policy_id == policy_id).order_by(PolicyChunk.chunk_index)
+        stmt = (
+            select(PolicyChunk)
+            .where(PolicyChunk.policy_id == policy_id)
+            .order_by(PolicyChunk.chunk_index)
+        )
         result = await self.session.execute(stmt)
         return list(result.scalars().all())
 
@@ -289,7 +309,9 @@ class PolicyRepository(BaseRepository[Policy]):
         result = await self.session.execute(stmt)
         return result.scalars().first()
 
-    async def get_chunk_neighbors(self, chunk_id: int, window: int = 1) -> Dict[str, Optional[PolicyChunk]]:
+    async def get_chunk_neighbors(
+        self, chunk_id: int, window: int = 1
+    ) -> Dict[str, Optional[PolicyChunk]]:
         """
         Get the neighboring chunks (previous and next) for a given chunk ID.
 
@@ -316,7 +338,9 @@ class PolicyRepository(BaseRepository[Policy]):
                 PolicyChunk.chunk_index >= target_index - window,
                 PolicyChunk.chunk_index < target_index,
             )
-            .order_by(PolicyChunk.chunk_index)  # Ascending to get closest first if window > 1
+            .order_by(
+                PolicyChunk.chunk_index
+            )  # Ascending to get closest first if window > 1
         )
         prev_result = await self.session.execute(prev_stmt)
         previous_chunks = list(prev_result.scalars().all())
@@ -340,7 +364,10 @@ class PolicyRepository(BaseRepository[Policy]):
         }
 
     async def search_chunks_by_embedding(
-        self, embedding: List[float], limit: int = None, similarity_threshold: float = None
+        self,
+        embedding: List[float],
+        limit: int = None,
+        similarity_threshold: float = None,
     ) -> List[Dict[str, Any]]:
         """
         Find chunks similar to the given embedding using cosine similarity.
@@ -355,10 +382,14 @@ class PolicyRepository(BaseRepository[Policy]):
         """
         limit = limit if limit is not None else config.RAG.TOP_K
         similarity_threshold = (
-            similarity_threshold if similarity_threshold is not None else config.RAG.SIMILARITY_THRESHOLD
+            similarity_threshold
+            if similarity_threshold is not None
+            else config.RAG.SIMILARITY_THRESHOLD
         )
 
-        logger.info(f"Performing vector-only search with limit={limit}, threshold={similarity_threshold}")
+        logger.info(
+            f"Performing vector-only search with limit={limit}, threshold={similarity_threshold}"
+        )
 
         # <=> is cosine distance. Similarity = 1 - distance.
         stmt = text(
@@ -416,13 +447,19 @@ class PolicyRepository(BaseRepository[Policy]):
         Returns:
             List of chunks with combined scores
         """
-        vector_weight = vector_weight if vector_weight is not None else config.RAG.VECTOR_WEIGHT
+        vector_weight = (
+            vector_weight if vector_weight is not None else config.RAG.VECTOR_WEIGHT
+        )
         limit = limit if limit is not None else config.RAG.TOP_K
         similarity_threshold = (
-            similarity_threshold if similarity_threshold is not None else config.RAG.SIMILARITY_THRESHOLD
+            similarity_threshold
+            if similarity_threshold is not None
+            else config.RAG.SIMILARITY_THRESHOLD
         )
 
-        logger.info(f"Performing hybrid search with query='{query}', weight={vector_weight}, limit={limit}")
+        logger.info(
+            f"Performing hybrid search with query='{query}', weight={vector_weight}, limit={limit}"
+        )
 
         # Prepare the text search query
         text_query = " & ".join(query.split())
@@ -493,7 +530,9 @@ class PolicyRepository(BaseRepository[Policy]):
         # Fetch results as mappings
         return [dict(row) for row in result.mappings()]
 
-    async def get_policies_from_chunks(self, chunk_results: List[Dict[str, Any]]) -> List[Policy]:
+    async def get_policies_from_chunks(
+        self, chunk_results: List[Dict[str, Any]]
+    ) -> List[Policy]:
         """
         Retrieve complete policies for chunks returned from a search.
 
@@ -516,7 +555,9 @@ class PolicyRepository(BaseRepository[Policy]):
         if not policy_ids_ordered:
             return []
 
-        logger.info(f"Retrieving {len(policy_ids_ordered)} complete policies from chunk results...")
+        logger.info(
+            f"Retrieving {len(policy_ids_ordered)} complete policies from chunk results..."
+        )
 
         # Fetch all policies with images eagerly loaded
         stmt = (
@@ -528,12 +569,16 @@ class PolicyRepository(BaseRepository[Policy]):
         policies_map = {p.id: p for p in result.scalars().all()}
 
         # Return policies in the order they appeared in chunk results
-        ordered_policies = [policies_map[pid] for pid in policy_ids_ordered if pid in policies_map]
+        ordered_policies = [
+            policies_map[pid] for pid in policy_ids_ordered if pid in policies_map
+        ]
         return ordered_policies
 
     async def log_policy_update(
         self,
-        policy_id: Optional[int],  # Make policy_id optional for logging deletion of non-existent item
+        policy_id: Optional[
+            int
+        ],  # Make policy_id optional for logging deletion of non-existent item
         admin_id: Optional[int],
         action: str,
         details: Optional[Dict] = None,
@@ -562,10 +607,14 @@ class PolicyRepository(BaseRepository[Policy]):
         await self.session.flush()
         await self.session.refresh(policy_update)
 
-        logger.info(f"Logged policy update: policy_id={policy_id}, action={action}, admin_id={admin_id}")
+        logger.info(
+            f"Logged policy update: policy_id={policy_id}, action={action}, admin_id={admin_id}"
+        )
         return policy_update
 
-    async def get_policy_update_history(self, policy_id: int, limit: int = 50) -> List[PolicyUpdate]:
+    async def get_policy_update_history(
+        self, policy_id: int, limit: int = 50
+    ) -> List[PolicyUpdate]:
         """
         Get update history for a specific policy.
 

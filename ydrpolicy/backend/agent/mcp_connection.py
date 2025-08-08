@@ -36,7 +36,9 @@ async def get_mcp_server() -> MCPServerSse:
         # Ensure host is not 0.0.0.0 for client connection if running locally
         if mcp_host == "0.0.0.0":
             mcp_host = "localhost"
-            logger.warning("MCP Host 0.0.0.0 detected, using 'localhost' for client connection.")
+            logger.warning(
+                "MCP Host 0.0.0.0 detected, using 'localhost' for client connection."
+            )
 
         mcp_port = config.MCP.PORT
         # The SDK expects the /sse endpoint for this class
@@ -56,7 +58,9 @@ async def get_mcp_server() -> MCPServerSse:
             logger.info("MCPServerSse instance created.")
         except Exception as e:
             logger.error(f"Failed to initialize MCPServerSse: {e}", exc_info=True)
-            raise ConnectionError(f"Could not initialize connection to MCP server at {mcp_url}") from e
+            raise ConnectionError(
+                f"Could not initialize connection to MCP server at {mcp_url}"
+            ) from e
 
     return _mcp_server_instance
 

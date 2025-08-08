@@ -15,7 +15,15 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy import text, inspect
 
 # Import models
-from ydrpolicy.backend.database.models import User, Policy, PolicyChunk, Image, Chat, Message, ToolUsage
+from ydrpolicy.backend.database.models import (
+    User,
+    Policy,
+    PolicyChunk,
+    Image,
+    Chat,
+    Message,
+    ToolUsage,
+)
 
 # Import repositories
 from ydrpolicy.backend.database.repository.users import UserRepository
@@ -52,7 +60,9 @@ async def create_test_database():
         # Check if database exists
         async with admin_engine.connect() as conn:
             # We need to run this as raw SQL since we can't use CREATE DATABASE in a transaction
-            result = await conn.execute(text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'"))
+            result = await conn.execute(
+                text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'")
+            )
             exists = result.scalar() is not None
 
             if not exists:
@@ -78,7 +88,9 @@ async def drop_test_database():
         # Check if database exists
         async with admin_engine.connect() as conn:
             # We need to run this as raw SQL since we can't use DROP DATABASE in a transaction
-            result = await conn.execute(text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'"))
+            result = await conn.execute(
+                text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'")
+            )
             exists = result.scalar() is not None
 
             if exists:
@@ -208,7 +220,10 @@ async def test_user_repository():
 
             # Create test user
             test_user = User(
-                email="test@example.com", password_hash="hashed_password", full_name="Test User", is_admin=False
+                email="test@example.com",
+                password_hash="hashed_password",
+                full_name="Test User",
+                is_admin=False,
             )
 
             # Create user
@@ -277,21 +292,29 @@ async def test_policy_repository():
 
             # Create policy
             created_policy = await policy_repo.create(test_policy)
-            test_logger.info(f"Created policy: {created_policy.id} - {created_policy.title}")
+            test_logger.info(
+                f"Created policy: {created_policy.id} - {created_policy.title}"
+            )
 
             # Verify search vector was created by trigger
-            assert created_policy.search_vector is not None, "Search vector was not created"
+            assert (
+                created_policy.search_vector is not None
+            ), "Search vector was not created"
             test_logger.info("Search vector trigger worked correctly")
 
             # Get policy by ID
             fetched_policy = await policy_repo.get_by_id(created_policy.id)
             assert fetched_policy is not None, "Failed to fetch policy by ID"
-            test_logger.info(f"Successfully fetched policy by ID: {fetched_policy.title}")
+            test_logger.info(
+                f"Successfully fetched policy by ID: {fetched_policy.title}"
+            )
 
             # Get policy by title
             title_policy = await policy_repo.get_by_title("Test Policy")
             assert title_policy is not None, "Failed to fetch policy by title"
-            test_logger.info(f"Successfully fetched policy by title: {title_policy.title}")
+            test_logger.info(
+                f"Successfully fetched policy by title: {title_policy.title}"
+            )
 
             # Get policy by URL
             url_policy = await policy_repo.get_by_url("http://example.com/policy")
@@ -300,7 +323,9 @@ async def test_policy_repository():
 
             # Create a policy chunk
             test_chunk = PolicyChunk(
-                policy_id=created_policy.id, chunk_index=0, content="This is a test chunk content."
+                policy_id=created_policy.id,
+                chunk_index=0,
+                content="This is a test chunk content.",
             )
 
             # Create chunk
@@ -310,31 +335,48 @@ async def test_policy_repository():
             # Test full text search
             search_results = await policy_repo.full_text_search("test")
             assert len(search_results) > 0, "Full text search returned no results"
-            test_logger.info(f"Full text search successful: {len(search_results)} results")
+            test_logger.info(
+                f"Full text search successful: {len(search_results)} results"
+            )
 
             # Update policy
-            update_data = {"title": "Updated Policy Title", "description": "This is an updated description"}
+            update_data = {
+                "title": "Updated Policy Title",
+                "description": "This is an updated description",
+            }
             updated_policy = await policy_repo.update(created_policy.id, update_data)
-            assert updated_policy.title == "Updated Policy Title", "Policy update failed"
+            assert (
+                updated_policy.title == "Updated Policy Title"
+            ), "Policy update failed"
             test_logger.info(f"Successfully updated policy: {updated_policy.title}")
 
             # Log policy update
             # Create admin user for logging
             admin_user = User(
-                email="admin@example.com", password_hash="admin_hash", full_name="Admin User", is_admin=True
+                email="admin@example.com",
+                password_hash="admin_hash",
+                full_name="Admin User",
+                is_admin=True,
             )
             user_repo = UserRepository(session)
             created_admin = await user_repo.create(admin_user)
 
             policy_update = await policy_repo.log_policy_update(
-                updated_policy.id, created_admin.id, "update", {"modified_fields": ["title", "description"]}
+                updated_policy.id,
+                created_admin.id,
+                "update",
+                {"modified_fields": ["title", "description"]},
             )
             test_logger.info(f"Logged policy update: {policy_update.id}")
 
             # Get policy update history
-            update_history = await policy_repo.get_policy_update_history(updated_policy.id)
+            update_history = await policy_repo.get_policy_update_history(
+                updated_policy.id
+            )
             assert len(update_history) > 0, "Policy update history is empty"
-            test_logger.info(f"Policy update history retrieved: {len(update_history)} entries")
+            test_logger.info(
+                f"Policy update history retrieved: {len(update_history)} entries"
+            )
 
             # Delete policy
             delete_result = await policy_repo.delete_by_id(created_policy.id)
@@ -410,12 +452,18 @@ async def test_additional_tables():
             test_logger.info(f"Created chat: {chat.id} for user {chat.user_id}")
 
             # Create messages in the chat
-            user_message = Message(chat_id=chat.id, role="user", content="This is a test user message")
+            user_message = Message(
+                chat_id=chat.id, role="user", content="This is a test user message"
+            )
             session.add(user_message)
             await session.flush()
             test_logger.info(f"Created user message: {user_message.id}")
 
-            assistant_message = Message(chat_id=chat.id, role="assistant", content="This is a test assistant response")
+            assistant_message = Message(
+                chat_id=chat.id,
+                role="assistant",
+                content="This is a test assistant response",
+            )
             session.add(assistant_message)
             await session.flush()
             test_logger.info(f"Created assistant message: {assistant_message.id}")
@@ -425,7 +473,11 @@ async def test_additional_tables():
                 message_id=assistant_message.id,
                 tool_name="policy_search",
                 input={"query": "test policy"},
-                output={"results": [{"id": created_policy.id, "title": created_policy.title}]},
+                output={
+                    "results": [
+                        {"id": created_policy.id, "title": created_policy.title}
+                    ]
+                },
                 execution_time=0.125,
             )
             session.add(tool_usage)
@@ -434,7 +486,9 @@ async def test_additional_tables():
 
             # Commit all changes
             await session.commit()
-            test_logger.info("Additional tables test complete - all test data committed")
+            test_logger.info(
+                "Additional tables test complete - all test data committed"
+            )
             return True
     except Exception as e:
         test_logger.error(f"Additional tables test failed: {e}")
@@ -475,19 +529,31 @@ async def test_chunking_and_embedding():
                     chunk_metadata={"position": i, "length": 50},
                     # Dummy embedding vector (would normally come from an embedding model)
                     embedding=(
-                        [0.1 * j for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)]
+                        [
+                            0.1 * j
+                            for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)
+                        ]
                         if i == 0
-                        else [0.2 * j for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)]
+                        else [
+                            0.2 * j
+                            for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)
+                        ]
                     ),
                 )
                 created_chunk = await policy_repo.create_chunk(chunk)
                 chunks.append(created_chunk)
-                test_logger.info(f"Created chunk {i}: {created_chunk.id} with embedding")
+                test_logger.info(
+                    f"Created chunk {i}: {created_chunk.id} with embedding"
+                )
 
             # Verify chunks were created
             policy_chunks = await policy_repo.get_chunks_by_policy_id(created_policy.id)
-            assert len(policy_chunks) == 3, f"Expected 3 chunks, got {len(policy_chunks)}"
-            test_logger.info(f"Successfully retrieved {len(policy_chunks)} chunks for policy")
+            assert (
+                len(policy_chunks) == 3
+            ), f"Expected 3 chunks, got {len(policy_chunks)}"
+            test_logger.info(
+                f"Successfully retrieved {len(policy_chunks)} chunks for policy"
+            )
 
             # Test getting neighbors of a chunk
             if len(chunks) > 1:
@@ -495,21 +561,36 @@ async def test_chunking_and_embedding():
                     # Check that chunks are proper objects with id attributes
                     if hasattr(chunks[1], "id"):
                         middle_chunk_id = chunks[1].id
-                        neighbors = await policy_repo.get_chunk_neighbors(middle_chunk_id, window=1)
-                        if "previous" in neighbors and neighbors["previous"] is not None:
-                            if isinstance(neighbors["previous"], list) and len(neighbors["previous"]) > 0:
+                        neighbors = await policy_repo.get_chunk_neighbors(
+                            middle_chunk_id, window=1
+                        )
+                        if (
+                            "previous" in neighbors
+                            and neighbors["previous"] is not None
+                        ):
+                            if (
+                                isinstance(neighbors["previous"], list)
+                                and len(neighbors["previous"]) > 0
+                            ):
                                 test_logger.info(
                                     f"Found previous chunk(s): {', '.join(str(c.id) for c in neighbors['previous'])}"
                                 )
                             else:
-                                test_logger.info(f"Found previous chunk: {neighbors['previous']}")
+                                test_logger.info(
+                                    f"Found previous chunk: {neighbors['previous']}"
+                                )
                         if "next" in neighbors and neighbors["next"] is not None:
-                            if isinstance(neighbors["next"], list) and len(neighbors["next"]) > 0:
+                            if (
+                                isinstance(neighbors["next"], list)
+                                and len(neighbors["next"]) > 0
+                            ):
                                 test_logger.info(
                                     f"Found next chunk(s): {', '.join(str(c.id) for c in neighbors['next'])}"
                                 )
                             else:
-                                test_logger.info(f"Found next chunk: {neighbors['next']}")
+                                test_logger.info(
+                                    f"Found next chunk: {neighbors['next']}"
+                                )
                         test_logger.info("Successfully retrieved chunk neighbors")
                     else:
                         test_logger.warning(
@@ -521,9 +602,15 @@ async def test_chunking_and_embedding():
             # Test search by embedding if supported
             try:
                 # Mock embedding vector for search
-                search_embedding = [0.15 * j for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)]
-                embedding_results = await policy_repo.search_chunks_by_embedding(search_embedding, limit=2)
-                test_logger.info(f"Vector search returned {len(embedding_results)} results")
+                search_embedding = [
+                    0.15 * j for j in range(backend_config.RAG.EMBEDDING_DIMENSIONS)
+                ]
+                embedding_results = await policy_repo.search_chunks_by_embedding(
+                    search_embedding, limit=2
+                )
+                test_logger.info(
+                    f"Vector search returned {len(embedding_results)} results"
+                )
             except Exception as e:
                 test_logger.warning(f"Vector search not fully tested: {e}")
 
@@ -590,7 +677,9 @@ async def run_all_tests(keep_db=False):
         test_logger.info("All database tests passed successfully!")
 
         if keep_db:
-            test_logger.info(f"Keeping test database '{DB_NAME}' for inspection (--keep-db flag is set)")
+            test_logger.info(
+                f"Keeping test database '{DB_NAME}' for inspection (--keep-db flag is set)"
+            )
         else:
             # Clean up test database
             await drop_test_database()
@@ -604,7 +693,11 @@ async def run_all_tests(keep_db=False):
 def parse_args():
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(description="Test database functionality")
-    parser.add_argument("--keep-db", action="store_true", help="Keep the test database after tests finish")
+    parser.add_argument(
+        "--keep-db",
+        action="store_true",
+        help="Keep the test database after tests finish",
+    )
     return parser.parse_args()
 
 

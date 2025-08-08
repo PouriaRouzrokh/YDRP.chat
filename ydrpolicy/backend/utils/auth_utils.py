@@ -58,7 +58,9 @@ ALGORITHM = config.API.JWT_ALGORITHM
 ACCESS_TOKEN_EXPIRE_MINUTES = config.API.JWT_EXPIRATION
 
 
-def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(
+    data: Dict[str, Any], expires_delta: Optional[timedelta] = None
+) -> str:
     """
     Creates a JWT access token.
 
@@ -73,7 +75,9 @@ def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta]
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+        )
     to_encode.update({"exp": expire})
     # Ensure 'sub' (subject) is present, commonly the user's email or ID
     if "sub" not in to_encode:

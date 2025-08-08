@@ -25,22 +25,22 @@ from selenium.webdriver.support.ui import WebDriverWait
 from ydrpolicy.data_collection.crawl.crawler_state import CrawlerState
 
 # Use aliases for clarity
-from ydrpolicy.data_collection.crawl.processors.document_processor import (
+from ydrpolicy.data_collection.processors.document_processor import (
     convert_to_markdown as crawl_convert_to_md,
     download_document as crawl_download_doc,
     html_to_markdown,
 )
 
 # Import updated pdf processor that returns path and timestamp
-from ydrpolicy.data_collection.crawl.processors.pdf_processor import (
-    pdf_to_markdown as crawl_pdf_to_md,
+from ydrpolicy.data_collection.processors.pdf_processor import (
+    pdf_url_to_markdown as crawl_pdf_to_md,
 )
 
 # Restore LLM processor and prompts
-from ydrpolicy.data_collection.crawl.processors.llm_processor import (
+from ydrpolicy.data_collection.processors.llm_processor import (
     analyze_content_for_policies,
 )
-from ydrpolicy.data_collection.crawl.processors import (
+from ydrpolicy.data_collection.processors import (
     llm_prompts as crawler_llm_prompts,
 )
 
@@ -63,7 +63,9 @@ class YaleCrawler:
         self.current_depth: int = 0
         self.config = config
         self.logger = logging.getLogger(__name__)
-        self.state_manager = CrawlerState(os.path.join(config.PATHS.RAW_DATA_DIR, "state"))
+        self.state_manager = CrawlerState(
+            os.path.join(config.PATHS.RAW_DATA_DIR, "state")
+        )
         self.stopping = False
         signal.signal(signal.SIGINT, lambda s, f: self.signal_handler(s, f))
         signal.signal(signal.SIGTERM, lambda s, f: self.signal_handler(s, f))
@@ -74,7 +76,9 @@ class YaleCrawler:
         os.makedirs(os.path.join(config.PATHS.RAW_DATA_DIR, "state"), exist_ok=True)
 
         # ** RESTORED ORIGINAL CSV COLUMNS **
-        self.policies_df_path = os.path.join(self.config.PATHS.RAW_DATA_DIR, "crawled_policies_data.csv")
+        self.policies_df_path = os.path.join(
+            self.config.PATHS.RAW_DATA_DIR, "crawled_policies_data.csv"
+        )
         self.csv_columns = [
             "url",
             "file_path",
@@ -94,7 +98,9 @@ class YaleCrawler:
                     self.logger.error(f"Failed remove CSV on reset: {e}")
             if not os.path.exists(self.policies_df_path):
                 try:
-                    pd.DataFrame(columns=self.csv_columns).to_csv(self.policies_df_path, index=False)
+                    pd.DataFrame(columns=self.csv_columns).to_csv(
+                        self.policies_df_path, index=False
+                    )
                     self.logger.info(f"Initialized CSV: {self.policies_df_path}")
                 except Exception as e:
                     self.logger.error(f"Failed create CSV: {e}")
@@ -137,7 +143,11 @@ class YaleCrawler:
 
     def save_state(self):
         """Save the current crawler state. (Original logic)"""
-        if self.current_url and isinstance(self.visited_urls, set) and isinstance(self.priority_queue, list):
+        if (
+            self.current_url
+            and isinstance(self.visited_urls, set)
+            and isinstance(self.priority_queue, list)
+        ):
             saved = self.state_manager.save_state(
                 self.visited_urls,
                 self.priority_queue,
@@ -158,7 +168,9 @@ class YaleCrawler:
                 try:
                     os.remove(self.policies_df_path)
                     self.logger.info("Removed CSV (resume disabled).")
-                    pd.DataFrame(columns=self.csv_columns).to_csv(self.policies_df_path, index=False)
+                    pd.DataFrame(columns=self.csv_columns).to_csv(
+                        self.policies_df_path, index=False
+                    )
                 except OSError as e:
                     self.logger.error(f"Failed remove/reinit CSV: {e}")
             return False
@@ -172,10 +184,16 @@ class YaleCrawler:
             heapq.heapify(self.priority_queue)
             self.current_url = state.get("current_url")
             self.current_depth = state.get("current_depth", 0)
-            self.logger.info(f"Resumed state: {len(self.visited_urls)} visited, {len(self.priority_queue)} in queue")
+            self.logger.info(
+                f"Resumed state: {len(self.visited_urls)} visited, {len(self.priority_queue)} in queue"
+            )
             if not os.path.exists(self.policies_df_path):
-                self.logger.warning("State loaded but CSV missing. Initializing empty CSV.")
-                pd.DataFrame(columns=self.csv_columns).to_csv(self.policies_df_path, index=False)
+                self.logger.warning(
+                    "State loaded but CSV missing. Initializing empty CSV."
+                )
+                pd.DataFrame(columns=self.csv_columns).to_csv(
+                    self.policies_df_path, index=False
+                )
             return True
         except Exception as e:
             self.logger.error(f"Error applying loaded state: {e}. Starting fresh.")
@@ -184,7 +202,9 @@ class YaleCrawler:
             self.current_url = None
             self.current_depth = 0
             self.state_manager.clear_state()
-            pd.DataFrame(columns=self.csv_columns).to_csv(self.policies_df_path, index=False)
+            pd.DataFrame(columns=self.csv_columns).to_csv(
+                self.policies_df_path, index=False
+            )
             return False
 
     def start(self, initial_url: str = None):
@@ -198,7 +218,9 @@ class YaleCrawler:
                 return
             self.logger.info(f"Opening initial URL: {start_url}")
             self.driver.get(start_url)
-            self.logger.info(">>> PAUSING: Log in/Navigate. Press Enter to start crawl...")
+            self.logger.info(
+                ">>> PAUSING: Log in/Navigate. Press Enter to start crawl..."
+            )
             input()
             self.logger.info(">>> Resuming...")
             resumed = self.load_state()
@@ -211,7 +233,9 @@ class YaleCrawler:
                     self.logger.warning(f"Initial URL {current_start_url} not allowed.")
             else:
                 self.logger.info(f"Resuming crawl. Last URL: {self.current_url}")
-            self.logger.info(f"Starting automated crawl loop (Max Depth: {self.config.CRAWLER.MAX_DEPTH})...")
+            self.logger.info(
+                f"Starting automated crawl loop (Max Depth: {self.config.CRAWLER.MAX_DEPTH})..."
+            )
             self.crawl_loop()  # Renamed from crawl_automatically
         except Exception as e:
             self.logger.error(f"Fatal error: {e}", exc_info=True)
@@ -258,7 +282,9 @@ class YaleCrawler:
                 self.signal_handler(signal.SIGINT, None)
                 break
             except Exception as e:
-                self.logger.error(f"Error processing URL {self.current_url}: {e}", exc_info=True)
+                self.logger.error(
+                    f"Error processing URL {self.current_url}: {e}", exc_info=True
+                )
                 self.visited_urls.add(self.current_url)
                 continue
 
@@ -269,7 +295,9 @@ class YaleCrawler:
                 self.logger.info("Crawler completed: Queue empty.")
                 # Don't clear state automatically # self.state_manager.clear_state()
             else:
-                self.logger.info(f"Crawler stopped: Max depth or other. {len(self.priority_queue)} URLs remain.")
+                self.logger.info(
+                    f"Crawler stopped: Max depth or other. {len(self.priority_queue)} URLs remain."
+                )
             self.save_state()
 
     def is_allowed_url(self, url: str) -> bool:
@@ -359,7 +387,9 @@ class YaleCrawler:
                 if not lk or lk.startswith(("#", "javascript:", "mailto:")):
                     continue
                 al = urllib.parse.urljoin(base_url, lk)
-                aln = urllib.parse.urlunparse(urllib.parse.urlparse(al)._replace(fragment=""))
+                aln = urllib.parse.urlunparse(
+                    urllib.parse.urlparse(al)._replace(fragment="")
+                )
                 # Allow all valid links here; filtering happens before queueing
                 pl.append((aln, tx))
         except Exception as e:
@@ -402,10 +432,14 @@ class YaleCrawler:
         # --- Get Content ---
         if self.is_document_url(url):
             self.logger.info(f"Processing as document: {url}")
-            markdown_content, saved_raw_path, saved_timestamp = self._process_document_content(url)
+            markdown_content, saved_raw_path, saved_timestamp = (
+                self._process_document_content(url)
+            )
         else:
             self.logger.info(f"Processing as webpage: {url}")
-            markdown_content, all_links = self._process_webpage_content(url)  # Gets links too
+            markdown_content, all_links = self._process_webpage_content(
+                url
+            )  # Gets links too
 
         # --- Save Raw File (if not already saved by PDF processor) & Record ---
         if markdown_content:
@@ -429,7 +463,9 @@ class YaleCrawler:
                 if match:
                     saved_timestamp = match.group(1)
                 else:
-                    self.logger.error(f"Could not determine timestamp for existing raw file: {saved_raw_path}")
+                    self.logger.error(
+                        f"Could not determine timestamp for existing raw file: {saved_raw_path}"
+                    )
 
             # Proceed only if we have a valid saved path and timestamp
             if saved_raw_path and saved_timestamp:
@@ -442,7 +478,9 @@ class YaleCrawler:
                         config=self.config,
                     )
                 else:
-                    self.logger.warning("OPENAI_API_KEY missing. Skipping LLM analysis.")
+                    self.logger.warning(
+                        "OPENAI_API_KEY missing. Skipping LLM analysis."
+                    )
                     # Default result if LLM skipped
                     policy_result = {
                         "include": False,
@@ -457,9 +495,9 @@ class YaleCrawler:
                     # policy_result['definite_links'] = []
 
                 # --- Record original CSV data ---
-                relative_path = os.path.relpath(saved_raw_path, self.config.PATHS.MARKDOWN_DIR).replace(
-                    os.path.sep, "/"
-                )
+                relative_path = os.path.relpath(
+                    saved_raw_path, self.config.PATHS.MARKDOWN_DIR
+                ).replace(os.path.sep, "/")
                 self.record_crawled_data_original(
                     url=url,
                     file_path=relative_path,  # Relative path to timestamped file
@@ -477,8 +515,15 @@ class YaleCrawler:
                     definite_links = policy_result.get("definite_links", [])
                     probable_links = policy_result.get("probable_links", [])
 
-                    if is_root_url and not definite_links and not probable_links and all_links:
-                        self.logger.warning("LLM found no policy links on root. Adding all (max 20).")
+                    if (
+                        is_root_url
+                        and not definite_links
+                        and not probable_links
+                        and all_links
+                    ):
+                        self.logger.warning(
+                            "LLM found no policy links on root. Adding all (max 20)."
+                        )
                         for link_url, link_text in all_links[:20]:
                             links_to_follow.append((link_url, link_text))
                     else:
@@ -504,10 +549,14 @@ class YaleCrawler:
                     f"Failed to save or determine timestamp for raw content from {url}. Skipping record/queue."
                 )
         else:
-            self.logger.warning(f"No markdown content obtained for {url}. Skipping further processing.")
+            self.logger.warning(
+                f"No markdown content obtained for {url}. Skipping further processing."
+            )
 
     # ** NEW HELPER **: Processes webpage content
-    def _process_webpage_content(self, url: str) -> Tuple[Optional[str], List[Tuple[str, str]]]:
+    def _process_webpage_content(
+        self, url: str
+    ) -> Tuple[Optional[str], List[Tuple[str, str]]]:
         """Gets MD content and links from a webpage."""
         markdown_content: Optional[str] = None
         links: List[Tuple[str, str]] = []
@@ -532,14 +581,18 @@ class YaleCrawler:
         return markdown_content, links
 
     # ** NEW HELPER **: Processes document content
-    def _process_document_content(self, url: str) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+    def _process_document_content(
+        self, url: str
+    ) -> Tuple[Optional[str], Optional[str], Optional[str]]:
         """Gets MD content, raw_path, raw_ts for documents."""
         markdown_content: Optional[str] = None
         raw_path: Optional[str] = None
         raw_ts: Optional[str] = None
         try:
             if url.lower().endswith(".pdf") or "files-profile" in url:
-                raw_path, raw_ts = crawl_pdf_to_md(url, self.config.PATHS.MARKDOWN_DIR, self.config)
+                raw_path, raw_ts = crawl_pdf_to_md(
+                    url, self.config.PATHS.MARKDOWN_DIR, self.config
+                )
                 if raw_path and raw_ts and os.path.exists(raw_path):
                     with open(raw_path, "r", encoding="utf-8") as f:
                         markdown_content = f.read()
@@ -549,7 +602,9 @@ class YaleCrawler:
                     raw_path = None
                     raw_ts = None  # Reset on failure
             else:  # Other docs
-                tmp_dir = os.path.join(self.config.PATHS.DOCUMENT_DIR, f"tmp_{int(time.time()*1e6)}")
+                tmp_dir = os.path.join(
+                    self.config.PATHS.DOCUMENT_DIR, f"tmp_{int(time.time()*1e6)}"
+                )
                 os.makedirs(tmp_dir, exist_ok=True)
                 dl_path = crawl_download_doc(url, tmp_dir, self.config)
                 if dl_path:
@@ -594,7 +649,9 @@ class YaleCrawler:
             new_row_df = pd.DataFrame(new_data)
 
             file_exists = os.path.exists(self.policies_df_path)
-            write_header = not file_exists or os.path.getsize(self.policies_df_path) == 0
+            write_header = (
+                not file_exists or os.path.getsize(self.policies_df_path) == 0
+            )
 
             new_row_df.to_csv(
                 self.policies_df_path,
@@ -606,7 +663,9 @@ class YaleCrawler:
             self.logger.debug(f"Recorded original CSV format for {url}")
 
         except Exception as e:
-            self.logger.error(f"Error recording original CSV data for {url}: {e}", exc_info=True)
+            self.logger.error(
+                f"Error recording original CSV data for {url}: {e}", exc_info=True
+            )
 
     # --- Removed original process_document, process_webpage, save_policy_content, record_policy_data ---
     # --- Logic is now primarily within process_url using helpers ---

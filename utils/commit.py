@@ -10,7 +10,9 @@ def get_repo_root():
     """Get the root directory of the git repository."""
     try:
         root = (
-            subprocess.check_output(["git", "rev-parse", "--show-toplevel"], stderr=subprocess.STDOUT)
+            subprocess.check_output(
+                ["git", "rev-parse", "--show-toplevel"], stderr=subprocess.STDOUT
+            )
             .decode("utf-8")
             .strip()
         )
@@ -22,7 +24,11 @@ def get_repo_root():
 
 def check_git_status():
     """Check if there are changes to commit."""
-    status = subprocess.check_output(["git", "status", "--porcelain"]).decode("utf-8").strip()
+    status = (
+        subprocess.check_output(["git", "status", "--porcelain"])
+        .decode("utf-8")
+        .strip()
+    )
     return bool(status)
 
 
@@ -99,7 +105,9 @@ def update_commit_log(commit_number, commit_message):
         # Split content to insert new commit after the header
         if "# Commit History" in content:
             header, rest = content.split("# Commit History", 1)
-            new_content = header + "# Commit History" + "\n\n" + new_commit + rest.lstrip()
+            new_content = (
+                header + "# Commit History" + "\n\n" + new_commit + rest.lstrip()
+            )
         else:
             new_content = "# Commit History\n\n" + new_commit + content
     else:

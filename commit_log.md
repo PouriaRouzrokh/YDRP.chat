@@ -174,6 +174,15 @@ Debugged the base path in the config files.
 
 ## commit 0 (3/25/2025 - 12:25)
 
+## commit 38 (8/08/2025 - 17:45)
+
+- Added local PDF ingestion pipeline and CLI (`policy --ingest-pdfs`) with options for `--pdfs-dir`, `--rebuild-db`, and `--global-link`.
+- Moved processors to `ydrpolicy/data_collection/processors` (shared by crawl and local); updated imports across the codebase.
+- Implemented OCR attempt via Mistral with fallback to PyPDF for local files; ensured processed outputs are saved under `data/processed/local_policies/` and appended to `processed_policies_log.csv`.
+- Preserved users on database rebuild; cleaned processed folders and log when requested.
+- Updated agent system prompt to cite titles and include a global link for local policies.
+- Updated `README.md` with comprehensive CLI instructions (including uv and new commands).
+- Created `AI_Docs/checkpoint_2/signout-checkpoint_2.md` and referenced it in checkpoint_1 sign-out.
 - Started commit logging in `commit_log.md`.
 - At this commit:
   - Data Collection works smoothly.

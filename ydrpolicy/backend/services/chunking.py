@@ -8,7 +8,9 @@ from ydrpolicy.backend.config import config
 logger = logging.getLogger(__name__)
 
 
-def chunk_text(text: str, chunk_size: Optional[int] = None, chunk_overlap: Optional[int] = None) -> List[str]:
+def chunk_text(
+    text: str, chunk_size: Optional[int] = None, chunk_overlap: Optional[int] = None
+) -> List[str]:
     """
     Split text into chunks using a recursive character-based approach.
 
@@ -30,7 +32,9 @@ def chunk_text(text: str, chunk_size: Optional[int] = None, chunk_overlap: Optio
     if chunk_overlap is None:
         chunk_overlap = config.RAG.CHUNK_OVERLAP
 
-    logger.debug(f"Chunking text of length {len(text)} with chunk_size={chunk_size}, chunk_overlap={chunk_overlap}")
+    logger.debug(
+        f"Chunking text of length {len(text)} with chunk_size={chunk_size}, chunk_overlap={chunk_overlap}"
+    )
 
     # If text is already small enough, return it as a single chunk
     if len(text) <= chunk_size:
@@ -71,7 +75,11 @@ def chunk_text(text: str, chunk_size: Optional[int] = None, chunk_overlap: Optio
 
                     # Start a new chunk with overlap
                     if chunk_overlap > 0:
-                        current_chunk = paragraph[-chunk_overlap:] if len(paragraph) > chunk_overlap else paragraph
+                        current_chunk = (
+                            paragraph[-chunk_overlap:]
+                            if len(paragraph) > chunk_overlap
+                            else paragraph
+                        )
                     else:
                         current_chunk = ""
             else:
@@ -114,10 +122,15 @@ def chunk_text(text: str, chunk_size: Optional[int] = None, chunk_overlap: Optio
                     # Start a new chunk with overlap from the last piece
                     if chunk_overlap > 0:
                         overlap_text = sentence[
-                            -(len(sentence) % (chunk_size - chunk_overlap) or (chunk_size - chunk_overlap)) :
+                            -(
+                                len(sentence) % (chunk_size - chunk_overlap)
+                                or (chunk_size - chunk_overlap)
+                            ) :
                         ]
                         current_chunk = (
-                            overlap_text if len(overlap_text) <= chunk_overlap else overlap_text[-chunk_overlap:]
+                            overlap_text
+                            if len(overlap_text) <= chunk_overlap
+                            else overlap_text[-chunk_overlap:]
                         )
                     else:
                         current_chunk = ""
@@ -127,7 +140,11 @@ def chunk_text(text: str, chunk_size: Optional[int] = None, chunk_overlap: Optio
 
                     # Start a new chunk with overlap
                     if chunk_overlap > 0:
-                        current_chunk = sentence[-chunk_overlap:] if len(sentence) > chunk_overlap else sentence
+                        current_chunk = (
+                            sentence[-chunk_overlap:]
+                            if len(sentence) > chunk_overlap
+                            else sentence
+                        )
                     else:
                         current_chunk = ""
             else:
@@ -152,7 +169,9 @@ def chunk_text(text: str, chunk_size: Optional[int] = None, chunk_overlap: Optio
 
 
 def chunk_markdown(
-    markdown_text: str, chunk_size: Optional[int] = None, chunk_overlap: Optional[int] = None
+    markdown_text: str,
+    chunk_size: Optional[int] = None,
+    chunk_overlap: Optional[int] = None,
 ) -> List[str]:
     """
     Split markdown text into chunks, trying to preserve structure.
@@ -201,7 +220,11 @@ def chunk_markdown(
         for i in range(len(all_positions)):
             start = all_positions[i]
             # End is either the next heading or the end of the document
-            end = all_positions[i + 1] if i < len(all_positions) - 1 else len(markdown_text)
+            end = (
+                all_positions[i + 1]
+                if i < len(all_positions) - 1
+                else len(markdown_text)
+            )
 
             section = markdown_text[start:end]
 

@@ -29,7 +29,9 @@ class MessageRepository(BaseRepository[Message]):
         super().__init__(session, Message)
         logger.debug("MessageRepository initialized.")
 
-    async def get_by_chat_id_ordered(self, chat_id: int, limit: Optional[int] = None) -> List[Message]:
+    async def get_by_chat_id_ordered(
+        self, chat_id: int, limit: Optional[int] = None
+    ) -> List[Message]:
         """
         Retrieves all messages for a given chat ID, ordered by creation time (oldest first).
 
@@ -40,7 +42,10 @@ class MessageRepository(BaseRepository[Message]):
         Returns:
             A list of Message objects, ordered chronologically.
         """
-        logger.debug(f"Retrieving messages for chat ID {chat_id}" + (f" (limit={limit})" if limit else ""))
+        logger.debug(
+            f"Retrieving messages for chat ID {chat_id}"
+            + (f" (limit={limit})" if limit else "")
+        )
         stmt = (
             select(Message)
             .where(Message.chat_id == chat_id)
@@ -87,7 +92,9 @@ class MessageRepository(BaseRepository[Message]):
 
         new_message = Message(chat_id=chat_id, role=role, content=content)
         message = await self.create(new_message)  # Uses BaseRepository.create
-        logger.debug(f"Successfully created message ID {message.id} for chat ID {chat_id}.")
+        logger.debug(
+            f"Successfully created message ID {message.id} for chat ID {chat_id}."
+        )
 
         # Update the parent chat's updated_at timestamp
         # SQLAlchemy might handle this if relationship is configured, but explicit update is safer
@@ -121,11 +128,15 @@ class MessageRepository(BaseRepository[Message]):
         Raises:
             ValueError: If the associated message_id does not exist or does not belong to an assistant.
         """
-        logger.debug(f"Creating tool usage record for message ID {message_id} (tool: {tool_name}).")
+        logger.debug(
+            f"Creating tool usage record for message ID {message_id} (tool: {tool_name})."
+        )
         # Optional: Verify message exists and role is 'assistant'
         msg_check = await self.session.get(Message, message_id)
         if not msg_check:
-            logger.error(f"Cannot create tool usage: Message with ID {message_id} not found.")
+            logger.error(
+                f"Cannot create tool usage: Message with ID {message_id} not found."
+            )
             raise ValueError(f"Message with ID {message_id} not found.")
         if msg_check.role != "assistant":
             logger.error(
@@ -145,5 +156,7 @@ class MessageRepository(BaseRepository[Message]):
         self.session.add(new_tool_usage)
         await self.session.flush()
         await self.session.refresh(new_tool_usage)
-        logger.debug(f"Successfully created tool usage ID {new_tool_usage.id} for message ID {message_id}.")
+        logger.debug(
+            f"Successfully created tool usage ID {new_tool_usage.id} for message ID {message_id}."
+        )
         return new_tool_usage

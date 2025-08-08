@@ -22,7 +22,9 @@ _config_dict = {
     },
     # Database settings
     "DATABASE": {
-        "DATABASE_URL": os.environ.get("DATABASE_URL", "postgresql+asyncpg://pr555:@localhost:5432/ydrpolicy"),
+        "DATABASE_URL": os.environ.get(
+            "DATABASE_URL", "postgresql+asyncpg://pr555:@localhost:5432/ydrpolicy"
+        ),
         # "DATABASE_URL": os.environ.get("DATABASE_URL", "postgresql+asyncpg://pouria:@localhost:5432/ydrpolicy"),
         "POOL_SIZE": 5,
         "MAX_OVERFLOW": 10,
@@ -75,13 +77,27 @@ _config_dict = {
 }
 
 # Add other path-dependent settings to the config dictionary
-_config_dict["PATHS"]["RAW_DATA_DIR"] = os.path.join(_config_dict["PATHS"]["DATA_DIR"], "raw")
-_config_dict["PATHS"]["PROCESSED_DATA_DIR"] = os.path.join(_config_dict["PATHS"]["DATA_DIR"], "processed")
+_config_dict["PATHS"]["RAW_DATA_DIR"] = os.path.join(
+    _config_dict["PATHS"]["DATA_DIR"], "raw"
+)
+_config_dict["PATHS"]["PROCESSED_DATA_DIR"] = os.path.join(
+    _config_dict["PATHS"]["DATA_DIR"], "processed"
+)
 _config_dict["PATHS"]["SCRAPED_POLICIES_DIR"] = os.path.join(
     _config_dict["PATHS"]["PROCESSED_DATA_DIR"], "scraped_policies"
 )
-_config_dict["PATHS"]["USERS_SEED_FILE"] = os.path.join(_config_dict["PATHS"]["AUTH_DIR"], "users.json")
-_config_dict["PATHS"]["LOGS_DIR"] = os.path.join(_config_dict["PATHS"]["DATA_DIR"], "logs")
+_config_dict["PATHS"]["SOURCE_POLICIES_DIR"] = os.path.join(
+    _config_dict["PATHS"]["DATA_DIR"], "source_policies"
+)
+_config_dict["PATHS"]["LOCAL_POLICIES_DIR"] = os.path.join(
+    _config_dict["PATHS"]["PROCESSED_DATA_DIR"], "local_policies"
+)
+_config_dict["PATHS"]["USERS_SEED_FILE"] = os.path.join(
+    _config_dict["PATHS"]["AUTH_DIR"], "users.json"
+)
+_config_dict["PATHS"]["LOGS_DIR"] = os.path.join(
+    _config_dict["PATHS"]["DATA_DIR"], "logs"
+)
 _config_dict["LOGGING"] = {
     "LEVEL": os.environ.get("LOG_LEVEL", "INFO"),
     "FILE": os.path.join(_config_dict["PATHS"]["DATA_DIR"], "logs", "backend.log"),

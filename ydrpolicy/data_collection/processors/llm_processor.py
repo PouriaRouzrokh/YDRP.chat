@@ -13,8 +13,8 @@ import logging
 # Third-party imports
 from mistralai import Mistral
 
-# Local imports
-from ydrpolicy.data_collection.crawl.processors import llm_prompts
+# Local imports (updated path)
+from ydrpolicy.data_collection.processors import llm_prompts
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -26,9 +26,12 @@ class PolicyContent(BaseModel):
     include: bool = Field(description="Whether the content contains policy information")
     content: str = Field(description="The extracted policy content")
     definite_links: List[str] = Field(
-        default_factory=list, description="Links that definitely contain policy information"
+        default_factory=list,
+        description="Links that definitely contain policy information",
     )
-    probable_links: List[str] = Field(default_factory=list, description="Links that might contain policy information")
+    probable_links: List[str] = Field(
+        default_factory=list, description="Links that might contain policy information"
+    )
 
 
 def process_document_with_ocr(document_url: str, config: SimpleNamespace) -> str:
@@ -94,7 +97,9 @@ def analyze_content_for_policies(
         links_info = ""
         if links and len(links) > 0:
             links_info = "\n\nLinks found on the page:\n"
-            for i, (link_url, link_text) in enumerate(links[:50]):  # Limit to 50 links to avoid token limits
+            for i, (link_url, link_text) in enumerate(
+                links[:50]
+            ):  # Limit to 50 links to avoid token limits
                 links_info += f"{i+1}. [{link_text}]({link_url})\n"
 
         # Prepare messages
@@ -114,7 +119,9 @@ def analyze_content_for_policies(
             # Get completion from LLM with proper Pydantic model
             openai_client = OpenAI(api_key=config.LLM.OPENAI_API_KEY)
             response = openai_client.chat.completions.create(
-                model=config.LLM.CRAWLER_LLM_MODEL, messages=messages, response_format={"type": "json_object"}
+                model=config.LLM.CRAWLER_LLM_MODEL,
+                messages=messages,
+                response_format={"type": "json_object"},
             )
 
             # Process the response
@@ -133,7 +140,9 @@ def analyze_content_for_policies(
 
                 # Convert to dictionary
                 result = policy_content.model_dump()
-                logger.info(f"LLM analysis complete for {url}. Policy detected: {result['include']}")
+                logger.info(
+                    f"LLM analysis complete for {url}. Policy detected: {result['include']}"
+                )
                 return result
 
         except Exception as parsing_error:
@@ -142,7 +151,9 @@ def analyze_content_for_policies(
             try:
                 openai_client = OpenAI(api_key=config.LLM.OPENAI_API_KEY)
                 response = openai_client.chat.completions.create(
-                    model=config.LLM.CRAWLER_LLM_MODEL, messages=messages, response_format={"type": "json_object"}
+                    model=config.LLM.CRAWLER_LLM_MODEL,
+                    messages=messages,
+                    response_format={"type": "json_object"},
                 )
 
                 if hasattr(response, "choices") and len(response.choices) > 0:
@@ -163,8 +174,18 @@ def analyze_content_for_policies(
                 logger.error(f"Error in fallback parsing: {str(fallback_error)}")
 
         # Default return if all else fails
-        return {"include": False, "content": "", "definite_links": [], "probable_links": []}
+        return {
+            "include": False,
+            "content": "",
+            "definite_links": [],
+            "probable_links": [],
+        }
 
     except Exception as e:
         logger.error(f"Error analyzing content: {str(e)}")
-        return {"include": False, "content": "", "definite_links": [], "probable_links": []}
+        return {
+            "include": False,
+            "content": "",
+            "definite_links": [],
+            "probable_links": [],
+        }

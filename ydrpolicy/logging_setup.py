@@ -21,8 +21,13 @@ try:
     from ydrpolicy.backend.config import config as backend_config
     from ydrpolicy.data_collection.config import config as data_config
 except ImportError as e:
-    print(f"CRITICAL ERROR: Could not import configuration modules for logging setup: {e}", file=sys.stderr)
-    print("Ensure configuration files exist and Python path is correct.", file=sys.stderr)
+    print(
+        f"CRITICAL ERROR: Could not import configuration modules for logging setup: {e}",
+        file=sys.stderr,
+    )
+    print(
+        "Ensure configuration files exist and Python path is correct.", file=sys.stderr
+    )
     sys.exit(1)  # Exit if config cannot be loaded, as logging setup is fundamental
 
 
@@ -59,7 +64,9 @@ def setup_logging(
     if disable_logging:
         # Configure root logger with NullHandler to silence everything, preventing
         # "No handlers could be found" warnings from libraries.
-        logging.basicConfig(level=logging.CRITICAL + 1, force=True, handlers=[logging.NullHandler()])
+        logging.basicConfig(
+            level=logging.CRITICAL + 1, force=True, handlers=[logging.NullHandler()]
+        )
         # A direct print indicates why no logs will appear.
         print("NOTICE: Logging setup skipped as logging is disabled.", file=sys.stderr)
         return  # Stop setup
@@ -77,7 +84,9 @@ def setup_logging(
     root_logger.setLevel(log_level)  # Set the minimum level for the root
 
     # --- Shared Formatter for Files ---
-    file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    file_formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
 
     # List to gather status messages for final log entry
     init_messages = [f"Logging configured. Level: {effective_level_str.upper()}"]
@@ -100,7 +109,9 @@ def setup_logging(
         init_messages.append("Console logging: OFF")
 
     # --- Setup Function for File Handlers (Helper) ---
-    def _add_file_handler(logger_instance: logging.Logger, file_path: Optional[str], file_desc: str) -> None:
+    def _add_file_handler(
+        logger_instance: logging.Logger, file_path: Optional[str], file_desc: str
+    ) -> None:
         """Adds a file handler to a specific logger instance."""
         if file_path:
             try:
@@ -113,7 +124,9 @@ def setup_logging(
                     file_path = os.path.join(os.getcwd(), file_path)
 
                 # Create and configure the file handler
-                file_handler = logging.FileHandler(file_path, mode="a", encoding="utf-8")
+                file_handler = logging.FileHandler(
+                    file_path, mode="a", encoding="utf-8"
+                )
                 file_handler.setFormatter(file_formatter)
                 file_handler.setLevel(log_level)
                 # Add the handler to the specific logger instance
@@ -121,7 +134,10 @@ def setup_logging(
                 init_messages.append(f"{file_desc} File logging: ON ({file_path})")
             except Exception as e:
                 # Print error directly as logger setup might be failing
-                print(f"ERROR setting up {file_desc.lower()} file log '{file_path}': {e}", file=sys.stderr)
+                print(
+                    f"ERROR setting up {file_desc.lower()} file log '{file_path}': {e}",
+                    file=sys.stderr,
+                )
                 init_messages.append(f"{file_desc} File logging: FAILED")
         else:
             init_messages.append(f"{file_desc} File logging: OFF")

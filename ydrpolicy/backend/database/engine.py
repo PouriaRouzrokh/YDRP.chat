@@ -63,7 +63,9 @@ async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
         AsyncSession: A SQLAlchemy async session.
     """
     engine = get_async_engine()
-    async_session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+    async_session_factory = async_sessionmaker(
+        engine, expire_on_commit=False, class_=AsyncSession
+    )
 
     async with async_session_factory() as session:
         try:
@@ -93,7 +95,9 @@ async def get_session() -> AsyncGenerator[AsyncSession, None]:
     ```
     """
     engine = get_async_engine()
-    async_session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+    async_session_factory = async_sessionmaker(
+        engine, expire_on_commit=False, class_=AsyncSession
+    )
 
     async with async_session_factory() as session:
         try:

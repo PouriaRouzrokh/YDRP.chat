@@ -28,7 +28,15 @@ _config_dict = {
         "MAIN_URL": "https://medicine.yale.edu/diagnosticradiology/facintranet/policies",
         "ALLOWED_DOMAINS": ["yale.edu", "medicine.yale.edu"],
         "DOCUMENT_EXTENSIONS": [".pdf", ".doc", ".docx"],
-        "ALLOWED_EXTENSIONS": [".pdf", ".doc", ".docx", ".html", ".htm", ".php", ".aspx"],
+        "ALLOWED_EXTENSIONS": [
+            ".pdf",
+            ".doc",
+            ".docx",
+            ".html",
+            ".htm",
+            ".php",
+            ".aspx",
+        ],
         "PRIORITY_KEYWORDS": [
             "policy",
             "policies",
@@ -72,17 +80,29 @@ _config_dict = {
 
 # Add other path-dependent settings to the config dictionary
 
-_config_dict["PATHS"]["RAW_DATA_DIR"] = os.path.join(_config_dict["PATHS"]["DATA_DIR"], "raw")
-_config_dict["PATHS"]["DOCUMENT_DIR"] = os.path.join(_config_dict["PATHS"]["RAW_DATA_DIR"], "documents")
-_config_dict["PATHS"]["MARKDOWN_DIR"] = os.path.join(_config_dict["PATHS"]["RAW_DATA_DIR"], "markdown_files")
-_config_dict["PATHS"]["PROCESSED_DATA_DIR"] = os.path.join(_config_dict["PATHS"]["DATA_DIR"], "processed")
+_config_dict["PATHS"]["RAW_DATA_DIR"] = os.path.join(
+    _config_dict["PATHS"]["DATA_DIR"], "raw"
+)
+_config_dict["PATHS"]["DOCUMENT_DIR"] = os.path.join(
+    _config_dict["PATHS"]["RAW_DATA_DIR"], "documents"
+)
+_config_dict["PATHS"]["MARKDOWN_DIR"] = os.path.join(
+    _config_dict["PATHS"]["RAW_DATA_DIR"], "markdown_files"
+)
+_config_dict["PATHS"]["PROCESSED_DATA_DIR"] = os.path.join(
+    _config_dict["PATHS"]["DATA_DIR"], "processed"
+)
 _config_dict["PATHS"]["SCRAPED_POLICIES_DIR"] = os.path.join(
     _config_dict["PATHS"]["PROCESSED_DATA_DIR"], "scraped_policies"
 )
 _config_dict["LOGGING"] = {
     "LEVEL": os.environ.get("LOG_LEVEL", "INFO"),
-    "CRAWLER_LOG_FILE": os.path.join(_config_dict["PATHS"]["DATA_DIR"], "logs", "crawler.log"),
-    "SCRAPER_LOG_FILE": os.path.join(_config_dict["PATHS"]["DATA_DIR"], "logs", "scraper.log"),
+    "CRAWLER_LOG_FILE": os.path.join(
+        _config_dict["PATHS"]["DATA_DIR"], "logs", "crawler.log"
+    ),
+    "SCRAPER_LOG_FILE": os.path.join(
+        _config_dict["PATHS"]["DATA_DIR"], "logs", "scraper.log"
+    ),
 }
 
 

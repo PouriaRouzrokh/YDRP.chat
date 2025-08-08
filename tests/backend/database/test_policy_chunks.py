@@ -15,7 +15,13 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy import text
 
 # Import models
-from ydrpolicy.backend.database.models import User, Policy, PolicyChunk, Image, PolicyUpdate
+from ydrpolicy.backend.database.models import (
+    User,
+    Policy,
+    PolicyChunk,
+    Image,
+    PolicyUpdate,
+)
 
 # Import repositories and services
 from ydrpolicy.backend.database.repository.policies import PolicyRepository
@@ -94,7 +100,9 @@ async def create_test_database():
         # Check if database exists
         async with admin_engine.connect() as conn:
             # We need to run this as raw SQL since we can't use CREATE DATABASE in a transaction
-            result = await conn.execute(text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'"))
+            result = await conn.execute(
+                text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'")
+            )
             exists = result.scalar() is not None
 
             if not exists:
@@ -120,7 +128,9 @@ async def drop_test_database():
         # Check if database exists
         async with admin_engine.connect() as conn:
             # We need to run this as raw SQL since we can't use DROP DATABASE in a transaction
-            result = await conn.execute(text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'"))
+            result = await conn.execute(
+                text(f"SELECT 1 FROM pg_database WHERE datname = '{DB_NAME}'")
+            )
             exists = result.scalar() is not None
 
             if exists:
@@ -172,7 +182,9 @@ async def test_chunking_functionality():
 
     for size in chunk_sizes:
         chunks = chunk_text(sample_text, chunk_size=size, chunk_overlap=10)
-        test_logger.info(f"Chunked text with size={size}: {len(chunks)} chunks produced")
+        test_logger.info(
+            f"Chunked text with size={size}: {len(chunks)} chunks produced"
+        )
         for i, chunk in enumerate(chunks):
             test_logger.info(f"  Chunk {i}: {len(chunk)} chars: {chunk[:30]}...")
 
@@ -207,7 +219,9 @@ async def test_embedding_functionality():
         # Test single text embedding
         sample_text = "This is a test sentence for embedding."
         embedding = await embed_text(sample_text)
-        test_logger.info(f"Generated embedding for single text: {len(embedding)} dimensions")
+        test_logger.info(
+            f"Generated embedding for single text: {len(embedding)} dimensions"
+        )
 
         # Test batch embedding
         sample_texts = [
@@ -294,10 +308,19 @@ async def test_policy_chunking_and_embedding():
             test_logger.info(f"Generated {len(chunk_embeddings)} embeddings")
 
             # Create PolicyChunk objects
-            for i, (chunk_text, embedding) in enumerate(zip(chunks_text, chunk_embeddings)):
-                chunk = PolicyChunk(policy_id=created_policy.id, chunk_index=i, content=chunk_text, embedding=embedding)
+            for i, (chunk_text, embedding) in enumerate(
+                zip(chunks_text, chunk_embeddings)
+            ):
+                chunk = PolicyChunk(
+                    policy_id=created_policy.id,
+                    chunk_index=i,
+                    content=chunk_text,
+                    embedding=embedding,
+                )
                 created_chunk = await policy_repo.create_chunk(chunk)
-                test_logger.info(f"Created chunk {i}: ID={created_chunk.id}, {len(chunk_text)} chars")
+                test_logger.info(
+                    f"Created chunk {i}: ID={created_chunk.id}, {len(chunk_text)} chars"
+                )
 
             # Test retrieving chunks
             policy_chunks = await policy_repo.get_chunks_by_policy_id(created_policy.id)
@@ -309,7 +332,9 @@ async def test_policy_chunking_and_embedding():
                 search_terms = ["guideline", "compliance", "introduction"]
                 for term in search_terms:
                     results = await policy_repo.text_search_chunks(term)
-                    test_logger.info(f"Text search for '{term}' returned {len(results)} results")
+                    test_logger.info(
+                        f"Text search for '{term}' returned {len(results)} results"
+                    )
                     if results:
                         for i, result in enumerate(results[:2]):  # Show first 2 results
                             test_logger.info(
@@ -320,10 +345,16 @@ async def test_policy_chunking_and_embedding():
             if len(policy_chunks) > 0 and len(chunk_embeddings) > 0:
                 # Use the first chunk's embedding as query
                 query_embedding = chunk_embeddings[0]
-                embedding_results = await policy_repo.search_chunks_by_embedding(query_embedding)
-                test_logger.info(f"Embedding search returned {len(embedding_results)} results")
+                embedding_results = await policy_repo.search_chunks_by_embedding(
+                    query_embedding
+                )
+                test_logger.info(
+                    f"Embedding search returned {len(embedding_results)} results"
+                )
                 if embedding_results:
-                    for i, result in enumerate(embedding_results[:2]):  # Show first 2 results
+                    for i, result in enumerate(
+                        embedding_results[:2]
+                    ):  # Show first 2 results
                         test_logger.info(
                             f"  Result {i}: similarity={result['similarity']:.4f}, content={result['content'][:50]}..."
                         )
@@ -331,9 +362,12 @@ async def test_policy_chunking_and_embedding():
                 # Test that results are ordered by similarity (highest first)
                 if len(embedding_results) >= 2:
                     assert (
-                        embedding_results[0]["similarity"] >= embedding_results[1]["similarity"]
+                        embedding_results[0]["similarity"]
+                        >= embedding_results[1]["similarity"]
                     ), "Embedding search results not properly ordered by similarity"
-                    test_logger.info("Confirmed embedding search results are ordered by similarity")
+                    test_logger.info(
+                        "Confirmed embedding search results are ordered by similarity"
+                    )
 
                 # Test with a slightly modified embedding to verify different similarity scores
                 if len(chunk_embeddings) > 0:
@@ -341,13 +375,18 @@ async def test_policy_chunking_and_embedding():
                     import random
 
                     # Add less noise to ensure similarity stays above default threshold
-                    modified_embedding = [e + random.uniform(-0.05, 0.05) for e in query_embedding]
+                    modified_embedding = [
+                        e + random.uniform(-0.05, 0.05) for e in query_embedding
+                    ]
 
                     # Search with modified embedding using a lower threshold to ensure results
                     modified_results = await policy_repo.search_chunks_by_embedding(
-                        modified_embedding, similarity_threshold=0.5  # Lower threshold to ensure we get results
+                        modified_embedding,
+                        similarity_threshold=0.5,  # Lower threshold to ensure we get results
                     )
-                    test_logger.info(f"Modified embedding search returned {len(modified_results)} results")
+                    test_logger.info(
+                        f"Modified embedding search returned {len(modified_results)} results"
+                    )
 
                     # Verify that exact match embedding has better similarity than modified one
                     if (
@@ -359,24 +398,35 @@ async def test_policy_chunking_and_embedding():
                             f"Original similarity: {embedding_results[0]['similarity']:.4f}, Modified similarity: {modified_results[0]['similarity']:.4f}"
                         )
                         assert (
-                            embedding_results[0]["similarity"] > modified_results[0]["similarity"]
+                            embedding_results[0]["similarity"]
+                            > modified_results[0]["similarity"]
                         ), "Exact match embedding should have higher similarity than modified embedding"
-                        test_logger.info("Confirmed exact match has higher similarity than modified embedding")
+                        test_logger.info(
+                            "Confirmed exact match has higher similarity than modified embedding"
+                        )
 
                 # Test similarity threshold filtering
                 if len(chunk_embeddings) > 0:
                     # Get baseline count with default threshold
-                    baseline_results = await policy_repo.search_chunks_by_embedding(query_embedding)
+                    baseline_results = await policy_repo.search_chunks_by_embedding(
+                        query_embedding
+                    )
                     baseline_count = len(baseline_results)
 
                     if baseline_count > 0:
                         # Get minimum similarity from baseline results
-                        min_similarity = min(result["similarity"] for result in baseline_results)
+                        min_similarity = min(
+                            result["similarity"] for result in baseline_results
+                        )
 
                         # Test with higher threshold (should return fewer results)
-                        higher_threshold = min(min_similarity + 0.1, 0.95)  # Add 0.1 but cap at 0.95
-                        higher_threshold_results = await policy_repo.search_chunks_by_embedding(
-                            query_embedding, similarity_threshold=higher_threshold
+                        higher_threshold = min(
+                            min_similarity + 0.1, 0.95
+                        )  # Add 0.1 but cap at 0.95
+                        higher_threshold_results = (
+                            await policy_repo.search_chunks_by_embedding(
+                                query_embedding, similarity_threshold=higher_threshold
+                            )
                         )
 
                         test_logger.info(
@@ -394,17 +444,25 @@ async def test_policy_chunking_and_embedding():
                                 result["similarity"] >= higher_threshold
                             ), f"Result with similarity {result['similarity']} below threshold {higher_threshold}"
 
-                        test_logger.info("Confirmed similarity threshold filtering works correctly")
+                        test_logger.info(
+                            "Confirmed similarity threshold filtering works correctly"
+                        )
 
             # Test hybrid search
             if len(policy_chunks) > 0 and len(chunk_embeddings) > 0:
                 # Search for "guideline" with the first chunk's embedding
                 query_text = "guideline"
                 query_embedding = chunk_embeddings[0]
-                hybrid_results = await policy_repo.hybrid_search(query_text, query_embedding)
-                test_logger.info(f"Hybrid search returned {len(hybrid_results)} results")
+                hybrid_results = await policy_repo.hybrid_search(
+                    query_text, query_embedding
+                )
+                test_logger.info(
+                    f"Hybrid search returned {len(hybrid_results)} results"
+                )
                 if hybrid_results:
-                    for i, result in enumerate(hybrid_results[:2]):  # Show first 2 results
+                    for i, result in enumerate(
+                        hybrid_results[:2]
+                    ):  # Show first 2 results
                         test_logger.info(
                             f"  Result {i}: combined={result['combined_score']:.4f}, text={result['text_score']:.4f}, vector={result['vector_score']:.4f}"
                         )
@@ -414,14 +472,18 @@ async def test_policy_chunking_and_embedding():
                 middle_index = len(policy_chunks) // 2
                 middle_chunk = policy_chunks[middle_index]
                 neighbors = await policy_repo.get_chunk_neighbors(middle_chunk.id)
-                test_logger.info(f"Retrieved neighbors for chunk {middle_chunk.id} (index {middle_chunk.chunk_index})")
+                test_logger.info(
+                    f"Retrieved neighbors for chunk {middle_chunk.id} (index {middle_chunk.chunk_index})"
+                )
 
                 if neighbors["previous"]:
                     if isinstance(neighbors["previous"], list):
                         prev_ids = [c.id for c in neighbors["previous"]]
                         test_logger.info(f"  Previous chunks: {prev_ids}")
                     else:
-                        test_logger.info(f"  Previous chunk: {neighbors['previous'].id}")
+                        test_logger.info(
+                            f"  Previous chunk: {neighbors['previous'].id}"
+                        )
 
                 if neighbors["next"]:
                     if isinstance(neighbors["next"], list):
@@ -433,7 +495,9 @@ async def test_policy_chunking_and_embedding():
             # Test getting policies from chunks
             if hybrid_results and len(hybrid_results) > 0:
                 policies = await policy_repo.get_policies_from_chunks(hybrid_results)
-                test_logger.info(f"Retrieved {len(policies)} unique policies from chunk results")
+                test_logger.info(
+                    f"Retrieved {len(policies)} unique policies from chunk results"
+                )
 
             # Commit all changes
             await session.commit()
@@ -443,7 +507,9 @@ async def test_policy_chunking_and_embedding():
             return created_policy.id
 
     except Exception as e:
-        test_logger.error(f"Error in policy chunking and embedding test: {e}", exc_info=True)
+        test_logger.error(
+            f"Error in policy chunking and embedding test: {e}", exc_info=True
+        )
         return None
     finally:
         await engine.dispose()
@@ -463,11 +529,17 @@ async def test_comprehensive_repository_functions():
 
             # Create test users
             admin_user = User(
-                email="admin@example.com", password_hash="admin_password_hash", full_name="Admin User", is_admin=True
+                email="admin@example.com",
+                password_hash="admin_password_hash",
+                full_name="Admin User",
+                is_admin=True,
             )
 
             regular_user = User(
-                email="user@example.com", password_hash="user_password_hash", full_name="Regular User", is_admin=False
+                email="user@example.com",
+                password_hash="user_password_hash",
+                full_name="Regular User",
+                is_admin=False,
             )
 
             # Modified to handle potentially missing is_active field
@@ -487,7 +559,9 @@ async def test_comprehensive_repository_functions():
                     full_name="Inactive User",
                     is_admin=False,
                 )
-                test_logger.warning("is_active field not present in User model, continuing without it")
+                test_logger.warning(
+                    "is_active field not present in User model, continuing without it"
+                )
 
             # Test create function
             created_admin = await user_repo.create(admin_user)
@@ -505,16 +579,22 @@ async def test_comprehensive_repository_functions():
             # Test get_by_email
             fetched_by_email = await user_repo.get_by_email("user@example.com")
             assert fetched_by_email is not None, "Failed to fetch user by email"
-            assert fetched_by_email.id == created_regular.id, "User fetched by email has incorrect ID"
+            assert (
+                fetched_by_email.id == created_regular.id
+            ), "User fetched by email has incorrect ID"
 
             # Test get_by_username if applicable - SKIPPING as User model doesn't have username
             # The model uses email instead of username for authentication
-            test_logger.info("Skipping username tests as User model uses email for identification")
+            test_logger.info(
+                "Skipping username tests as User model uses email for identification"
+            )
 
             # Test get_admin_users
             admin_users = await user_repo.get_admin_users()
             assert len(admin_users) > 0, "No admin users found"
-            assert any(u.id == created_admin.id for u in admin_users), "Admin user not found in admin users list"
+            assert any(
+                u.id == created_admin.id for u in admin_users
+            ), "Admin user not found in admin users list"
 
             # Test get_active_users if implemented
             if hasattr(User, "is_active") and hasattr(user_repo, "get_active_users"):
@@ -528,16 +608,22 @@ async def test_comprehensive_repository_functions():
                     auth_result = await user_repo.authenticate(
                         email="user@example.com", hashed_password="user_password_hash"
                     )
-                    test_logger.info(f"Authentication result: {auth_result.id if auth_result else 'Failed'}")
+                    test_logger.info(
+                        f"Authentication result: {auth_result.id if auth_result else 'Failed'}"
+                    )
                 except TypeError:
                     # If method signature doesn't match, skip this test
-                    test_logger.warning("Authentication method has incompatible signature, skipping test")
+                    test_logger.warning(
+                        "Authentication method has incompatible signature, skipping test"
+                    )
                 except AttributeError as e:
                     # If there's an attribute error (like no username field), skip this test
                     test_logger.warning(f"Authentication test skipped: {e}")
 
             # Test update
-            update_result = await user_repo.update(created_regular.id, {"full_name": "Updated User Name"})
+            update_result = await user_repo.update(
+                created_regular.id, {"full_name": "Updated User Name"}
+            )
             assert update_result.full_name == "Updated User Name", "User update failed"
 
             # Now test Policy Repository functions not covered in the previous test
@@ -560,27 +646,39 @@ async def test_comprehensive_repository_functions():
             # Test get_by_title
             title_policy = await policy_repo.get_by_title("Test Policy 1")
             assert title_policy is not None, "Failed to get policy by title"
-            assert title_policy.id == policies[1].id, "Policy fetched by title has incorrect ID"
+            assert (
+                title_policy.id == policies[1].id
+            ), "Policy fetched by title has incorrect ID"
 
             # Test get_by_url
             url_policy = await policy_repo.get_by_url("http://example.com/policy-2")
             assert url_policy is not None, "Failed to get policy by URL"
-            assert url_policy.id == policies[2].id, "Policy fetched by URL has incorrect ID"
+            assert (
+                url_policy.id == policies[2].id
+            ), "Policy fetched by URL has incorrect ID"
 
             # Test search_by_title
             title_search = await policy_repo.search_by_title("Policy")
-            assert len(title_search) >= 3, "Title search returned fewer results than expected"
+            assert (
+                len(title_search) >= 3
+            ), "Title search returned fewer results than expected"
 
             # Test get_recent_policies
             recent_policies = await policy_repo.get_recent_policies()
-            assert len(recent_policies) >= 3, "Recent policies returned fewer results than expected"
+            assert (
+                len(recent_policies) >= 3
+            ), "Recent policies returned fewer results than expected"
 
             # Test get_recently_updated_policies
             updated_policies = await policy_repo.get_recently_updated_policies()
-            assert len(updated_policies) >= 3, "Recently updated policies returned fewer results than expected"
+            assert (
+                len(updated_policies) >= 3
+            ), "Recently updated policies returned fewer results than expected"
 
             # SKIP Test get_policy_details due to issues with selectinload.order_by
-            test_logger.info("Skipping get_policy_details test due to issues with selectinload.order_by")
+            test_logger.info(
+                "Skipping get_policy_details test due to issues with selectinload.order_by"
+            )
 
             # Test full_text_search
             search_results = await policy_repo.full_text_search("Test")
@@ -589,7 +687,10 @@ async def test_comprehensive_repository_functions():
 
             # Log a policy update
             update_log = await policy_repo.log_policy_update(
-                policy_id=policies[0].id, admin_id=created_admin.id, action="test_update", details={"test": "details"}
+                policy_id=policies[0].id,
+                admin_id=created_admin.id,
+                action="test_update",
+                details={"test": "details"},
             )
             assert update_log is not None, "Failed to log policy update"
 
@@ -666,7 +767,9 @@ async def run_all_tests(keep_db=False):
         test_logger.info("All policy chunking and embedding tests passed successfully!")
 
         if keep_db:
-            test_logger.info(f"Keeping test database '{DB_NAME}' for inspection (--keep-db flag is set)")
+            test_logger.info(
+                f"Keeping test database '{DB_NAME}' for inspection (--keep-db flag is set)"
+            )
         else:
             # Clean up test database
             await drop_test_database()
@@ -679,8 +782,14 @@ async def run_all_tests(keep_db=False):
 
 def parse_args():
     """Parse command-line arguments."""
-    parser = argparse.ArgumentParser(description="Test policy chunking and embedding functionality")
-    parser.add_argument("--keep-db", action="store_true", help="Keep the test database after tests finish")
+    parser = argparse.ArgumentParser(
+        description="Test policy chunking and embedding functionality"
+    )
+    parser.add_argument(
+        "--keep-db",
+        action="store_true",
+        help="Keep the test database after tests finish",
+    )
     return parser.parse_args()
 
 

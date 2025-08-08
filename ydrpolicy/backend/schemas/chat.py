@@ -10,10 +10,15 @@ from pydantic import BaseModel, Field, ConfigDict  # Import ConfigDict
 class ChatRequest(BaseModel):
     """Request model for the streaming chat endpoint."""
 
-    user_id: int = Field(..., description="The ID of the user initiating the chat request.")
-    message: str = Field(..., description="The user's current message to the chat agent.")
+    user_id: int = Field(
+        ..., description="The ID of the user initiating the chat request."
+    )
+    message: str = Field(
+        ..., description="The user's current message to the chat agent."
+    )
     chat_id: Optional[int] = Field(
-        None, description="The ID of an existing chat session to continue. If None, a new chat will be created."
+        None,
+        description="The ID of an existing chat session to continue. If None, a new chat will be created.",
     )
 
 
@@ -33,14 +38,19 @@ class StreamChunk(BaseModel):
     """
 
     type: str = Field(
-        ..., description="Type of the chunk (e.g., 'text_delta', 'tool_call', 'chat_info', 'error', 'status')."
+        ...,
+        description="Type of the chunk (e.g., 'text_delta', 'tool_call', 'chat_info', 'error', 'status').",
     )
-    data: StreamChunkData = Field(..., description="The actual data payload for the chunk.")
+    data: StreamChunkData = Field(
+        ..., description="The actual data payload for the chunk."
+    )
 
 
 # --- Specific data models for StreamChunk payloads ---
 class ChatInfoData(BaseModel):
-    chat_id: int = Field(..., description="The ID of the chat session (new or existing).")
+    chat_id: int = Field(
+        ..., description="The ID of the chat session (new or existing)."
+    )
     title: Optional[str] = Field(None, description="The title of the chat session.")
 
 
@@ -64,8 +74,13 @@ class ErrorData(BaseModel):
 
 
 class StatusData(BaseModel):
-    status: str = Field(..., description="The final status of the agent run (e.g., 'complete', 'error').")
-    chat_id: Optional[int] = Field(None, description="The ID of the chat session, included on final status.")
+    status: str = Field(
+        ...,
+        description="The final status of the agent run (e.g., 'complete', 'error').",
+    )
+    chat_id: Optional[int] = Field(
+        None, description="The ID of the chat session, included on final status."
+    )
 
 
 # --- Schemas for Chat Management ---
@@ -76,9 +91,15 @@ class ChatSummary(BaseModel):
 
     id: int = Field(..., description="Unique identifier for the chat session.")
     title: Optional[str] = Field(None, description="Title of the chat session.")
-    created_at: datetime = Field(..., description="Timestamp when the chat was created.")
-    updated_at: datetime = Field(..., description="Timestamp when the chat was last updated (last message).")
-    is_archived: bool = Field(..., description="Indicates if the chat session is archived.")  # Added
+    created_at: datetime = Field(
+        ..., description="Timestamp when the chat was created."
+    )
+    updated_at: datetime = Field(
+        ..., description="Timestamp when the chat was last updated (last message)."
+    )
+    is_archived: bool = Field(
+        ..., description="Indicates if the chat session is archived."
+    )  # Added
 
     # Enable ORM mode to allow creating instances from SQLAlchemy models
     model_config = ConfigDict(from_attributes=True)
@@ -88,9 +109,13 @@ class MessageSummary(BaseModel):
     """Represents a single message within a chat history."""
 
     id: int = Field(..., description="Unique identifier for the message.")
-    role: str = Field(..., description="Role of the message sender ('user' or 'assistant').")
+    role: str = Field(
+        ..., description="Role of the message sender ('user' or 'assistant')."
+    )
     content: str = Field(..., description="Text content of the message.")
-    created_at: datetime = Field(..., description="Timestamp when the message was created.")
+    created_at: datetime = Field(
+        ..., description="Timestamp when the message was created."
+    )
     # Optional: Add tool_usages here later if needed by frontend history display
     # tool_usages: Optional[List[Dict[str, Any]]] = None
 
@@ -101,13 +126,21 @@ class MessageSummary(BaseModel):
 class ChatRenameRequest(BaseModel):
     """Request model for renaming a chat session."""
 
-    new_title: str = Field(..., min_length=1, max_length=255, description="The new title for the chat session.")
+    new_title: str = Field(
+        ...,
+        min_length=1,
+        max_length=255,
+        description="The new title for the chat session.",
+    )
 
 
 class ActionResponse(BaseModel):
     """Generic response model for actions returning a message and count."""
 
-    message: str = Field(..., description="A confirmation message about the action performed.")
+    message: str = Field(
+        ..., description="A confirmation message about the action performed."
+    )
     count: Optional[int] = Field(
-        None, description="Optional count related to the action (e.g., number of items affected)."
+        None,
+        description="Optional count related to the action (e.g., number of items affected).",
     )

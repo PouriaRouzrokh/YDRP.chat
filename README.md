@@ -127,7 +127,12 @@ https://github.com/PouriaRouzrokh/YDRP_UI
     pip install -r requirements.txt
     ```
 
-    _Note: Ensure your dependency file includes `fastapi[all]`, `openai`, `agents-sdk`, `mcp[cli]`, `sqlalchemy[asyncpg]`, `psycopg` (or `psycopg2-binary`), `pgvector-sqlalchemy`, `typer`, `python-dotenv`, `pandas`, `selenium`, `markdownify`, `python-jose[cryptography]`, `passlib[bcrypt]`, `python-multipart`, `ruff`, `alembic` (if using migrations)._
+    _Note: Ensure your dependency file includes `fastapi[all]`, `openai`, `agents-sdk`, `mcp[cli]`, `sqlalchemy[asyncpg]`, `psycopg` (or `psycopg2-binary`), `pgvector-sqlalchemy`, `typer`, `python-dotenv`, `pandas`, `selenium`, `markdownify`, `python-jose[cryptography]`, `passlib[bcrypt]`, `python-multipart`, `ruff`, `alembic` (if using migrations)._ 
+
+    - Using uv (optional, recommended for local runs without installing the package):
+      ```bash
+      uv run python main.py --help
+      ```
 
 5.  **Configuration (`.env` file):**
 
@@ -222,7 +227,7 @@ Manages the database schema, user seeding, and policy data population.
 
 ### 2. `policy` Command
 
-Manages the data collection/processing pipeline (filesystem operations) and database _removal_.
+Manages the data collection/processing pipeline (filesystem operations), local PDF ingestion, and database _removal_.
 
 - **`python main.py policy --collect-all`**
 
@@ -258,6 +263,30 @@ Manages the data collection/processing pipeline (filesystem operations) and data
   - `--resume-crawl`: (With `--collect-all` / `--crawl-all`) Resumes crawl from saved state.
   - `--force`: (With `--remove-*`) Skips confirmation prompt.
   - `--db-url <URL>`: (With `--remove-*`) Specifies DB URL for removal.
+
+#### Local PDF Ingestion (New)
+
+- **`python main.py policy --ingest-pdfs [--pdfs-dir <policies_YYYYMMDD>] [--rebuild-db] [--global-link <URL>]`**
+
+  - **Purpose:** Ingests policies directly from a local folder of PDFs (organized under `data/source_policies/`). Converts each PDF to Markdown, chunks, embeds, and writes to the database.
+  - **Folder Discovery:** If `--pdfs-dir` is omitted, the app auto-detects the latest folder named like `policies_YYYYMMDD` under `data/source_policies/`.
+  - **Processed Outputs:** For each policy, processed markdown/images are saved under `data/processed/local_policies/<sanitized_title>_<timestamp>/` and appended to `data/processed/processed_policies_log.csv`.
+  - **DB Rebuild:** If `--rebuild-db` is supplied, the database is dropped and re-initialized, existing users are re-seeded from `auth/users.json`, and prior processed folders (`scraped_policies` and `local_policies`) and `processed_policies_log.csv` are removed.
+  - **Citations:** For locally ingested policies without a public URL, the agent cites the policy title and, if provided, includes the global download page link via `--global-link`.
+  - **OCR Behavior:** The pipeline first attempts OCR via Mistral. If the file upload OCR API is unavailable, it falls back to extracting text with PyPDF to ensure ingestion continuity.
+
+  - **Examples:**
+    ```bash
+    # Using uv (auto-pick latest policies_YYYYMMDD)
+    uv run python main.py policy --ingest-pdfs --global-link "https://medicine.yale.edu/radiology-biomedical-imaging/intranet/division-of-bioimaging-sciences-policies-sops-and-forms/"
+
+    # Rebuild database and ingest from a specific folder
+    uv run python main.py policy \
+      --ingest-pdfs \
+      --pdfs-dir "/home1/pr555/Projects/YDRP-RAG/ydrp_engine/data/source_policies/policies_20250808" \
+      --rebuild-db \
+      --global-link "https://medicine.yale.edu/radiology-biomedical-imaging/intranet/division-of-bioimaging-sciences-policies-sops-and-forms/"
+    ```
 
 ### 3. `mcp` Command
 
@@ -309,8 +338,13 @@ Runs the chat agent application.
 2.  **(First time or after schema change) Init DB & Seed Users:**
     - Using Alembic: `alembic upgrade head` (assuming initialized and migrations generated)
     - Using `init_db`: `python main.py database --init --no-populate`
-3.  **(Optional) Collect & Process Policy Data:** `python main.py policy --collect-all`
-4.  **(Optional) Populate Policies into DB:** `python main.py database --populate`
+3.  **(Optional) Collect & Process Policy Data (Web Crawl):** `python main.py policy --collect-all`
+4.  **(Optional) Populate Policies into DB (from web-scraped results):** `python main.py database --populate`
+5.  **(Alternative) Ingest Policies from Local PDFs (skips crawl/scrape):**
+    ```bash
+    # Auto-detect latest policies_YYYYMMDD folder
+    uv run python main.py policy --ingest-pdfs --global-link "https://medicine.yale.edu/radiology-biomedical-imaging/intranet/division-of-bioimaging-sciences-policies-sops-and-forms/"
+    ```
 5.  **Start MCP Server:** `python main.py mcp --transport http` (in Terminal 1)
 6.  **Start Agent API Server:** `python main.py agent` (in Terminal 2)
 7.  **Interact:** Use the frontend UI (pointing to `http://localhost:8000`) or the API docs (`http://localhost:8000/docs`).

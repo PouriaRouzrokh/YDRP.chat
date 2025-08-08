@@ -17,7 +17,9 @@ from ydrpolicy.backend.routers import auth as auth_router  # Import the auth rou
 # from ydrpolicy.backend.routers import auth as auth_router
 from ydrpolicy.backend.agent.mcp_connection import close_mcp_connection
 from ydrpolicy.backend.database.engine import close_db_connection
-from ydrpolicy.backend.utils.paths import ensure_directories  # Import ensure_directories
+from ydrpolicy.backend.utils.paths import (
+    ensure_directories,
+)  # Import ensure_directories
 
 # Initialize logger
 logger = logging.getLogger(__name__)

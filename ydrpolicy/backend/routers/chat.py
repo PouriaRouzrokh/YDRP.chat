@@ -5,9 +5,23 @@ API Router for chat interactions with the YDR Policy Agent, including history an
 import asyncio
 import json  # Needed for tool call input parsing
 import logging
-from typing import Any, AsyncGenerator, Dict, List, Optional, Annotated  # Added types and Annotated
+from typing import (
+    Any,
+    AsyncGenerator,
+    Dict,
+    List,
+    Optional,
+    Annotated,
+)  # Added types and Annotated
 
-from fastapi import APIRouter, Body, Depends, HTTPException, Query, status  # Added status
+from fastapi import (
+    APIRouter,
+    Body,
+    Depends,
+    HTTPException,
+    Query,
+    status,
+)  # Added status
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession  # Added AsyncSession
 
@@ -92,9 +106,12 @@ async def stream_chat(
     Requires authentication. User ID in request body must match authenticated user.
     """
     if request.user_id != current_user.id:
-        logger.warning(f"User ID mismatch: Token user ID {current_user.id} != Request body user ID {request.user_id}")
+        logger.warning(
+            f"User ID mismatch: Token user ID {current_user.id} != Request body user ID {request.user_id}"
+        )
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="User ID in request does not match authenticated user."
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="User ID in request does not match authenticated user.",
         )
 
     logger.info(
@@ -105,16 +122,18 @@ async def stream_chat(
         try:
             # Start with initial heartbeat to confirm connection
             yield f"data: {{\n\n"
-            
+
             # Process the user message and stream responses
             async for chunk in chat_service.process_user_message_stream(
-                user_id=current_user.id, message=request.message, chat_id=request.chat_id
+                user_id=current_user.id,
+                message=request.message,
+                chat_id=request.chat_id,
             ):
                 if hasattr(chunk, "type") and hasattr(chunk, "data"):
                     json_chunk = chunk.model_dump_json(exclude_unset=True)
                     yield f"data: {json_chunk}\n\n"
                     # Reduce sleep time to avoid long pauses but maintain backpressure
-                    await asyncio.sleep(0.002)  
+                    await asyncio.sleep(0.002)
                 else:
                     logger.error(f"Invalid chunk received from service: {chunk!r}")
 
@@ -130,11 +149,17 @@ async def stream_chat(
                 exc_info=True,
             )
             try:
-                error_payload = ErrorData(message=f"Streaming generation failed: {str(e)}")
+                error_payload = ErrorData(
+                    message=f"Streaming generation failed: {str(e)}"
+                )
                 if hasattr(chat_service, "_create_stream_chunk"):
-                    error_chunk = chat_service._create_stream_chunk("error", error_payload)
+                    error_chunk = chat_service._create_stream_chunk(
+                        "error", error_payload
+                    )
                 else:
-                    error_chunk = StreamChunk(type="error", data=StreamChunkData(**error_payload.model_dump()))
+                    error_chunk = StreamChunk(
+                        type="error", data=StreamChunkData(**error_payload.model_dump())
+                    )
                 yield f"data: {error_chunk.model_dump_json()}\n\n"
                 # Final heartbeat
                 yield f"data: {{\n\n"
@@ -154,7 +179,7 @@ async def stream_chat(
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
             "X-Accel-Buffering": "no",  # Prevent Nginx buffering
-        }
+        },
     )
     return response
 
@@ -169,14 +194,21 @@ async def stream_chat(
         "ordered by the most recently updated. By default, only active (non-archived) chats are returned."
     ),
     response_description="A list of chat session summaries.",
-    responses={401: {"description": "Authentication required"}, 500: {"description": "Internal Server Error"}},
+    responses={
+        401: {"description": "Authentication required"},
+        500: {"description": "Internal Server Error"},
+    },
 )
 async def list_user_chats(
     archived: bool = Query(
         False, description="Set to true to list archived chats instead of active ones."
     ),  # Added parameter
-    skip: int = Query(0, ge=0, description="Number of chat sessions to skip (for pagination)."),
-    limit: int = Query(100, ge=1, le=200, description="Maximum number of chat sessions to return."),
+    skip: int = Query(
+        0, ge=0, description="Number of chat sessions to skip (for pagination)."
+    ),
+    limit: int = Query(
+        100, ge=1, le=200, description="Maximum number of chat sessions to return."
+    ),
     current_user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(get_session),
 ):
@@ -191,11 +223,19 @@ async def list_user_chats(
     try:
         chat_repo = ChatRepository(session)
         # Pass the archived status to the repository method
-        chats = await chat_repo.get_chats_by_user(user_id=current_user.id, skip=skip, limit=limit, archived=archived)
+        chats = await chat_repo.get_chats_by_user(
+            user_id=current_user.id, skip=skip, limit=limit, archived=archived
+        )
         return chats
     except Exception as e:
-        logger.error(f"Error fetching {status_str} chats for user {current_user.id}: {e}", exc_info=True)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve chat list.")
+        logger.error(
+            f"Error fetching {status_str} chats for user {current_user.id}: {e}",
+            exc_info=True,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve chat list.",
+        )
 
 
 # --- Get Messages for a Chat Endpoint ---
@@ -214,8 +254,12 @@ async def list_user_chats(
 )
 async def get_chat_messages(
     chat_id: int,
-    skip: int = Query(0, ge=0, description="Number of messages to skip (for pagination)."),
-    limit: int = Query(100, ge=1, le=500, description="Maximum number of messages to return."),
+    skip: int = Query(
+        0, ge=0, description="Number of messages to skip (for pagination)."
+    ),
+    limit: int = Query(
+        100, ge=1, le=500, description="Maximum number of messages to return."
+    ),
     current_user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(get_session),
 ):
@@ -230,18 +274,28 @@ async def get_chat_messages(
         chat_repo = ChatRepository(session)
         msg_repo = MessageRepository(session)
 
-        chat = await chat_repo.get_by_user_and_id(chat_id=chat_id, user_id=current_user.id)
+        chat = await chat_repo.get_by_user_and_id(
+            chat_id=chat_id, user_id=current_user.id
+        )
         if not chat:
-            logger.warning(f"Chat {chat_id} not found or not owned by user {current_user.id}.")
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found.")
+            logger.warning(
+                f"Chat {chat_id} not found or not owned by user {current_user.id}."
+            )
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found."
+            )
 
         messages = await msg_repo.get_by_chat_id_ordered(chat_id=chat_id, limit=None)
         paginated_messages = messages[skip : skip + limit]
         return paginated_messages
     except Exception as e:
-        logger.error(f"Error fetching messages for chat {chat_id}, user {current_user.id}: {e}", exc_info=True)
+        logger.error(
+            f"Error fetching messages for chat {chat_id}, user {current_user.id}: {e}",
+            exc_info=True,
+        )
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to retrieve chat messages."
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve chat messages.",
         )
 
 
@@ -268,7 +322,9 @@ async def rename_chat_session(
     """
     Renames a specific chat session belonging to the authenticated user.
     """
-    logger.info(f"API: User {current_user.id} attempting to rename chat {chat_id} to '{request.new_title}'.")
+    logger.info(
+        f"API: User {current_user.id} attempting to rename chat {chat_id} to '{request.new_title}'."
+    )
     try:
         chat_repo = ChatRepository(session)
         updated_chat = await chat_repo.update_chat_title(
@@ -278,15 +334,22 @@ async def rename_chat_session(
         if not updated_chat:
             # get_by_user_and_id check is done within update_chat_title
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user."
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Chat session not found or not owned by user.",
             )
 
         # Commit the session changes implicitly by exiting the 'with' block in get_session
         return updated_chat  # Pydantic will convert to ChatSummary
 
     except Exception as e:
-        logger.error(f"Error renaming chat {chat_id} for user {current_user.id}: {e}", exc_info=True)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to rename chat session.")
+        logger.error(
+            f"Error renaming chat {chat_id} for user {current_user.id}: {e}",
+            exc_info=True,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to rename chat session.",
+        )
 
 
 # --- NEW: Archive Chat Endpoint ---
@@ -315,19 +378,28 @@ async def archive_chat_session(
     try:
         chat_repo = ChatRepository(session)
         updated_chat = await chat_repo.archive_chat(
-            chat_id=chat_id, user_id=current_user.id, archive=True  # Set archive flag to True
+            chat_id=chat_id,
+            user_id=current_user.id,
+            archive=True,  # Set archive flag to True
         )
 
         if not updated_chat:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user."
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Chat session not found or not owned by user.",
             )
 
         return updated_chat
 
     except Exception as e:
-        logger.error(f"Error archiving chat {chat_id} for user {current_user.id}: {e}", exc_info=True)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to archive chat session.")
+        logger.error(
+            f"Error archiving chat {chat_id} for user {current_user.id}: {e}",
+            exc_info=True,
+        )
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to archive chat session.",
+        )
 
 
 # --- NEW: Unarchive Chat Endpoint ---
@@ -356,20 +428,27 @@ async def unarchive_chat_session(
     try:
         chat_repo = ChatRepository(session)
         updated_chat = await chat_repo.archive_chat(
-            chat_id=chat_id, user_id=current_user.id, archive=False  # Set archive flag to False
+            chat_id=chat_id,
+            user_id=current_user.id,
+            archive=False,  # Set archive flag to False
         )
 
         if not updated_chat:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Chat session not found or not owned by user."
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Chat session not found or not owned by user.",
             )
 
         return updated_chat
 
     except Exception as e:
-        logger.error(f"Error unarchiving chat {chat_id} for user {current_user.id}: {e}", exc_info=True)
+        logger.error(
+            f"Error unarchiving chat {chat_id} for user {current_user.id}: {e}",
+            exc_info=True,
+        )
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to unarchive chat session."
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to unarchive chat session.",
         )
 
 
@@ -392,7 +471,9 @@ async def archive_all_user_chats(
     """
     Archives all active chat sessions for the authenticated user.
     """
-    logger.warning(f"API: User {current_user.id} attempting to archive ALL active chats.")
+    logger.warning(
+        f"API: User {current_user.id} attempting to archive ALL active chats."
+    )
     try:
         chat_repo = ChatRepository(session)
         archived_count = await chat_repo.archive_all_chats(user_id=current_user.id)
@@ -401,12 +482,16 @@ async def archive_all_user_chats(
         # await session.commit() # Handled by get_session context manager
 
         return ActionResponse(
-            message=f"Successfully archived {archived_count} active chat session(s).", count=archived_count
+            message=f"Successfully archived {archived_count} active chat session(s).",
+            count=archived_count,
         )
 
     except Exception as e:
-        logger.error(f"Error archiving all chats for user {current_user.id}: {e}", exc_info=True)
+        logger.error(
+            f"Error archiving all chats for user {current_user.id}: {e}", exc_info=True
+        )
         # await session.rollback() # Handled by get_session context manager
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to archive all chat sessions."
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to archive all chat sessions.",
         )

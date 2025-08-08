@@ -32,7 +32,8 @@ router = APIRouter(
 
 @router.post("/token", response_model=Token)
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()], session: AsyncSession = Depends(get_session)
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    session: AsyncSession = Depends(get_session),
 ):
     """
     Standard OAuth2 password flow - login with email and password to get a JWT.
@@ -45,7 +46,9 @@ async def login_for_access_token(
 
     # Validate user and password
     if not user or not verify_password(form_data.password, user.password_hash):
-        logger.warning(f"Login failed for user: {form_data.username} - Invalid credentials.")
+        logger.warning(
+            f"Login failed for user: {form_data.username} - Invalid credentials."
+        )
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
@@ -55,14 +58,19 @@ async def login_for_access_token(
     # Create JWT
     # 'sub' (subject) is typically the username or user ID
     access_token = create_access_token(
-        data={"sub": user.email, "user_id": user.id}  # Include user_id if needed elsewhere
+        data={
+            "sub": user.email,
+            "user_id": user.id,
+        }  # Include user_id if needed elsewhere
     )
     logger.info(f"Login successful, token created for user: {user.email}")
     return {"access_token": access_token, "token_type": "bearer"}
 
 
 @router.get("/users/me", response_model=UserRead)
-async def read_users_me(current_user: Annotated[User, Depends(get_current_active_user)]):
+async def read_users_me(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
     """
     Test endpoint to get current authenticated user's details.
     """

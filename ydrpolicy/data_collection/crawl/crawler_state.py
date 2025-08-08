@@ -31,7 +31,11 @@ class CrawlerState:
         os.makedirs(state_dir, exist_ok=True)
 
     def save_state(
-        self, visited_urls: Set[str], priority_queue: List[Tuple[float, str, int]], current_url: str, current_depth: int
+        self,
+        visited_urls: Set[str],
+        priority_queue: List[Tuple[float, str, int]],
+        current_url: str,
+        current_depth: int,
     ) -> bool:
         """
         Save the current crawler state to disk.
@@ -101,7 +105,9 @@ class CrawlerState:
             self.logger.info(
                 f"Loaded crawler state: {len(state['visited_urls'])} URLs visited, {len(priority_queue)} URLs in queue"
             )
-            self.logger.info(f"Last URL: {state['current_url']} (depth: {state['current_depth']})")
+            self.logger.info(
+                f"Last URL: {state['current_url']} (depth: {state['current_depth']})"
+            )
 
             return state
 
