@@ -57,12 +57,10 @@ async def create_policy_agent(use_mcp: bool = True) -> Agent:
 
     # Only add model_settings if the model is not o3-mini, o3-preview, or o1-preview
     if config.OPENAI.MODEL not in ["o3-mini", "o3-preview", "o1-preview"]:
-        agent_settings["model_settings"] = (
-            ModelSettings(
-                temperature=config.OPENAI.TEMPERATURE,
-                # max_tokens=config.OPENAI.MAX_TOKENS, # Max tokens usually applies to completion, not the model setting itself directly here
-                # tool_choice="auto" # Let the agent decide when to use tools based on instructions
-            ),
+        agent_settings["model_settings"] = ModelSettings(
+            reasoning={
+                "effort": "medium",
+            }
         )
 
     # Filter out mcp_servers if not use_mcp
