@@ -18,7 +18,7 @@ dotenv_path = os.path.join(project_root, ".env")
 load_dotenv(dotenv_path=dotenv_path)
 
 # Import the main function to test
-from ydrpolicy.data_collection.collect_policies import collect_all
+from ydrpolicy.data_collection.collect_policy_urls import collect_all
 
 # Import config and logger
 from ydrpolicy.data_collection.config import config

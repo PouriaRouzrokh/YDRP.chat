@@ -1,5 +1,23 @@
 # Commit History
 
+## commit 40 (8/09/2025 - 12:44)
+
+- Renamed CLI flags for policy commands for consistency:
+  - `--collect-all` → `--collect-all-urls`, `--collect-one` → `--collect-one-url`
+  - `--crawl-all` → `--crawl-all-urls`, added `--crawl-one-url`
+  - `--scrape-all` → `--scrape-all-urls`
+  - Split `--ingest-pdfs` into process-only: `--ingest-all-pdfs`, `--ingest-one-pdf`
+- Separated processing from DB population:
+  - New process-only local PDF module `ydrpolicy/data_collection/ingest_local_pdfs.py`
+  - Renamed URLs collector to `ydrpolicy/data_collection/collect_policy_urls.py`
+  - `database --populate` now loads from BOTH `processed/scraped_policies/` and `processed/local_policies/`
+- Removed old redundant local-PDF DB ingestion path from `init_db.py`
+- Added `LOCAL_POLICIES_DIR` and `SOURCE_POLICIES_DIR` to data collection config
+- Updated `README.md` with new commands and flows; adjusted examples and module names
+- Verified end-to-end:
+  - Dropped and re-initialized DB (users re-seeded)
+  - Processed 35 local PDFs; populated DB with 35 policies and embeddings
+
 ## commit 39 (8/08/2025 - 18:10)
 
 - Made user email handling case-insensitive for authentication while keeping password verification case-sensitive.

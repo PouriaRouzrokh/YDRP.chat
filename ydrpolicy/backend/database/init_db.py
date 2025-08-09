@@ -38,13 +38,6 @@ from ydrpolicy.backend.services.chunking import chunk_text
 from ydrpolicy.backend.services.embeddings import embed_texts
 from ydrpolicy.backend.utils.auth_utils import hash_password
 from ydrpolicy.backend.utils.paths import ensure_directories
-from ydrpolicy.data_collection.config import config as data_config
-from ydrpolicy.data_collection.processors.pdf_processor import pdf_file_to_markdown
-from ydrpolicy.data_collection.scrape.scraper import (
-    _filter_markdown_for_txt,
-    sanitize_filename,
-)
-import shutil
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -721,300 +714,218 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
     )
 
 
-# --- New: Populate database from local PDFs ---
-def _find_latest_policies_dir(base_dir: str) -> Optional[str]:
-    """Find the latest 'policies_YYYYMMDD' directory under base_dir."""
-    if not os.path.isdir(base_dir):
-        logger.error(f"Source policies base directory not found: {base_dir}")
-        return None
-    latest_dir: Optional[str] = None
-    latest_key: Optional[int] = None
-    pattern = re.compile(r"^policies_(\d{8})$")
-    for name in os.listdir(base_dir):
-        full = os.path.join(base_dir, name)
-        if not os.path.isdir(full):
-            continue
-        m = pattern.match(name)
-        if not m:
-            continue
-        try:
-            key = int(m.group(1))
-        except ValueError:
-            continue
-        if latest_key is None or key > latest_key:
-            latest_key = key
-            latest_dir = full
-    return latest_dir
-
-
-def _prettify_title_from_filename(name: str) -> str:
-    """Create a human-readable title from a filename stem."""
-    base = os.path.splitext(os.path.basename(name))[0]
-    pretty = re.sub(r"[_\-]+", " ", base).strip()
-    pretty = re.sub(r"\s+", " ", pretty)
-    return pretty or base
-
-
-# Note: OCR-based local PDF conversion handled via pdf_file_to_markdown
-
-
-async def populate_database_from_local_pdfs(
-    session: AsyncSession,
-    source_policies_root: Optional[str] = None,
-    global_download_url: Optional[str] = None,
-) -> None:
+# --- Populate database from local processed policies (same logic, different dir) ---
+async def populate_database_from_local_processed(session: AsyncSession):
     """
-    Scan latest local policies directory and ingest PDFs as policies.
-
-    - Finds latest directory under config.PATHS.SOURCE_POLICIES_DIR matching 'policies_YYYYMMDD'
-    - Recursively scans for .pdf files
-    - For each PDF, extracts text with PyPDF
-    - Writes a structured folder under SCRAPED_POLICIES_DIR as '<title>_<timestamp>' with content.md and content.txt
-    - Reuses create/update logic to insert into DB and generate chunks/embeddings
+    Scans the local policies processed directory, identifies new/updated policies,
+    and populates the database within the given session using create or update logic.
     """
-    base_dir = config.PATHS.SOURCE_POLICIES_DIR
-    root_dir = (
-        source_policies_root
-        if source_policies_root
-        else _find_latest_policies_dir(base_dir)
-    )
-    if not root_dir or not os.path.isdir(root_dir):
-        logger.error(f"Local policies directory not found or invalid: {root_dir}")
+    local_policies_dir = config.PATHS.LOCAL_POLICIES_DIR
+    if not os.path.isdir(local_policies_dir):
+        logger.warning(f"Local processed policies directory not found: {local_policies_dir}")
         return
 
-    logger.info(f"Scanning local PDFs under: {root_dir}")
-    local_policies_dir = config.PATHS.LOCAL_POLICIES_DIR
-    os.makedirs(local_policies_dir, exist_ok=True)
+    logger.info(f"Scanning local processed policies directory: {local_policies_dir}")
 
-    # Load existing policies for update decisions
-    existing_policies = await get_existing_policies_info(session)
-
-    created_count = 0
-    updated_count = 0
-    skipped_count = 0
-    error_count = 0
-    # Prepare CSV log path (append mode)
-    csv_log_path = os.path.join(
+    # --- Load descriptions (from processed_policies_log.csv) ---
+    timestamp_to_description: Dict[str, str] = {}
+    url_to_description: Dict[str, str] = {}
+    csv_path = os.path.join(
         config.PATHS.PROCESSED_DATA_DIR, "processed_policies_log.csv"
     )
-    csv_header = (
-        "url,file_path,include,found_links_count,definite_links,probable_links,timestamp,"
-        "contains_policy,policy_title,policy_content_path,extraction_reasoning\n"
-    )
-    if not os.path.exists(csv_log_path):
+    if os.path.exists(csv_path):
         try:
-            with open(csv_log_path, "w", encoding="utf-8") as f:
-                f.write(csv_header)
-        except Exception as e:
-            logger.warning(f"Could not create CSV log at {csv_log_path}: {e}")
-
-    # Walk recursively for PDFs
-    for dirpath, _, filenames in os.walk(root_dir):
-        for filename in filenames:
-            if not filename.lower().endswith(".pdf"):
-                continue
-            pdf_path = os.path.join(dirpath, filename)
-            # Use filename to generate a human-readable title; folder-safe via sanitize_filename
-            title_pretty = _prettify_title_from_filename(filename)
-
-            # Check existing policy timestamp to decide create/update/skip
-            existing_info = existing_policies.get(title_pretty)
-            is_update = False
-            if existing_info:
-                existing_meta = existing_info.get("metadata", {}) or {}
-                existing_ts = existing_meta.get("scrape_timestamp")
-                # We will compare after we determine OCR timestamp
-
-            # Convert local PDF to markdown via OCR (shared with crawler)
-            md_output_dir = data_config.PATHS.MARKDOWN_DIR
-            os.makedirs(md_output_dir, exist_ok=True)
-            md_path, raw_timestamp = pdf_file_to_markdown(
-                pdf_path, md_output_dir, data_config
-            )
-            if not md_path or not os.path.exists(md_path) or not raw_timestamp:
+            policy_df = pd.read_csv(csv_path)
+            logger.info(f"Reading policy descriptions from CSV: {csv_path}")
+            timestamp_mapping = "timestamp" in policy_df.columns
+            url_mapping = "url" in policy_df.columns
+            if "extraction_reasoning" in policy_df.columns:
+                for _, row in policy_df.iterrows():
+                    if pd.notna(row["extraction_reasoning"]):
+                        reasoning = str(row["extraction_reasoning"])
+                        if timestamp_mapping and pd.notna(row["timestamp"]):
+                            timestamp_to_description[str(row["timestamp"])] = reasoning
+                        if url_mapping and pd.notna(row["url"]):
+                            url_to_description[str(row["url"])] = reasoning
+                logger.info(
+                    f"Loaded {len(timestamp_to_description)} timestamp mappings and {len(url_to_description)} URL mappings for descriptions."
+                )
+            else:
                 logger.warning(
-                    f"OCR/Markdown conversion failed for PDF. Skipping: {pdf_path}"
+                    f"CSV file '{csv_path}' missing 'extraction_reasoning' column."
                 )
-                skipped_count += 1
-                continue
+        except Exception as e:
+            logger.error(
+                f"Error reading policy descriptions from CSV '{csv_path}': {e}"
+            )
+    else:
+        logger.warning(f"Policy descriptions CSV file not found: {csv_path}")
 
-            # Determine timestamp for folder naming and metadata
-            scrape_timestamp = raw_timestamp
-            # Now that we have ts, decide update vs skip
-            if existing_info:
-                existing_meta = existing_info.get("metadata", {}) or {}
-                existing_ts = existing_meta.get("scrape_timestamp")
-                if isinstance(existing_ts, str) and scrape_timestamp <= existing_ts:
-                    skipped_count += 1
-                    logger.debug(
-                        f"Skipping '{title_pretty}' (OCR ts {scrape_timestamp} <= existing {existing_ts})."
-                    )
-                    continue
-                else:
-                    is_update = True
+    policy_repo = PolicyRepository(session)
+    existing_policies = await get_existing_policies_info(session)
+    folder_pattern = re.compile(r"^(.+)_\d{20}$")
 
-            # Read markdown and produce text via scraper helper
-            try:
-                with open(md_path, "r", encoding="utf-8") as f_md:
-                    raw_md_content = f_md.readlines()
-                text_content = _filter_markdown_for_txt(raw_md_content)
-                # Prepend header to markdown to include source URL and provenance
-                header_lines = [
-                    f"# Source URL: {global_download_url or ''}",
-                    f"# Imported From: Local PDF",
-                    f"# Original File: {filename}",
-                    f"# Timestamp: {scrape_timestamp}",
-                    "\n---\n\n",
-                ]
-                markdown_content = "".join(header_lines) + "".join(raw_md_content)
-            except Exception as e:
-                logger.error(f"Failed to prepare markdown/text for '{pdf_path}': {e}")
-                error_count += 1
-                continue
+    processed_new_count = 0
+    processed_update_count = 0
+    skipped_count = 0
+    error_count = 0
+    processed_titles_in_run: Set[str] = set()
 
-            # Write structured folder in local_policies_dir to reuse existing logic
-            folder_name = f"{sanitize_filename(title_pretty)}_{scrape_timestamp}"
-            dest_folder = os.path.join(local_policies_dir, folder_name)
-            try:
-                os.makedirs(dest_folder, exist_ok=True)
-                md_path = os.path.join(dest_folder, "content.md")
-                txt_path = os.path.join(dest_folder, "content.txt")
-                with open(md_path, "w", encoding="utf-8") as f_md_out:
-                    f_md_out.write(markdown_content)
-                with open(txt_path, "w", encoding="utf-8") as f_txt:
-                    f_txt.write(text_content)
-                # Copy images from OCR output directory if present
-                source_img_dir = os.path.join(md_output_dir, scrape_timestamp)
-                if os.path.isdir(source_img_dir):
-                    copied = 0
-                    for item in os.listdir(source_img_dir):
-                        s = os.path.join(source_img_dir, item)
-                        d = os.path.join(dest_folder, item)
-                        if os.path.isfile(s):
-                            try:
-                                shutil.copy2(s, d)
-                                copied += 1
-                            except Exception as img_err:
-                                logger.warning(
-                                    f"Failed to copy image '{item}' for '{title_pretty}': {img_err}"
-                                )
-                    if copied:
+    for folder_name in sorted(os.listdir(local_policies_dir)):
+        folder_path = os.path.join(local_policies_dir, folder_name)
+        if not os.path.isdir(folder_path):
+            continue
+
+        match = folder_pattern.match(folder_name)
+        if not match:
+            logger.warning(
+                f"Skipping folder with unexpected name format: {folder_name}"
+            )
+            skipped_count += 1
+            continue
+
+        policy_title = match.group(1)
+        scrape_timestamp = match.group(2) if match.lastindex and match.lastindex >= 2 else folder_name.split("_")[-1]
+        logger.debug(
+            f"Checking local folder: '{folder_name}' -> title='{policy_title}', timestamp={scrape_timestamp}"
+        )
+
+        if policy_title in processed_titles_in_run:
+            logger.warning(
+                f"Policy title '{policy_title}' was already processed or updated in this run from another folder. Skipping redundant processing for folder '{folder_name}'."
+            )
+            skipped_count += 1
+            continue
+
+        existing_policy_info = existing_policies.get(policy_title)
+        should_process = False
+        is_update = False
+
+        if existing_policy_info:
+            existing_id = existing_policy_info["id"]
+            existing_metadata = existing_policy_info.get("metadata", {})
+            if existing_metadata and "scrape_timestamp" in existing_metadata:
+                existing_timestamp = existing_metadata["scrape_timestamp"]
+                try:
+                    if scrape_timestamp > existing_timestamp:
                         logger.info(
-                            f"Copied {copied} image(s) to '{dest_folder}' for '{title_pretty}'."
+                            f"Newer version found for '{policy_title}'. Scraped: {scrape_timestamp}, Existing DB: {existing_timestamp}. Will update existing ID {existing_id}."
                         )
-            except Exception as e:
-                logger.error(
-                    f"Failed to write structured files for '{title_pretty}': {e}"
-                )
-                error_count += 1
-                continue
-
-            # Create or update using existing functions
-            try:
-                if is_update and existing_info:
-                    policy_id = existing_info["id"]
-                    policy_obj = await PolicyRepository(session).get_by_id(policy_id)
-                    if policy_obj is None:
-                        logger.warning(
-                            f"Expected existing policy ID {policy_id} for '{title_pretty}' not found. Creating new."
-                        )
-                        created = await create_new_policy(
-                            folder_path=dest_folder,
-                            policy_title=title_pretty,
-                            scrape_timestamp=scrape_timestamp,
-                            session=session,
-                            extraction_reasoning="Imported from local PDFs",
-                        )
-                        if created:
-                            created_count += 1
-                            existing_policies[title_pretty] = {
-                                "id": created.id,
-                                "metadata": created.policy_metadata,
-                            }
+                        should_process = True
+                        is_update = True
                     else:
-                        ok = await update_existing_policy(
-                            existing_policy=policy_obj,
-                            folder_path=dest_folder,
-                            scrape_timestamp=scrape_timestamp,
-                            session=session,
-                            extraction_reasoning="Imported from local PDFs (updated)",
+                        logger.debug(
+                            f"Skipping older/same version for '{policy_title}': Folder timestamp '{scrape_timestamp}' <= DB timestamp '{existing_timestamp}'."
                         )
-                        if ok:
-                            updated_count += 1
-                            # update local map
-                            existing_policies[title_pretty] = {
-                                "id": policy_obj.id,
-                                "metadata": {"scrape_timestamp": scrape_timestamp},
-                            }
+                        skipped_count += 1
+                        processed_titles_in_run.add(policy_title)
+                except TypeError as te:
+                    logger.error(
+                        f"Timestamp comparison error for '{policy_title}' (Folder: {scrape_timestamp}, DB: {existing_timestamp}): {te}. Assuming update needed."
+                    )
+                    should_process = True
+                    is_update = True
+            else:
+                logger.info(
+                    f"Existing '{policy_title}' (ID: {existing_id}) lacks timestamp or metadata. Assuming update needed."
+                )
+                should_process = True
+                is_update = True
+        else:
+            logger.info(
+                f"New policy found: '{policy_title}' from folder '{folder_name}'. Will create."
+            )
+            should_process = True
+            is_update = False
+
+        if should_process:
+            extraction_reasoning = timestamp_to_description.get(scrape_timestamp)
+            if not extraction_reasoning and url_to_description:
+                md_path_for_url = os.path.join(folder_path, "content.md")
+                if os.path.exists(md_path_for_url):
+                    try:
+                        with open(md_path_for_url, "r", encoding="utf-8") as f_md_url:
+                            md_content_for_url = f_md_url.read()
+                        source_url_match_desc = re.search(
+                            r"^# Source URL: (.*)$", md_content_for_url, re.MULTILINE
+                        )
+                        if source_url_match_desc:
+                            source_url_desc = source_url_match_desc.group(1).strip()
+                            extraction_reasoning = url_to_description.get(
+                                source_url_desc
+                            )
+                            if extraction_reasoning:
+                                logger.debug(
+                                    f"Found description for '{policy_title}' via URL match: {source_url_desc}"
+                                )
+                    except Exception as file_err:
+                        logger.error(
+                            f"Error reading markdown for URL-based description extraction for '{policy_title}': {file_err}"
+                        )
+
+            try:
+                if is_update and existing_policy_info:
+                    existing_id = existing_policy_info["id"]
+                    try:
+                        policy_to_update = await policy_repo.get_by_id(existing_id)
+                        if policy_to_update:
+                            update_success = await update_existing_policy(
+                                existing_policy=policy_to_update,
+                                folder_path=folder_path,
+                                scrape_timestamp=scrape_timestamp,
+                                session=session,
+                                extraction_reasoning=extraction_reasoning,
+                            )
+                            if update_success:
+                                processed_update_count += 1
+                                processed_titles_in_run.add(policy_title)
+                            else:
+                                error_count += 1
+                        else:
+                            logger.error(
+                                f"Could not find policy with ID {existing_id} for update, despite initial check finding title '{policy_title}'. Skipping update."
+                            )
+                            error_count += 1
+                    except Exception as fetch_err:
+                        logger.error(
+                            f"Error fetching policy ID {existing_id} for update: {fetch_err}. Skipping update.",
+                            exc_info=True,
+                        )
+                        error_count += 1
                 else:
-                    created = await create_new_policy(
-                        folder_path=dest_folder,
-                        policy_title=title_pretty,
+                    created_policy = await create_new_policy(
+                        folder_path=folder_path,
+                        policy_title=policy_title,
                         scrape_timestamp=scrape_timestamp,
                         session=session,
-                        extraction_reasoning="Imported from local PDFs",
+                        extraction_reasoning=extraction_reasoning,
                     )
-                    if created:
-                        created_count += 1
-                        existing_policies[title_pretty] = {
-                            "id": created.id,
-                            "metadata": created.policy_metadata,
-                        }
-            except Exception as e:
+                    if created_policy:
+                        processed_new_count += 1
+                        processed_titles_in_run.add(policy_title)
+                    else:
+                        error_count += 1
+            except IntegrityError as ie:
                 logger.error(
-                    f"Failed to create/update policy for '{title_pretty}': {e}"
+                    f"DATABASE INTEGRITY ERROR processing '{policy_title}' from '{folder_name}': {ie}.",
+                    exc_info=False,
                 )
                 error_count += 1
-
-            # Append a row to CSV log to record this processed local policy
-            try:
-                # Compose CSV fields similar to scraped flow
-                url_field = (global_download_url or "").strip()
-                file_basename = os.path.basename(md_path)
-                include = True
-                found_links_count = 0
-                definite_links = "[]"
-                probable_links = "[]"
-                timestamp_field = scrape_timestamp
-                contains_policy = True
-                policy_title_field = title_pretty
-                policy_content_path = os.path.join(dest_folder, "content.md")
-                reasoning_field = "Imported from local PDFs"
-                row = f'{url_field},{file_basename},{str(include)},{found_links_count},"{definite_links}","{probable_links}",{timestamp_field},{str(contains_policy)},{policy_title_field},{policy_content_path},{reasoning_field}\n'
-                with open(csv_log_path, "a", encoding="utf-8") as f:
-                    f.write(row)
-            except Exception as log_err:
-                logger.warning(
-                    f"Failed to append to processed_policies_log.csv: {log_err}"
+                processed_titles_in_run.add(policy_title)
+            except Exception as proc_err:
+                logger.error(
+                    f"UNEXPECTED ERROR processing '{policy_title}' from '{folder_name}': {proc_err}. Skipping.",
+                    exc_info=True,
                 )
+                error_count += 1
+                processed_titles_in_run.add(policy_title)
 
     logger.info(
-        f"Local PDF ingestion finished. Created: {created_count}, Updated: {updated_count}, Skipped: {skipped_count}, Errors: {error_count}"
+        f"Local processed population finished. Created New: {processed_new_count}, Updated Existing: {processed_update_count}, "
+        f"Skipped (older/duplicate/format): {skipped_count}, Errors during processing: {error_count}"
     )
 
-
-async def ingest_policies_from_local_pdfs(
-    db_url: Optional[str] = None,
-    source_policies_root: Optional[str] = None,
-    global_download_url: Optional[str] = None,
-) -> None:
-    """Entry point helper: open engine/session and ingest local PDFs into the DB."""
-    ensure_directories()
-    effective_db_url = db_url or str(config.DATABASE.DATABASE_URL)
-    engine = create_async_engine(effective_db_url, echo=config.API.DEBUG)
-    try:
-        async_session_factory = async_sessionmaker(
-            engine, expire_on_commit=False, class_=AsyncSession
-        )
-        async with async_session_factory() as session:
-            async with session.begin():
-                await populate_database_from_local_pdfs(
-                    session=session,
-                    source_policies_root=source_policies_root,
-                    global_download_url=global_download_url,
-                )
-    finally:
-        await engine.dispose()
+    # (local PDF ingestion via DB path removed; use process-only policy commands and database --populate)
 
 
 # --- init_db function remains largely unchanged, calls populate... ---
@@ -1068,11 +979,10 @@ async def init_db(db_url: Optional[str] = None, populate: bool = True) -> None:
 
                 if populate:
                     logger.info(
-                        "Starting policy data population from scraped_policies directory..."
+                        "Starting policy data population from processed directories (scraped + local)..."
                     )
-                    await populate_database_from_scraped_policies(
-                        session
-                    )  # Calls the updated function
+                    await populate_database_from_scraped_policies(session)
+                    await populate_database_from_local_processed(session)
                 else:
                     logger.info(
                         "Skipping policy data population step as per configuration."

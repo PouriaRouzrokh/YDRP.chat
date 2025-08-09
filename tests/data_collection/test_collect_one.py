@@ -14,7 +14,7 @@ sys.path.append(project_root)
 dotenv_path = os.path.join(project_root, ".env")
 load_dotenv(dotenv_path=dotenv_path)
 
-from ydrpolicy.data_collection.collect_policies import collect_one
+from ydrpolicy.data_collection.collect_policy_urls import collect_one
 from ydrpolicy.data_collection.config import config
 
 

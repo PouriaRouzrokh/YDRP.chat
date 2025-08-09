@@ -205,12 +205,11 @@ Manages the database schema, user seeding, and policy data population.
 
 - **`python main.py database --populate`**
 
-  - **Purpose:** Populates the database with new or updated policy data found in the processed data directory (`data/processed/scraped_policies/`). Implicitly runs `--init` actions if needed but focuses on data loading.
+  - **Purpose:** Populates the database with new or updated policy data found in the processed data directories. Implicitly runs `--init` actions if needed but focuses on data loading.
   - **Actions:**
     - Ensures DB schema exists (like `--init`, but safe to run if already initialized).
-    - Scans `data/processed/scraped_policies/` for `<title>_<timestamp>` folders.
+    - Scans BOTH `data/processed/scraped_policies/` and `data/processed/local_policies/` for `<title>_<timestamp>` folders.
     - Compares found policies (by title and timestamp) with existing DB records.
-    - Deletes older versions from the DB if a newer timestamped folder is found.
     - For new policies or newer versions: reads content, chunks text, generates embeddings (via OpenAI), and inserts `Policy`, `Image`, `PolicyChunk` records into the DB.
   - **Use Case:** Adding policies to the agent's knowledge base after they have been collected and processed by the `policy` command.
 
@@ -227,66 +226,56 @@ Manages the database schema, user seeding, and policy data population.
 
 ### 2. `policy` Command
 
-Manages the data collection/processing pipeline (filesystem operations), local PDF ingestion, and database _removal_.
+Manages the data collection/processing pipeline (filesystem operations), local PDF processing, and database removal.
 
-- **`python main.py policy --collect-all`**
+- URL workflows
+  - **`python main.py policy --collect-all-urls`**: Crawl + scrape full pipeline from allowed domains; writes processed folders under `scraped_policies/`. Does NOT populate DB. (implemented in `ydrpolicy/data_collection/collect_policy_urls.py`)
+  - **`python main.py policy --collect-one-url <URL>`**: Process a single URL end-to-end; writes processed folder if identified as a policy. Does NOT populate DB. (implemented in `ydrpolicy/data_collection/collect_policy_urls.py`)
+  - **`python main.py policy --crawl-all-urls`**: Crawl only (produces raw markdown and CSV of discovered URLs).
+  - **`python main.py policy --crawl-one-url <URL>`**: Start crawling from a specific URL.
+  - **`python main.py policy --scrape-all-urls`**: Scrape/classify existing crawled raw data into processed folders.
 
-  - **Purpose:** Runs the full data finding, downloading, processing, and classification pipeline. Prepares policy data folders on the filesystem. **Does NOT populate DB.**
-  - **Actions:** Crawls sources, downloads/converts content (saving raw versions), classifies using LLM, extracts titles, creates structured folders (`<title>_<timestamp>`) in `data/processed/scraped_policies/`.
-  - **Use Case:** Refreshing policy data from source. Needs `database --populate` afterwards.
+- Local PDF workflows (process-only)
+  - **`python main.py policy --ingest-all-pdfs [--pdfs-dir <policies_YYYYMMDD>] [--global-link <URL>]`**: Process all PDFs under the specified/latest `policies_YYYYMMDD` into `local_policies/` and append to `processed_policies_log.csv`. No DB writes. (implemented in `ydrpolicy/data_collection/ingest_local_pdfs.py`)
+  - **`python main.py policy --ingest-one-pdf <PATH_TO_PDF> [--global-link <URL>]`**: Process a single local PDF into `local_policies/`. No DB writes. (implemented in `ydrpolicy/data_collection/ingest_local_pdfs.py`)
 
-- **`python main.py policy --collect-one --url <URL>`**
+- Removal from DB
+  - **`python main.py policy --remove-id <ID> [--force]`** or **`--remove-title <TITLE> [--force]`**: Remove a policy and its chunks/images from the database (applies regardless of URL vs local source). Does not delete filesystem folders.
 
-  - **Purpose:** Processes a single URL through the full pipeline. Prepares folder if identified as policy. **Does NOT populate DB.**
-  - **Use Case:** Adding/testing a single known policy URL. Needs `database --populate` afterwards.
+- Common Options
+  - `--pdfs-dir`: For PDF flows, specify a concrete `policies_YYYYMMDD` folder; defaults to latest under `data/source_policies/`.
+  - `--global-link`: A download page URL that is embedded into markdown headers for local PDFs.
+  - `--reset-crawl` / `--resume-crawl`: Control crawler state.
+  - `--db-url`: (With `--remove-*`) override DB URL.
+  - `--rebuild-db`: Optional convenience flag usable with `--collect-all-urls` or `--ingest-all-pdfs` to drop and re-init DB, and clear processed folders/logs (useful for full refresh). Remember to run `database --populate` afterwards to index processed data.
 
-- **`python main.py policy --crawl-all`**
+#### Local PDF Processing Details
+- Attempts OCR via Mistral OCR; falls back to PyPDF if OCR fails.
+- Produces `<title>_<timestamp>/content.md`, `content.txt`, and any extracted images under `data/processed/local_policies/`.
+- Appends a row into `data/processed/processed_policies_log.csv`.
 
-  - **Purpose:** Runs only the crawling stage (finding/downloading raw content).
-  - **Actions:** Saves raw markdown/images, creates `crawled_policies_data.csv`. Does not classify or create processed folders.
-  - **Use Case:** Refreshing raw data only.
+### Common Workflow Example
 
-- **`python main.py policy --scrape-all`**
-
-  - **Purpose:** Runs only the classification/processing stage on existing raw data.
-  - **Actions:** Reads CSV, analyzes raw files via LLM, creates structured processed folders. **Does NOT populate DB.**
-  - **Use Case:** Classifying previously crawled data.
-
-- **`python main.py policy --remove-id <ID> [--force]`** or **`python main.py policy --remove-title <TITLE> [--force]`**
-
-  - **Purpose:** Removes a policy and its associated data (chunks, images) **from the database ONLY**.
-  - **Actions:** Finds policy by ID or title in DB and deletes it. Logs the action. **Does NOT delete filesystem folders.**
-  - **Use Case:** Removing outdated/incorrect policies from the agent's knowledge.
-
-- **Common Options:**
-  - `--reset-crawl`: (With `--collect-all` / `--crawl-all`) Clears crawler state.
-  - `--resume-crawl`: (With `--collect-all` / `--crawl-all`) Resumes crawl from saved state.
-  - `--force`: (With `--remove-*`) Skips confirmation prompt.
-  - `--db-url <URL>`: (With `--remove-*`) Specifies DB URL for removal.
-
-#### Local PDF Ingestion (New)
-
-- **`python main.py policy --ingest-pdfs [--pdfs-dir <policies_YYYYMMDD>] [--rebuild-db] [--global-link <URL>]`**
-
-  - **Purpose:** Ingests policies directly from a local folder of PDFs (organized under `data/source_policies/`). Converts each PDF to Markdown, chunks, embeds, and writes to the database.
-  - **Folder Discovery:** If `--pdfs-dir` is omitted, the app auto-detects the latest folder named like `policies_YYYYMMDD` under `data/source_policies/`.
-  - **Processed Outputs:** For each policy, processed markdown/images are saved under `data/processed/local_policies/<sanitized_title>_<timestamp>/` and appended to `data/processed/processed_policies_log.csv`.
-  - **DB Rebuild:** If `--rebuild-db` is supplied, the database is dropped and re-initialized, existing users are re-seeded from `auth/users.json`, and prior processed folders (`scraped_policies` and `local_policies`) and `processed_policies_log.csv` are removed.
-  - **Citations:** For locally ingested policies without a public URL, the agent cites the policy title and, if provided, includes the global download page link via `--global-link`.
-  - **OCR Behavior:** The pipeline first attempts OCR via Mistral. If the file upload OCR API is unavailable, it falls back to extracting text with PyPDF to ensure ingestion continuity.
-
-  - **Examples:**
-    ```bash
-    # Using uv (auto-pick latest policies_YYYYMMDD)
-    uv run python main.py policy --ingest-pdfs --global-link "https://medicine.yale.edu/radiology-biomedical-imaging/intranet/division-of-bioimaging-sciences-policies-sops-and-forms/"
-
-    # Rebuild database and ingest from a specific folder
-    uv run python main.py policy \
-      --ingest-pdfs \
-      --pdfs-dir "/home1/pr555/Projects/YDRP-RAG/ydrp_engine/data/source_policies/policies_20250808" \
-      --rebuild-db \
-      --global-link "https://medicine.yale.edu/radiology-biomedical-imaging/intranet/division-of-bioimaging-sciences-policies-sops-and-forms/"
-    ```
+1. Init DB & seed users (no populate):
+   ```bash
+   uv run python main.py database --init --no-populate
+   ```
+2. Collect policies from URLs:
+   ```bash
+   uv run python main.py policy --collect-all-urls
+   ```
+3. Process local PDFs (optional):
+   ```bash
+   uv run python main.py policy --ingest-all-pdfs --global-link "https://example.com/all-pdfs"
+   ```
+4. Populate DB from all processed sources (URLs + local PDFs):
+   ```bash
+   uv run python main.py database --populate
+   ```
+5. Remove a policy from DB by ID:
+   ```bash
+   uv run python main.py policy --remove-id 123 --force
+   ```
 
 ### 3. `mcp` Command
 

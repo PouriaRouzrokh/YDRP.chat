@@ -179,20 +179,26 @@ def db_command(
 @app.command(name="policy")
 def policy_command(
     ctx: typer.Context,
-    collect_all: bool = typer.Option(
-        False, "--collect-all", help="Run full data collection (crawl & scrape)."
+    collect_all_urls: bool = typer.Option(
+        False, "--collect-all-urls", help="Run full data collection (crawl & scrape) from URLs."
     ),
-    collect_one: Optional[str] = typer.Option(
-        None, "--collect-one", help="Collect/process a single URL."
+    collect_one_url: Optional[str] = typer.Option(
+        None, "--collect-one-url", help="Collect/process a single URL."
     ),
-    crawl_only: bool = typer.Option(
-        False, "--crawl-all", help="Run only the crawling step."
+    crawl_all_urls: bool = typer.Option(
+        False, "--crawl-all-urls", help="Run only the crawling step over URLs."
     ),
-    scrape_only: bool = typer.Option(
-        False, "--scrape-all", help="Run only the scraping/classification step."
+    crawl_one_url: Optional[str] = typer.Option(
+        None, "--crawl-one-url", help="Run crawling starting from a single URL."
     ),
-    ingest_pdfs: bool = typer.Option(
-        False, "--ingest-pdfs", help="Ingest local PDFs into the database."
+    scrape_all_urls: bool = typer.Option(
+        False, "--scrape-all-urls", help="Run only the scraping/classification step for URLs."
+    ),
+    ingest_all_pdfs: bool = typer.Option(
+        False, "--ingest-all-pdfs", help="Process all local PDFs into processed folders and CSV (no DB)."
+    ),
+    ingest_one_pdf: Optional[str] = typer.Option(
+        None, "--ingest-one-pdf", help="Process a single local PDF into processed folder and CSV (no DB)."
     ),
     pdfs_dir: Optional[str] = typer.Option(
         None,
@@ -202,7 +208,7 @@ def policy_command(
     rebuild_db: bool = typer.Option(
         False,
         "--rebuild-db",
-        help="Drop and recreate the database before ingesting PDFs (DANGEROUS!).",
+        help="Drop and recreate the database before running (use with --collect-all-urls or --ingest-all-pdfs).",
     ),
     global_link: Optional[str] = typer.Option(
         None,
@@ -228,11 +234,13 @@ def policy_command(
 ):
     """Manage policy data: Collect, process, or remove policies."""
     collection_actions = [
-        collect_all,
-        collect_one is not None,
-        crawl_only,
-        scrape_only,
-        ingest_pdfs,
+        collect_all_urls,
+        collect_one_url is not None,
+        crawl_all_urls,
+        crawl_one_url is not None,
+        scrape_all_urls,
+        ingest_all_pdfs,
+        ingest_one_pdf is not None,
     ]
     removal_actions = [remove_id is not None, remove_title is not None]
     num_collection_actions = sum(collection_actions)
@@ -251,7 +259,7 @@ def policy_command(
         logger = logging.getLogger("ydrpolicy.data_collection")
         data_config = ctx.meta["data_config"]
         try:
-            from ydrpolicy.data_collection import collect_policies, crawl, scrape
+            from ydrpolicy.data_collection import collect_policy_urls as collect_policies, crawl, scrape
         except ImportError as e:
             logger.critical(f"Failed to import data_collection modules: {e}")
             raise typer.Exit(code=1)
@@ -259,20 +267,8 @@ def policy_command(
         data_config.CRAWLER.RESET_CRAWL = reset_crawl
         data_config.CRAWLER.RESUME_CRAWL = resume_crawl and not reset_crawl
 
-        if collect_all:
-            logger.info("Running full data collection pipeline...")
-            collect_policies.collect_all(config=data_config)
-        elif collect_one is not None:
-            logger.info(f"Collecting single URL: {collect_one}")
-            collect_policies.collect_one(url=collect_one, config=data_config)
-        elif crawl_only:
-            logger.info("Running crawling step only...")
-            crawl.main(config=data_config)
-        elif scrape_only:
-            logger.info("Running scraping/classification step only...")
-            scrape.main(config=data_config)
-        elif ingest_pdfs:
-            # Ingest local PDFs into the DB
+        # Optional rebuild DB (no populate) when collecting URLs or processing PDFs in bulk
+        if rebuild_db and (collect_all_urls or ingest_all_pdfs):
             backend_config = ctx.meta["backend_config"]
             target_db_url = str(backend_config.DATABASE.DATABASE_URL)
             logger_backend = logging.getLogger("ydrpolicy.backend.database")
@@ -280,59 +276,80 @@ def policy_command(
                 from ydrpolicy.backend.database import init_db as db_manager
             except ImportError as e:
                 logger_backend.critical(
-                    f"Failed to import database module for ingestion: {e}"
+                    f"Failed to import database module for rebuild: {e}"
                 )
                 raise typer.Exit(code=1)
-            if rebuild_db:
-                logger_backend.warning(
-                    "--rebuild-db specified. Dropping and re-initializing database (DANGEROUS!)."
+            logger_backend.warning(
+                "--rebuild-db specified. Dropping and re-initializing database (DANGEROUS!)."
+            )
+            asyncio.run(db_manager.drop_db(db_url=target_db_url, force=True))
+            asyncio.run(db_manager.init_db(db_url=target_db_url, populate=False))
+            # Clean processed directories for a fresh start
+            try:
+                from ydrpolicy.backend.config import config as backend_cfg
+                import shutil
+                for d in [
+                    backend_cfg.PATHS.SCRAPED_POLICIES_DIR,
+                    backend_cfg.PATHS.LOCAL_POLICIES_DIR,
+                ]:
+                    if os.path.isdir(d):
+                        shutil.rmtree(d, ignore_errors=True)
+                os.makedirs(backend_cfg.PATHS.SCRAPED_POLICIES_DIR, exist_ok=True)
+                os.makedirs(backend_cfg.PATHS.LOCAL_POLICIES_DIR, exist_ok=True)
+                csv_log = os.path.join(
+                    backend_cfg.PATHS.PROCESSED_DATA_DIR, "processed_policies_log.csv"
                 )
-                asyncio.run(db_manager.drop_db(db_url=target_db_url, force=True))
-                asyncio.run(db_manager.init_db(db_url=target_db_url, populate=False))
-                # Clean processed directories for a fresh start
                 try:
-                    from ydrpolicy.backend.config import config as backend_cfg
-                    import shutil
-
-                    for d in [
-                        backend_cfg.PATHS.SCRAPED_POLICIES_DIR,
-                        backend_cfg.PATHS.LOCAL_POLICIES_DIR,
-                    ]:
-                        if os.path.isdir(d):
-                            shutil.rmtree(d, ignore_errors=True)
-                    os.makedirs(backend_cfg.PATHS.SCRAPED_POLICIES_DIR, exist_ok=True)
-                    os.makedirs(backend_cfg.PATHS.LOCAL_POLICIES_DIR, exist_ok=True)
-                    # Also remove old processed_policies_log.csv if present
-                    csv_log = os.path.join(
-                        backend_cfg.PATHS.PROCESSED_DATA_DIR,
-                        "processed_policies_log.csv",
-                    )
-                    try:
-                        if os.path.exists(csv_log):
-                            os.remove(csv_log)
-                            logger_backend.info(f"Removed old log file: {csv_log}")
-                    except OSError as e:
-                        logger_backend.warning(
-                            f"Failed to remove old log file {csv_log}: {e}"
-                        )
-                except Exception as clean_err:
+                    if os.path.exists(csv_log):
+                        os.remove(csv_log)
+                        logger_backend.info(f"Removed old log file: {csv_log}")
+                except OSError as e:
                     logger_backend.warning(
-                        f"Failed to clean processed directories: {clean_err}"
+                        f"Failed to remove old log file {csv_log}: {e}"
                     )
-            # Run ingestion
-            from ydrpolicy.backend.database.init_db import (
-                ingest_policies_from_local_pdfs,
+            except Exception as clean_err:
+                logger_backend.warning(
+                    f"Failed to clean processed directories: {clean_err}"
+                )
+
+        # URL flows
+        if collect_all_urls:
+            logger.info("Running full data collection pipeline (URLs)...")
+            collect_policies.collect_all(config=data_config)
+        elif collect_one_url is not None:
+            logger.info(f"Collecting single URL: {collect_one_url}")
+            collect_policies.collect_one(url=collect_one_url, config=data_config)
+        elif crawl_all_urls:
+            logger.info("Running crawling step only (all URLs)...")
+            crawl.main(config=data_config)
+        elif crawl_one_url is not None:
+            logger.info(f"Running crawling step starting from URL: {crawl_one_url}")
+            from ydrpolicy.data_collection.crawl.crawler import YaleCrawler
+
+            crawler = YaleCrawler(config=data_config)
+            crawler.start(initial_url=crawl_one_url)
+        elif scrape_all_urls:
+            logger.info("Running scraping/classification step only (URLs)...")
+            scrape.main(config=data_config)
+        # Local PDF process-only flows
+        elif ingest_all_pdfs:
+            logger.info("Processing all local PDFs into processed folders and CSV (no DB)...")
+            from ydrpolicy.data_collection.ingest_local_pdfs import (
+                process_all_local_pdfs,
             )
 
-            logger_backend.info("Starting ingestion from local PDFs...")
-            asyncio.run(
-                ingest_policies_from_local_pdfs(
-                    db_url=target_db_url,
-                    source_policies_root=pdfs_dir,
-                    global_download_url=global_link,
-                )
+            process_all_local_pdfs(
+                source_policies_root=pdfs_dir, global_download_url=global_link
             )
-            logger_backend.info("Local PDF ingestion finished.")
+        elif ingest_one_pdf is not None:
+            logger.info(
+                f"Processing single local PDF into processed folder and CSV (no DB): {ingest_one_pdf}"
+            )
+            from ydrpolicy.data_collection.ingest_local_pdfs import process_one_pdf
+
+            ok = process_one_pdf(pdf_path=ingest_one_pdf, global_download_url=global_link)
+            if not ok:
+                logger.error("Processing single PDF failed.")
         logger.info("Policy data collection/processing action finished.")
 
     elif num_removal_actions == 1:

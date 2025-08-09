@@ -39,7 +39,7 @@ def setup_logging(
     backend_log_file: Optional[str] = backend_config.LOGGING.FILE,
     dc_log_file_crawler: Optional[str] = data_config.LOGGING.CRAWLER_LOG_FILE,
     dc_log_file_scraper: Optional[str] = data_config.LOGGING.SCRAPER_LOG_FILE,
-    # Add specific file for collect_policies if desired
+    # Add specific file for collect_policy_urls if desired
     dc_log_file_collect: Optional[str] = None,  # Or maybe reuse crawler log?
 ):
     """

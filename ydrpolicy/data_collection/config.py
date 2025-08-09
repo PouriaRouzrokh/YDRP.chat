@@ -95,6 +95,12 @@ _config_dict["PATHS"]["PROCESSED_DATA_DIR"] = os.path.join(
 _config_dict["PATHS"]["SCRAPED_POLICIES_DIR"] = os.path.join(
     _config_dict["PATHS"]["PROCESSED_DATA_DIR"], "scraped_policies"
 )
+_config_dict["PATHS"]["LOCAL_POLICIES_DIR"] = os.path.join(
+    _config_dict["PATHS"]["PROCESSED_DATA_DIR"], "local_policies"
+)
+_config_dict["PATHS"]["SOURCE_POLICIES_DIR"] = os.path.join(
+    _BASE_DIR, "data", "source_policies"
+)
 _config_dict["LOGGING"] = {
     "LEVEL": os.environ.get("LOG_LEVEL", "INFO"),
     "CRAWLER_LOG_FILE": os.path.join(
