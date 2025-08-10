@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PanelLeftOpen, Edit } from "lucide-react";
@@ -35,13 +35,12 @@ import {
 } from "@/types";
 import { ChatRenameDialog } from "@/components/chat/chat-rename-dialog";
 import { ChatArchiveDialog } from "@/components/chat/chat-archive-dialog";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
+// LoadingSpinner no longer needed here
 
-// Client component that uses useSearchParams
 function ChatPageContent() {
-  const searchParams = useSearchParams();
-  const initialMessage = searchParams.get("message");
-  const chatId = searchParams.get("id");
+  // Capture URL params once on mount to avoid Suspense requirement and flicker
+  const [initialMessageParam, setInitialMessageParam] = useState<string | null>(null);
+  const [chatIdParam, setChatIdParam] = useState<string | null>(null);
   const router = useRouter();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -60,6 +59,14 @@ function ChatPageContent() {
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
   const [chatToRename, setChatToRename] = useState<ChatSession | null>(null);
   const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
+
+  // Parse URL search params on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    setInitialMessageParam(params.get("message"));
+    setChatIdParam(params.get("id"));
+  }, []);
 
   // Fetch messages for a specific session
   const fetchMessagesForSession = async (sessionId: number) => {
@@ -116,8 +123,8 @@ function ChatPageContent() {
       setChatSessions(formattedSessions);
 
       // If chat ID was specified in URL, select it explicitly.
-      if (chatId) {
-        setActiveSessionId(chatId);
+      if (chatIdParam) {
+        setActiveSessionId(chatIdParam);
         // We don't need to call fetchMessagesForSession here since there's already a useEffect
         // that will load messages when activeSessionId and chatId match
       }
@@ -127,7 +134,7 @@ function ChatPageContent() {
     } finally {
       setLoading(false);
     }
-  }, [chatId]);
+  }, [chatIdParam]);
 
   // Fetch sessions on mount and when dependencies change
   useEffect(() => {
@@ -145,12 +152,12 @@ function ChatPageContent() {
   // Add a new effect to load messages when a chat ID is provided in URL
   useEffect(() => {
     // Don't fetch messages if this is a new chat being created
-    if (chatId && activeSessionId === chatId && !isNewChat) {
+    if (chatIdParam && activeSessionId === chatIdParam && !isNewChat) {
       // Call directly without adding to dependency array
       (async () => {
         try {
           setLoading(true);
-          const messageData = await chatService.getChatMessages(Number(chatId));
+          const messageData = await chatService.getChatMessages(Number(chatIdParam));
           const formattedMessages =
             chatService.formatMessagesForUI(messageData);
           // Convert to Message type (should be compatible)
@@ -162,14 +169,14 @@ function ChatPageContent() {
           }));
           setMessages(msgArray);
         } catch (error) {
-          console.error(`Error fetching messages for chat ${chatId}:`, error);
+          console.error(`Error fetching messages for chat ${chatIdParam}:`, error);
           toast.error("Failed to load messages");
         } finally {
           setLoading(false);
         }
       })();
     }
-  }, [chatId, activeSessionId, isNewChat]);
+  }, [chatIdParam, activeSessionId, isNewChat]);
 
   // Auto-scroll to bottom of messages
   useEffect(() => {
@@ -333,7 +340,7 @@ function ChatPageContent() {
     if (!content.trim()) return;
 
     // Mark initialMessage as sent if this message matches it
-    if (initialMessage && content === initialMessage) {
+    if (initialMessageParam && content === initialMessageParam) {
       setInitialMessageSent(true);
     }
 
@@ -363,15 +370,15 @@ function ChatPageContent() {
         setIsTyping(false);
         toast.error("Failed to get response from server");
       });
-  }, [activeSessionId, initialMessage, handleStreamChunk]);
+  }, [activeSessionId, initialMessageParam, handleStreamChunk]);
 
   // Handle initial message from URL if present
   useEffect(() => {
-    if (initialMessage && !initialMessageSent && !activeSessionId) {
-      handleSendMessage(initialMessage);
+    if (initialMessageParam && !initialMessageSent && !activeSessionId) {
+      handleSendMessage(initialMessageParam);
       setInitialMessageSent(true);
     }
-  }, [initialMessage, initialMessageSent, activeSessionId, handleSendMessage]);
+  }, [initialMessageParam, initialMessageSent, activeSessionId, handleSendMessage]);
 
   // Handle selecting a chat session
   const handleSelectChat = useCallback((chatId: string) => {
@@ -599,7 +606,7 @@ function ChatPageContent() {
               placeholder="Type your message..."
               className="pb-0 text-sm sm:text-base"
               initialValue={
-                initialMessage && !initialMessageSent ? initialMessage : ""
+                initialMessageParam && !initialMessageSent ? initialMessageParam : ""
               }
               autoSubmit={true}
             />
@@ -632,11 +639,7 @@ function ChatPageContent() {
   );
 }
 
-// Main page component with Suspense boundary
+// Main page component without Suspense to avoid flicker on first agent message
 export default function ChatPage() {
-  return (
-    <Suspense fallback={<div className="flex h-[calc(100vh-3.5rem)] items-center justify-center"><LoadingSpinner size="lg" /></div>}>
-      <ChatPageContent />
-    </Suspense>
-  );
+  return <ChatPageContent />;
 }
