@@ -9,9 +9,8 @@ import { cn } from "@/lib/utils";
 import { Bot, User } from "lucide-react";
 import { motion } from "framer-motion";
 import { fadeInUp } from "@/lib/animation-variants";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkBreaks from "remark-breaks";
+// Markdown imports removed; we render sanitized HTML
+import DOMPurify from "dompurify";
 import { useState, useEffect } from "react";
 import { siteConfig } from "@/config/site";
 
@@ -36,15 +35,9 @@ interface MessageProps {
 
 export function ChatMessage({ message }: MessageProps) {
   const isUser = message.role === "user";
+  const sanitizedHtml = typeof window !== 'undefined' ? DOMPurify.sanitize(message.content, { USE_PROFILES: { html: true } }) : message.content;
 
-  // Helper function to make URLs more mobile-friendly by truncating if needed
-  const formatUrl = (url: string) => {
-    // For display purposes, we'll truncate very long URLs
-    if (url.length > 30) {
-      return `${url.substring(0, 15)}...${url.substring(url.length - 10)}`;
-    }
-    return url;
-  };
+  // URLs are rendered directly inside sanitized HTML; no truncation here
 
   return (
     <motion.div
@@ -86,56 +79,11 @@ export function ChatMessage({ message }: MessageProps) {
             )}
           >
             <CardContent className="px-2 sm:px-3 py-0 flex items-center overflow-hidden">
-              <div className="prose-sm sm:prose dark:prose-invert break-words w-full overflow-hidden my-2">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm, remarkBreaks]}
-                  components={{
-                    a: ({ href, children, ...props }) => (
-                      <a
-                        {...props}
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:underline break-all hyphens-auto overflow-wrap-anywhere text-xs sm:text-sm"
-                        title={href}
-                      >
-                        {typeof children === "string" && children === href
-                          ? formatUrl(href)
-                          : children}
-                      </a>
-                    ),
-                    ul: ({ ...props }) => (
-                      <ul {...props} className="list-disc pl-3 sm:pl-5 mb-2" />
-                    ),
-                    ol: ({ ...props }) => (
-                      <ol
-                        {...props}
-                        className="list-decimal pl-3 sm:pl-5 mb-2"
-                      />
-                    ),
-                    li: ({ ...props }) => <li {...props} className="mb-1" />,
-                    p: ({ ...props }) => (
-                      <p
-                        {...props}
-                        className="mb-2 max-w-full text-sm sm:text-base break-words whitespace-pre-wrap overflow-wrap-anywhere hyphens-auto"
-                      />
-                    ),
-                    code: ({ ...props }) => (
-                      <code
-                        {...props}
-                        className="break-all text-xs sm:text-sm p-0.5 overflow-wrap-anywhere"
-                      />
-                    ),
-                    pre: ({ ...props }) => (
-                      <pre
-                        {...props}
-                        className="whitespace-pre-wrap break-all text-xs sm:text-sm overflow-x-auto max-w-full"
-                      />
-                    ),
-                  }}
-                >
-                  {message.content}
-                </ReactMarkdown>
+              <div className="prose-sm sm:prose dark:prose-invert break-words w-full overflow-hidden my-2 [&_a]:text-blue-600 dark:[&_a]:text-blue-400 [&_a]:underline">
+                <div
+                  className="max-w-full text-sm sm:text-base break-words overflow-wrap-anywhere hyphens-auto"
+                  dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+                />
               </div>
             </CardContent>
           </Card>

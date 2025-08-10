@@ -36,6 +36,8 @@ export interface ChatMessageRequest {
 export type StreamChunkType =
   | "chat_info"
   | "text_delta"
+  | "html_chunk"
+  | "html_message"
   | "tool_call"
   | "tool_output"
   | "error"
@@ -61,6 +63,20 @@ export interface TextDeltaChunk {
   type: "text_delta";
   data: {
     delta: string;
+  };
+}
+
+export interface HtmlMessageChunk {
+  type: "html_message";
+  data: {
+    html: string;
+  };
+}
+
+export interface HtmlChunkStream {
+  type: "html_chunk";
+  data: {
+    html_chunk: string;
   };
 }
 

@@ -159,14 +159,24 @@ export const chatService = {
    * Convert API chat summaries to UI chat format
    */
   formatChatsForUI(chats: ChatSummary[]): Chat[] {
-    return chats.map((chat) => ({
-      id: chat.id,
-      title: chat.title ?? "Untitled Chat",
-      lastMessageTime: new Date(chat.updated_at),
-      // We will get the actual message count with a separate API call
-      messageCount: 0,
-      isArchived: chat.is_archived,
-    }));
+    return chats.map((chat) => {
+      const dt = new Date(chat.created_at);
+      const y = dt.getFullYear().toString().slice(-2);
+      const m = String(dt.getMonth() + 1).padStart(2, '0');
+      const d = String(dt.getDate()).padStart(2, '0');
+      const hh = String(dt.getHours()).padStart(2, '0');
+      const mm = String(dt.getMinutes()).padStart(2, '0');
+      const ss = String(dt.getSeconds()).padStart(2, '0');
+      const defaultTitle = `${y}${m}${d}-${hh}${mm}${ss}`;
+      return {
+        id: chat.id,
+        title: chat.title ?? defaultTitle,
+        lastMessageTime: new Date(chat.updated_at),
+        // We will get the actual message count with a separate API call
+        messageCount: 0,
+        isArchived: chat.is_archived,
+      };
+    });
   },
 
   /**

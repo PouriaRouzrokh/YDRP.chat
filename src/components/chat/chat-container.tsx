@@ -16,6 +16,8 @@ import {
   StatusChunk,
   StreamChunk,
   TextDeltaChunk,
+  HtmlMessageChunk,
+  HtmlChunkStream,
 } from "@/types";
 import { ChatRenameDialog } from "./chat-rename-dialog";
 import { ChatArchiveDialog } from "./chat-archive-dialog";
@@ -47,6 +49,8 @@ export function ChatContainer({
   const [isTyping, setIsTyping] = useState(false);
   const [currentMessage, setCurrentMessage] = useState<Message | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const jsonBufferRef = useRef<string>("");
+  const htmlStreamingRef = useRef<boolean>(false);
 
   // State for rename dialog
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
@@ -114,10 +118,12 @@ export function ChatContainer({
       setArchivedSessions(formattedArchivedSessions);
 
       // Set active session if we have any and none is currently selected
-      if (formattedActiveSessions.length > 0 && !activeSessionId) {
+        if (formattedActiveSessions.length > 0 && !activeSessionId) {
         const firstSession = formattedActiveSessions[0];
-        setActiveSessionId(firstSession.id);
-        setActiveChatTitle(firstSession.title);
+          setActiveSessionId(firstSession.id);
+          setActiveChatTitle(firstSession.lastMessageTime
+            ? new Date(firstSession.lastMessageTime).toLocaleString()
+            : firstSession.title);
         fetchMessagesForSession(Number(firstSession.id));
       }
     } catch (error) {
@@ -170,7 +176,18 @@ export function ChatContainer({
       // Update active session ID if this is a new chat
       if (!activeSessionId) {
         const newChatId = String(infoChunk.data.chat_id);
-        const newChatTitle = infoChunk.data.title || "New Chat";
+        // Always prefer a timestamp title by default (YYMMDD-HHMSS)
+        const dt = new Date();
+        const y = dt.getFullYear().toString().slice(-2);
+        const m = String(dt.getMonth() + 1).padStart(2, '0');
+        const d = String(dt.getDate()).padStart(2, '0');
+        const hh = String(dt.getHours()).padStart(2, '0');
+        const mm = String(dt.getMinutes()).padStart(2, '0');
+        const ss = String(dt.getSeconds()).padStart(2, '0');
+        const defaultTitle = `${y}${m}${d}-${hh}${mm}${ss}`;
+        const newChatTitle = /^\d{6}-\d{6}$/.test(infoChunk.data.title || '')
+          ? (infoChunk.data.title as string)
+          : defaultTitle;
 
         setActiveSessionId(newChatId);
         setActiveChatTitle(newChatTitle);
@@ -185,25 +202,46 @@ export function ChatContainer({
           isArchived: false, // New chats are not archived by default
         };
         setSessions((prev) => [newSession, ...prev]);
+        // Reset streaming helpers
+        jsonBufferRef.current = "";
+        htmlStreamingRef.current = false;
       }
     } else if (chunk.type === "text_delta") {
       const textChunk = chunk as TextDeltaChunk;
-      // Append text delta to current assistant message
-      setCurrentMessage((prev) => {
-        if (!prev) {
-          // Create new assistant message if it doesn't exist
-          return {
-            id: `assistant-${Date.now()}`,
-            content: textChunk.data.delta,
-            role: "assistant",
-            timestamp: new Date(),
-          };
+      const delta = textChunk.data.delta;
+      // Heuristics: if delta looks like JSON structure, buffer only; don't render as text
+      const looksLikeJson = /\{|\}|"html_chunk"|"html"|"done"/.test(delta);
+      jsonBufferRef.current += delta;
+      try {
+        const obj = JSON.parse(jsonBufferRef.current);
+        if (obj && (typeof obj.html === 'string' || typeof obj.html_chunk === 'string')) {
+          htmlStreamingRef.current = true;
+          return; // do not render raw
         }
-        // Append delta to existing message
-        return {
-          ...prev,
-          content: prev.content + textChunk.data.delta,
-        };
+      } catch {
+        // not a full json object yet
+      }
+      if (!htmlStreamingRef.current && !looksLikeJson) {
+        setCurrentMessage((prev) => {
+          if (!prev) {
+            return { id: `assistant-${Date.now()}`, content: delta, role: "assistant", timestamp: new Date() };
+          }
+          return { ...prev, content: prev.content + delta };
+        });
+      }
+      } else if (chunk.type === "html_chunk") {
+        const c = chunk as HtmlChunkStream;
+        // Append chunked HTML progressively
+        setCurrentMessage((prev) => {
+          const base = prev ?? { id: `assistant-${Date.now()}`, content: "", role: "assistant", timestamp: new Date() };
+          return { ...base, content: base.content + c.data.html_chunk };
+        });
+      } else if (chunk.type === "html_message") {
+      const htmlChunk = chunk as HtmlMessageChunk;
+      // Replace current message content with final HTML for rendering
+      setCurrentMessage((prev) => {
+        if (!prev) return null;
+        return { ...prev, content: htmlChunk.data.html };
       });
     } else if (chunk.type === "status") {
       const statusChunk = chunk as StatusChunk;
@@ -224,17 +262,28 @@ export function ChatContainer({
         // Update session if active
         if (activeSessionId) {
           setSessions((prev) =>
-            prev.map((session) =>
-              session.id === String(statusChunk.data.chat_id)
-                ? {
-                    ...session,
-                    lastMessageTime: new Date(),
-                    messageCount: session.messageCount
-                      ? session.messageCount + 1
-                      : 1,
-                  }
-                : session
-            )
+            prev.map((session) => {
+              if (session.id === String(statusChunk.data.chat_id)) {
+                const updated = {
+                  ...session,
+                  lastMessageTime: new Date(),
+                  messageCount: session.messageCount ? session.messageCount + 1 : 1,
+                };
+                // Default sidebar label to YYMMDD-HHMMSS based on first message time until user renames
+                const dt = new Date(updated.lastMessageTime);
+                const y = dt.getFullYear().toString().slice(-2);
+                const m = String(dt.getMonth() + 1).padStart(2, '0');
+                const d = String(dt.getDate()).padStart(2, '0');
+                const hh = String(dt.getHours()).padStart(2, '0');
+                const mm = String(dt.getMinutes()).padStart(2, '0');
+                const ss = String(dt.getSeconds()).padStart(2, '0');
+                if (!updated.title || /^\d{6}-\d{6}$/.test(updated.title)) {
+                  updated.title = `${y}${m}${d}-${hh}${mm}${ss}`;
+                }
+                return updated;
+              }
+              return session;
+            })
           );
         }
       }

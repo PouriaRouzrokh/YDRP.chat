@@ -30,6 +30,8 @@ import {
   StatusChunk,
   StreamChunk,
   TextDeltaChunk,
+  HtmlMessageChunk,
+  HtmlChunkStream,
 } from "@/types";
 import { ChatRenameDialog } from "@/components/chat/chat-rename-dialog";
 import { ChatArchiveDialog } from "@/components/chat/chat-archive-dialog";
@@ -51,6 +53,8 @@ function ChatPageContent() {
   const [initialMessageSent, setInitialMessageSent] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isNewChat, setIsNewChat] = useState(false);
+  const jsonBufferRef = useRef<string>("");
+  const htmlStreamingRef = useRef<boolean>(false);
 
   // State for rename dialog
   const [isRenameDialogOpen, setIsRenameDialogOpen] = useState(false);
@@ -195,9 +199,17 @@ function ChatPageContent() {
           router.replace(`/chat?id=${newChatId}`, { scroll: false });
 
           // Create new session in the sidebar
+          const dt = new Date();
+          const y = dt.getFullYear().toString().slice(-2);
+          const m = String(dt.getMonth() + 1).padStart(2, '0');
+          const d = String(dt.getDate()).padStart(2, '0');
+          const hh = String(dt.getHours()).padStart(2, '0');
+          const mm = String(dt.getMinutes()).padStart(2, '0');
+          const ss = String(dt.getSeconds()).padStart(2, '0');
+          const defaultTitle = `${y}${m}${d}-${hh}${mm}${ss}`;
           const newSession: ChatSession = {
             id: newChatId,
-            title: infoChunk.data.title || "New Chat",
+            title: infoChunk.data.title || defaultTitle,
             createdAt: new Date(),
             lastMessageTime: new Date(),
             messageCount: 1, // Initial user message counts as 1
@@ -207,32 +219,60 @@ function ChatPageContent() {
         }
       } else if (chunk.type === "text_delta") {
         const textChunk = chunk as TextDeltaChunk;
-        // Turn off the typing indicator when actual message starts streaming
-        setIsTyping(false);
-        setMessages((prevMessages) => {
-          const lastMessage = prevMessages[prevMessages.length - 1];
-
-          // If the last message exists and is from the assistant, append the delta
-          if (lastMessage && lastMessage.role === "assistant") {
-            return [
-              ...prevMessages.slice(0, -1),
-              {
-                ...lastMessage,
-                content: lastMessage.content + textChunk.data.delta,
-              },
-            ];
-          } else {
-            // Otherwise, add a new assistant message
+        const delta = textChunk.data.delta;
+        const looksLikeJson = /\{|\}|"html_chunk"|"html"|"done"/.test(delta);
+        jsonBufferRef.current += delta;
+        try {
+          const obj = JSON.parse(jsonBufferRef.current);
+          if (obj && (typeof obj.html === 'string' || typeof obj.html_chunk === 'string')) {
+            htmlStreamingRef.current = true;
+            return;
+          }
+        } catch {
+          // incomplete JSON
+        }
+        if (!htmlStreamingRef.current && !looksLikeJson) {
+          setIsTyping(false);
+          setMessages((prevMessages) => {
+            const lastMessage = prevMessages[prevMessages.length - 1];
+            if (lastMessage && lastMessage.role === "assistant") {
+              return [
+                ...prevMessages.slice(0, -1),
+                { ...lastMessage, content: lastMessage.content + delta },
+              ];
+            }
             return [
               ...prevMessages,
-              {
-                id: `assistant-${Date.now()}`,
-                content: textChunk.data.delta,
-                role: "assistant",
-                timestamp: new Date(),
-              },
+              { id: `assistant-${Date.now()}`, content: delta, role: "assistant", timestamp: new Date() },
             ];
+          });
+        }
+      } else if (chunk.type === "html_chunk") {
+        const c = chunk as HtmlChunkStream;
+        setIsTyping(false);
+        setMessages((prevMessages) => {
+          const last = prevMessages[prevMessages.length - 1];
+          const base = last && last.role === 'assistant'
+            ? last
+            : { id: `assistant-${Date.now()}`, content: "", role: "assistant" as const, timestamp: new Date() };
+        
+          const updated = { ...base, content: (base.content || "") + c.data.html_chunk };
+          if (last && last.role === 'assistant') {
+            return [...prevMessages.slice(0, -1), updated];
           }
+          return [...prevMessages, updated];
+        });
+      } else if (chunk.type === "html_message") {
+        const htmlChunk = chunk as HtmlMessageChunk;
+        setMessages((prevMessages) => {
+          const updated = [...prevMessages];
+          for (let i = updated.length - 1; i >= 0; i--) {
+            if (updated[i].role === "assistant") {
+              updated[i] = { ...updated[i], content: htmlChunk.data.html };
+              break;
+            }
+          }
+          return updated;
         });
       } else if (chunk.type === "tool_call") {
         // Show a tool call indicator - set to typing to indicate processing
@@ -250,6 +290,8 @@ function ChatPageContent() {
           setIsTyping(false);
           // Reset the new chat flag once a response is complete
           setIsNewChat(false);
+          jsonBufferRef.current = "";
+          htmlStreamingRef.current = false;
           // Update session metadata if needed (e.g., last message time)
           if (activeSessionId) {
             const chatIdStr = String(statusChunk.data.chat_id);
