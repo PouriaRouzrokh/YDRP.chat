@@ -51,6 +51,8 @@ from ydrpolicy.backend.schemas.chat import (
     StreamChunk,
     StreamChunkData,  # The wrapper
     TextDeltaData,
+    HtmlMessageData,
+    HtmlChunkData,
     ToolCallData,
     ToolOutputData,
 )
@@ -191,6 +193,12 @@ class ChatService:
             f"Processing message stream for user {user_id}, chat {chat_id}, message: '{message[:100]}...'"
         )
         agent_response_content = ""
+        # Buffers for structured-output progressive HTML rendering
+        structured_json_buffer = ""
+        last_streamed_html = ""
+        is_structured_streaming = False
+        agent_response_html = ""
+        final_html_buffer = ""
         # Use List[Tuple[Any, Any]] since specific item types aren't importable
         tool_calls_data: List[Tuple[Any, Optional[Any]]] = []
         final_status_str: str = "unknown"
@@ -263,7 +271,8 @@ class ChatService:
                             ChatInfoData(chat_id=processed_chat_id, title=chat_title),
                         )
                     else:
-                        new_title = message[:80] + ("..." if len(message) > 80 else "")
+                        # Default chat title based on first message timestamp in YYMMDD-HHMMSS format
+                        new_title = datetime.datetime.now().strftime("%y%m%d-%H%M%S")
                         new_chat = await chat_repo.create_chat(
                             user_id=user_id, title=new_title
                         )
@@ -337,9 +346,97 @@ class ChatService:
                                 ):
                                     delta_text = event.data.delta
                                     agent_response_content += delta_text
-                                    yield self._create_stream_chunk(
-                                        "text_delta", TextDeltaData(delta=delta_text)
-                                    )
+                                    # Try to progressively parse structured output {"html": "..."}
+                                    try:
+                                        structured_json_buffer += delta_text
+                                        # If the buffer begins with a JSON object, switch to structured mode
+                                        if structured_json_buffer.lstrip().startswith("{"):
+                                            is_structured_streaming = True
+
+                                        # Attempt to extract one or more complete JSON objects from the buffer
+                                        idx = 0
+                                        n = len(structured_json_buffer)
+                                        while idx < n:
+                                            # skip whitespace
+                                            while idx < n and structured_json_buffer[idx] in " \t\r\n":
+                                                idx += 1
+                                            if idx >= n:
+                                                break
+                                            if structured_json_buffer[idx] != "{":
+                                                # discard until the next object start
+                                                idx += 1
+                                                continue
+
+                                            depth = 0
+                                            i = idx
+                                            in_string = False
+                                            escape = False
+                                            complete_at = -1
+                                            while i < n:
+                                                ch = structured_json_buffer[i]
+                                                if in_string:
+                                                    if escape:
+                                                        escape = False
+                                                    elif ch == "\\":
+                                                        escape = True
+                                                    elif ch == '"':
+                                                        in_string = False
+                                                else:
+                                                    if ch == '"':
+                                                        in_string = True
+                                                    elif ch == '{':
+                                                        depth += 1
+                                                    elif ch == '}':
+                                                        depth -= 1
+                                                        if depth == 0:
+                                                            complete_at = i + 1
+                                                            break
+                                                i += 1
+
+                                            if complete_at == -1:
+                                                # need more data
+                                                break
+
+                                            obj_str = structured_json_buffer[idx:complete_at]
+                                            # move buffer forward
+                                            structured_json_buffer = structured_json_buffer[complete_at:]
+                                            n = len(structured_json_buffer)
+                                            idx = 0
+
+                                            try:
+                                                parsed = json.loads(obj_str)
+                                            except json.JSONDecodeError:
+                                                continue
+
+                                            if isinstance(parsed, dict):
+                                                # chunked streaming
+                                                if isinstance(parsed.get("html_chunk"), str):
+                                                    chunk_html = parsed["html_chunk"].strip()
+                                                    if chunk_html:
+                                                        yield self._create_stream_chunk(
+                                                            "html_chunk",
+                                                            HtmlChunkData(html_chunk=chunk_html),
+                                                        )
+                                                        final_html_buffer += chunk_html
+                                                # full message update (optional)
+                                                if isinstance(parsed.get("html"), str):
+                                                    current_html = parsed["html"].strip()
+                                                    if current_html and current_html != last_streamed_html:
+                                                        last_streamed_html = current_html
+                                                        yield self._create_stream_chunk(
+                                                            "html_message",
+                                                            HtmlMessageData(html=current_html),
+                                                        )
+                                                        final_html_buffer = current_html
+                                                # ignore {"done": true} here; final status arrives separately
+                                    except Exception:
+                                        # Ignore parse errors until more data arrives
+                                        pass
+                                    # Only stream raw text deltas if we're not in structured HTML mode
+                                    if not is_structured_streaming:
+                                        yield self._create_stream_chunk(
+                                            "text_delta", TextDeltaData(delta=delta_text)
+                                        )
                             elif event.type == "run_item_stream_event":
                                 item = (
                                     event.item
@@ -496,14 +593,39 @@ class ChatService:
                     if run_succeeded and final_status_str == "complete":
                         if agent_response_content:
                             try:
+                                # Prefer assembled streaming HTML; otherwise parse a final single html or wrap text
+                                if final_html_buffer:
+                                    agent_response_html = final_html_buffer
+                                else:
+                                    try:
+                                        parsed = json.loads(agent_response_content)
+                                        if isinstance(parsed, dict) and isinstance(parsed.get("html"), str):
+                                            agent_response_html = parsed["html"].strip()
+                                    except json.JSONDecodeError:
+                                        pass
+                                    if not agent_response_html:
+                                        candidate = agent_response_content.strip()
+                                        agent_response_html = (
+                                            candidate if "<" in candidate else f"<p>{candidate}</p>"
+                                        )
+
                                 assistant_msg = await msg_repo.create_message(
                                     chat_id=processed_chat_id,
                                     role="assistant",
-                                    content=agent_response_content.strip(),
+                                    content=agent_response_html,
                                 )
                                 logger.debug(
                                     f"Saved assistant message ID {assistant_msg.id} to chat ID {processed_chat_id}."
                                 )
+                                # Emit final HTML message chunk if it differs from the last streamed HTML
+                                try:
+                                    if agent_response_html and agent_response_html != last_streamed_html:
+                                        yield self._create_stream_chunk(
+                                            "html_message",
+                                            HtmlMessageData(html=agent_response_html),
+                                        )
+                                except Exception:
+                                    logger.warning("Failed to stream final html_message chunk", exc_info=True)
                                 # Save tool usage linked to the assistant message
                                 if tool_calls_data:
                                     for call_item, output_item in tool_calls_data:

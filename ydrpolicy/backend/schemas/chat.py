@@ -58,6 +58,20 @@ class TextDeltaData(BaseModel):
     delta: str = Field(..., description="The text delta.")
 
 
+class HtmlDeltaData(BaseModel):
+    delta_html: str = Field(
+        ..., description="HTML fragment delta (sanitized server-side or rendered client-side with sanitization)."
+    )
+
+
+class HtmlMessageData(BaseModel):
+    html: str = Field(..., description="Final HTML fragment for the assistant message.")
+
+
+class HtmlChunkData(BaseModel):
+    html_chunk: str = Field(..., description="A small, self-contained HTML fragment chunk.")
+
+
 class ToolCallData(BaseModel):
     id: str = Field(..., description="The unique ID for this tool call.")
     name: str = Field(..., description="The name of the tool being called.")
