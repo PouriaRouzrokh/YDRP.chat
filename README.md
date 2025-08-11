@@ -66,10 +66,10 @@ Examples
 - Frontend details: see `ydrp_ui/README.md`
 
 ## Contact
-Pouria Rouzrokh, MD, MPH, MHPE — Diagnostic Radiology Resident
+Pouria Rouzrokh, MD, MPH, MHPE — Diagnostic Radiology Resident @ Yale University
 - Email: pouria.rouzrokh@yale.edu
 - Homepage: https://pouriarouzrokh.com
 
-Bardia (Bardīa) Khosravi, MD, MPH, MHPE — Diagnostic Radiology Resident
+Bardia (Bardīa) Khosravi, MD, MPH, MHPE — Diagnostic Radiology Resident @ Yale University
 - Email: bardia.khosravi@yale.edu
 - Homepage: https://brdkhsrv.com

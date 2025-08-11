@@ -333,12 +333,17 @@ _(This is a high-level overview. See the Frontend Developer Guide or API docs `/
 - **`POST /chat/archive-all`**: Archive all user's active chats.
 - **`GET /auth/users/me`**: Get authenticated user details.
 
-## Developer
+## Developers
 
 Pouria Rouzrokh, MD, MPH, MHPE
 Diagnostic Radiology Resident
 Department of Radiolohy, Yale New Haven School of Medicine, Yale University, CT, USA
-Homepage: https://pouria.ai
+Homepage: https://pouriarouzrokh.com
+
+Bardia Khosravi, MD, MPH, MHPE
+Diagnostic Radiology Resident
+Department of Radiolohy, Yale New Haven School of Medicine, Yale University, CT, USA
+Homepage: https://brdkhsrv.com
 
 ## Copyright
 

@@ -187,7 +187,14 @@ function LoginForm() {
               href="mailto:pouria.rouzrokh@yale.edu"
               className="text-sm text-muted-foreground hover:underline"
             >
-              Pouria Rouzrokh, MD.
+              pouria.rouzrokh@yale.edu
+            </a>
+            <span> or </span>
+            <a
+              href="mailto:bardia.khosravi@yale.edu"
+              className="text-sm text-muted-foreground hover:underline"
+            >
+              bardia.khosravi@yale.edu
             </a>
           </div>
         </CardFooter>

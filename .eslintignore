@@ -1,7 +1,0 @@
-# Ignore everything by default at repo root
-**/*
-
-# Re-include the UI app for linting
-!ydrp_ui/**
-!ydrp_ui/eslint.config.mjs
-

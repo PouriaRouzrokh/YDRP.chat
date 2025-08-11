@@ -144,4 +144,5 @@ yarn start
 
 ## Support
 
-For technical support, please contact Pouria Rouzrokh, MD, MPH, MHPE.
+For technical support, please contact Pouria Rouzrokh or Bardia Khosravi.
+Emails: pouria.rouzrokh@yale.edu | bardia.khosravi@yale.edu

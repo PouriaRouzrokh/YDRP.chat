@@ -121,6 +121,12 @@ export default function AboutPage() {
             </p>
             <p>Email: pouria.rouzrokh@yale.edu</p>
           </div>
+          <div className="bg-muted/50 p-4 rounded-lg">
+            <p>
+              <strong>Bardia Khosravi, MD, MPH, MHPE</strong>
+            </p>
+            <p>Email: bardia.khosravi@yale.edu</p>
+          </div>
           <Separator className="my-4" />
           <div className="text-sm text-muted-foreground">
             <p>Version 0.2.0</p>

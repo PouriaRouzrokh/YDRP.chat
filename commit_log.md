@@ -1,8 +1,6 @@
 # YDRP Monorepo Commit Log
 
-This file consolidates commit logs from the Engine and UI projects.
-
-## Engine (from ydrp_engine/commit_log.md)
+This file consolidates commit logs from the Engine and UI sub-projects.
 
 ### 8/11/2025 - 20:00
 
@@ -16,6 +14,11 @@ This file consolidates commit logs from the Engine and UI projects.
 - Chat streaming: backend adds HTML formatting fallback and debug prints; emits `html_chunk`/`html` structures.
 - UI: render sanitized HTML, enable list styling, and add visual spacing between streamed chunks.
 - Fixed CSV appending for import list and cleaned old data folders.
+- Chat rendering refined for agent HTML output:
+  - Sanitize while preserving class and data attributes used by streamed chunks.
+  - Render sanitized HTML directly inside `div.chat-html`.
+  - Tailwind/typography list styles enabled; bullets and spacing visible.
+  - Added spacing between streamed chunks using `.html-chunk-sep` and `[data-chunk="1"]`.
 
 ### 8/09/2025 - 12:44  
 
@@ -226,23 +229,4 @@ Debugged the base path in the config files.
 
 - Added commit.py file. 
   - It should handle commit levelling appropriately!
-
-### 3/25/2025 - 12:25
-
-## UI (from ydrp_ui/commit_log.md)
-
-# Commit History
-
-### 8/11/2025 - 20:00
-
-- Chat rendering refined for agent HTML output:
-  - Sanitize while preserving class and data attributes used by streamed chunks.
-  - Render sanitized HTML directly inside `div.chat-html`.
-  - Tailwind/typography list styles enabled; bullets and spacing visible.
-  - Added spacing between streamed chunks using `.html-chunk-sep` and `[data-chunk="1"]`.
-
-### 4/21/2025 - 22:01
-
-Updated agent system prompt.
-
 

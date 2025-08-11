@@ -114,5 +114,5 @@ alwaysApply: false
 - **If a request is unclear or lacks sufficient information, ask clarifying questions before proceeding.**
 - **Always consider the security implications of your code, especially when dealing with user inputs and external data.**
 - **Actively use and promote best practices for the specific tasks at hand (LLM app development, data cleaning, demo creation, etc.).**
-- ** Commits**: Whenever asked to commit, don't forget to update the @commit_log.md file. Note that the most recent commit logs come in the beginning of that file, not at the end! Also remeber that you should change directory to either of the ydrp_engine and ydrp_ui folders before committing, as these folders are being synced to different git repos. 
+- ** Commits**: Whenever asked to commit, don't forget to update the @commit_log.md file. Note that the most recent commit logs come in the beginning of that file, not at the end!
 
