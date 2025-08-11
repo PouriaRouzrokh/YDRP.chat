@@ -204,6 +204,32 @@ body {
   word-break: break-word;
 }
 
+/* Ensure lists inside chat bubbles render bullets and spacing correctly */
+.chat-html ul {
+  list-style: disc outside;
+  margin-left: 1.25rem;
+  padding-left: 0.25rem;
+}
+.chat-html ol {
+  list-style: decimal outside;
+  margin-left: 1.25rem;
+  padding-left: 0.25rem;
+}
+.chat-html li {
+  margin: 0.15rem 0;
+}
+
+/* Visual separation between streamed chunks */
+.chat-html .html-chunk-sep,
+.chat-html [data-chunk="1"],
+.chat-html div.html-chunk-sep,
+.chat-html span.html-chunk-sep {
+  display: block;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem; /* ~1 line space */
+  padding-bottom: 0.5rem;
+}
+
 /* Ensure message cards don't overflow on mobile */
 @media (max-width: 640px) {
   .prose {

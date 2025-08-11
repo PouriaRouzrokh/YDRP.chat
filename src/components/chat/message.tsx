@@ -35,7 +35,13 @@ interface MessageProps {
 
 export function ChatMessage({ message }: MessageProps) {
   const isUser = message.role === "user";
-  const sanitizedHtml = typeof window !== 'undefined' ? DOMPurify.sanitize(message.content, { USE_PROFILES: { html: true } }) : message.content;
+  const sanitizedHtml =
+    typeof window !== 'undefined'
+      ? DOMPurify.sanitize(message.content, {
+          USE_PROFILES: { html: true },
+          ADD_ATTR: ["class", "data-chunk"], // preserve wrapper classes and data-chunk markers
+        })
+      : message.content;
 
   // URLs are rendered directly inside sanitized HTML; no truncation here
 
@@ -78,13 +84,11 @@ export function ChatMessage({ message }: MessageProps) {
               "w-full shadow-sm overflow-hidden break-words py-2"
             )}
           >
-            <CardContent className="px-2 sm:px-3 py-0 flex items-center overflow-hidden">
-              <div className="prose-sm sm:prose dark:prose-invert break-words w-full overflow-hidden my-2 [&_a]:text-blue-600 dark:[&_a]:text-blue-400 [&_a]:underline">
-                <div
-                  className="max-w-full text-sm sm:text-base break-words overflow-wrap-anywhere hyphens-auto"
-                  dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-                />
-              </div>
+            <CardContent className="px-2 sm:px-3 py-0">
+              <div
+                className="chat-html prose-sm sm:prose dark:prose-invert break-words w-full my-2 [&_a]:text-blue-600 dark:[&_a]:text-blue-400 [&_a]:underline"
+                dangerouslySetInnerHTML={{ __html: sanitizedHtml as string }}
+              />
             </CardContent>
           </Card>
           {message.references && message.references.length > 0 && (
