@@ -20,11 +20,11 @@ _config_dict = {
 
 # Add other path-dependent settings to the config dictionary
 
-_config_dict["PATHS"]["IMPORT_DIR"] = os.path.join(
-    _config_dict["PATHS"]["DATA_DIR"], "import"
+_config_dict["PATHS"]["PDF_DIR"] = os.path.join(
+    _config_dict["PATHS"]["DATA_DIR"], "PDF"
 )
-_config_dict["PATHS"]["PROCESSED_DIR"] = os.path.join(
-    _config_dict["PATHS"]["DATA_DIR"], "processed"
+_config_dict["PATHS"]["TXT_DIR"] = os.path.join(
+    _config_dict["PATHS"]["DATA_DIR"], "TXT"
 )
 _config_dict["PATHS"]["SOURCE_POLICIES_DIR"] = os.path.join(_BASE_DIR, "data", "source_policies")
 

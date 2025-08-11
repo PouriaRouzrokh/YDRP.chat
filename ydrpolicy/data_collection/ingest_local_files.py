@@ -18,7 +18,7 @@ def _normalize_text_no_blank_lines(text: str) -> str:
 def _get_import_pdf_path(filename_or_path: str) -> Optional[str]:
     if os.path.isfile(filename_or_path):
         return filename_or_path
-    candidate = os.path.join(data_config.PATHS.IMPORT_DIR, filename_or_path)
+    candidate = os.path.join(data_config.PATHS.PDF_DIR, filename_or_path)
     return candidate if os.path.isfile(candidate) else None
 
 
@@ -51,7 +51,7 @@ def ingest_single_file(
     if not pdf_path:
         logger.error(f"PDF not found (expected in IMPORT_DIR): {file}")
         return False
-    processed_dir = data_config.PATHS.PROCESSED_DIR
+    processed_dir = data_config.PATHS.TXT_DIR
     os.makedirs(processed_dir, exist_ok=True)
     base = os.path.splitext(os.path.basename(pdf_path))[0]
     txt_path = os.path.join(processed_dir, f"{base}.txt")

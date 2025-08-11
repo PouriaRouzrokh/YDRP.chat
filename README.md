@@ -203,7 +203,7 @@ Manages the database schema, user seeding, and policy data population.
   - **Purpose:** Populates the database with new or updated policy data found in the processed data directory. Implicitly runs `--init` actions if needed but focuses on data loading.
   - **Actions:**
     - Ensures DB schema exists (like `--init`, but safe to run if already initialized).
-    - Scans `data/processed/` for `*.txt` files. Title comes from filename; URL/origin are read from `data/import/import.csv` if present. Creates/updates `Policy` and `PolicyChunk` records.
+   - Scans `data/TXT/` for `*.txt` files. Title comes from filename; URL/origin are read from `data/PDF/import.csv` if present. Creates/updates `Policy` and `PolicyChunk` records.
   - **Use Case:** Adding policies to the agent's knowledge base after they have been collected and processed by the `policy` command.
 
 - **`uv run python main.py database --drop [--force]`**
@@ -225,18 +225,18 @@ Local ingestion only (no crawling/scraping). Prepares processed folders and the 
   - `uv run python main.py ingest --file <FILENAME_OR_PATH_TO_PDF> --url <SOURCE_URL> --origin <download|webpage> [--overwrite]`
 
 - Bulk mode via CSV
-  - `uv run python main.py ingest --csv data/import/import.csv`
+  - `uv run python main.py ingest --csv data/PDF/import.csv`
   - CSV headers (required): `filename,url,origin,overwrite` (overwrite is optional; yes/true/1/y to force)
 
 - Optional
   - `--clear-db-policies`: Remove all policies/chunks/images from DB (schema remains)
-  - `--clean-files`: Remove ALL files from `data/import/` (except reset CSV) and `data/processed/`
+  - `--clean-files`: Remove ALL files from `data/PDF/` (except reset CSV) and `data/TXT/`
 
 Details
 - PDFs are converted to Markdown via OCR; Markdown files are passed-through.
 - Each saved Markdown includes headers: `Source URL`, `Origin Type` (`Yale Downloadable File` or `Yale Webpage Converted`), `Original File`, `Timestamp`.
-- Output: `<title>_<timestamp>/content.md`, `content.txt`, and images under `data/processed/local_policies/`.
-- Log: appends to `data/processed/processed_policies_log.csv`.
+  
+  (Note: outputs are now flat TXT under `data/TXT/` only.)
 
 ### Common Workflow Example
 
@@ -248,10 +248,10 @@ Details
    ```bash
    uv run python main.py ingest --file MyPolicy.pdf --url https://medicine.yale.edu/... --origin download --overwrite
    # or bulk via CSV (example rows)
-    echo "filename,url,origin,overwrite" > data/import/import.csv
-    echo "MyPolicy.pdf,https://medicine.yale.edu/...,download,yes" >> data/import/import.csv
-    echo "WebpageSaved.pdf,https://medicine.yale.edu/.../webpage,webpage,no" >> data/import/import.csv
-   uv run python main.py ingest --csv data/import/import.csv
+   echo "filename,url,origin,overwrite" > data/PDF/import.csv
+   echo "MyPolicy.pdf,https://medicine.yale.edu/...,download,yes" >> data/PDF/import.csv
+   echo "WebpageSaved.pdf,https://medicine.yale.edu/.../webpage,webpage,no" >> data/PDF/import.csv
+  uv run python main.py ingest --csv data/PDF/import.csv
    ```
 3. Populate DB from processed local policies:
    ```bash

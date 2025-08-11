@@ -241,26 +241,26 @@ def ingest_command(
 
     # Ensure data directories exist
     try:
-        os.makedirs(data_config.PATHS.IMPORT_DIR, exist_ok=True)
-        os.makedirs(data_config.PATHS.PROCESSED_DIR, exist_ok=True)
+        os.makedirs(data_config.PATHS.PDF_DIR, exist_ok=True)
+        os.makedirs(data_config.PATHS.TXT_DIR, exist_ok=True)
     except Exception:
         pass
 
     if clean_files:
-        logger.warning("Cleaning import and processed directories, and resetting CSV...")
+        logger.warning("Cleaning PDF and TXT directories, and resetting CSV...")
         try:
             # Clean processed dir
-            for entry in os.listdir(data_config.PATHS.PROCESSED_DIR):
+            for entry in os.listdir(data_config.PATHS.TXT_DIR):
                 try:
-                    os.remove(os.path.join(data_config.PATHS.PROCESSED_DIR, entry))
+                    os.remove(os.path.join(data_config.PATHS.TXT_DIR, entry))
                 except IsADirectoryError:
-                    shutil.rmtree(os.path.join(data_config.PATHS.PROCESSED_DIR, entry), ignore_errors=True)
+                    shutil.rmtree(os.path.join(data_config.PATHS.TXT_DIR, entry), ignore_errors=True)
                 except FileNotFoundError:
                     pass
-            # Clean import dir except CSV
-            import_csv = os.path.join(data_config.PATHS.IMPORT_DIR, "import.csv")
-            for entry in os.listdir(data_config.PATHS.IMPORT_DIR):
-                p = os.path.join(data_config.PATHS.IMPORT_DIR, entry)
+            # Clean PDF dir except CSV
+            import_csv = os.path.join(data_config.PATHS.PDF_DIR, "import.csv")
+            for entry in os.listdir(data_config.PATHS.PDF_DIR):
+                p = os.path.join(data_config.PATHS.PDF_DIR, entry)
                 if os.path.abspath(p) != os.path.abspath(import_csv):
                     try:
                         os.remove(p)
@@ -269,7 +269,7 @@ def ingest_command(
                     except FileNotFoundError:
                         pass
             # Reset CSV header
-            os.makedirs(data_config.PATHS.IMPORT_DIR, exist_ok=True)
+            os.makedirs(data_config.PATHS.PDF_DIR, exist_ok=True)
             with open(import_csv, "w", encoding="utf-8") as f:
                 f.write("filename,url,origin,overwrite\n")
             logger.info("File cleanup completed.")

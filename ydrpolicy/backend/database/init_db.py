@@ -711,8 +711,8 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
 
 async def populate_database_from_processed_txt(session: AsyncSession):
     """Populate DB by scanning processed TXT files (flat directory)."""
-    processed_dir = config.PATHS.PROCESSED_DIR
-    import_dir = getattr(config.PATHS, "IMPORT_DIR", None)
+    processed_dir = getattr(config.PATHS, "TXT_DIR", None)
+    import_dir = getattr(config.PATHS, "PDF_DIR", None)
     if not os.path.isdir(processed_dir):
         logger.warning(f"Processed directory not found: {processed_dir}")
         return
