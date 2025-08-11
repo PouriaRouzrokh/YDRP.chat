@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "title": "Residency Shift Scheduling",
+    "userMessage": "What is Yale Policy on residents shifts during high volume hours?",
+    "assistantMessage": "To help residents manage excessive clinical volume, Yale requires that shifts overlap during high volume hours. This overlap is intended to allow residents to finish their shifts on time while ensuring a safe transition of patient care. On busy services, service requirements are adjusted so that more residents are scheduled concurrently to properly share the workload and mitigate fatigue...",
+    "imageUrl": "https://res.cloudinary.com/dzqiwtbg6/image/upload/v1745286075/39fed4ad-39a9-4fd5-b595-14307229103d.png",
+    "category": "Residency",
+    "path": "/chat?topic=residency-shifts"
+  },
+  {
+    "id": 2,
+    "title": "Equipment Purchase",
+    "userMessage": "Can Yale Radiology faculties spend funding from their staff accounts on Amazon purchases?",
+    "assistantMessage": "Faculty funds for staff accounts are designated to cover work-related activities and professional development expenses. The policy explicitly states that “No Amazon purchases are allowed unless pre-approved by the business office.",
+    "imageUrl": "https://res.cloudinary.com/dzqiwtbg6/image/upload/v1745286450/93c412fa-4580-4806-83e4-242a2df7152d.png",
+    "category": "Equipment",
+    "path": "/chat?topic=equipment-maintenance"
+  },
+  {
+    "id": 3,
+    "title": "Contrast Reaction Documentation",
+    "userMessage": "How should I document a contrast reaction event?",
+    "assistantMessage": "Below are the key documentation requirements for a contrast reaction event as outlined in the guidelines: • Document the event in the patient’s medical record (Epic) by including: The contrast agent used and the dose administered A clear description of the reaction signs and symptoms (e.g., type and severity) Details of patient management (for example, medications or interventions provided) Patient outcome and any relevant discharge instructions • The radiologist should also document the contrast administration details and the adverse event in the radiology report whenever possible. • In addition, the technologist must report the incident in the SAFER Event Reporting System.",
+    "imageUrl": "https://res.cloudinary.com/dzqiwtbg6/image/upload/v1745287466/fc2acc3f-69ad-40d3-bc00-3d37029d7987.png",
+    "category": "Contrast Reaction",
+    "path": "/chat?topic=contrast-reaction"
+  }
+]
