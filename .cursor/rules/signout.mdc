@@ -1,0 +1,238 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Rule: Generating a Comprehensive Checkpoint Sign-out
+
+## Goal
+
+To guide an AI assistant in creating a comprehensive, detailed sign-out document in Markdown format by analyzing the entire codebase at the end of a development checkpoint. The sign-out should provide complete understanding of the current project state for the next group of developers to seamlessly continue development.
+
+## Output
+
+- **Format:** Markdown (`.md`)
+- **Location:** `AI_Docs/[checkpoint folder]` (e.g., `AI_Docs/checkpoint_1`)
+- **Filename:** `signout-[checkpoint number].md` (e.g., `signout-checkpoint_1.md`)
+
+## Process
+
+1. **Receive Project Reference:** The user points the AI to the current codebase and specifies which checkpoint and PRD this sign-out relates to.
+2. **Comprehensive Codebase Analysis:** The AI must thoroughly analyze the entire codebase, including all files, folders, configurations, and dependencies to understand the current project state.
+3. **Cross-reference with Documentation:** Compare the actual implemented code against existing PRDs, task lists, and logs to identify discrepancies between planned and actual implementation.
+4. **Generate Comprehensive Sign-out:** Create a detailed sign-out document following the specified format that serves as a complete handover document.
+
+## Analysis Requirements
+
+The AI must analyze and document:
+- **Complete file structure:** Every file, folder, configuration, and setting
+- **Actual implementation status:** What is truly implemented in code vs. documentation
+- **Technical architecture:** Current tech stack, dependencies, and versions
+- **Code relationships:** How files interact and depend on each other
+- **Core logic and algorithms:** Authentication, database management, APIs, business logic
+- **Design patterns and principles:** Architectural decisions and coding standards
+- **Compromises and technical debt:** Known limitations and workarounds
+- **Development environment:** Setup requirements and configurations
+
+## Output Format
+
+The generated sign-out document _must_ follow this structure:
+
+```markdown
+# Checkpoint [Number] Sign-out
+
+## Document Metadata
+- **PRD Reference:** [Link to or name of the PRD this checkpoint implements]
+- **Checkpoint:** [checkpoint number/name]
+- **Sign-out Date:** [Current date]
+- **Project Phase:** [Current development phase]
+
+## Project Overview
+- **Project Goals:** [High-level project objectives from PRD]
+- **Development Phases:** [Overall roadmap and current phase status]
+- **Current Milestone:** [What this checkpoint was meant to achieve]
+
+## Implementation Status
+
+### Completed Features
+- [List of fully implemented features with brief descriptions]
+- [Prioritize actual code implementation over documentation claims]
+
+### Partially Implemented Features
+- [Features that are started but not complete]
+- [What is working vs. what still needs work]
+
+### Pending Features
+- [Features not yet started from the current PRD]
+
+### Detailed To-Do List
+- [Comprehensive list of next steps based on PRD and current code state]
+- [Prioritized by dependency and importance]
+
+## Technical Architecture
+
+### Tech Stack
+#### Frontend
+- [Framework and version]
+- [Key libraries and versions]
+- [Build tools and configurations]
+
+#### Backend
+- [Runtime environment and version]
+- [Framework and key dependencies]
+- [Database and version]
+- [External services and APIs]
+
+#### Development Environment
+- [Required software and versions]
+- [Setup and installation requirements]
+
+### File and Folder Structure
+```
+project-root/
+├── folder1/
+│   ├── file1.ext - [2-3 line description of purpose]
+│   └── file2.ext - [2-3 line description of purpose]
+├── folder2/
+│   ├── subfolder/
+│   │   └── file3.ext - [2-3 line description of purpose]
+│   └── file4.ext - [2-3 line description of purpose]
+├── config-file.json - [2-3 line description of purpose]
+└── README.md - [2-3 line description of purpose]
+```
+
+### File Relationships and Dependencies
+- [Document how key files interact with each other]
+- [Import/export relationships]
+- [Data flow between components]
+
+## Core Implementation Details
+
+### Authentication System
+- [Detailed description of auth implementation]
+- [Flow and security measures]
+- [File locations and key functions]
+
+### Database Management
+- [Database schema and relationships]
+- [CRUD operations and data models]
+- [Migration status and data management]
+
+### API Architecture
+- [Endpoints and their purposes]
+- [Request/response patterns]
+- [Error handling and validation]
+
+### Business Logic
+- [Core algorithms and calculations]
+- [Workflow implementations]
+- [Data processing logic]
+
+### Frontend Architecture
+- [Component hierarchy and structure]
+- [State management approach]
+- [Routing and navigation]
+- [UI/UX patterns implemented]
+
+## Design Principles and Standards
+
+### Architectural Decisions
+- [Design patterns used]
+- [Code organization principles]
+- [Naming conventions and standards]
+
+### Coding Standards
+- [Style guidelines followed]
+- [Testing approaches]
+- [Documentation standards]
+
+## Technical Debt and Compromises
+
+### Known Limitations
+- [Current system limitations]
+- [Performance bottlenecks]
+- [Scalability concerns]
+
+### Temporary Solutions
+- [Workarounds implemented]
+- [Quick fixes that need proper solutions]
+- [Technical debt that should be addressed]
+
+### Design Decisions for Future Consideration
+- [Choices that may need revisiting]
+- [Alternative approaches considered]
+- [Impact on future development]
+
+## Development Environment Setup
+
+### Prerequisites
+- [Required software and versions]
+- [System requirements]
+
+### Installation Steps
+- [Step-by-step setup instructions]
+- [Environment configuration]
+- [Database setup and seeding]
+
+### Running the Application
+- [Commands to start development server]
+- [Build and deployment processes]
+- [Testing procedures]
+
+## Testing Status
+
+### Test Coverage
+- [Current test coverage levels]
+- [Types of tests implemented]
+- [Testing frameworks and tools used]
+
+### Known Issues
+- [Bugs or issues identified]
+- [Test failures or gaps]
+- [Performance issues]
+
+## Additional Considerations
+
+### Security
+- [Security measures implemented]
+- [Vulnerabilities identified]
+- [Security best practices followed]
+
+### Performance
+- [Performance optimizations made]
+- [Load testing results]
+- [Performance monitoring setup]
+
+### Monitoring and Logging
+- [Logging implementation]
+- [Error tracking setup]
+- [Performance monitoring tools]
+
+## Recommendations for Next Phase
+
+### Immediate Priorities
+- [Most critical next steps]
+- [Blockers that need resolution]
+
+### Long-term Considerations
+- [Strategic technical decisions needed]
+- [Architectural improvements]
+- [Scalability preparations]
+
+## Conclusion
+
+[Summary of current state and readiness for next phase of development]
+```
+
+## Quality Standards
+
+The sign-out document must:
+- **Be completely accurate:** Only document what actually exists in the code
+- **Be comprehensive:** Cover every aspect of the current implementation  
+- **Be actionable:** Provide clear next steps for continuing development
+- **Be detailed:** Include sufficient technical detail for developers to understand and continue work
+- **Prioritize code reality:** Always favor what's actually implemented over what documentation claims
+
+## Target Audience
+
+Assume the primary readers are **junior developers** who need to understand and continue development of an unfamiliar codebase. The sign-out should enable them to quickly become productive on the project.
