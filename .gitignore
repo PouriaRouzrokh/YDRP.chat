@@ -1,0 +1,64 @@
+# OS/Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Node/Next.js
+node_modules/
+.npm/
+.next/
+.next/cache/
+out/
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+
+# Logs
+logs/
+**/*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Env files
+.env
+.env.*
+.env.local
+
+# Build/coverage
+dist/
+build/
+coverage/
+
+# Project-specific heavy content
+.merge_backups_*/
+project_docs/*.pptx
+ydrp_engine/data/
+ydrp_engine/data/**
+ydrp_engine/**/logs/
+
+# Common large/binary types (keep UI public assets tracked; these only affect untracked files)
+*.zip
+*.tar
+*.tar.gz
+*.7z
+*.gz
+*.bz2
+*.xz
+*.iso
+*.bin
+*.exe
+*.dll
+*.dylib
+*.so
+
