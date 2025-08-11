@@ -38,6 +38,7 @@ from ydrpolicy.backend.services.chunking import chunk_text
 from ydrpolicy.backend.services.embeddings import embed_texts
 from ydrpolicy.backend.utils.auth_utils import hash_password
 from ydrpolicy.backend.utils.paths import ensure_directories
+from pathlib import Path
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -470,16 +471,10 @@ async def _process_policy_children(
         )
 
 
-# --- populate_database_from_scraped_policies (Modified to use create/update) ---
+# (Removed scraped policies population – local processed policies only)
 async def populate_database_from_scraped_policies(session: AsyncSession):
-    """
-    Scans the scraped policies directory, identifies new/updated policies,
-    and populates the database within the given session using create or update logic.
-    """
-    scraped_policies_dir = config.PATHS.SCRAPED_POLICIES_DIR
-    if not os.path.isdir(scraped_policies_dir):
-        logger.error(f"Scraped policies directory not found: {scraped_policies_dir}")
-        return
+    logger.info("Skipping scraped policies population (feature removed).")
+    return
 
     logger.info(f"Scanning scraped policies directory: {scraped_policies_dir}")
 
@@ -714,218 +709,131 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
     )
 
 
-# --- Populate database from local processed policies (same logic, different dir) ---
-async def populate_database_from_local_processed(session: AsyncSession):
-    """
-    Scans the local policies processed directory, identifies new/updated policies,
-    and populates the database within the given session using create or update logic.
-    """
-    local_policies_dir = config.PATHS.LOCAL_POLICIES_DIR
-    if not os.path.isdir(local_policies_dir):
-        logger.warning(f"Local processed policies directory not found: {local_policies_dir}")
+async def populate_database_from_processed_txt(session: AsyncSession):
+    """Populate DB by scanning processed TXT files (flat directory)."""
+    processed_dir = config.PATHS.PROCESSED_DIR
+    import_dir = getattr(config.PATHS, "IMPORT_DIR", None)
+    if not os.path.isdir(processed_dir):
+        logger.warning(f"Processed directory not found: {processed_dir}")
         return
 
-    logger.info(f"Scanning local processed policies directory: {local_policies_dir}")
-
-    # --- Load descriptions (from processed_policies_log.csv) ---
-    timestamp_to_description: Dict[str, str] = {}
-    url_to_description: Dict[str, str] = {}
-    csv_path = os.path.join(
-        config.PATHS.PROCESSED_DATA_DIR, "processed_policies_log.csv"
-    )
-    if os.path.exists(csv_path):
+    # Build filename -> (url, origin) mapping from import.csv if present
+    filename_to_meta: Dict[str, Dict[str, str]] = {}
+    import_csv = os.path.join(import_dir, "import.csv") if import_dir else None
+    if import_csv and os.path.exists(import_csv):
         try:
-            policy_df = pd.read_csv(csv_path)
-            logger.info(f"Reading policy descriptions from CSV: {csv_path}")
-            timestamp_mapping = "timestamp" in policy_df.columns
-            url_mapping = "url" in policy_df.columns
-            if "extraction_reasoning" in policy_df.columns:
-                for _, row in policy_df.iterrows():
-                    if pd.notna(row["extraction_reasoning"]):
-                        reasoning = str(row["extraction_reasoning"])
-                        if timestamp_mapping and pd.notna(row["timestamp"]):
-                            timestamp_to_description[str(row["timestamp"])] = reasoning
-                        if url_mapping and pd.notna(row["url"]):
-                            url_to_description[str(row["url"])] = reasoning
-                logger.info(
-                    f"Loaded {len(timestamp_to_description)} timestamp mappings and {len(url_to_description)} URL mappings for descriptions."
-                )
-            else:
-                logger.warning(
-                    f"CSV file '{csv_path}' missing 'extraction_reasoning' column."
-                )
+            import csv
+            with open(import_csv, newline="", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    fn = (row.get("filename") or "").strip()
+                    if not fn:
+                        continue
+                    filename_to_meta[os.path.splitext(fn)[0]] = {
+                        "url": (row.get("url") or "").strip(),
+                        "origin": (row.get("origin") or "").strip().lower(),
+                    }
         except Exception as e:
-            logger.error(
-                f"Error reading policy descriptions from CSV '{csv_path}': {e}"
-            )
-    else:
-        logger.warning(f"Policy descriptions CSV file not found: {csv_path}")
+            logger.warning(f"Failed to read import CSV for metadata: {e}")
 
     policy_repo = PolicyRepository(session)
     existing_policies = await get_existing_policies_info(session)
-    folder_pattern = re.compile(r"^(.+)_\d{20}$")
 
-    processed_new_count = 0
-    processed_update_count = 0
-    skipped_count = 0
-    error_count = 0
-    processed_titles_in_run: Set[str] = set()
-
-    for folder_name in sorted(os.listdir(local_policies_dir)):
-        folder_path = os.path.join(local_policies_dir, folder_name)
-        if not os.path.isdir(folder_path):
+    created, updated, skipped, errors = 0, 0, 0, 0
+    for entry in sorted(os.listdir(processed_dir)):
+        if not entry.lower().endswith(".txt"):
+            continue
+        txt_path = os.path.join(processed_dir, entry)
+        if not os.path.isfile(txt_path):
             continue
 
-        match = folder_pattern.match(folder_name)
-        if not match:
-            logger.warning(
-                f"Skipping folder with unexpected name format: {folder_name}"
-            )
-            skipped_count += 1
-            continue
+        base = os.path.splitext(entry)[0]
+        # Title: prettify base
+        policy_title = base.replace("_", " ").strip()
+        # Timestamp: file mtime
+        mtime = datetime.fromtimestamp(Path(txt_path).stat().st_mtime)
+        processed_ts = mtime.strftime("%Y%m%d%H%M%S")
 
-        policy_title = match.group(1)
-        scrape_timestamp = match.group(2) if match.lastindex and match.lastindex >= 2 else folder_name.split("_")[-1]
-        logger.debug(
-            f"Checking local folder: '{folder_name}' -> title='{policy_title}', timestamp={scrape_timestamp}"
+        # Source URL & origin
+        meta = filename_to_meta.get(base, {})
+        source_url = meta.get("url") or None
+        origin = meta.get("origin") or "download"
+        origin_label = (
+            "Yale Downloadable File" if origin == "download" else "Yale Webpage Converted"
         )
 
-        if policy_title in processed_titles_in_run:
-            logger.warning(
-                f"Policy title '{policy_title}' was already processed or updated in this run from another folder. Skipping redundant processing for folder '{folder_name}'."
-            )
-            skipped_count += 1
+        try:
+            with open(txt_path, "r", encoding="utf-8") as f_txt:
+                text_content = f_txt.read()
+            header_lines = [
+                f"# Source URL: {source_url or ''}",
+                f"# Origin Type: {origin_label}",
+                f"# Original File: {base}.pdf",
+                f"# Timestamp: {processed_ts}",
+                "\n---\n\n",
+            ]
+            markdown_content = "\n".join(header_lines) + text_content
+        except Exception as e:
+            logger.error(f"Failed to read TXT '{txt_path}': {e}")
+            errors += 1
             continue
 
-        existing_policy_info = existing_policies.get(policy_title)
-        should_process = False
-        is_update = False
+        existing = existing_policies.get(policy_title)
+        should_update = False
+        if existing and existing.get("metadata"):
+            existing_ts = existing["metadata"].get("scrape_timestamp") or existing["metadata"].get("processed_at", "")
+            should_update = processed_ts > existing_ts
 
-        if existing_policy_info:
-            existing_id = existing_policy_info["id"]
-            existing_metadata = existing_policy_info.get("metadata", {})
-            if existing_metadata and "scrape_timestamp" in existing_metadata:
-                existing_timestamp = existing_metadata["scrape_timestamp"]
-                try:
-                    if scrape_timestamp > existing_timestamp:
-                        logger.info(
-                            f"Newer version found for '{policy_title}'. Scraped: {scrape_timestamp}, Existing DB: {existing_timestamp}. Will update existing ID {existing_id}."
-                        )
-                        should_process = True
-                        is_update = True
-                    else:
-                        logger.debug(
-                            f"Skipping older/same version for '{policy_title}': Folder timestamp '{scrape_timestamp}' <= DB timestamp '{existing_timestamp}'."
-                        )
-                        skipped_count += 1
-                        processed_titles_in_run.add(policy_title)
-                except TypeError as te:
-                    logger.error(
-                        f"Timestamp comparison error for '{policy_title}' (Folder: {scrape_timestamp}, DB: {existing_timestamp}): {te}. Assuming update needed."
-                    )
-                    should_process = True
-                    is_update = True
+        try:
+            if existing and should_update:
+                # Fetch and update
+                policy_to_update = await policy_repo.get_by_id(existing["id"])
+                if not policy_to_update:
+                    logger.error(f"Policy ID {existing['id']} not found for update.")
+                    errors += 1
+                    continue
+                # Delete children
+                await session.execute(delete(Image).where(Image.policy_id == policy_to_update.id))
+                await session.execute(delete(PolicyChunk).where(PolicyChunk.policy_id == policy_to_update.id))
+                await session.flush()
+                policy_to_update.source_url = source_url
+                policy_to_update.markdown_content = markdown_content
+                policy_to_update.text_content = text_content
+                policy_to_update.policy_metadata = {
+                    "scrape_timestamp": processed_ts,
+                    "source_file": f"{base}.txt",
+                    "processed_at": datetime.utcnow().isoformat(),
+                }
+                session.add(policy_to_update)
+                await _process_policy_children(session, policy_to_update, processed_dir, text_content)
+                updated += 1
+            elif not existing:
+                policy = Policy(
+                    title=policy_title,
+                    source_url=source_url,
+                    markdown_content=markdown_content,
+                    text_content=text_content,
+                    description=None,
+                    policy_metadata={
+                        "scrape_timestamp": processed_ts,
+                        "source_file": f"{base}.txt",
+                        "processed_at": datetime.utcnow().isoformat(),
+                    },
+                )
+                session.add(policy)
+                await session.flush()
+                await session.refresh(policy)
+                await _process_policy_children(session, policy, processed_dir, text_content)
+                created += 1
             else:
-                logger.info(
-                    f"Existing '{policy_title}' (ID: {existing_id}) lacks timestamp or metadata. Assuming update needed."
-                )
-                should_process = True
-                is_update = True
-        else:
-            logger.info(
-                f"New policy found: '{policy_title}' from folder '{folder_name}'. Will create."
-            )
-            should_process = True
-            is_update = False
-
-        if should_process:
-            extraction_reasoning = timestamp_to_description.get(scrape_timestamp)
-            if not extraction_reasoning and url_to_description:
-                md_path_for_url = os.path.join(folder_path, "content.md")
-                if os.path.exists(md_path_for_url):
-                    try:
-                        with open(md_path_for_url, "r", encoding="utf-8") as f_md_url:
-                            md_content_for_url = f_md_url.read()
-                        source_url_match_desc = re.search(
-                            r"^# Source URL: (.*)$", md_content_for_url, re.MULTILINE
-                        )
-                        if source_url_match_desc:
-                            source_url_desc = source_url_match_desc.group(1).strip()
-                            extraction_reasoning = url_to_description.get(
-                                source_url_desc
-                            )
-                            if extraction_reasoning:
-                                logger.debug(
-                                    f"Found description for '{policy_title}' via URL match: {source_url_desc}"
-                                )
-                    except Exception as file_err:
-                        logger.error(
-                            f"Error reading markdown for URL-based description extraction for '{policy_title}': {file_err}"
-                        )
-
-            try:
-                if is_update and existing_policy_info:
-                    existing_id = existing_policy_info["id"]
-                    try:
-                        policy_to_update = await policy_repo.get_by_id(existing_id)
-                        if policy_to_update:
-                            update_success = await update_existing_policy(
-                                existing_policy=policy_to_update,
-                                folder_path=folder_path,
-                                scrape_timestamp=scrape_timestamp,
-                                session=session,
-                                extraction_reasoning=extraction_reasoning,
-                            )
-                            if update_success:
-                                processed_update_count += 1
-                                processed_titles_in_run.add(policy_title)
-                            else:
-                                error_count += 1
-                        else:
-                            logger.error(
-                                f"Could not find policy with ID {existing_id} for update, despite initial check finding title '{policy_title}'. Skipping update."
-                            )
-                            error_count += 1
-                    except Exception as fetch_err:
-                        logger.error(
-                            f"Error fetching policy ID {existing_id} for update: {fetch_err}. Skipping update.",
-                            exc_info=True,
-                        )
-                        error_count += 1
-                else:
-                    created_policy = await create_new_policy(
-                        folder_path=folder_path,
-                        policy_title=policy_title,
-                        scrape_timestamp=scrape_timestamp,
-                        session=session,
-                        extraction_reasoning=extraction_reasoning,
-                    )
-                    if created_policy:
-                        processed_new_count += 1
-                        processed_titles_in_run.add(policy_title)
-                    else:
-                        error_count += 1
-            except IntegrityError as ie:
-                logger.error(
-                    f"DATABASE INTEGRITY ERROR processing '{policy_title}' from '{folder_name}': {ie}.",
-                    exc_info=False,
-                )
-                error_count += 1
-                processed_titles_in_run.add(policy_title)
-            except Exception as proc_err:
-                logger.error(
-                    f"UNEXPECTED ERROR processing '{policy_title}' from '{folder_name}': {proc_err}. Skipping.",
-                    exc_info=True,
-                )
-                error_count += 1
-                processed_titles_in_run.add(policy_title)
+                skipped += 1
+        except Exception as e:
+            logger.error(f"Error creating/updating policy '{policy_title}': {e}")
+            errors += 1
 
     logger.info(
-        f"Local processed population finished. Created New: {processed_new_count}, Updated Existing: {processed_update_count}, "
-        f"Skipped (older/duplicate/format): {skipped_count}, Errors during processing: {error_count}"
+        f"Processed TXT population finished. Created: {created}, Updated: {updated}, Skipped: {skipped}, Errors: {errors}"
     )
-
-    # (local PDF ingestion via DB path removed; use process-only policy commands and database --populate)
 
 
 # --- init_db function remains largely unchanged, calls populate... ---
@@ -979,10 +887,9 @@ async def init_db(db_url: Optional[str] = None, populate: bool = True) -> None:
 
                 if populate:
                     logger.info(
-                        "Starting policy data population from processed directories (scraped + local)..."
+                        "Starting policy data population from processed TXT directory..."
                     )
-                    await populate_database_from_scraped_policies(session)
-                    await populate_database_from_local_processed(session)
+                    await populate_database_from_processed_txt(session)
                 else:
                     logger.info(
                         "Skipping policy data population step as per configuration."

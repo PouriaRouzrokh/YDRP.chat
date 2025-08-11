@@ -30,6 +30,7 @@ import typer
 import uvicorn
 import logging
 from openai.types.chat import ChatCompletionMessageParam
+import shutil
 
 # No ToolCallItem import needed
 
@@ -175,226 +176,139 @@ def db_command(
     logger.info("Database command finished.")
 
 
-# --- Data Collection Command ---
-@app.command(name="policy")
-def policy_command(
+# --- Local Ingestion Command (no crawling/scraping) ---
+@app.command(name="ingest")
+def ingest_command(
     ctx: typer.Context,
-    collect_all_urls: bool = typer.Option(
-        False, "--collect-all-urls", help="Run full data collection (crawl & scrape) from URLs."
+    file: Optional[str] = typer.Option(
+        None, "--file", help="Filename (or path) of a single local PDF in import dir."
     ),
-    collect_one_url: Optional[str] = typer.Option(
-        None, "--collect-one-url", help="Collect/process a single URL."
-    ),
-    crawl_all_urls: bool = typer.Option(
-        False, "--crawl-all-urls", help="Run only the crawling step over URLs."
-    ),
-    crawl_one_url: Optional[str] = typer.Option(
-        None, "--crawl-one-url", help="Run crawling starting from a single URL."
-    ),
-    scrape_all_urls: bool = typer.Option(
-        False, "--scrape-all-urls", help="Run only the scraping/classification step for URLs."
-    ),
-    ingest_all_pdfs: bool = typer.Option(
-        False, "--ingest-all-pdfs", help="Process all local PDFs into processed folders and CSV (no DB)."
-    ),
-    ingest_one_pdf: Optional[str] = typer.Option(
-        None, "--ingest-one-pdf", help="Process a single local PDF into processed folder and CSV (no DB)."
-    ),
-    pdfs_dir: Optional[str] = typer.Option(
+    csv: Optional[str] = typer.Option(
         None,
-        "--pdfs-dir",
-        help="Optional path to a specific 'policies_YYYYMMDD' directory. Defaults to latest under data/source_policies.",
+        "--csv",
+        help="Path to a CSV containing rows: filename,url,origin[,overwrite].",
     ),
-    rebuild_db: bool = typer.Option(
+    url: Optional[str] = typer.Option(
+        None,
+        "--url",
+        help="If using --file: the online source URL for the file.",
+    ),
+    origin: str = typer.Option(
+        "download",
+        "--origin",
+        help="If using --file: origin type within Yale site: 'download' (original downloadable file) or 'webpage' (webpage converted to PDF/MD).",
+    ),
+    overwrite: bool = typer.Option(
+        False, "--overwrite", help="If using --file: overwrite existing processed TXT if present."
+    ),
+    clear_db_policies: bool = typer.Option(
         False,
-        "--rebuild-db",
-        help="Drop and recreate the database before running (use with --collect-all-urls or --ingest-all-pdfs).",
+        "--clear-db-policies",
+        help="Remove all existing policies, chunks, and images from the database (keeps DB/schema).",
     ),
-    global_link: Optional[str] = typer.Option(
-        None,
-        "--global-link",
-        help="Global download page URL to include in source metadata for local PDFs.",
-    ),
-    reset_crawl: bool = typer.Option(
-        False, "--reset-crawl", help="Reset crawler state."
-    ),
-    resume_crawl: bool = typer.Option(False, "--resume-crawl", help="Resume crawling."),
-    remove_id: Optional[int] = typer.Option(
-        None, "--remove-id", help="ID of policy to remove."
-    ),
-    remove_title: Optional[str] = typer.Option(
-        None, "--remove-title", help="Exact title of policy to remove."
-    ),
-    force_remove: bool = typer.Option(
-        False, "--force", help="Force removal without confirmation."
-    ),
-    db_url_remove: Optional[str] = typer.Option(
-        None, "--db-url", help="DB URL override for removal."
+    clean_files: bool = typer.Option(
+        False,
+        "--clean-files",
+        help="Remove ALL files from import and processed directories, and reset import.csv.",
     ),
 ):
-    """Manage policy data: Collect, process, or remove policies."""
-    collection_actions = [
-        collect_all_urls,
-        collect_one_url is not None,
-        crawl_all_urls,
-        crawl_one_url is not None,
-        scrape_all_urls,
-        ingest_all_pdfs,
-        ingest_one_pdf is not None,
-    ]
-    removal_actions = [remove_id is not None, remove_title is not None]
-    num_collection_actions = sum(collection_actions)
-    num_removal_actions = sum(removal_actions)
+    """Ingest local files into processed structure and prepare for DB population."""
+    logger = logging.getLogger("ydrpolicy.data_collection")
+    data_config = ctx.meta["data_config"]
 
-    if num_collection_actions + num_removal_actions == 0:
-        print("No action specified for 'policy' command.")
-        typer.echo(ctx.get_help())
-        raise typer.Exit()
-    elif num_collection_actions + num_removal_actions > 1:
-        print("ERROR: Multiple actions specified.")
-        typer.echo(ctx.get_help())
-        raise typer.Exit(code=1)
-
-    if num_collection_actions == 1:
-        logger = logging.getLogger("ydrpolicy.data_collection")
-        data_config = ctx.meta["data_config"]
+    # Optionally clear all policy records from the DB
+    if clear_db_policies:
+        logger.warning("Clearing all existing policies from database (chunks/images cascade)...")
         try:
-            from ydrpolicy.data_collection import collect_policy_urls as collect_policies, crawl, scrape
-        except ImportError as e:
-            logger.critical(f"Failed to import data_collection modules: {e}")
+            from ydrpolicy.backend.database.engine import get_async_engine
+            from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+            from sqlalchemy import delete
+            from ydrpolicy.backend.database.models import Policy, PolicyChunk, Image
+            engine = get_async_engine()
+            session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+            async def _clear():
+                async with session_factory() as session:
+                    # Delete children first to be explicit
+                    await session.execute(delete(PolicyChunk))
+                    await session.execute(delete(Image))
+                    await session.execute(delete(Policy))
+                    await session.commit()
+            asyncio.run(_clear())
+            logger.info("All policy-related records removed from the database.")
+        except Exception as e:
+            logger.error(f"Failed to clear policies from DB: {e}")
             raise typer.Exit(code=1)
-        logger.info("Executing policy data collection/processing action...")
-        data_config.CRAWLER.RESET_CRAWL = reset_crawl
-        data_config.CRAWLER.RESUME_CRAWL = resume_crawl and not reset_crawl
 
-        # Optional rebuild DB (no populate) when collecting URLs or processing PDFs in bulk
-        if rebuild_db and (collect_all_urls or ingest_all_pdfs):
-            backend_config = ctx.meta["backend_config"]
-            target_db_url = str(backend_config.DATABASE.DATABASE_URL)
-            logger_backend = logging.getLogger("ydrpolicy.backend.database")
-            try:
-                from ydrpolicy.backend.database import init_db as db_manager
-            except ImportError as e:
-                logger_backend.critical(
-                    f"Failed to import database module for rebuild: {e}"
-                )
-                raise typer.Exit(code=1)
-            logger_backend.warning(
-                "--rebuild-db specified. Dropping and re-initializing database (DANGEROUS!)."
-            )
-            asyncio.run(db_manager.drop_db(db_url=target_db_url, force=True))
-            asyncio.run(db_manager.init_db(db_url=target_db_url, populate=False))
-            # Clean processed directories for a fresh start
-            try:
-                from ydrpolicy.backend.config import config as backend_cfg
-                import shutil
-                for d in [
-                    backend_cfg.PATHS.SCRAPED_POLICIES_DIR,
-                    backend_cfg.PATHS.LOCAL_POLICIES_DIR,
-                ]:
-                    if os.path.isdir(d):
-                        shutil.rmtree(d, ignore_errors=True)
-                os.makedirs(backend_cfg.PATHS.SCRAPED_POLICIES_DIR, exist_ok=True)
-                os.makedirs(backend_cfg.PATHS.LOCAL_POLICIES_DIR, exist_ok=True)
-                csv_log = os.path.join(
-                    backend_cfg.PATHS.PROCESSED_DATA_DIR, "processed_policies_log.csv"
-                )
+    # Ensure data directories exist
+    try:
+        os.makedirs(data_config.PATHS.IMPORT_DIR, exist_ok=True)
+        os.makedirs(data_config.PATHS.PROCESSED_DIR, exist_ok=True)
+    except Exception:
+        pass
+
+    if clean_files:
+        logger.warning("Cleaning import and processed directories, and resetting CSV...")
+        try:
+            # Clean processed dir
+            for entry in os.listdir(data_config.PATHS.PROCESSED_DIR):
                 try:
-                    if os.path.exists(csv_log):
-                        os.remove(csv_log)
-                        logger_backend.info(f"Removed old log file: {csv_log}")
-                except OSError as e:
-                    logger_backend.warning(
-                        f"Failed to remove old log file {csv_log}: {e}"
-                    )
-            except Exception as clean_err:
-                logger_backend.warning(
-                    f"Failed to clean processed directories: {clean_err}"
-                )
-
-        # URL flows
-        if collect_all_urls:
-            logger.info("Running full data collection pipeline (URLs)...")
-            collect_policies.collect_all(config=data_config)
-        elif collect_one_url is not None:
-            logger.info(f"Collecting single URL: {collect_one_url}")
-            collect_policies.collect_one(url=collect_one_url, config=data_config)
-        elif crawl_all_urls:
-            logger.info("Running crawling step only (all URLs)...")
-            crawl.main(config=data_config)
-        elif crawl_one_url is not None:
-            logger.info(f"Running crawling step starting from URL: {crawl_one_url}")
-            from ydrpolicy.data_collection.crawl.crawler import YaleCrawler
-
-            crawler = YaleCrawler(config=data_config)
-            crawler.start(initial_url=crawl_one_url)
-        elif scrape_all_urls:
-            logger.info("Running scraping/classification step only (URLs)...")
-            scrape.main(config=data_config)
-        # Local PDF process-only flows
-        elif ingest_all_pdfs:
-            logger.info("Processing all local PDFs into processed folders and CSV (no DB)...")
-            from ydrpolicy.data_collection.ingest_local_pdfs import (
-                process_all_local_pdfs,
-            )
-
-            process_all_local_pdfs(
-                source_policies_root=pdfs_dir, global_download_url=global_link
-            )
-        elif ingest_one_pdf is not None:
-            logger.info(
-                f"Processing single local PDF into processed folder and CSV (no DB): {ingest_one_pdf}"
-            )
-            from ydrpolicy.data_collection.ingest_local_pdfs import process_one_pdf
-
-            ok = process_one_pdf(pdf_path=ingest_one_pdf, global_download_url=global_link)
-            if not ok:
-                logger.error("Processing single PDF failed.")
-        logger.info("Policy data collection/processing action finished.")
-
-    elif num_removal_actions == 1:
-        logger = logging.getLogger("ydrpolicy.backend.scripts")
-        backend_config = ctx.meta["backend_config"]
-        try:
-            from ydrpolicy.backend.scripts.remove_policy import run_remove
-        except ImportError as e:
-            logger.critical(f"Failed to import remove_policy script: {e}")
+                    os.remove(os.path.join(data_config.PATHS.PROCESSED_DIR, entry))
+                except IsADirectoryError:
+                    shutil.rmtree(os.path.join(data_config.PATHS.PROCESSED_DIR, entry), ignore_errors=True)
+                except FileNotFoundError:
+                    pass
+            # Clean import dir except CSV
+            import_csv = os.path.join(data_config.PATHS.IMPORT_DIR, "import.csv")
+            for entry in os.listdir(data_config.PATHS.IMPORT_DIR):
+                p = os.path.join(data_config.PATHS.IMPORT_DIR, entry)
+                if os.path.abspath(p) != os.path.abspath(import_csv):
+                    try:
+                        os.remove(p)
+                    except IsADirectoryError:
+                        shutil.rmtree(p, ignore_errors=True)
+                    except FileNotFoundError:
+                        pass
+            # Reset CSV header
+            os.makedirs(data_config.PATHS.IMPORT_DIR, exist_ok=True)
+            with open(import_csv, "w", encoding="utf-8") as f:
+                f.write("filename,url,origin,overwrite\n")
+            logger.info("File cleanup completed.")
+        except Exception as e:
+            logger.error(f"File cleanup failed: {e}")
             raise typer.Exit(code=1)
-        identifier = remove_id if remove_id is not None else remove_title
-        id_type = "ID" if remove_id is not None else "Title"
-        target_db_url = db_url_remove or str(backend_config.DATABASE.DATABASE_URL)
-        logger.info(f"Executing remove-policy action for {id_type}: '{identifier}'")
-        if not force_remove:
-            try:
-                typer.confirm(
-                    f"==> WARNING <==\nAre you sure you want to permanently remove policy {id_type} '{identifier}' and ALL associated data? This cannot be undone.",
-                    abort=True,
-                )
-            except typer.Abort:
-                logger.info("Policy removal cancelled by user.")
-                raise typer.Exit()
-            except EOFError:
-                logger.warning(
-                    "Input stream closed. Assuming cancellation for policy removal."
-                )
-                raise typer.Exit()
-        logger.warning(
-            f"Proceeding with removal of policy {id_type}: '{identifier}'..."
-        )
-        success = asyncio.run(run_remove(identifier=identifier, db_url=target_db_url))
-        if success:
-            logger.info(
-                f"SUCCESS: Successfully removed policy identified by {id_type}: '{identifier}'."
-            )
-        else:
-            logger.error(
-                f"FAILURE: Failed to remove policy identified by {id_type}: '{identifier}'. Check logs."
-            )
-            raise typer.Exit(code=1)
-        logger.info("Remove-policy action finished.")
-    else:
-        logger.error("Internal error: Invalid action state in policy command.")
+
+    # Ingest logic
+    if file is None and csv is None:
+        # Allow clear-only mode
+        logger.info("No --file or --csv provided. Finished housekeeping.")
+        return
+    if (file is None) == (csv is None) is False:
+        # exactly one must be provided if any provided
+        print("Specify exactly one of --file or --csv")
         raise typer.Exit(code=1)
+
+    try:
+        from ydrpolicy.data_collection.ingest_local_files import (
+            ingest_single_file,
+            ingest_from_csv,
+        )
+    except ImportError as e:
+        logger.critical(f"Failed to import local ingestion module: {e}")
+        raise typer.Exit(code=1)
+
+    if file is not None:
+        logger.info(f"Ingesting single file: {file}")
+        ok = ingest_single_file(file=file, source_url=url, origin=origin, overwrite=overwrite)
+        if not ok:
+            logger.error("Single-file ingestion failed.")
+            raise typer.Exit(code=1)
+        logger.info("Single-file ingestion finished.")
+    else:
+        logger.info(f"Ingesting from CSV: {csv}")
+        success, failed = ingest_from_csv(csv_path=csv)
+        if failed > 0 and success == 0:
+            raise typer.Exit(code=1)
+        logger.info("CSV ingestion finished.")
 
 
 # --- MCP Server Command ---

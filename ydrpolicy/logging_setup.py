@@ -37,10 +37,9 @@ def setup_logging(
     log_to_console: bool = True,
     # Default file paths read from respective configs
     backend_log_file: Optional[str] = backend_config.LOGGING.FILE,
-    dc_log_file_crawler: Optional[str] = data_config.LOGGING.CRAWLER_LOG_FILE,
-    dc_log_file_scraper: Optional[str] = data_config.LOGGING.SCRAPER_LOG_FILE,
-    # Add specific file for collect_policy_urls if desired
-    dc_log_file_collect: Optional[str] = None,  # Or maybe reuse crawler log?
+    dc_log_file_crawler: Optional[str] = None,
+    dc_log_file_scraper: Optional[str] = None,
+    dc_log_file_collect: Optional[str] = None,
 ):
     """
     Configures logging handlers and levels for the entire application.
@@ -158,8 +157,10 @@ def setup_logging(
     # Example: Separate files for crawl/scrape based on provided paths
     # Note: A single file handler on dc_logger would capture all data collection logs.
     # If using separate files, ensure the correct path is passed from main.py or config.
-    _add_file_handler(dc_logger, dc_log_file_crawler, "DC-Crawler")
-    _add_file_handler(dc_logger, dc_log_file_scraper, "DC-Scraper")
+    if dc_log_file_crawler:
+        _add_file_handler(dc_logger, dc_log_file_crawler, "DC-Crawler")
+    if dc_log_file_scraper:
+        _add_file_handler(dc_logger, dc_log_file_scraper, "DC-Scraper")
     # _add_file_handler(dc_logger, dc_log_file_collect, "DC-Collect") # If using combined
 
     # --- Log Initialization Summary ---

@@ -1,5 +1,18 @@
 # Commit History
 
+## commit 41 (8/11/2025 - 20:00)
+
+- Local-only ingestion overhaul finalized; removed crawl/scrape flows.
+- PyPDF is the sole PDF processor; removed all Mistral API usage.
+- New ingestion CLI supports single file and CSV modes with overwrite logic.
+- Simplified data layout to `data/import/` and `data/processed/` (txt only).
+- DB population reads `processed/*.txt` and maps metadata from `import/import.csv`.
+- Agent prompt updated to: output HTML, hide titles/origin by default, return one reference link, and name files only when downloads are requested.
+- MCP `find_similar_chunks` tool returns `policy_url` and `origin_type` for internal use.
+- Chat streaming: backend adds HTML formatting fallback and debug prints; emits `html_chunk`/`html` structures.
+- UI: render sanitized HTML, enable list styling, and add visual spacing between streamed chunks.
+- Fixed CSV appending for import list and cleaned old data folders.
+
 ## commit 40 (8/09/2025 - 12:44)
 
 - Renamed CLI flags for policy commands for consistency:

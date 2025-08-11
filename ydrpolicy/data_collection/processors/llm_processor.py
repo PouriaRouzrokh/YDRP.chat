@@ -11,7 +11,6 @@ from pydantic import BaseModel, Field
 import logging
 
 # Third-party imports
-from mistralai import Mistral
 
 # Local imports (updated path)
 from ydrpolicy.data_collection.processors import llm_prompts
@@ -35,42 +34,9 @@ class PolicyContent(BaseModel):
 
 
 def process_document_with_ocr(document_url: str, config: SimpleNamespace) -> str:
-    """
-    Process a document using Mistral's OCR capabilities.
-
-    Args:
-        document_url: URL of the document to process
-
-    Returns:
-        Extracted text in markdown format
-    """
-    try:
-        if not config.LLM.MISTRAL_API_KEY:
-            raise ValueError("MISTRAL_API_KEY is not set in the environment variables")
-
-        client = Mistral(api_key=config.LLM.MISTRAL_API_KEY)
-
-        logger.info(f"Processing document with OCR: {document_url}")
-        ocr_response = client.ocr.process(
-            model=config.LLM.OCR_MODEL,
-            document={"type": "document_url", "document_url": document_url},
-            include_image_base64=False,
-        )
-
-        # Extract text from OCR response
-        if hasattr(ocr_response, "text"):
-            return ocr_response.text
-
-        # If the response structure is different, attempt to extract text
-        if isinstance(ocr_response, dict) and "text" in ocr_response:
-            return ocr_response["text"]
-
-        logger.warning(f"Unexpected OCR response structure: {type(ocr_response)}")
-        return str(ocr_response)
-
-    except Exception as e:
-        logger.error(f"Error processing document with OCR: {str(e)}")
-        return f"Error processing document: {str(e)}"
+    """Deprecated: remote OCR removed. Use local ingestion."""
+    logger.warning("process_document_with_ocr is deprecated.")
+    return ""
 
 
 def analyze_content_for_policies(

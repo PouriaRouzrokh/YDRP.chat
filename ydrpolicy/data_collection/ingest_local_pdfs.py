@@ -8,8 +8,8 @@ from typing import Optional
 
 from ydrpolicy.data_collection.config import config as data_config
 from ydrpolicy.data_collection.processors.pdf_processor import pdf_file_to_markdown
-from ydrpolicy.data_collection.scrape.scraper import (
-    _filter_markdown_for_txt,
+from ydrpolicy.data_collection.utils.markdown_utils import (
+    filter_markdown_for_txt as _filter_markdown_for_txt,
     sanitize_filename,
 )
 

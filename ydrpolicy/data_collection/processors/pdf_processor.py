@@ -9,7 +9,6 @@ import shutil
 from types import SimpleNamespace
 from typing import Tuple, Optional
 
-from mistralai import Mistral
 from pypdf import PdfReader
 
 logger = logging.getLogger(__name__)
@@ -25,116 +24,36 @@ def generate_pdf_raw_timestamp_name() -> Tuple[str, str]:
 def pdf_url_to_markdown(
     pdf_url: str, output_folder: str, config: SimpleNamespace
 ) -> Tuple[Optional[str], Optional[str]]:
-    """OCR a remote PDF URL to markdown; returns (md_path, timestamp)."""
-    markdown_path: Optional[str] = None
-    timestamp_basename: Optional[str] = None
-    doc_images_dir: Optional[str] = None
-    try:
-        api_key = config.LLM.MISTRAL_API_KEY
-        if not api_key:
-            logger.error("Mistral API key missing.")
-            return None, None
-        client = Mistral(api_key=api_key)
-
-        timestamp_basename, markdown_filename = generate_pdf_raw_timestamp_name()
-        markdown_path = os.path.join(output_folder, markdown_filename)
-        doc_images_dir = os.path.join(output_folder, timestamp_basename)
-        os.makedirs(doc_images_dir, exist_ok=True)
-
-        logger.info(f"Processing PDF: {pdf_url}")
-        ocr_response = client.ocr.process(
-            model=config.LLM.OCR_MODEL,
-            document={"type": "document_url", "document_url": pdf_url},
-            include_image_base64=True,
-        )
-        markdown_content = get_combined_markdown(ocr_response, doc_images_dir)
-
-        with open(markdown_path, "w", encoding="utf-8") as file:
-            file.write(markdown_content)
-
-        logger.info(f"PDF -> Raw MD success: {markdown_path}")
-        return markdown_path, timestamp_basename
-
-    except Exception as e:
-        logger.error(f"Error converting PDF {pdf_url} -> MD: {e}", exc_info=True)
-        if markdown_path and os.path.exists(markdown_path):
-            try:
-                os.remove(markdown_path)
-            except OSError:
-                pass
-        if doc_images_dir and os.path.exists(doc_images_dir):
-            try:
-                shutil.rmtree(doc_images_dir)
-            except OSError:
-                pass
-        return None, None
+    """Deprecated: remote URL OCR removed; use local ingestion with PyPDF."""
+    logger.warning("pdf_url_to_markdown is deprecated. Returning (None, None).")
+    return None, None
 
 
 def pdf_file_to_markdown(
     pdf_path: str, output_folder: str, config: SimpleNamespace
 ) -> Tuple[Optional[str], Optional[str]]:
-    """OCR a local PDF file to markdown; returns (md_path, timestamp)."""
+    """Extract text from a local PDF to markdown via PyPDF; returns (md_path, timestamp)."""
     markdown_path: Optional[str] = None
     timestamp_basename: Optional[str] = None
     doc_images_dir: Optional[str] = None
     try:
-        api_key = config.LLM.MISTRAL_API_KEY
-        if not api_key:
-            logger.error("Mistral API key missing.")
-            return None, None
-        client = Mistral(api_key=api_key)
-
         timestamp_basename, markdown_filename = generate_pdf_raw_timestamp_name()
         markdown_path = os.path.join(output_folder, markdown_filename)
-        doc_images_dir = os.path.join(output_folder, timestamp_basename)
-        os.makedirs(doc_images_dir, exist_ok=True)
-
-        logger.info(f"Processing local PDF: {pdf_path}")
-        # Upload local file to Mistral and use returned file_id (per SDK docs)
+        logger.info(f"Processing local PDF via PyPDF: {pdf_path}")
         try:
-            uploaded = client.files.upload(
-                file={
-                    "file_name": os.path.basename(pdf_path),
-                    "content": open(pdf_path, "rb"),
-                }
-            )
-            file_id = getattr(uploaded, "id", None)
-            if not file_id:
-                raise RuntimeError("Mistral file upload did not return a file_id.")
-            ocr_response = client.ocr.process(
-                model=config.LLM.OCR_MODEL,
-                document={"type": "file", "file_id": file_id},
-                include_image_base64=True,
-            )
-
-            markdown_content = get_combined_markdown(ocr_response, doc_images_dir)
-
+            reader = PdfReader(pdf_path)
+            pieces = []
+            for page in reader.pages:
+                pieces.append(page.extract_text() or "")
+            text = "\n\n".join(pieces).strip()
             with open(markdown_path, "w", encoding="utf-8") as file:
-                file.write(markdown_content)
-
-            logger.info(f"Local PDF -> Raw MD success: {markdown_path}")
+                # Do not include any header here; ingestion step will add a unified header.
+                file.write(text)
+            logger.info(f"Local PDF -> MD via PyPDF success: {markdown_path}")
             return markdown_path, timestamp_basename
-        except Exception as ocr_err:
-            logger.warning(
-                f"Mistral OCR failed for local PDF, falling back to PyPDF text extraction: {ocr_err}"
-            )
-            # Fallback: simple text extraction via PyPDF
-            try:
-                reader = PdfReader(pdf_path)
-                pieces = []
-                for page in reader.pages:
-                    pieces.append(page.extract_text() or "")
-                text = "\n\n".join(pieces).strip()
-                header = f"# Source URL: \n# Imported From: Local PDF\n# Original File: {os.path.basename(pdf_path)}\n# Timestamp: {timestamp_basename}\n\n---\n\n"
-                with open(markdown_path, "w", encoding="utf-8") as file:
-                    file.write(header + text)
-                logger.info(
-                    f"Local PDF -> Raw MD success via PyPDF fallback: {markdown_path}"
-                )
-                return markdown_path, timestamp_basename
-            except Exception as pypdf_err:
-                logger.error(f"PyPDF fallback failed: {pypdf_err}")
-                raise
+        except Exception as pypdf_err:
+            logger.error(f"PyPDF extraction failed: {pypdf_err}")
+            raise
 
     except Exception as e:
         logger.error(f"Error converting local PDF {pdf_path} -> MD: {e}", exc_info=True)

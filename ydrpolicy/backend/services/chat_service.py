@@ -6,6 +6,7 @@ Handles errors via exceptions from the agent runner.
 Manages MCP connection lifecycle using async context manager.
 """
 import asyncio
+import re
 import contextlib  # For null_async_context
 import datetime
 import json  # For safe parsing of tool arguments
@@ -352,6 +353,12 @@ class ChatService:
                                         # If the buffer begins with a JSON object, switch to structured mode
                                         if structured_json_buffer.lstrip().startswith("{"):
                                             is_structured_streaming = True
+                                            # Log once when we detect structured streaming
+                                            logger.info("Detected structured JSON streaming (html/html_chunk). UI should render HTML.")
+                                            try:
+                                                print("[YDRP DEBUG] Detected structured JSON streaming from agent (expect html_chunk/html)")
+                                            except Exception:
+                                                pass
 
                                         # Attempt to extract one or more complete JSON objects from the buffer
                                         idx = 0
@@ -413,21 +420,23 @@ class ChatService:
                                                 if isinstance(parsed.get("html_chunk"), str):
                                                     chunk_html = parsed["html_chunk"].strip()
                                                     if chunk_html:
+                                                        wrapped_chunk = f'<div class="html-chunk-sep" data-chunk="1">{chunk_html}</div>'
                                                         yield self._create_stream_chunk(
                                                             "html_chunk",
-                                                            HtmlChunkData(html_chunk=chunk_html),
+                                                            HtmlChunkData(html_chunk=wrapped_chunk),
                                                         )
-                                                        final_html_buffer += chunk_html
+                                                        # Keep a mirrored buffer of chunked HTML with separators for final render
+                                                        final_html_buffer += wrapped_chunk
                                                 # full message update (optional)
                                                 if isinstance(parsed.get("html"), str):
                                                     current_html = parsed["html"].strip()
                                                     if current_html and current_html != last_streamed_html:
-                                                        last_streamed_html = current_html
-                                                        yield self._create_stream_chunk(
-                                                            "html_message",
-                                                            HtmlMessageData(html=current_html),
-                                                        )
-                                                        final_html_buffer = current_html
+                                                         last_streamed_html = current_html
+                                                         yield self._create_stream_chunk(
+                                                             "html_message",
+                                                             HtmlMessageData(html=current_html),
+                                                         )
+                                                         final_html_buffer = current_html
                                                 # ignore {"done": true} here; final status arrives separately
                                     except Exception:
                                         # Ignore parse errors until more data arrives
@@ -604,10 +613,58 @@ class ChatService:
                                     except json.JSONDecodeError:
                                         pass
                                     if not agent_response_html:
+                                        # Convert plain text into simple, readable HTML
                                         candidate = agent_response_content.strip()
-                                        agent_response_html = (
-                                            candidate if "<" in candidate else f"<p>{candidate}</p>"
-                                        )
+                                        if "<" in candidate:
+                                            agent_response_html = candidate
+                                        else:
+                                            # Lightweight formatting: paragraphs and unordered lists
+                                            def plain_text_to_html(text: str) -> str:
+                                                lines = [ln.rstrip() for ln in text.splitlines()]
+                                                html_parts: list[str] = []
+                                                in_list = False
+                                                for ln in lines:
+                                                    if not ln.strip():
+                                                        if in_list:
+                                                            html_parts.append("</ul>")
+                                                            in_list = False
+                                                        continue
+                                                    if ln.lstrip().startswith(("- ", "* ", "• ")):
+                                                        if not in_list:
+                                                            html_parts.append("<ul>")
+                                                            in_list = True
+                                                        # Remove bullet prefix and wrap in <li>
+                                                        item = ln.lstrip()[2:] if ln.lstrip().startswith(("- ", "* ")) else ln.lstrip()[2:]
+                                                        html_parts.append(f"<li>{item}</li>")
+                                                    else:
+                                                        if in_list:
+                                                            html_parts.append("</ul>")
+                                                            in_list = False
+                                                        html_parts.append(f"<p>{ln}</p>")
+                                                if in_list:
+                                                    html_parts.append("</ul>")
+                                                raw_html = "".join(html_parts)
+                                                # Linkify plain URLs
+                                                url_pattern = re.compile(r"(https?://[^\s<]+)")
+                                                return url_pattern.sub(lambda m: f'<a href="{m.group(1)}" target="_blank" rel="noopener noreferrer">{m.group(1)}</a>', raw_html)
+
+                                            agent_response_html = plain_text_to_html(candidate)
+
+                                # --- DEBUG: Print/log raw vs formatted outputs for troubleshooting ---
+                                raw_preview = (agent_response_content or "").strip()[:500]
+                                html_preview = (agent_response_html or "").strip()[:500]
+                                logger.info(
+                                    "Agent output prepared. raw_len=%d, html_len=%d, raw_preview=%r, html_preview=%r",
+                                    len(agent_response_content or ""),
+                                    len(agent_response_html or ""),
+                                    raw_preview,
+                                    html_preview,
+                                )
+                                try:
+                                    print("[YDRP DEBUG] Agent RAW sample (first 500 chars):\n" + raw_preview)
+                                    print("[YDRP DEBUG] Agent HTML sample (first 500 chars):\n" + html_preview)
+                                except Exception:
+                                    pass
 
                                 assistant_msg = await msg_repo.create_message(
                                     chat_id=processed_chat_id,

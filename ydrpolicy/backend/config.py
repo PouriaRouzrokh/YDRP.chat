@@ -77,20 +77,11 @@ _config_dict = {
 }
 
 # Add other path-dependent settings to the config dictionary
-_config_dict["PATHS"]["RAW_DATA_DIR"] = os.path.join(
-    _config_dict["PATHS"]["DATA_DIR"], "raw"
+_config_dict["PATHS"]["IMPORT_DIR"] = os.path.join(
+    _config_dict["PATHS"]["DATA_DIR"], "import"
 )
-_config_dict["PATHS"]["PROCESSED_DATA_DIR"] = os.path.join(
+_config_dict["PATHS"]["PROCESSED_DIR"] = os.path.join(
     _config_dict["PATHS"]["DATA_DIR"], "processed"
-)
-_config_dict["PATHS"]["SCRAPED_POLICIES_DIR"] = os.path.join(
-    _config_dict["PATHS"]["PROCESSED_DATA_DIR"], "scraped_policies"
-)
-_config_dict["PATHS"]["SOURCE_POLICIES_DIR"] = os.path.join(
-    _config_dict["PATHS"]["DATA_DIR"], "source_policies"
-)
-_config_dict["PATHS"]["LOCAL_POLICIES_DIR"] = os.path.join(
-    _config_dict["PATHS"]["PROCESSED_DATA_DIR"], "local_policies"
 )
 _config_dict["PATHS"]["USERS_SEED_FILE"] = os.path.join(
     _config_dict["PATHS"]["AUTH_DIR"], "users.json"

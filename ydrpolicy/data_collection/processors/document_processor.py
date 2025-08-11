@@ -15,10 +15,7 @@ import requests
 from docx import Document
 
 # Local imports (updated path)
-from ydrpolicy.data_collection.processors.llm_processor import (
-    process_document_with_ocr,
-)
-from ydrpolicy.data_collection.processors.pdf_processor import pdf_url_to_markdown
+from pypdf import PdfReader
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -125,8 +122,8 @@ def convert_to_markdown(file_path: str, url: str, config: SimpleNamespace) -> st
     try:
         # Handle different file types
         if file_ext in [".pdf"]:
-            # Always use Mistral OCR for PDFs
-            return convert_pdf_to_markdown(file_path, url, config)
+            # Convert PDF to simple markdown using PyPDF (no external OCR)
+            return convert_pdf_to_markdown(file_path)
         elif file_ext in [".doc", ".docx"]:
             return convert_docx_to_markdown(file_path)
         else:
@@ -138,47 +135,30 @@ def convert_to_markdown(file_path: str, url: str, config: SimpleNamespace) -> st
         return ""
 
 
-def convert_pdf_to_markdown(file_path: str, url: str, config: SimpleNamespace) -> str:
+def convert_pdf_to_markdown(file_path: str) -> str:
     """
-    Convert a PDF document to markdown using Mistral OCR.
+    Convert a PDF document to simple markdown-like text using PyPDF only.
 
     Args:
         file_path: Path to the PDF document
-        url: Original URL of the document
 
     Returns:
-        PDF content in markdown format
+        PDF content as plain text separated by newlines (no blank lines).
     """
     try:
-        logger.info(f"Processing PDF with Mistral OCR: {url}")
-
-        # Create a specific output directory for this document
-        doc_output_dir = os.path.join(
-            config.PATHS.DOCUMENT_DIR, f"doc_{hash(url) % 10000}"
-        )
-        os.makedirs(doc_output_dir, exist_ok=True)
-
-        # Use the pdf_url_to_markdown function from pdf_processor
-        markdown_path = pdf_url_to_markdown(url, doc_output_dir, config)
-
-        if markdown_path and os.path.exists(markdown_path):
-            with open(markdown_path, "r", encoding="utf-8") as f:
-                return f.read()
-        else:
-            # If OCR processing fails, fall back to direct document processing
-            logger.warning(
-                f"Mistral OCR processing failed for {url}, trying direct API call"
-            )
-            markdown_text = process_document_with_ocr(url, config)
-
-            if markdown_text:
-                return f"# {os.path.basename(file_path)}\n\nSource: {url}\n\n{markdown_text}"
-            else:
-                return f"# Failed to Extract Content\n\nFile: {os.path.basename(file_path)}\nURL: {url}\n\nCould not extract content from this PDF."
-
+        reader = PdfReader(file_path)
+        pieces = []
+        for page in reader.pages:
+            text = page.extract_text() or ""
+            # normalize: remove extra blank lines
+            lines = [ln for ln in text.splitlines() if ln.strip()]
+            pieces.append("\n".join(lines))
+        text_joined = "\n".join(pieces).strip()
+        title = os.path.basename(file_path)
+        return f"# {title}\n\n{text_joined}"
     except Exception as e:
-        logger.error(f"Error converting PDF to markdown: {str(e)}")
-        return f"# Error Processing PDF\n\nFile: {os.path.basename(file_path)}\nURL: {url}\n\nError: {str(e)}"
+        logger.error(f"Error converting PDF via PyPDF: {str(e)}")
+        return f"# Error Processing PDF\n\nFile: {os.path.basename(file_path)}\n\nError: {str(e)}"
 
 
 def convert_docx_to_markdown(file_path: str) -> str:

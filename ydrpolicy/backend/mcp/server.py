@@ -82,12 +82,14 @@ async def find_similar_chunks(
             similarity_score = chunk_info.get("similarity", 0.0)
             policy_id = chunk_info.get("policy_id", "N/A")
             policy_title = chunk_info.get("policy_title", "N/A")
+            policy_url = chunk_info.get("policy_url", "")
             content_snippet = chunk_info.get("content", "")[:200] + "..."
             output_lines.append(
                 f"\n--- Result {i+1} ---\n"
                 f"  Chunk ID: {chunk_id}\n"
                 f"  Policy ID: {policy_id}\n"
                 f"  Policy Title: {policy_title}\n"
+                f"  Source URL: {policy_url or 'N/A'}\n"
                 f"  Similarity: {similarity_score:.4f}\n"
                 f"  Content Snippet: {content_snippet}"
             )

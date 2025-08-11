@@ -1,5 +1,7 @@
 # Data
 data/
+!data/import/
+!data/import/.gitkeep
 auth/users.json
 tests/data_collection/test_data
 

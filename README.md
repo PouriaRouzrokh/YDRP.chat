@@ -6,11 +6,10 @@ The Yale Radiology Policies RAG Application is a comprehensive system designed t
 
 It includes components for:
 
-1.  **Data Collection:** Crawling Yale web sources, downloading documents, extracting text and image files.
-2.  **Processing & Classification:** Converting content to Markdown/Text, using LLMs to identify actual policies and extract titles.
-3.  **Database Storage:** Storing policy metadata, text content, image references, user information, chat history (including archived status), and vector embeddings (using `pgvector`) in a PostgreSQL database.
-4.  **Retrieval & Generation:** Providing tools (via MCP) for semantic search (RAG) over the policy data.
-5.  **Agent Interaction:** Exposing a chat agent (via API or terminal) that uses the retrieval tools to answer user questions based on the indexed policies, with support for persistent chat history, user authentication, and chat management (rename, archive).
+1.  **Local Ingestion:** Importing policies from local PDF/Markdown files (no web crawling). PDFs are converted to Markdown; Markdown files are passed through.
+2.  **Database Storage:** Storing policy metadata, text content, image references, user information, chat history (including archived status), and vector embeddings (using `pgvector`) in a PostgreSQL database.
+3.  **Retrieval & Generation:** Providing tools (via MCP) for semantic search (RAG) over the policy data.
+4.  **Agent Interaction:** Exposing a chat agent (via API or terminal) that uses the retrieval tools to answer user questions based on the indexed policies, with support for persistent chat history, user authentication, and chat management (rename, archive).
 
 This repository contains the scripts for the core engine functionalities – everything apart from the user interface. The UI will be developed in a separate repository:
 
@@ -36,15 +35,13 @@ https://github.com/PouriaRouzrokh/YDRP_UI
 - **Typer**: CLI framework for `main.py`.
 - **HTTPX**: Async HTTP client (used internally by SDKs).
 - **Ruff**: Linter and formatter.
-- **(Optional) Mistral API**: Used in data collection for potential OCR tasks.
+  
 
-### Data Collection and Processing
+### Data Ingestion and Processing
 
-- **Selenium**: Web automation for crawling complex, Javascript-heavy sites.
-- **Requests**: HTTP library for simpler web requests and document downloads.
-- **PDF Processing Libraries**: Tools used internally by data collection scripts.
-- **Markdown Processing**: Libraries like `markdownify` for converting HTML to Markdown.
-- **Pandas**: Used for managing crawled data logs.
+- **PDF Processing/OCR**: Converts PDFs to Markdown (with OCR fallback strategy).
+- **Markdown Processing**: Local `.md` files are passed through with headers added.
+- **Pandas**: Used for simple CSV-based batch ingestion logs.
 
 ## System Architecture
 
@@ -86,11 +83,10 @@ https://github.com/PouriaRouzrokh/YDRP_UI
                    │
 ┌─────────────────────────────────────┐
 │                                     │
-│ Data Collection & Processing        │
-│ (Via main.py policy &               │
+│ Data Ingestion & Processing         │
+│ (Via main.py ingest &               │
 │ main.py database --populate)        │
-│ - Crawler (Selenium/Requests)       │
-│ - Scraper/Classifier (LLM)          │
+│ - Local file ingestion (PDF/MD)     │
 │ - DB Populator (Embedding, Insert)  │
 │ - User Seeding (from JSON)          │
 │                                     │
@@ -142,7 +138,6 @@ https://github.com/PouriaRouzrokh/YDRP_UI
       - `OPENAI_API_KEY`: Your OpenAI API key (used for embeddings and agent generation).
       - `JWT_SECRET`: **Crucially, change this to a strong, unique secret key.** Generate one using `python -c 'import secrets; print(secrets.token_hex(32))'`.
     - Optional:
-      - `MISTRAL_API_KEY`: If used for OCR in data collection.
       - Adjust `JWT_EXPIRATION` (in minutes, default 30) in `config.py` if needed.
 
 6.  **Create User Seed File (Required for Auth):**
@@ -177,8 +172,8 @@ https://github.com/PouriaRouzrokh/YDRP_UI
     - **OR Using `init_db` (for simpler setups/testing):**
       - Run the database initialization command. This creates the DB (if needed), enables `pgvector`, creates tables based on current models, and **seeds users** from `users.json`.
       ```bash
-      # Create schema and seed users, but don't populate policies yet
-      python main.py database --init --no-populate
+      # Create schema and seed users (no policy population)
+      uv run python main.py database --init
       ```
       - **Note:** If you later change models, `init_db` will _not_ automatically migrate the schema. You would need to `--drop` and `--init` again, losing data, or manually alter the tables, or switch to Alembic.
 
@@ -192,7 +187,7 @@ _(Run `python main.py --help` for a full list)_
 
 Manages the database schema, user seeding, and policy data population.
 
-- **`python main.py database --init [--no-populate]`**
+- **`uv run python main.py database --init`**
 
   - **Purpose:** Initializes the database structure (creating DB, extensions, tables based on **current** models) and seeds users from `auth/users.json`. Optionally populates policies. **WARNING:** Does not perform schema migrations on existing databases. Use Alembic for managing schema changes on existing databases.
   - **Actions:**
@@ -200,20 +195,18 @@ Manages the database schema, user seeding, and policy data population.
     - Creates all tables defined in `models.py` (if they don't exist).
     - Applies full-text search triggers.
     - Reads `auth/users.json`, hashes passwords, and inserts any users not already present in the DB based on email.
-    - If `--no-populate` is **NOT** used (or if `--populate` is explicitly used later), it proceeds to populate policies (see below).
+    - Population is run separately via `--populate`.
   - **Use Case:** First-time setup, resetting the schema (requires `--drop` first if DB exists), adding predefined users.
 
-- **`python main.py database --populate`**
+- **`uv run python main.py database --populate`**
 
-  - **Purpose:** Populates the database with new or updated policy data found in the processed data directories. Implicitly runs `--init` actions if needed but focuses on data loading.
+  - **Purpose:** Populates the database with new or updated policy data found in the processed data directory. Implicitly runs `--init` actions if needed but focuses on data loading.
   - **Actions:**
     - Ensures DB schema exists (like `--init`, but safe to run if already initialized).
-    - Scans BOTH `data/processed/scraped_policies/` and `data/processed/local_policies/` for `<title>_<timestamp>` folders.
-    - Compares found policies (by title and timestamp) with existing DB records.
-    - For new policies or newer versions: reads content, chunks text, generates embeddings (via OpenAI), and inserts `Policy`, `Image`, `PolicyChunk` records into the DB.
+    - Scans `data/processed/` for `*.txt` files. Title comes from filename; URL/origin are read from `data/import/import.csv` if present. Creates/updates `Policy` and `PolicyChunk` records.
   - **Use Case:** Adding policies to the agent's knowledge base after they have been collected and processed by the `policy` command.
 
-- **`python main.py database --drop [--force]`**
+- **`uv run python main.py database --drop [--force]`**
 
   - **Purpose:** **Permanently deletes** the entire application database.
   - **Actions:** Connects to PostgreSQL and executes `DROP DATABASE`.
@@ -224,57 +217,45 @@ Manages the database schema, user seeding, and policy data population.
   - `--db-url <URL>`: Override the `DATABASE_URL` from `.env`.
   - `--no-populate`: (With `--init`) Explicitly skip the policy population step, only create schema and seed users.
 
-### 2. `policy` Command
+### 2. `ingest` Command
 
-Manages the data collection/processing pipeline (filesystem operations), local PDF processing, and database removal.
+Local ingestion only (no crawling/scraping). Prepares processed folders and the processed log for DB population.
 
-- URL workflows
-  - **`python main.py policy --collect-all-urls`**: Crawl + scrape full pipeline from allowed domains; writes processed folders under `scraped_policies/`. Does NOT populate DB. (implemented in `ydrpolicy/data_collection/collect_policy_urls.py`)
-  - **`python main.py policy --collect-one-url <URL>`**: Process a single URL end-to-end; writes processed folder if identified as a policy. Does NOT populate DB. (implemented in `ydrpolicy/data_collection/collect_policy_urls.py`)
-  - **`python main.py policy --crawl-all-urls`**: Crawl only (produces raw markdown and CSV of discovered URLs).
-  - **`python main.py policy --crawl-one-url <URL>`**: Start crawling from a specific URL.
-  - **`python main.py policy --scrape-all-urls`**: Scrape/classify existing crawled raw data into processed folders.
+- Single file mode (PDF in import dir)
+  - `uv run python main.py ingest --file <FILENAME_OR_PATH_TO_PDF> --url <SOURCE_URL> --origin <download|webpage> [--overwrite]`
 
-- Local PDF workflows (process-only)
-  - **`python main.py policy --ingest-all-pdfs [--pdfs-dir <policies_YYYYMMDD>] [--global-link <URL>]`**: Process all PDFs under the specified/latest `policies_YYYYMMDD` into `local_policies/` and append to `processed_policies_log.csv`. No DB writes. (implemented in `ydrpolicy/data_collection/ingest_local_pdfs.py`)
-  - **`python main.py policy --ingest-one-pdf <PATH_TO_PDF> [--global-link <URL>]`**: Process a single local PDF into `local_policies/`. No DB writes. (implemented in `ydrpolicy/data_collection/ingest_local_pdfs.py`)
+- Bulk mode via CSV
+  - `uv run python main.py ingest --csv data/import/import.csv`
+  - CSV headers (required): `filename,url,origin,overwrite` (overwrite is optional; yes/true/1/y to force)
 
-- Removal from DB
-  - **`python main.py policy --remove-id <ID> [--force]`** or **`--remove-title <TITLE> [--force]`**: Remove a policy and its chunks/images from the database (applies regardless of URL vs local source). Does not delete filesystem folders.
+- Optional
+  - `--clear-db-policies`: Remove all policies/chunks/images from DB (schema remains)
+  - `--clean-files`: Remove ALL files from `data/import/` (except reset CSV) and `data/processed/`
 
-- Common Options
-  - `--pdfs-dir`: For PDF flows, specify a concrete `policies_YYYYMMDD` folder; defaults to latest under `data/source_policies/`.
-  - `--global-link`: A download page URL that is embedded into markdown headers for local PDFs.
-  - `--reset-crawl` / `--resume-crawl`: Control crawler state.
-  - `--db-url`: (With `--remove-*`) override DB URL.
-  - `--rebuild-db`: Optional convenience flag usable with `--collect-all-urls` or `--ingest-all-pdfs` to drop and re-init DB, and clear processed folders/logs (useful for full refresh). Remember to run `database --populate` afterwards to index processed data.
-
-#### Local PDF Processing Details
-- Attempts OCR via Mistral OCR; falls back to PyPDF if OCR fails.
-- Produces `<title>_<timestamp>/content.md`, `content.txt`, and any extracted images under `data/processed/local_policies/`.
-- Appends a row into `data/processed/processed_policies_log.csv`.
+Details
+- PDFs are converted to Markdown via OCR; Markdown files are passed-through.
+- Each saved Markdown includes headers: `Source URL`, `Origin Type` (`Yale Downloadable File` or `Yale Webpage Converted`), `Original File`, `Timestamp`.
+- Output: `<title>_<timestamp>/content.md`, `content.txt`, and images under `data/processed/local_policies/`.
+- Log: appends to `data/processed/processed_policies_log.csv`.
 
 ### Common Workflow Example
 
-1. Init DB & seed users (no populate):
+1. Init DB & seed users:
    ```bash
-   uv run python main.py database --init --no-populate
+   uv run python main.py database --init
    ```
-2. Collect policies from URLs:
+2. Ingest local files:
    ```bash
-   uv run python main.py policy --collect-all-urls
+   uv run python main.py ingest --file MyPolicy.pdf --url https://medicine.yale.edu/... --origin download --overwrite
+   # or bulk via CSV (example rows)
+    echo "filename,url,origin,overwrite" > data/import/import.csv
+    echo "MyPolicy.pdf,https://medicine.yale.edu/...,download,yes" >> data/import/import.csv
+    echo "WebpageSaved.pdf,https://medicine.yale.edu/.../webpage,webpage,no" >> data/import/import.csv
+   uv run python main.py ingest --csv data/import/import.csv
    ```
-3. Process local PDFs (optional):
-   ```bash
-   uv run python main.py policy --ingest-all-pdfs --global-link "https://example.com/all-pdfs"
-   ```
-4. Populate DB from all processed sources (URLs + local PDFs):
+3. Populate DB from processed local policies:
    ```bash
    uv run python main.py database --populate
-   ```
-5. Remove a policy from DB by ID:
-   ```bash
-   uv run python main.py policy --remove-id 123 --force
    ```
 
 ### 3. `mcp` Command
