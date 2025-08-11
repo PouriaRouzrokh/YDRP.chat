@@ -10,6 +10,14 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  // Limit linting to this package and ignore parent/root and build artifacts
+  { ignores: [
+      "../**",
+      "**/.next/**",
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+    ] },
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 
