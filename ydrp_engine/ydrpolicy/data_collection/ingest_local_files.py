@@ -5,6 +5,10 @@ from typing import Optional, Tuple
 
 from ydrpolicy.data_collection.config import config as data_config
 from pypdf import PdfReader
+import pymupdf  # PyMuPDF
+from ydrpolicy.data_collection.processors.pdf_processor import (
+    extract_pdf_markdown_with_links,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -27,15 +31,24 @@ def _write_processed_txt(pdf_path: str, processed_dir: str) -> Optional[str]:
     base = os.path.splitext(os.path.basename(pdf_path))[0]
     txt_path = os.path.join(processed_dir, f"{base}.txt")
     try:
-        reader = PdfReader(pdf_path)
-        pieces = [page.extract_text() or "" for page in reader.pages]
-        normalized = _normalize_text_no_blank_lines("\n".join(pieces))
+        # Prefer PyMuPDF to preserve hyperlinks; serialize links inline as [text](url)
+        text_with_links = extract_pdf_markdown_with_links(pdf_path)
+        normalized = _normalize_text_no_blank_lines(text_with_links)
         with open(txt_path, "w", encoding="utf-8") as f:
             f.write(normalized)
         return txt_path
-    except Exception as e:
-        logger.error(f"Failed to extract text from PDF '{pdf_path}': {e}")
-        return None
+    except Exception as mupdf_err:
+        logger.warning(f"PyMuPDF failed for '{pdf_path}', falling back to PyPDF: {mupdf_err}")
+        try:
+            reader = PdfReader(pdf_path)
+            pieces = [page.extract_text() or "" for page in reader.pages]
+            normalized = _normalize_text_no_blank_lines("\n".join(pieces))
+            with open(txt_path, "w", encoding="utf-8") as f:
+                f.write(normalized)
+            return txt_path
+        except Exception as e:
+            logger.error(f"Failed to extract text from PDF '{pdf_path}': {e}")
+            return None
 
 
 def ingest_single_file(

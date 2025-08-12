@@ -2,6 +2,17 @@
 
 This file consolidates commit logs from the Engine and UI sub-projects.
 
+### 8/12/2025 - 12:00
+
+- Switched primary PDF text extraction to PyMuPDF to preserve hyperlinks; added PyPDF fallback.
+- Implemented `extract_pdf_markdown_with_links` in `ydrpolicy/data_collection/processors/pdf_processor.py` and refactored callers to reuse it.
+- Updated:
+  - `pdf_processor.pdf_file_to_markdown`
+  - `document_processor.convert_pdf_to_markdown`
+  - `ingest_local_files._write_processed_txt`
+- Added `pymupdf` to dependency list and installed via `uv add pymupdf`.
+- Result: TXT/MD outputs now include clickable links formatted as `[text](URL)` while preserving non-linked text.
+
 ### 8/11/2025 - 20:00
 
 - Local-only ingestion overhaul finalized; removed crawl/scrape flows.

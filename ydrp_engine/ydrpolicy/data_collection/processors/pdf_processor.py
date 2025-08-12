@@ -10,6 +10,7 @@ from types import SimpleNamespace
 from typing import Tuple, Optional
 
 from pypdf import PdfReader
+import pymupdf  # PyMuPDF
 
 logger = logging.getLogger(__name__)
 
@@ -39,21 +40,29 @@ def pdf_file_to_markdown(
     try:
         timestamp_basename, markdown_filename = generate_pdf_raw_timestamp_name()
         markdown_path = os.path.join(output_folder, markdown_filename)
-        logger.info(f"Processing local PDF via PyPDF: {pdf_path}")
+        logger.info(f"Processing local PDF via PyMuPDF with hyperlink preservation: {pdf_path}")
         try:
-            reader = PdfReader(pdf_path)
-            pieces = []
-            for page in reader.pages:
-                pieces.append(page.extract_text() or "")
-            text = "\n\n".join(pieces).strip()
+            text = extract_pdf_markdown_with_links(pdf_path)
             with open(markdown_path, "w", encoding="utf-8") as file:
                 # Do not include any header here; ingestion step will add a unified header.
                 file.write(text)
-            logger.info(f"Local PDF -> MD via PyPDF success: {markdown_path}")
+            logger.info(f"Local PDF -> MD via PyMuPDF success: {markdown_path}")
             return markdown_path, timestamp_basename
-        except Exception as pypdf_err:
-            logger.error(f"PyPDF extraction failed: {pypdf_err}")
-            raise
+        except Exception as mupdf_err:
+            logger.error(f"PyMuPDF extraction failed, falling back to PyPDF: {mupdf_err}")
+            try:
+                reader = PdfReader(pdf_path)
+                pieces = []
+                for page in reader.pages:
+                    pieces.append(page.extract_text() or "")
+                text = "\n\n".join(pieces).strip()
+                with open(markdown_path, "w", encoding="utf-8") as file:
+                    file.write(text)
+                logger.info(f"Local PDF -> MD via PyPDF fallback success: {markdown_path}")
+                return markdown_path, timestamp_basename
+            except Exception as pypdf_err:
+                logger.error(f"PyPDF fallback extraction failed: {pypdf_err}")
+                raise
 
     except Exception as e:
         logger.error(f"Error converting local PDF {pdf_path} -> MD: {e}", exc_info=True)
@@ -128,3 +137,108 @@ def get_combined_markdown(ocr_response, doc_images_dir: str) -> str:
         markdowns.append(page_markdown)
         page_num += 1
     return "\n\n---\n\n".join(markdowns)
+
+
+def extract_pdf_markdown_with_links(pdf_path: str) -> str:
+    """
+    Extracts text from PDF and preserves hyperlinks as Markdown links.
+
+    Strategy:
+    - Use PyMuPDF to get page words in reading order and page links with their rectangles.
+    - For each line, wrap contiguous words that intersect a link rectangle as [text](url).
+    - Non-linked text is preserved verbatim.
+
+    Returns:
+        Markdown-flavored text with [text](URL) where applicable.
+    """
+    try:
+        lines_out = []
+        with pymupdf.open(pdf_path) as doc:
+            for page in doc:
+                try:
+                    link_rects = []
+                    for lnk in page.get_links() or []:
+                        uri = lnk.get("uri")
+                        rect = lnk.get("from") or lnk.get("rect")
+                        if not uri or not rect:
+                            continue
+                        try:
+                            link_rects.append((pymupdf.Rect(rect), uri))
+                        except Exception:
+                            # Skip malformed rectangles
+                            continue
+
+                    words = page.get_text("words", sort=True) or []
+                    if not words:
+                        # Fall back to simple text if words not available
+                        text_plain = page.get_text("text") or ""
+                        for raw_line in (text_plain.splitlines() if text_plain else []):
+                            lines_out.append(raw_line)
+                        # Add a page separator as a blank line
+                        lines_out.append("")
+                        continue
+
+                    # Reconstruct lines based on block and line indices
+                    def flush_line(parts):
+                        if not parts:
+                            return ""
+                        segments = []
+                        buf_words = []
+                        buf_url = None
+                        for token, url in parts:
+                            if url == buf_url:
+                                buf_words.append(token)
+                            else:
+                                if buf_words:
+                                    seg_text = " ".join(buf_words)
+                                    if buf_url:
+                                        segments.append(f"[{seg_text}]({buf_url})")
+                                    else:
+                                        segments.append(seg_text)
+                                buf_words = [token]
+                                buf_url = url
+                        if buf_words:
+                            seg_text = " ".join(buf_words)
+                            if buf_url:
+                                segments.append(f"[{seg_text}]({buf_url})")
+                            else:
+                                segments.append(seg_text)
+                        return " ".join(segments)
+
+                    current_key = None  # (block_no, line_no)
+                    current_parts = []  # list[(token, url)]
+
+                    for x0, y0, x1, y1, token, block_no, line_no, word_no in words:
+                        key = (block_no, line_no)
+                        if current_key is None:
+                            current_key = key
+                        if key != current_key:
+                            lines_out.append(flush_line(current_parts))
+                            current_parts = []
+                            current_key = key
+
+                        word_rect = pymupdf.Rect(x0, y0, x1, y1)
+                        url_for_word = None
+                        for rect, uri in link_rects:
+                            if rect.intersects(word_rect):
+                                url_for_word = uri
+                                break
+                        current_parts.append((token, url_for_word))
+
+                    if current_parts:
+                        lines_out.append(flush_line(current_parts))
+
+                    # Page separator blank line
+                    lines_out.append("")
+                except Exception as page_err:
+                    logger.warning(f"Failed to extract page {page.number}: {page_err}")
+                    text_plain = page.get_text("text") or ""
+                    if text_plain:
+                        lines_out.extend(text_plain.splitlines())
+                        lines_out.append("")
+
+        result = "\n".join(lines_out).strip()
+        return result
+    except Exception as e:
+        logger.error(f"PyMuPDF hyperlink-aware extraction failed for '{pdf_path}': {e}")
+        raise

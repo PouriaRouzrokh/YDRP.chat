@@ -8,6 +8,7 @@ This repository is the monorepo for the YDRP.chat website — a policy chatbot f
 - `run.sh`: Top‑level helper for starting/stopping services locally
 
 Detailed documentation for each module is available in their respective README files under `ydrp_engine/` and `ydrp_ui/`.
+Database details are also available at `ydrp_engine/Database.md`.
 
 ## Working with run.sh
 The `run.sh` script manages local development via tmux sessions. It can start the MCP server, the Agent API, the UI, and Cloudflare tunnels.

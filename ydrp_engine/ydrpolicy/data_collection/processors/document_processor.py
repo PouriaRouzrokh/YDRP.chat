@@ -16,6 +16,10 @@ from docx import Document
 
 # Local imports (updated path)
 from pypdf import PdfReader
+import pymupdf  # PyMuPDF
+from ydrpolicy.data_collection.processors.pdf_processor import (
+    extract_pdf_markdown_with_links,
+)
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -146,19 +150,25 @@ def convert_pdf_to_markdown(file_path: str) -> str:
         PDF content as plain text separated by newlines (no blank lines).
     """
     try:
-        reader = PdfReader(file_path)
-        pieces = []
-        for page in reader.pages:
-            text = page.extract_text() or ""
-            # normalize: remove extra blank lines
-            lines = [ln for ln in text.splitlines() if ln.strip()]
-            pieces.append("\n".join(lines))
-        text_joined = "\n".join(pieces).strip()
+        # Prefer PyMuPDF to preserve hyperlinks, falling back to PyPDF
+        text_joined = extract_pdf_markdown_with_links(file_path)
         title = os.path.basename(file_path)
         return f"# {title}\n\n{text_joined}"
-    except Exception as e:
-        logger.error(f"Error converting PDF via PyPDF: {str(e)}")
-        return f"# Error Processing PDF\n\nFile: {os.path.basename(file_path)}\n\nError: {str(e)}"
+    except Exception as mupdf_err:
+        logger.warning(f"PyMuPDF failed to convert PDF preserving links, fallback to PyPDF: {mupdf_err}")
+        try:
+            reader = PdfReader(file_path)
+            pieces = []
+            for page in reader.pages:
+                text = page.extract_text() or ""
+                lines = [ln for ln in text.splitlines() if ln.strip()]
+                pieces.append("\n".join(lines))
+            text_joined = "\n".join(pieces).strip()
+            title = os.path.basename(file_path)
+            return f"# {title}\n\n{text_joined}"
+        except Exception as e:
+            logger.error(f"Error converting PDF via PyPDF fallback: {str(e)}")
+            return f"# Error Processing PDF\n\nFile: {os.path.basename(file_path)}\n\nError: {str(e)}"
 
 
 def convert_docx_to_markdown(file_path: str) -> str:
