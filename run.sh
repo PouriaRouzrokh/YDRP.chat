@@ -36,6 +36,8 @@ CLOUDFLARED_BIN="${CLOUDFLARED_BIN:-cloudflared}"
 CF_TUNNEL_ID="${CF_TUNNEL_ID:-}"
 CF_TUNNEL_NAME="${CF_TUNNEL_NAME:-}"
 CF_CONFIG="${CF_CONFIG:-}"
+# Allow disabling auto-detection of named tunnels (set to "false" to skip)
+CF_DETECT_NAMED_TUNNEL="${CF_DETECT_NAMED_TUNNEL:-true}"
 # Secondary hostname for API exposure
 CF_API_HOSTNAME="${CF_API_HOSTNAME:-api.ydrp.chat}"
 CF_API_TARGET="${CF_API_TARGET:-http://localhost:${API_PORT}}"
@@ -68,6 +70,7 @@ Environment variables (optional):
   CF_API_HOSTNAME               Default: api.ydrp.chat
   CF_API_TARGET                 Default: http://localhost:
   CF_AUTOCONFIG_DNS             Default: true (adds/updates DNS routes for hostnames when using named tunnel)
+  CF_DETECT_NAMED_TUNNEL        Default: true (auto-picks first available named tunnel if none specified)
 
 Paths auto-detected:
   ENGINE_DIR: $ENGINE_DIR
@@ -101,7 +104,7 @@ new_session_run() {
 
 detect_named_tunnel() {
   # Populate CF_TUNNEL_ID if empty by picking the first available tunnel
-  if [ -z "$CF_TUNNEL_ID" ] && [ -z "$CF_TUNNEL_NAME" ]; then
+  if [ "$CF_DETECT_NAMED_TUNNEL" = "true" ] && [ -z "$CF_TUNNEL_ID" ] && [ -z "$CF_TUNNEL_NAME" ]; then
     if command -v "$CLOUDFLARED_BIN" >/dev/null 2>&1; then
       local first_id
       first_id="$($CLOUDFLARED_BIN tunnel list 2>/dev/null | awk 'NR>1 && $1 ~ /^[0-9a-f-]{36}$/ {print $1; exit}')"
@@ -151,7 +154,17 @@ start_ui() {
   if { [ -n "$CF_TUNNEL_ID" ] || [ -n "$CF_TUNNEL_NAME" ]; } && [ "$NEXT_PUBLIC_API_URL" = "http://localhost:${API_PORT}" ]; then
     api_url="https://$CF_API_HOSTNAME"
   fi
-  local cmd="cd '$UI_DIR' && npm ci && npm run build && NEXT_PUBLIC_API_URL='$api_url' NEXT_PUBLIC_ADMIN_MODE='$NEXT_PUBLIC_ADMIN_MODE' NEXT_PUBLIC_TYPING_INDICATOR_DELAY_MS='$NEXT_PUBLIC_TYPING_INDICATOR_DELAY_MS' npm start -- --port '$NEXT_PORT'"
+
+  # Respect .env.production in the UI directory if present: let Next.js read it instead of overriding with inline envs
+  local cmd
+  if [ -f "$UI_DIR/.env.production" ]; then
+    echo "Detected $UI_DIR/.env.production. Building UI with environment from file (NEXT_PUBLIC_* from .env.production will override any .env.local)."
+    # Source .env.production so NEXT_PUBLIC_* are exported during build
+    cmd="cd '$UI_DIR' && npm ci && set -a && . ./.env.production && set +a && npm run build && npm start -- --port '$NEXT_PORT'"
+  else
+    # Important: if no .env.production file, inject NEXT_PUBLIC_* at build time so the client bundle has the correct values
+    cmd="cd '$UI_DIR' && npm ci && NEXT_PUBLIC_API_URL='$api_url' NEXT_PUBLIC_ADMIN_MODE='$NEXT_PUBLIC_ADMIN_MODE' NEXT_PUBLIC_TYPING_INDICATOR_DELAY_MS='$NEXT_PUBLIC_TYPING_INDICATOR_DELAY_MS' npm run build && NEXT_PUBLIC_API_URL='$api_url' NEXT_PUBLIC_ADMIN_MODE='$NEXT_PUBLIC_ADMIN_MODE' NEXT_PUBLIC_TYPING_INDICATOR_DELAY_MS='$NEXT_PUBLIC_TYPING_INDICATOR_DELAY_MS' npm start -- --port '$NEXT_PORT'"
+  fi
   new_session_run "$SESSION_UI" "$cmd"
   echo "Started Next.js UI in tmux session: $SESSION_UI (on port ${NEXT_PORT})"
 }

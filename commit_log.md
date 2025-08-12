@@ -2,6 +2,14 @@
 
 This file consolidates commit logs from the Engine and UI sub-projects.
 
+### 8/12/2025 - 00:40
+
+- Tooling (run.sh): Respect `ydrp_ui/.env.production` if present by not overriding `NEXT_PUBLIC_*` during build/start; otherwise continue injecting envs at build time. Keeps `CF_DETECT_NAMED_TUNNEL` toggle and help updates. File updated: `run.sh`.
+
+### 8/12/2025 - 01:25
+
+- Tooling (run.sh): Fixed production env handling by sourcing `.env.production` with `set -a` so `NEXT_PUBLIC_*` are exported for the Next.js build. This ensures the browser bundle uses `https://api.ydrp.chat` in production. Restarted UI with the new behavior. File updated: `run.sh`.
+
 ### 8/12/2025 - 21:45
 
 - Backend (DB population): Now prefers `data/import.csv` for URL/origin metadata with fallback to legacy `data/PDF/import.csv`. Logs which path is used. File updated: `ydrpolicy/backend/database/init_db.py`.
