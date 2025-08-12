@@ -712,6 +712,7 @@ async def populate_database_from_scraped_policies(session: AsyncSession):
 async def populate_database_from_processed_txt(session: AsyncSession):
     """Populate DB by scanning processed TXT files (flat directory)."""
     processed_dir = getattr(config.PATHS, "TXT_DIR", None)
+    data_dir = getattr(config.PATHS, "DATA_DIR", None)
     import_dir = getattr(config.PATHS, "PDF_DIR", None)
     if not os.path.isdir(processed_dir):
         logger.warning(f"Processed directory not found: {processed_dir}")
@@ -719,8 +720,14 @@ async def populate_database_from_processed_txt(session: AsyncSession):
 
     # Build filename -> (url, origin) mapping from import.csv if present
     filename_to_meta: Dict[str, Dict[str, str]] = {}
-    import_csv = os.path.join(import_dir, "import.csv") if import_dir else None
-    if import_csv and os.path.exists(import_csv):
+    # Prefer root data/import.csv, fallback to legacy PDF/import.csv
+    candidate_csv_paths: List[str] = []
+    if data_dir:
+        candidate_csv_paths.append(os.path.join(data_dir, "import.csv"))
+    if import_dir:
+        candidate_csv_paths.append(os.path.join(import_dir, "import.csv"))
+    import_csv: Optional[str] = next((p for p in candidate_csv_paths if os.path.exists(p)), None)
+    if import_csv:
         try:
             import csv
             with open(import_csv, newline="", encoding="utf-8") as f:
@@ -733,8 +740,9 @@ async def populate_database_from_processed_txt(session: AsyncSession):
                         "url": (row.get("url") or "").strip(),
                         "origin": (row.get("origin") or "").strip().lower(),
                     }
+            logger.info(f"Loaded import metadata from CSV: {import_csv}")
         except Exception as e:
-            logger.warning(f"Failed to read import CSV for metadata: {e}")
+            logger.warning(f"Failed to read import CSV for metadata '{import_csv}': {e}")
 
     policy_repo = PolicyRepository(session)
     existing_policies = await get_existing_policies_info(session)

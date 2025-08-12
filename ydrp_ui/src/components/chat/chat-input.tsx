@@ -86,7 +86,7 @@ export function ChatInput({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         disabled={isDisabled}
-        className="resize-none min-h-[40px] md:min-h-[60px] max-h-[150px] sm:max-h-[200px] flex-1 py-2 px-2 sm:px-3 md:py-4 leading-relaxed text-sm sm:text-base"
+        className="resize-none min-h-[40px] md:min-h-[60px] max-h-[150px] sm:max-h-[200px] flex-1 py-2 px-2 sm:px-3 md:py-4 leading-relaxed text-sm sm:text-base border-2 border-foreground/30 dark:border-foreground/40 hover:border-foreground/50"
         rows={1}
       />
       <Button

@@ -566,7 +566,8 @@ function ChatPageContent() {
                         <br />
                         <p className="max-w-md mx-auto border-4 ">
                           Please note that this chat is not HIPAA safe, so
-                          please avoid entering sensitive information.
+                          avoid entering sensitive information. Also, AI chatbots are not perfect, so the answers may not be 100% accurate.
+                          When in doubt, please check the <a href="https://medicine.yale.edu/radiology-biomedical-imaging/intranet/division-of-bioimaging-sciences-policies-sops-and-forms" target="_blank" rel="noopener noreferrer"><u>Yale Department of Radiology Policies</u></a> for the most up-to-date information.
                         </p>
                       </div>
                     </motion.div>

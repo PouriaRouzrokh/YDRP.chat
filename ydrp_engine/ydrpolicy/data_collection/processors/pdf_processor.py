@@ -170,13 +170,21 @@ def extract_pdf_markdown_with_links(pdf_path: str) -> str:
 
                     words = page.get_text("words", sort=True) or []
                     if not words:
-                        # Fall back to simple text if words not available
-                        text_plain = page.get_text("text") or ""
-                        for raw_line in (text_plain.splitlines() if text_plain else []):
-                            lines_out.append(raw_line)
-                        # Add a page separator as a blank line
-                        lines_out.append("")
-                        continue
+                        # Try OCR directly if no words are detected (likely scanned page)
+                        try:
+                            tp = page.get_textpage_ocr(languages="eng")
+                            ocr_text = page.get_text("text", textpage=tp) or ""
+                            for raw_line in (ocr_text.splitlines() if ocr_text else []):
+                                lines_out.append(raw_line)
+                            lines_out.append("")
+                            continue
+                        except Exception:
+                            # Fall back to simple text if OCR unavailable
+                            text_plain = page.get_text("text") or ""
+                            for raw_line in (text_plain.splitlines() if text_plain else []):
+                                lines_out.append(raw_line)
+                            lines_out.append("")
+                            continue
 
                     # Reconstruct lines based on block and line indices
                     def flush_line(parts):
@@ -227,6 +235,33 @@ def extract_pdf_markdown_with_links(pdf_path: str) -> str:
 
                     if current_parts:
                         lines_out.append(flush_line(current_parts))
+
+                    # Heuristic check for gibberish text due to font encoding; if so, OCR the page
+                    try:
+                        page_text_candidate = "\n".join(lines_out[-(len(current_parts) + 1) :]) if current_parts else "\n".join(lines_out[-1:])
+                    except Exception:
+                        page_text_candidate = ""
+
+                    def _looks_gibberish(text: str) -> bool:
+                        if not text or len(text) < 40:
+                            return False
+                        letters = sum(ch.isalpha() for ch in text)
+                        digits = sum(ch.isdigit() for ch in text)
+                        spaces = text.count(" ") + text.count("\n") + text.count("\t")
+                        total = len(text)
+                        alpha_ratio = letters / max(total, 1)
+                        space_ratio = spaces / max(total, 1)
+                        # Many PDFs with broken encoding show very low alpha ratio and odd spacing
+                        return alpha_ratio < 0.35 and space_ratio < 0.35
+
+                    if _looks_gibberish("\n".join(lines_out[-200:])):
+                        try:
+                            tp = page.get_textpage_ocr(languages="eng")
+                            ocr_text = page.get_text("text", textpage=tp) or ""
+                            # Replace the last page's lines (best-effort): append OCR text as new page section
+                            lines_out.append(ocr_text)
+                        except Exception:
+                            pass
 
                     # Page separator blank line
                     lines_out.append("")

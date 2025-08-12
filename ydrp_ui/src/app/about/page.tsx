@@ -120,8 +120,7 @@ export default function AboutPage() {
               <strong>Pouria Ruzrokh, MD, MPH, MHPE</strong>
             </p>
             <p>Email: pouria.rouzrokh@yale.edu</p>
-          </div>
-          <div className="bg-muted/50 p-4 rounded-lg">
+            <br />
             <p>
               <strong>Bardia Khosravi, MD, MPH, MHPE</strong>
             </p>

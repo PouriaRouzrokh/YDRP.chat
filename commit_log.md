@@ -2,6 +2,15 @@
 
 This file consolidates commit logs from the Engine and UI sub-projects.
 
+### 8/12/2025 - 21:45
+
+- Backend (DB population): Now prefers `data/import.csv` for URL/origin metadata with fallback to legacy `data/PDF/import.csv`. Logs which path is used. File updated: `ydrpolicy/backend/database/init_db.py`.
+- UI (Chat): Increased default/unfocused visibility of the chat input border while keeping focused state intact. File updated: `ydrp_ui/src/components/chat/chat-input.tsx`.
+- Data handling (local ops, not tracked by git due to `.gitignore`):
+  - Copied PDFs from `temp/` and `temp1/` into `ydrp_engine/data/PDF/` and generated `import.csv` with appropriate URLs (`policies & SOPs`, `trainee-resources`, `resident-resources`).
+  - Moved `import.csv` to `ydrp_engine/data/import.csv` per new loader behavior; normalized all CSV filenames to include `.pdf`.
+  - Archive of PDF files completed as of Aug 11, 2025.
+
 ### 8/12/2025 - 12:00
 
 - Switched primary PDF text extraction to PyMuPDF to preserve hyperlinks; added PyPDF fallback.
