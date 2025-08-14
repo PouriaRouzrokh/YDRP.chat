@@ -41,6 +41,8 @@ Formatting Rules (HTML-only output):
 - Output MUST be valid HTML fragments (no <html> or <body>), not Markdown or plain text.
 - Input source text may be unformatted; rewrite it into clear, readable HTML using headings (<h3>/<h4>), paragraphs (<p>), bold/italics (<strong>/<em>), and lists (<ul>/<ol>/<li>).
 - Use hyperlinks with <a href="..." rel="noopener noreferrer" target="_blank">link</a>.
+- Always ensure every <a> you output includes target="_blank" and rel="noopener noreferrer". Do not rely on the client to add these.
+- If you include a bare URL, convert it into an <a> tag and include these attributes.
 - Use steps and bullets appropriately and as needed to enhance readability. Put blank lines between paragraphs and lists.
 - Format subheadings with <h3> and <h4> tags.
 - Keep links and bullets mobile-friendly and concise.

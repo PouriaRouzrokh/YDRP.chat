@@ -2,6 +2,20 @@
 
 This file consolidates commit logs from the Engine and UI sub-projects.
 
+### 8/14/2025 - 11:20
+
+- UI (Chat links): Ensured all hyperlinks in assistant-rendered messages open in a new tab consistently.
+  - Post-render attribute enforcement for `target="_blank"` and `rel="noopener noreferrer"` scoped to `div.chat-html`.
+  - Event-delegated click fallback to always `window.open(..., '_blank', 'noopener,noreferrer')` for resilient behavior across re-renders and historical messages.
+  - Explicit attributes added to policy reference links.
+  - File: `ydrp_ui/src/components/chat/message.tsx`.
+- Backend (HTML hardening): Strengthened link behavior and prompt guidance.
+  - System prompt now explicitly requires `target="_blank" rel="noopener noreferrer"` on every `<a>`; convert bare URLs to links with those attributes.
+  - Stream-time HTML hardening to add/merge `target`/`rel` on all anchors for `html_chunk`, `html_message`, and final saved HTML. Preserves existing attributes.
+  - Fixed malformed try/except indentation and linter errors in `chat_service.py`.
+  - Files: `ydrpolicy/backend/agent/system_prompt.py`, `ydrpolicy/backend/services/chat_service.py`.
+  - Result: Stable, consistent new-tab behavior across old and new messages with defense-in-depth (agent + server + UI).
+
 ### 8/12/2025 - 00:40
 
 - Tooling (run.sh): Respect `ydrp_ui/.env.production` if present by not overriding `NEXT_PUBLIC_*` during build/start; otherwise continue injecting envs at build time. Keeps `CF_DETECT_NAMED_TUNNEL` toggle and help updates. File updated: `run.sh`.

@@ -11,7 +11,7 @@ import { motion } from "framer-motion";
 import { fadeInUp } from "@/lib/animation-variants";
 // Markdown imports removed; we render sanitized HTML
 import DOMPurify from "dompurify";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { siteConfig } from "@/config/site";
 
 export interface PolicyReference {
@@ -44,6 +44,53 @@ export function ChatMessage({ message }: MessageProps) {
       : message.content;
 
   // URLs are rendered directly inside sanitized HTML; no truncation here
+  const contentRef = useRef<HTMLDivElement | null>(null);
+
+  // Ensure all links open in a new tab with proper rel for security
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    const anchors = root.querySelectorAll<HTMLAnchorElement>('a');
+    anchors.forEach((a) => {
+      try {
+        a.setAttribute('target', '_blank');
+        // Preserve any existing rel values while ensuring security flags are present
+        const existingRel = a.getAttribute('rel') || '';
+        const needed = ['noopener', 'noreferrer'];
+        const merged = Array.from(new Set([...existingRel.split(/\s+/).filter(Boolean), ...needed]));
+        a.setAttribute('rel', merged.join(' '));
+      } catch {
+        // no-op: defensive in case of detached nodes
+      }
+    });
+  }, [sanitizedHtml]);
+
+  // Fallback: intercept clicks to always open in a new tab (guards against any re-renders wiping attrs)
+  useEffect(() => {
+    const root = contentRef.current;
+    if (!root) return;
+    const handleClick = (e: MouseEvent) => {
+      const target = e.target as Element | null;
+      if (!target) return;
+      const anchor = target.closest('a') as HTMLAnchorElement | null;
+      if (!anchor) return;
+      // Only handle primary button clicks without modifier keys
+      if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.defaultPrevented) return;
+      e.preventDefault();
+      try {
+        window.open(anchor.href, '_blank', 'noopener,noreferrer');
+      } catch {
+        // As a last resort, set attributes and let default proceed
+        anchor.setAttribute('target', '_blank');
+        anchor.setAttribute('rel', 'noopener noreferrer');
+        anchor.click();
+      }
+    };
+    root.addEventListener('click', handleClick);
+    return () => {
+      root.removeEventListener('click', handleClick);
+    };
+  }, []);
 
   return (
     <motion.div
@@ -86,6 +133,7 @@ export function ChatMessage({ message }: MessageProps) {
           >
             <CardContent className="px-2 sm:px-3 py-0">
               <div
+                ref={contentRef}
                 className="chat-html prose-sm sm:prose dark:prose-invert break-words w-full my-2 [&_a]:text-blue-600 dark:[&_a]:text-blue-400 [&_a]:underline"
                 dangerouslySetInnerHTML={{ __html: sanitizedHtml as string }}
               />
@@ -117,6 +165,8 @@ export function PolicyReference({ reference }: { reference: PolicyReference }) {
         <a
           href={reference.url}
           className="text-xs text-blue-600 dark:text-blue-300 hover:underline"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           View Source
         </a>

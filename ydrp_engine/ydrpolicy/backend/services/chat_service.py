@@ -335,6 +335,31 @@ class ChatService:
                             input=agent_input_list,
                         )
 
+                        # Utility: enforce target/rel on all anchors
+                        def _harden_anchors(html: str) -> str:
+                            try:
+                                if not html:
+                                    return html
+                                # Add target and rel if missing. Handle already-present attributes gracefully.
+                                # Ensure every <a ...> has target="_blank"
+                                html = re.sub(r"<a(?![^>]*\btarget=)[^>]*>",
+                                              lambda m: m.group(0)[:-1] + ' target="_blank">',
+                                              html)
+                                # Ensure rel contains both noopener and noreferrer
+                                def _ensure_rel(match: re.Match) -> str:
+                                    tag = match.group(0)
+                                    if 'rel=' in tag:
+                                        # merge values
+                                        return re.sub(r"rel=\"([^\"]*)\"",
+                                                      lambda mm: 'rel="' + ' '.join(sorted(set((mm.group(1) + ' noopener noreferrer').split()))) + '"',
+                                                      tag)
+                                    else:
+                                        return tag[:-1] + ' rel="noopener noreferrer">'
+                                html = re.sub(r"<a[^>]*>", _ensure_rel, html)
+                                return html
+                            except Exception:
+                                return html
+
                         async for event in run_result_stream.stream_events():
                             logger.debug(
                                 f"Stream event for chat {processed_chat_id}: {event.type}"
@@ -420,6 +445,8 @@ class ChatService:
                                                 if isinstance(parsed.get("html_chunk"), str):
                                                     chunk_html = parsed["html_chunk"].strip()
                                                     if chunk_html:
+                                                        # Harden anchors inside chunk before wrapping
+                                                        chunk_html = _harden_anchors(chunk_html)
                                                         wrapped_chunk = f'<div class="html-chunk-sep" data-chunk="1">{chunk_html}</div>'
                                                         yield self._create_stream_chunk(
                                                             "html_chunk",
@@ -431,6 +458,7 @@ class ChatService:
                                                 if isinstance(parsed.get("html"), str):
                                                     current_html = parsed["html"].strip()
                                                     if current_html and current_html != last_streamed_html:
+                                                         current_html = _harden_anchors(current_html)
                                                          last_streamed_html = current_html
                                                          yield self._create_stream_chunk(
                                                              "html_message",
@@ -649,6 +677,9 @@ class ChatService:
                                                 return url_pattern.sub(lambda m: f'<a href="{m.group(1)}" target="_blank" rel="noopener noreferrer">{m.group(1)}</a>', raw_html)
 
                                             agent_response_html = plain_text_to_html(candidate)
+
+                                # Final hardening pass to ensure all anchors are safe and open in new tab
+                                agent_response_html = _harden_anchors(agent_response_html)
 
                                 # --- DEBUG: Print/log raw vs formatted outputs for troubleshooting ---
                                 raw_preview = (agent_response_content or "").strip()[:500]
